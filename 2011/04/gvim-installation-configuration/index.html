@@ -1,0 +1,427 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>gvim安装和配置 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2011/04/gvim-installation-configuration/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2011/04/gvim-installation-configuration/">gvim安装和配置</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>04 Apr 2011</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/gvim">gvim</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/IDE">IDE</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/vim">vim</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>花了大概2、3天在gvim上，试了很多插件，总体感觉还是有点菜。也不是gvim菜，关键是插件特别是ctags对php的支持太菜。<br />
+<strong>这部分已经作了修正，详细情况请看comments。</strong></p>
+<p><span style="font-size: large;"><strong>1. 安装：</strong></span></p>
+<p>要装的东西还蛮多的：<br />
+1. gvim<a href="http://www.vim.org/download.php">本体</a>，下载windows的或者linux的都可以<br />
+2. 文件夹管理器（项目文件管理器），推荐：<a href="http://www.vim.org/scripts/script.php?script_id=1658">NERDTree</a><br />
+3. 代码文件解析器：<a href="http://ctags.sourceforge.net/">ctags</a>。可以参考下别人翻译的<a href="http://easwy.com/blog/archives/exuberant-ctags-chinese-manual/">中文手册</a>，更具体的细节参考<a title="ctags使用详解" href="http://xenojoshua.com/2011/04/ctags-intruduction-detail/">这里</a>。ctags绝对是整个编辑器最核心的一个组件，关于对php的支持还可以参考：某人用c写的一个做<a href="http://www.linuxdocs.org/HOWTOs/PHP-HOWTO-10.html">phptag</a>的工具文件和已经打好php补丁的ctags<a href="http://untidy.net/blog/2006/10/04/ctags-php-5-support/">可执行文件</a><br />
+4. 代码文件结构查看：<a href="http://www.vim.org/scripts/script.php?script_id=273">taglist</a><br />
+5<a href="http://www.vim.org/scripts/script.php?script_id=273"></a>. 文件查找工具：<a href="http://www.vim.org/scripts/script.php?script_id=1581">lookupfile</a>或者<a href="http://www.vim.org/scripts/script.php?script_id=1984">FuzzyFinder</a><br />
+6. 代码补全：<a href="http://www.vim.org/scripts/script.php?script_id=3171">phpcomplete<br />
+</a>东西就简单列下，安装就基本不用说什么了，直接往里面放就是了，文件往对应的目录里放。</p>
+<p><span style="font-size: large;"><strong>2. 配置：</strong></span></p>
+<p>这里简单贴下我的vimrc文件，里面都有注释，稍微看下就好，基本的配置都在这个配置文件里（vim的配置文件"表示注释开始，有点怪异，下面的代码用vb的style来展示的，将就着看吧。。。）<br />
+[codesyntax lang="vb"]</p>
+<pre>" ---------------------------------------------------------------------------------------------|
+" Workspace &amp; Project
+" ---------------------------------------------------------------------------------------------|
+let $proj='E:\project'
+let $bookmark=$vim.'\NerdBookmarks'
+let $ctagsroot=$vim.'\ctags58\ctags.exe'
+let $tagsfile=$vim.'\tagsfile'
+
+" ---------------------------------------------------------------------------------------------|
+" Configurations
+" ---------------------------------------------------------------------------------------------|
+set guifont=monaco:h14       " 设置字体
+au GUIENTER * simalt ~x      " 打开Vim同时最大化
+set nocompatible             " 去掉讨厌的有关vi一致性模式，避免以前版本的一些bug和局限
+set nu                       " 显示行号
+set history=1000             " 记录历史的行数
+set autoread                 " 当文件在外部有改动时，自动加载
+set autoindent               " 自动对齐，也就是把当前行的对起格式应用到下一行
+set smartindent              " 依据上面的对齐格式，智能的选择对齐方式
+set showmatch                " 设置匹配模式，类似当输入一个左括号时会匹配相应的那个右括号
+set guioptions-=T            " 去除vim的GUI版本中的toolbar
+set ruler                    " 在编辑过程中，在右下角显示光标位置的状态行
+set hlsearch                 " 寻找匹配是高亮度显示的
+set expandtab                " 使用空格替换tab
+set tabstop=4                " 用4个空格代替1个tab
+set shiftwidth=4             " 设定 &lt;&lt; 和 &gt;&gt; 命令移动时的宽度为 4
+set sts=4                    " 设置softtabstop 为 4，输入tab后就跳了4格
+set wrap                     " 自动换行
+set encoding=utf-8           " 默认使用utf-8编码
+set langmenu=zh_CN.UTF-8     " 界面中文
+language message zh_CN.UTF-8 " 默认使用utf-8编码
+set filetype=php:.php.inc    " 将php和inc后缀的文件作为php类型看待
+
+filetype on                  " 检测文件的类型
+syntax enable                " 语法高亮度显示
+syntax on                    " 语法高亮度显示
+colorscheme desert           " 设置配色模式
+
+" ---------------------------------------------------------------------------------------------|
+" Shortcut configurations
+" ---------------------------------------------------------------------------------------------|
+map  &lt;F9&gt;  :call TabInit()&lt;CR&gt;
+map  &lt;F10&gt; :NERDTreeToggle $proj&lt;CR&gt;   " F1打开/关闭NERDTree
+map  &lt;F11&gt; :TlistToggle&lt;CR&gt;            " F10打开/关闭taglist
+map  &lt;F12&gt; &lt;Esc&gt;:call MakeTags()&lt;CR&gt;   " F12生成一个tags文件
+map  &lt;C-h&gt; :tabp&lt;CR&gt;                   " 上个标签
+map  &lt;C-l&gt; :tabn&lt;CR&gt;                   " 下个标签
+map  &lt;C-j&gt; :tabnew&lt;CR&gt;                 " 新标签
+map  &lt;C-k&gt; :tabc&lt;CR&gt;                   " 关闭标签
+
+" ---------------------------------------------------------------------------------------------|
+" NERDTree configurations
+" ---------------------------------------------------------------------------------------------|
+let NERDTreeBookmarksFile=$bookmark    " bookmark列表文件
+let NERDTreeShowBookmarks=1            " 默认显示bookmark
+
+" ---------------------------------------------------------------------------------------------|
+" TageList configurations
+" ---------------------------------------------------------------------------------------------|
+let Tlist_Ctags_Cmd=$ctagsroot         " 配置taglist的ctags路径
+let Tlist_Exit_OnlyWindow=1            " 如果taglist窗口是最后一个窗口，则退出 vim
+let Tlist_File_Fold_Auto_Close=1       " 让当前不被编辑的文件的方法列表自动折叠起来
+let Tlist_Show_Menu=1                  " 显示taglist菜单
+let Tlist_Enable_Fold_Column=1         " 显示折叠标记
+"let Tlist_Show_One_File=1             " 不同时显示多个文件的tag，只显示当前文件的
+"let Tlist_Auto_Open=1                 " 启动vim自动打开taglist
+"let Tlist_Use_Horiz_Window=0          " 是否横向展示taglist窗口
+"let Tlist_Use_Left_Window=0           " 在左边窗口显示taglist窗口
+"let Tlist_Use_Right_Window=1          " 在右边窗口显示taglist窗口
+
+" ---------------------------------------------------------------------------------------------|
+" Global Display Commands configurations
+" ---------------------------------------------------------------------------------------------|
+autocmd VimEnter * nested call VimInit()  " Vim窗口初始化
+
+" ---------------------------------------------------------------------------------------------|
+" Out source vim configurations
+" ---------------------------------------------------------------------------------------------|
+source $VIMRUNTIME/vimcdoc.vim         " Vim plugin to set the default help language to Chinese
+source $VIMRUNTIME/vimrc_example.vim   " An example for a vimrc file
+source $VIMRUNTIME/mswin.vim           " Set options and add mapping such that Vim behaves a lot like MS-Windows
+behave mswin
+
+" ---------------------------------------------------------------------------------------------|
+" Functions
+" ---------------------------------------------------------------------------------------------|
+" Vim Init
+function VimInit()
+  Tlist
+  NERDTree $proj
+  exec 'split'
+  exec 'wincmd j'
+  exec 'buffer 2'
+  exec 'wincmd l'
+  exec 'q'
+endfunction
+
+" Tab Init
+function TabInit()
+  Tlist
+  NERDTreeMirror
+  exec 'split'
+  exec 'wincmd j'
+  exec 'buffer __Tag_List__'
+  exec 'wincmd l'
+  exec 'q'
+endfunction
+
+" Make Tags
+function MakeTags()
+  exec 'cd $proj'
+  exec '!ctags -R --langmap=php:.php.inc -f '.$tagsfile
+endfunction
+
+" diffexpr
+set diffexpr=MyDiff()
+function MyDiff()
+  let opt = '-a --binary '
+  if &amp;diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+  if &amp;diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+  let arg1 = v:fname_in
+  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+  let arg2 = v:fname_new
+  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+  let arg3 = v:fname_out
+  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+  let eq = ''
+  if $VIMRUNTIME =~ ' '
+    if &amp;sh =~ '<pre wp-pre-tag-0></pre>lt;cmd'
+      let cmd = '""' . $VIMRUNTIME . '\diff"'
+      let eq = '"'
+    else
+      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+    endif
+  else
+    let cmd = $VIMRUNTIME . '\diff'
+  endif
+  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' &gt; ' . arg3 . eq
+endfunction</pre>
+<p>[/codesyntax]</p>
+<p><span style="font-size: large;"><strong>3. 问题</strong></span></p>
+<p>如果，这里只说如果，如果所有的插件都能按他们所描述的功能工作的话，那么这个IDE是非常完美的，没有任何的瑕疵。<br />
+但是就是有问题，关键在于ctags，所有的后续的几个插件，包括文件查找、代码补全、taglist等等，都需要ctags创建的tags索引来做支持。<br />
+在ctags对php支持不好的情况下，是在是没有办法使用。虽然我在网上看了很多很简单就配置成功的例子，但是不知道为什么我的代码库就是不行。<br />
+两种可能性，一种是我使用的ctags没有针对php做好的优化，另一种可能性就是我使用的autoload方法对于ctags的支持并不好，可能ctags需要include语句来包含代码（可能性很低，因为在创建tag的时候ctags都是逐个目录文件扫过去的）。<br />
+研究了很长时间，但是对于这个ctags始终是没辙，结果就算了，毕竟这么弄下去也不是办法，暂时用回eclipse。<br />
+至少eclipse的代码补全、文件查找、tags创建都是自己完成的，虽然说支持也不是太好，毕竟没什么问题。<br />
+但是反过来说，如果能找到对tags比较好的支持的话，用vim还是一个不错的选择，毕竟作为文本编辑工具vim的效率比eclipse实在是高出太多太多。有时候以后再研究。</p>
+<p><span style="font-size: large;"><strong>4. Appendix </strong></span></p>
+<p>接下去列一些比较有用的blog：<br />
+易水的blog，有很详细的vim相关系列贴，这里给出<a href="http://easwy.com/blog/archives/advanced-vim-skills-catalog/">入口</a><br />
+“把VIM打造成一个真正的IDE”系列贴，感觉不错：分为<a href="http://www.vimer.cn/2009/10/%E6%8A%8Avim%E6%89%93%E9%80%A0%E6%88%90%E4%B8%80%E4%B8%AA%E7%9C%9F%E6%AD%A3%E7%9A%84ide1.html">篇1</a>、<a href="http://www.vimer.cn/2009/10/%E6%8A%8Avim%E6%89%93%E9%80%A0%E6%88%90%E4%B8%80%E4%B8%AA%E7%9C%9F%E6%AD%A3%E7%9A%84ide2.html">篇2</a>、<a href="http://www.vimer.cn/2009/10/%E6%8A%8Avim%E6%89%93%E9%80%A0%E6%88%90%E4%B8%80%E4%B8%AA%E7%9C%9F%E6%AD%A3%E7%9A%84ide3.html">篇3</a><br />
+<a href="http://www.cnblogs.com/ifys/archive/2010/10/24/1860610.html">这个帖子</a>介绍了如何整合winmanager和NERDTree</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2011/04/gvim-installation-configuration/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

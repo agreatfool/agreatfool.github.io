@@ -1,0 +1,277 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Wordpress Trackback & Pingback | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2011/04/wordpress-trackback-pingback/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2011/04/wordpress-trackback-pingback/">Wordpress Trackback & Pingback</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>05 Apr 2011</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/SEO">SEO</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Wordpress">Wordpress</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p><strong>什么是Trackback？</strong></p>
+<p><strong>Trackback</strong>这个词要准确地翻译成中文还是比较别扭的，通常的说法是“<strong>引用</strong>”或“<strong>引用通告</strong>”。</p>
+<p>它是设计用来实现网站之间的互相通告的一种方法，通俗地说就是：当你引用了另外一个网站的内容时，你得告诉人家一下，“嘿，哥们！我在我的这篇文章里用了你写的文章”。而原创的那个哥们如果想知道谁用了他的文章时告诉他一声，那么他就得在网页的某个地方给出引用的地址(Trackback URI)，引用的人使用这个地址在自己的文章里作为链接，当文章发表以后，原创的人就能够知道有人在什么地方引用了他的文章。</p>
+<p>当然，必须是要支持Trackback功能的网站之间才能够实现。现在常用的博客网站都支持Trackback的功能；支持Trackback的博客软件有Movable Type，WordPress，Plog，.Text，Bloxsom，Blojsom等等。</p>
+<p><strong><br />
+那么在WordPress里如何使用Trackback的功能呢？</strong></p>
+<p>先说如何设置你自己文章的Trackback地址</p>
+<p>如果你使用的主题已经给出了Trackback URI，那么你也就不用操心了，Trackback地址会显示在你的页面的某个地方，通常是文章的结尾了。</p>
+<p>如果你想自己加上Trackback的地址，那么在模板里加上下面的语句就可以了：</p>
+<blockquote><p>Trackback URL: &lt;?php trackback_url(); ?&gt;</p>
+</blockquote>
+<p>再说如何在文章中使用原创者的Trackback地址</p>
+<p>在WordPress 2.0的界面，在”Upload”的按钮下面有一栏叫“Trackbacks”，点击“+”展开，你把Trackback地址填写在这个地方，多个Trackback地址的话，用空格分开。当你写完文章，按“Publish”发布时，你的通知就会发送到你引用了文章的网站。</p>
+<p>实际上，在WordPress里，如果你使用了Pingback的功能的话，那么在文章中你可以直接就使用对方的永久链接地址。要启用这个选项，在WordPress的后台管理界面的“Options-&gt;Discussion”-&gt;“Attempt to notify any Weblogs linked to from the article (slows down posting.)”把这个选项选中。</p>
+<p>一般来说，WordPress的默认安装都允许Pingback的功能，当然也有人把它禁用了，如果你要确认的话，看看他的网页代码，在顶部有没有下面的语句：</p>
+<blockquote><p>&lt;link rel="pingback" href="…" /&gt;</p>
+</blockquote>
+<p>如果有，那就是允许的。</p>
+<p>当你发布完你的文章后，可以确认一下你的Trackback和Pingback是不是成功了。你可以选择编辑这篇文章，然后再下面的“Custom Fields”的上方，会有信息告诉你“Already Pinged …”和Trackback的地址。</p>
+<p><strong>慎用Trackback和Pingback</strong></p>
+<p>当你发出一个trackback的时候，要注意是否发出一个pingback。如果你链接的网站允许了pingback，那就不要发送trackback，因为这会在对方的网站上显示出两个链接，这样可能导致对方认为你是spam。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2011/04/wordpress-trackback-pingback/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

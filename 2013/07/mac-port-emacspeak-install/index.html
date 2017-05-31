@@ -1,0 +1,544 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>在MAC下使用MacPort编译安装emacspeak | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2013/07/mac-port-emacspeak-install/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2013/07/mac-port-emacspeak-install/">在MAC下使用MacPort编译安装emacspeak</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>02 Jul 2013</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Emacs">Emacs</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Emacspeak">Emacspeak</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MAC">MAC</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/OSX">OSX</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>其实不怎么想继续写安装系列的文章了，但是这玩意安装的时候实在是坑太多，这里留下笔记。</p>
+<h4>1. 先了解下什么是emacs</h4>
+<p><a title="GNU Emacs - GNU Project - Free Software Foundation (FSF)" href="http://www.gnu.org/software/emacs/" target="_blank">GNU Emacs - GNU Project - Free Software Foundation (FSF)</a></p>
+<h4>2. 什么是emacspeak</h4>
+<p><a title="Emacspeak --The Complete Audio Desktop" href="http://emacspeak.sourceforge.net/" target="_blank">Emacspeak --The Complete Audio Desktop</a></p>
+<h4>3. 我参考的安装手册</h4>
+<p><a href="http://e-mac-speak.googlecode.com/svn/trunk/e-mac-speak-howto.org" target="_blank">http://e-mac-speak.googlecode.com/svn/trunk/e-mac-speak-howto.org</a></p>
+<p>下面是全文quote：</p>
+<blockquote>
+<pre>* Introduction
+
+This document is a step by step guide showing how to configure emacspeak on a mac.  It includes installation of emacs, emacspeak and the e-mac-server.
+
+These instructions are only one way to achieve the end result of having emacspeak working on a mac.  This is the way I found worked best for me.  For example I have chosen to use "brew" to install emacs, I had no luck with the seemingly popular "macports".  Your mileage may vary.
+
+I have also made assumptions about file paths, feel free to put things where it feels most comfortable.  
+
+I welcome any updates to this document and or questions or issues found when following these instructions.
+
+* Prerequisites
+
+- A mac running a recent version of os x.  I used snow leopard 10.6.7.
+- An internet connection so we can download all the required bits.
+
+The version of emacs shipped with snow leopard (22.1) is not recent enough.  We will be installing emacs 24.  It also appears that the emacs shipped with snow leopard only runs in the terminal and not as a standalone app. 
+
+* XCODE4 
+To be able to build packages using homebrew you will need to have apple xcode installed.  If you are an apple developer it is a free download or can be purchased for around $5 from the mac appstore if you are not.
+
+It can be installed from the mac app store.
+
+Here is a link to the relevant apple developer page:
+http://developer.apple.com/xcode/
+
+It is a rather large download of about 4 gig so may take some time to install depending on your Internet connection speed.
+
+* Homebrew
+
+Homebrew is a package management system for installing unix programs on mac.  You can read all about it at the below URL or the blog post sighted in the following text: 
+https://github.com/mxcl/homebrew
+
+These instructions are mostly taken from the blog post at:
+http://www.engineyard.com/blog/2010/homebrew-os-xs-missing-package-manager/
+
+To install homebrew, from the terminal run the following commands.  I suggest that if you are at all worried checkout the script that is being run by the curl command so as to not install anything on your system that may be in any way suspicious  .
+
+#Note: I had to create the /usr/local directory on my mac which isn't in the blog post.
+# create /usr/local if it doesn't already exist
+sudo mkdir -p /usr/local
+# Take ownership of /usr/local so you don't have to sudo
+sudo chown -R `whoami` /usr/local
+# Fix the permissions on your mysql installation, if you have one
+sudo chown -R mysql:mysql /usr/local/mysql*
+# Download and install Homebrew from github
+curl -L http://github.com/mxcl/homebrew/tarball/master | tar xz --strip 1 -C /usr/local
+
+Once this is complete you should now have the "brew" program in your path.
+
+If typing "brew" at the terminal prompt gives a "command not found" error investigate if "/usr/local/bin" is in your PATH environment variable.
+
+If everything has worked up to this point typing "brew" should display an example usage message.
+
+* Install git
+
+Next we will install git as it is required to be able to update homebrew itself as well as to install many homebrew formula.
+
+From the terminal:
+
+brew install git
+
+* Install emacs
+
+This installs the current development branch of emacs24 from  repo.or.cz.
+
+It may be possible to use other emacson such as aquamax or other distributions specifically for the mac.  I had no luck doing so and this was the way that worked for me.
+
+If anyone else is using a different emacs I would love to hear about it so I can add aditional install options here.
+
+To install using brew, issue the following command from the terminal: 
+brew install emacs --HEAD --use-git-head --cocoa
+
+You will need to have added /usr/local/bin to the beginning of your PATH environment variable otherwise the shell will find the apple supplied version of emacs.
+
+You can check this has worked by issueing the following command at the terminal:
+
+which emacs
+
+It should report /usr/local/bin/emacs 
+
+* Install emacspeak
+
+We will keep emacspeak in a directory ~/src/emacspeak
+# create the ~/src dir if it doesn't exist
+mkdir -p ~/src
+# changedir to ~/src
+cd ~/src
+# checkout a copy of emacspeak from the google svn repository
+svn co http://emacspeak.googlecode.com/svn/trunk emacspeak
+
+cd emacspeak
+make config
+make emacspeak
+
+* E-Mac-Speak server prerequisites
+
+You will need to install sox and the pysox library.  These are used to provide extra filters on the tts.  As the set of parameters  available with mac tts engines is limited.
+
+Feedback on this process is most welcome as it's written from memory.
+
+To install sox:
+brew install sox
+
+To install pysox:
+sudo easy_install pyrex
+sudo easy_install pysox
+
+* Test the e-mac-speak server
+
+Before trying to run emacspeak itself we need to verify that the e-mac-speak server is working.
+
+To do this, from the terminal:
+
+# Change to the emacspeak servers directory
+cd ~/src/emacspeak/servers
+# run the e-mac-speak server
+./mac
+
+At this point you should hear the words "emacspeak server" spoken.
+
+If not then we have a problem.
+
+To speak some text enter the following lines.
+
+q {This is a test.}
+d
+
+You should hear the words "This is a test."
+
+If all goes well move on to the next step.  If not troubleshoot the issue until the above steps work.
+
+* Emacs initialization
+
+To get emacs to start up loading emacspeak with the e-mac-speak server place the following in your .emacs.d/init.el file.
+
+This is the minimum required to ensure that emacspeak comes up talking.  You will want to investigate further customizations of both emacs and emacspeak as you progress.
+
+You will also want to ajust the paths to reflect where you installed emacspeak.
+
+(setq load-path (cons "~/src/emacspeak/lisp" load-path))
+(setq emacspeak-directory "~/src/emacspeak")
+(setq dtk-program "mac")
+(load-file "~/src/emacspeak/lisp/mac-voices.el")
+(setq mac-default-speech-rate 500)
+(load-file "~/src/emacspeak/lisp/emacspeak-setup.el")
+
+A good place to look for emacspeak customizations is in the "tvr" directory of the emacspeak source.  This is Raman's emacs customizations.
+
+fixme
+* pysox
+
+To compile pysox you will need the sox headers and libraries installed.  They can be installed with:
+brew install sox
+
+You can download the pysox package from:
+http://pypi.python.org/pypi/pysox
+
+I have found it does not build cleanly for me.
+
+This is how I got it built and installed.
+
+First I run:
+python setup.py build
+as per the README.
+
+This will fail.
+I then took the two build lines and ran them by hand.  On each line I removed the --arch i386.
+
+So the two build lines I ended up with were:
+llvm-gcc-4.2 -fno-strict-aliasing -fno-common -dynamic -g -Os -pipe -fno-common -fno-strict-aliasing -fwrapv -mno-fused-madd -DENABLE_DTRACE -DMACOSX -DNDEBUG -Wall -Wstrict-prototypes -Wshorten-64-to-32 -DNDEBUG -g -fwrapv -Os -Wall -Wstrict-prototypes -DENABLE_DTRACE -arch x86_64 -pipe -I/System/Library/Frameworks/Python.framework/Versions/2.7/include/python2.7 -c pysox/combiner.c -o build/temp.macosx-10.7-intel-2.7/pysox/combiner.o
+llvm-gcc-4.2 -Wl,-F. -bundle -undefined dynamic_lookup -Wl,-F. -arch x86_64 build/temp.macosx-10.7-intel-2.7/pysox/combiner.o -lsox -o build/lib.macosx-10.7-intel-2.7/pysox/combiner.so
+
+After running these two commands I then was able to run the build again:
+
+python setup.py build
+Then to install 
+python setup.py install</pre>
+</blockquote>
+<h4>4. MacPort和Homebrew的差别</h4>
+<p>因为这篇文章使用的是homebrew这个工具，和我现在在使用的macport非常不同，这里简单介绍下不同点：</p>
+<h5>MacPort：</h5>
+<p>macports的工作方式是下载source code然后在本地编译。macport的理念是尽量减少对系统现有库的依赖。<br />
+所以，第一次用macport的时候，需要很长时间让macport重新build整个基本库，什么perl啊，python啊的。</p>
+<p>代价是较长的编译时间，较多的依赖关系下载。好处是不怎么依赖系统，也就是说，更新Mac OS不会破坏你现有的<br />
+package。</p>
+<p>另外，macports安装所有的package到/opt/local下面。这样不会和系统现有的/usr/local有什么冲突。</p>
+<h5>Homebrew:</h5>
+<p>这个比较新，是在Lion之后才兴起的。<br />
+工作方式和macport类似，也是下载source并在本地编译安装。但是和macports有两个根本的区别。</p>
+<ol>
+<li>homebrew的理念是尽量使用系统现有的库。这样可以大大的减少编译时间。</li>
+<li>package都安装到/usr/local下面。</li>
+</ol>
+<p>这两点和macports是完全相反的。结果也是有利有弊。</p>
+<p>最大的好处莫过于编译时间变短，安装简单。问题就是和系统紧密依赖。</p>
+<p>另外Homebrew假设你的Mac是单用户系统，所以/usr/local的owner应该是你，而不是传统的root。<br />
+这个假设在大多数情况下都成立。 （当然你可以改变homebrew的安装路径，然后修改你的PATH）</p>
+<p>另外，一个不太重要的区别，macport是用rsync来同步repository tree和获取新的package的。 homebrew是用git来管理repository的。 如果你是在内部网或者firewall后通过proxy使用，这点可能会给你带来影响--一些proxy不支持rsync的。</p>
+<h5>总结:</h5>
+<ol>
+<li>如果你是重量级的Linux用户，希望使用所有的open source package，那么macports是你不二的选择。</li>
+<li>如果你只希望很快的安装一些便利的工具，那么homebrew是个不错的选择。</li>
+</ol>
+<p>看完上面的内容你应该就明白了，使用homebrew的时候，安装的sox和python包等，都是安装在/usr/local下面的，在进行emacspeak的包安装的时候不会出现依赖找不到的问题，而使用macport的时候就会出现问题了。</p>
+<p>不过实际上我在安装的时候遇到的问题不多。</p>
+<h4>5. 我的安装步骤</h4>
+<ul>
+<li>XCode肯定是没问题的，我早安装好了</li>
+<li>Homebrew这步直接跳过</li>
+<li>git也早就安装好了</li>
+<li>emacs本体使用macport安装：sudo port -v install emacs</li>
+<li>emacspeak的安装也是按照介绍的方法安装：拿到源代码，然后make等，细节看上面的guide</li>
+<li>sox使用macport安装：sudo port -v install sox</li>
+</ul>
+<p>步骤到这步都没问题，问题是在下面的python包，pyrex和pysox上。</p>
+<h4>6. 问题</h4>
+<p>这里要说明下我安装时候的机器环境问题。因为MAC是默认整合python的，所以我以前使用macport安装的python2.7一直都没有启用（默认的path里的是系统安装的python），这我也是在装这个东西的时候才发现的。</p>
+<p>所以理所当然的，所有的python相关的工具和环境都是系统默认的，这在安装本文讨论的emacspeak的时候倒是正好。</p>
+<p>安装pyrex的时候，sudo easy_install pyrex，轻松就过了。</p>
+<p>但是在安装pysox的时候，sudo easy_install pysox，报编译错误了：</p>
+<p>sox.h not found</p>
+<p>没办法，想到的解决方案就是自己下载pysox的源码，把sox.h这个文件从别的地方补进去。</p>
+<p>pysox的官网在：<a href="https://pypi.python.org/pypi/pysox" target="_blank">https://pypi.python.org/pypi/pysox</a></p>
+<p>下载链接：<a href="https://pypi.python.org/packages/source/p/pysox/pysox-0.3.6.alpha.tar.gz" target="_blank">https://pypi.python.org/packages/source/p/pysox/pysox-0.3.6.alpha.tar.gz</a></p>
+<p>下载下来解压，然后去下载sox源码，找sox.h文件。</p>
+<p>sox的官网在：<a href="http://sox.sourceforge.net/" target="_blank">http://sox.sourceforge.net/</a></p>
+<p>下载页面在：<a href="http://sourceforge.net/projects/sox/files/sox/" target="_blank">http://sourceforge.net/projects/sox/files/sox/</a></p>
+<p>然后把sox源码包下的src/sox.h，拷贝到pysox源码包下的pysox/sox.h。</p>
+<p>然后去pysox的源码包根目录下运行：python ./setup.py build</p>
+<p>发现又报错：</p>
+<blockquote><p>22 warnings generated.<br />
+clang -bundle -undefined dynamic_lookup -Wl,-F. -arch i386 -arch x86_64 build/temp.macosx-10.8-intel-2.7/pysox/sox.o -lsox -o build/lib.macosx-10.8-intel-2.7/pysox/sox.so<br />
+ld: library not found for -lsox<br />
+clang: error: linker command failed with exit code 1 (use -v to see invocation)<br />
+error: command 'clang' failed with exit status 1</p></blockquote>
+<p>这是因为sox我们是使用macport安装的，系统的python是在/usr/local下查找编译后的lib的，所以找不到，解决方法就是做个软连接到/usr/local下：</p>
+<p>sudo ln -s /opt/local/lib/libsox.a /usr/lib/libsox.a</p>
+<p>事后记得删除。</p>
+<p>再运行：python ./setup.py build</p>
+<p>继续报错：</p>
+<blockquote><p>2 warnings generated.<br />
+clang -bundle -undefined dynamic_lookup -Wl,-F. -arch i386 -arch x86_64 build/temp.macosx-10.8-intel-2.7/pysox/combiner.o -lsox -o build/lib.macosx-10.8-intel-2.7/pysox/combiner.so<br />
+ld: warning: ignoring file /usr/lib/libsox.a, file was built for archive which is not the architecture being linked (i386): /usr/lib/libsox.a</p></blockquote>
+<p>将上面的命令中的 -arch i386删除，再运行：python ./setup.py build</p>
+<p>下面列出来的o文件就应该都准备好了：</p>
+<blockquote><p>Jonathan-MBP-2:pysox-0.3.6.alpha jonathan$ ll build/temp.macosx-10.8-intel-2.7/pysox/<br />
+total 3200<br />
+drwxr-xr-x 5 jonathan staff 170B 6 28 15:12 ./<br />
+drwxr-xr-x 3 jonathan staff 102B 6 27 22:22 ../<br />
+-rw-r--r-- 1 jonathan staff 303K 6 28 15:12 combiner.o<br />
+-rw-r--r-- 1 jonathan staff 205K 6 28 15:12 customeffects.o<br />
+-rw-r--r-- 1 jonathan staff 1.1M 6 28 11:07 sox.o</p></blockquote>
+<p>这次应该没问题了，运行：python ./setup.py install</p>
+<blockquote><p>Jonathan-MBP-2:pysox-0.3.6.alpha jonathan$ sudo python setup.py install<br />
+Building without Cython<br />
+running install<br />
+running build<br />
+running build_py<br />
+running build_ext<br />
+running install_lib<br />
+creating /Library/Python/2.7/site-packages/pysox<br />
+copying build/lib.macosx-10.8-intel-2.7/pysox/__init__.py -&gt; /Library/Python/2.7/site-packages/pysox<br />
+copying build/lib.macosx-10.8-intel-2.7/pysox/combiner.so -&gt; /Library/Python/2.7/site-packages/pysox<br />
+copying build/lib.macosx-10.8-intel-2.7/pysox/csox.pxd -&gt; /Library/Python/2.7/site-packages/pysox<br />
+copying build/lib.macosx-10.8-intel-2.7/pysox/customeffects.so -&gt; /Library/Python/2.7/site-packages/pysox<br />
+copying build/lib.macosx-10.8-intel-2.7/pysox/sox.pxd -&gt; /Library/Python/2.7/site-packages/pysox<br />
+copying build/lib.macosx-10.8-intel-2.7/pysox/sox.so -&gt; /Library/Python/2.7/site-packages/pysox<br />
+copying build/lib.macosx-10.8-intel-2.7/pysox/SoxApp.py -&gt; /Library/Python/2.7/site-packages/pysox<br />
+byte-compiling /Library/Python/2.7/site-packages/pysox/__init__.py to __init__.pyc<br />
+byte-compiling /Library/Python/2.7/site-packages/pysox/SoxApp.py to SoxApp.pyc<br />
+running install_egg_info<br />
+Writing /Library/Python/2.7/site-packages/pysox-0.3.6.alpha-py2.7.egg-info<br />
+---</p></blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2013/07/mac-port-emacspeak-install/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

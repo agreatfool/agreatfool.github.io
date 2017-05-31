@@ -1,0 +1,445 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Backbone.js | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2014/02/backbone-js/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2014/02/backbone-js/">Backbone.js</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>17 Feb 2014</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>Backbone.js，用来构建JavaScript项目的框架。官方给的介绍：</p>
+<blockquote><p>Backbone.js gives structure to web applications by providing <b>models</b> with key-value binding and custom events, <b>collections</b> with a rich API of enumerable functions,<b>views</b> with declarative event handling, and connects it all to your existing API over a RESTful JSON interface.</p></blockquote>
+<p>可以看到，连官方都没有自称自己是MVC框架，充其量只是一个MV框架。作为一款轻量级的JavaScript框架系统，Backbone.js非常简单，容易学习容易操作，但是也相对应的有很严重的问题。我们就一个个来看一下。</p>
+<p>主页：<a title="Backbone.js" href="http://backbonejs.org/" target="_blank">http://backbonejs.org/</a></p>
+<p>github：<a href="https://github.com/jashkenas/backbone" target="_blank">https://github.com/jashkenas/backbone</a></p>
+<p>Tutorial：<a href="http://backbonetutorials.com/" target="_blank">http://backbonetutorials.com/</a></p>
+<p>学习一个新的东西，一般你都会从官方文档开始，而backbone.js的文档实在是让我眼前一亮，这TM是文档？这根本就是一个API列表，谢谢。于是乎只能在网上找tutorial，所幸还是有一个<a href="http://backbonetutorials.com/" target="_blank">不错的站点</a>，给出了backbone.js的教程。接下来我们就按backbone.js的主要组件的结构来分析下backbone.js。</p>
+<h2>Model</h2>
+<p>官方对于Model的定义：</p>
+<blockquote><p>Models are the heart of any JavaScript application, containing the interactive data as well as a large part of the logic surrounding it: conversions, validations, computed properties, and access control.</p></blockquote>
+<p>Backbone.js里的Model就是数据模型，它提供了你业务逻辑上必须的数据存储的需求。包括了：</p>
+<ul>
+<li>数据模型的定义：含初始化</li>
+<li><span style="line-height: 11.988636016845703px;">数据存储：含数据更改（get、set）</span></li>
+<li>监听数据变化：在模型内数据有变化的时候响应事件（比如说：更新数据对应的UI）</li>
+<li>与服务器交互：在模型内设定该模型绑定的RESTful地址，并进行数据的提交或更新</li>
+</ul>
+<p>给几段代码：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>    Person = Backbone.Model.extend({
+    defaults: {
+        name: 'Fetus',
+        age: 0,
+        child: ''
+    },
+    initialize: function(){
+        alert("Welcome to this world");
+    }
+});
+
+var person = new Person({ name: "Thomas", age: 67, child: 'Ryan'});
+
+var age = person.get("age"); // 67
+var name = person.get("name"); // "Thomas"
+var child = person.get("child"); // 'Ryan'</pre>
+<p>[/codesyntax]</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>    var UserModel = Backbone.Model.extend({
+    urlRoot: '/user',
+    defaults: {
+        name: '',
+        email: ''
+    }
+});
+var user = new Usermodel();
+// Notice that we haven't set an `id`
+var userDetails = {
+    name: 'Thomas',
+    email: 'thomasalwyndavis@gmail.com'
+};
+// Because we have not set a `id` the server will call
+// POST /user with a payload of {name:'Thomas', email: 'thomasalwyndavis@gmail.com'}
+// The server should save the data and return a response containing the new `id`
+user.save(userDetails, {
+    success: function (user) {
+        alert(user.toJSON());
+    }
+})
+// Here we have set the `id` of the model
+var user = new Usermodel({
+    id: 1,
+    name: 'Thomas',
+    email: 'thomasalwyndavis@gmail.com'
+});
+
+// Let's change the name and update the server
+// Because there is `id` present, Backbone.js will fire
+// PUT /user/1 with a payload of `{name: 'Davis', email: 'thomasalwyndavis@gmail.com'}`
+user.save({name: 'Davis'}, {
+    success: function (model) {
+        alert(user.toJSON());
+    }
+});</pre>
+<p>[/codesyntax]</p>
+<h2>View</h2>
+<p>官方对于View的定义：</p>
+<blockquote><p>Backbone views are used to reflect what your applications' data models look like. They are also used to listen to events and react accordingly. This tutorial will not be addressing how to bind models and collections to views but will focus on view functionality and how to use views with a JavaScript templating library, specifically<a href="http://documentcloud.github.com/underscore/#template">Underscore.js's _.template</a>.</p></blockquote>
+<p>简而言之Backbone.js的View即负责显示，又负责事件的监听和反应。（这真的是view么？！）</p>
+<p>View的功能点包含了：</p>
+<ul>
+<li>可重用的模板代码</li>
+<li>HTML元素事件的绑定监听</li>
+<li>HTML页面代码的渲染</li>
+</ul>
+<p>简单来说，其工作的流程可以是：</p>
+<ul>
+<li>在页面上引入可重用的模板代码</li>
+<li>在页面上加入自定义id的div元素，作为渲染输出的父节点</li>
+<li>编写JavaScript代码，将HTML事件绑定到View对象中，并编写render函数渲染HTML页面</li>
+</ul>
+<p>给几段代码：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>&lt;script type="text/template" id="search_template"&gt;
+    &lt;!-- Access template variables with &lt;%= %&gt; --&gt;
+    &lt;label&gt;&lt;%= search_label %&gt;&lt;/label&gt;
+    &lt;input type="text" id="search_input" /&gt;
+    &lt;input type="button" id="search_button" value="Search" /&gt;
+&lt;/script&gt;
+
+&lt;div id="search_container"&gt;&lt;/div&gt;
+
+&lt;script type="text/javascript"&gt;
+     SearchView = Backbone.View.extend({
+        initialize: function(){
+            this.render();
+        },
+        render: function(){
+            //Pass variables in using Underscore.js Template
+            var variables = { search_label: "My Search" };
+            // Compile the template using underscore
+            var template = _.template( $("#search_template").html(), variables );
+            // Load the compiled HTML into the Backbone "el"
+            this.$el.html( template );
+        },
+        events: {
+            "click input[type=button]": "doSearch"  
+        },
+        doSearch: function( event ){
+            // Button clicked, you can access the element that was clicked with event.currentTarget
+            alert( "Search for " + $("#search_input").val() );
+        }
+    });
+
+    var search_view = new SearchView({ el: $("#search_container") });
+&lt;/script&gt;</pre>
+<p>[/codesyntax]</p>
+<h2>Collection</h2>
+<p>官方的说明：</p>
+<blockquote><p>Backbone collections are simply an ordered set of <a href="http://backbonetutorials.com/what-is-a-model">models</a>. Such that it can be used in situations such as;</p>
+<ul>
+<li>Model: Student, Collection: ClassStudents</li>
+<li>Model: Todo Item, Collection: Todo List</li>
+<li>Model: Animal, Collection: Zoo</li>
+</ul>
+<p>Typically your collection will only use one type of model but models themselves are not limited to a type of collection;</p>
+<ul>
+<li>Model: Student, Collection: Gym Class</li>
+<li>Model: Student, Collection: Art Class</li>
+<li>Model: Student, Collection: English Class</li>
+</ul>
+</blockquote>
+<p>简单来说就是Model的聚合，没啥意思。给个例子：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>    var Song = Backbone.Model.extend({
+    defaults: {
+        name: "Not specified",
+        artist: "Not specified"
+    },
+    initialize: function(){
+        console.log("Music is the answer");
+    }
+});
+
+var Album = Backbone.Collection.extend({
+    model: Song
+});
+
+var song1 = new Song({ name: "How Bizarre", artist: "OMC" });
+var song2 = new Song({ name: "Sexual Healing", artist: "Marvin Gaye" });
+var song3 = new Song({ name: "Talk It Over In Bed", artist: "OMC" });
+
+var myAlbum = new Album([ song1, song2, song3]);
+console.log( myAlbum.models ); // [song1, song2, song3]</pre>
+<p>[/codesyntax]</p>
+<h2>Router</h2>
+<p>看看官方的说明：</p>
+<blockquote><p>Backbone routers are used for routing your applications URL's when using hash tags(#). In the traditional MVC sense they don't necessarily fit the semantics and if you have read "<a href="http://backbonetutorials.com/what-is-a-view">What is a view?</a>" it will elaborate on this point. Though a Backbone "router" is still very useful for any application/feature that needs URL routing/history capabilities.</p></blockquote>
+<p>实质上，router对于组织项目结构、开发来说没什么意义，它只是使用了浏览器的history功能，将ajax请求友好地映射到浏览器地址栏上而已。</p>
+<p>看个例子就明白了：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>    var AppRouter = Backbone.Router.extend({
+    routes: {
+        "posts/:id": "getPost",
+        "*actions": "defaultRoute" // Backbone will try match the route above first
+    }
+});
+// Instantiate the router
+var app_router = new AppRouter;
+app_router.on('route:getPost', function (id) {
+    // Note the variable in the route definition being passed in here
+    alert( "Get post number " + id );   
+});
+app_router.on('route:defaultRoute', function (actions) {
+    alert( actions ); 
+});
+// Start Backbone history a necessary step for bookmarkable URL's
+Backbone.history.start();</pre>
+<p>[/codesyntax]</p>
+<h2>Conclusion</h2>
+<p>纵观上述内容，大家不难看出，Backbone.js其实是一个很简单的框架，对于程序来说，有用的就只有Model和View这两块而已。而Model在backbone中相对比较干净点，干的都是“Model”这个概念应该干的事情。View就很苦逼了，不但要做渲染，还等于兼容了Controller的工作，这直接导致了显示渲染的代码和控制的代码耦合得非常紧密。对于大项目的制作来说，这绝对是不可接受的。</p>
+<p>结论就是做一个小的，快速开发的项目，Backbone.js尚可，大项目的话就不要使用它了。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2014/02/backbone-js/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

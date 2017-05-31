@@ -1,0 +1,573 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Netty | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2013/08/netty/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2013/08/netty/">Netty</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>08 Aug 2013</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Java">Java</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Netty">Netty</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>实在想不出来名字叫啥，就写Netty吧，反正我也不准备分篇，就全写在这篇里好了。</p>
+<h2>1. 介绍</h2>
+<p>Netty的官网：<a title="netty.io" href="http://netty.io" target="_blank">netty.io</a></p>
+<p>Netty的github页：<a title="netty/netty · GitHub" href="https://github.com/netty/netty" target="_blank">netty/netty · GitHub</a></p>
+<p>文档：<a href="http://netty.io/wiki/" target="_blank">http://netty.io/wiki/</a></p>
+<p>官方的3.xTutorial：<a href="http://netty.io/3.6/guide/" target="_blank">http://netty.io/3.6/guide/</a>，这篇文档里零零碎碎讲了很多，不过没啥系统，能看就看</p>
+<p>官方的<a href="https://github.com/netty/netty/tree/netty-4.0.6.Final" target="_blank">4.0.6.Final版本</a>上个礼拜刚出来，4.x版本也慢慢开始有稳定版本了。3.x的版本和4.x的版本互相不兼容，我暂时没涉足4.x的版本。我玩的版本是3.6.5.Final，3.x的最后一个版本是3.6.6.Final。</p>
+<p>官方介绍：</p>
+<blockquote><p>Netty is a NIO client server framework which enables quick and easy development of network applications such as protocol servers and clients. It greatly simplifies and streamlines network programming such as TCP and UDP socket server.</p></blockquote>
+<p>关于同作者参与制作的两款NIO框架，netty和mina之间的性能测试：<a title="NIO系列6：流行 NIO Framework netty 和 mina 性能测评与分析" href="http://blog.csdn.net/mindfloating/article/details/8622930" target="_blank">NIO系列6：流行 NIO Framework netty 和 mina 性能测评与分析</a></p>
+<p>不得不吐槽，netty的文档实在是，太少了，而且还很渣，受不了。。。</p>
+<p>很棒的学习netty的资料：</p>
+<ul>
+<li><span style="line-height: 12px;"><a title="Netty学习专题系列导航" href="http://www.coderli.com/netty-navi" target="_blank">Netty学习专题系列导航</a><br />
+</span></li>
+<li><a title="Java NIO Netty实现过程分析" href="http://www.qqread.com/java/2010/08/w494875.html" target="_blank">Java NIO Netty实现过程分析</a></li>
+</ul>
+<p>关于如何在netty中使用protobuf来进行消息通讯：<a title="在Netty中使用Protobuf" href="http://xenojoshua.com/2013/08/using-protobuf-in-netty/" target="_blank">在Netty中使用Protobuf</a></p>
+<p>我的开源项目，我做了一个基于Java和Netty的服务端框架，并同步做了一个Sample项目，两个都开源在github上：</p>
+<ul>
+<li><a href="https://github.com/agreatfool/XJF" target="_blank"><span style="line-height: 12px;">XJF</span></a></li>
+<li><a href="https://github.com/agreatfool/XJF-Sample" target="_blank">XJF-Sample</a></li>
+</ul>
+<h2>2. 架构</h2>
+<p>接下来我们简单过下netty的设计架构。</p>
+<h4>2.1 核心思想</h4>
+<p>核心思想就是围绕着两个概念，channel和nio。</p>
+<ul>
+<li>channel就是netty中抽象的连接的概念，netty中你不需要关心channel是什么连接（TCP？UDP？），channel就是建立的连接，能从里面读数据，也能向里面写数据（ServerBootstrap这个Helper类用来处理TCP连接，而ConnectionlessBoostrap则是用来处理UDP连接的）</li>
+<li>当你有了channel（获得到连接，可以开始读取、写入数据）之后，你就能使用异步事件机制来处理后续的IO（NIO），这就是netty最重要的设计思想，尽量使用异步处理来提高吞吐效率</li>
+</ul>
+<h4>2.2 消息流转</h4>
+<p>当然，channel还仅仅只是一个连接而已，整个消息的流转过程还是有点小复杂的，我们来看下：</p>
+<ul>
+<li>服务器启动，生成Boss线程（一个服务器端口对应一个）
+<ul>
+<li>--- Boss线程接收到客户端连接 --- 生成Channel --- 交给Worker线程池（多个Worker线程）来分配处理
+<ul>
+<li>Worker线程 --- 读完已接收的消息数据到ChannelBuffer --- 触发ChannelPipeline中的ChannelHandler链来处理消息数据
+<ul>
+<li>假设你的应用有heavy business，响应速度比较慢的话，你还需要在业务handler上添加一层业务逻辑的worker线程池，使用MemoryAwareThreadPoolExecutor</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>换个程序点的流程：</p>
+<ul>
+<li><span style="line-height: 12px;">Bootstrap启动服务器，与ChannelFactory一并初始化，ChannelFactory里带有两个线程池</span>
+<ul>
+<li>boss线程池中的boss线程得到请求（一个端口一个线程），创建Channel对象（连接），并交予worker线程池的线程（随机）进行处理
+<ul>
+<li>worker线程将Channel内的消息读出装填到ChannelBuffer中，然后交予ChannelPiplineFactory创建出来的ChannelPipline处理
+<ul>
+<li>ChannelPipline按UpStream和DownStream的方向，将Channel按ChannelPipline里注册的ChannelHandler顺序，一个个过
+<ul>
+<li>各个ChannelHandler按内部实现的ChannelEvent处理器，进行各个事件的处理
+<ul>
+<li>如果ChannelPipline内还有heavy business的话，使用MemoryAwareThreadPoolExecutor线程池来队列响应缓慢的ChannelHandler</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4>2.3 核心组件</h4>
+<p>下面列一下Netty里的核心组件类，请结合上面的流转过程，将它们一个个放进对应的步骤中：</p>
+<ul>
+<li>ServerBootstrap、ClientBootstrap：服务器、客户端的启动Helper类</li>
+<li>ChannelFactory：创建Channel实例的工厂类</li>
+<li>Executors：创建线程池的Helper类</li>
+<li>Channel：你可以理解为netty里的连接</li>
+<li>ChannelGroup：Channel的组，可以用来进行连接管理和批量操作</li>
+<li>ChannelPipelineFactory：创建ChannelPipline的工厂类</li>
+<li>ChannelEvent：ChannelPipline中的事件类</li>
+<li>ChannelHandler：注册在ChannelPipline中，用来处理ChannelEvent的处理器类</li>
+<li>ChannelPipeline：处理Channel中的消息的事件管道类</li>
+<li>ChannelBuffer：Channel中消息读取和写入的缓冲类</li>
+<li>Codec Framework：消息的序列化和反序列化类系列</li>
+<li>MemoryAwareThreadPoolExecutor：消息处理的heavy logic线程池类</li>
+<li>OrderedMemoryAwareThreadPoolExecutor：同上，执行顺序严格限定的线程池</li>
+</ul>
+<h2>3. 核心组件</h2>
+<h4>3.1 <a href="http://netty.io/3.6/api/org/jboss/netty/bootstrap/package-summary.html" target="_blank">Bootstrap</a></h4>
+<p>Bootstrap类是服务器、客户端的启动Helper类。查看源代码你会发现，netty的Bootstrap类一共只有4个，在org.jboss.netty.bootstrap包下。分别是：</p>
+<ul>
+<li>Bootstrap：基类</li>
+<li>ClientBootstrap：客户端Helper，结合NioClientSocketChannelFactory使用</li>
+<li>ConnectionlessBootstrap：UDP的服务端Helper，结合NioDatagramChannelFactory使用</li>
+<li>ServerBootstrap：服务端Helper，结合NioServerSocketChannelFactory使用</li>
+</ul>
+<p>参考<a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioServerSocketChannelFactory.html" target="_blank">NioServerSocketChannelFactory</a>，正确的关闭一个服务器的方法是：</p>
+<blockquote><p>To shut down a service gracefully, you should do the following:</p>
+<ol>
+<li>unbind all channels created by the factory,</li>
+<li>close all child channels accepted by the unbound channels, and (these two steps so far is usually done using <a href="http://netty.io/3.6/api/org/jboss/netty/channel/group/ChannelGroup.html#close()"><code>ChannelGroup.close()</code></a>)</li>
+<li>call <a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioServerSocketChannelFactory.html#releaseExternalResources()"><code>releaseExternalResources()</code></a>.</li>
+</ol>
+<p>Please make sure not to shut down the executor until all channels are closed. Otherwise, you will end up with a <a title="class or interface in java.util.concurrent" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/RejectedExecutionException.html?is-external=true"><code>RejectedExecutionException</code></a> and the related resources might not be released properly.</p></blockquote>
+<h5>3.1.1 Options</h5>
+<p>Bootstrap在实例化之后，可以使用setOption来调整其参数，这里简单收集下参数列表。因为官方文档上很零碎，都需要自己整理。</p>
+<h5>3.1.2 <a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelConfig.html" target="_blank">ChannelConfig</a></h5>
+<table border="1" cellspacing="0" cellpadding="6">
+<tbody>
+<tr>
+<th><span style="font-size: x-small;">Name</span></th>
+<th><span style="font-size: x-small;">Associated setter method</span></th>
+</tr>
+<tr>
+<td><code>"bufferFactory"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelConfig.html#setBufferFactory(org.jboss.netty.buffer.ChannelBufferFactory)"><code>setBufferFactory(ChannelBufferFactory)</code></a></td>
+</tr>
+<tr>
+<td><code>"connectTimeoutMillis"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelConfig.html#setConnectTimeoutMillis(int)"><code>setConnectTimeoutMillis(int)</code></a></td>
+</tr>
+<tr>
+<td><code>"pipelineFactory"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelConfig.html#setPipelineFactory(org.jboss.netty.channel.ChannelPipelineFactory)"><code>setPipelineFactory(ChannelPipelineFactory)</code></a></td>
+</tr>
+</tbody>
+</table>
+<h5>3.1.3 <a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html" target="_blank">SocketChannelConfig</a></h5>
+<table border="1" cellspacing="0" cellpadding="6">
+<tbody>
+<tr>
+<th><span style="font-size: x-small;">Name</span></th>
+<th><span style="font-size: x-small;">Associated setter method</span></th>
+</tr>
+<tr>
+<td><code>"keepAlive"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html#setKeepAlive(boolean)"><code>setKeepAlive(boolean)</code></a></td>
+</tr>
+<tr>
+<td><code>"reuseAddress"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html#setReuseAddress(boolean)"><code>setReuseAddress(boolean)</code></a></td>
+</tr>
+<tr>
+<td><code>"soLinger"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html#setSoLinger(int)"><code>setSoLinger(int)</code></a></td>
+</tr>
+<tr>
+<td><code>"tcpNoDelay"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html#setTcpNoDelay(boolean)"><code>setTcpNoDelay(boolean)</code></a></td>
+</tr>
+<tr>
+<td><code>"receiveBufferSize"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html#setReceiveBufferSize(int)"><code>setReceiveBufferSize(int)</code></a></td>
+</tr>
+<tr>
+<td><code>"sendBufferSize"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html#setSendBufferSize(int)"><code>setSendBufferSize(int)</code></a></td>
+</tr>
+<tr>
+<td><code>"trafficClass"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/SocketChannelConfig.html#setTrafficClass(int)"><code>setTrafficClass(int)</code></a></td>
+</tr>
+</tbody>
+</table>
+<h5>3.1.4 <a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioSocketChannelConfig.html" target="_blank">NioSocketChannelConfig</a></h5>
+<table border="1" cellspacing="0" cellpadding="6">
+<tbody>
+<tr>
+<th><span style="font-size: x-small;">Name</span></th>
+<th><span style="font-size: x-small;">Associated setter method</span></th>
+</tr>
+<tr>
+<td><code>"writeBufferHighWaterMark"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioChannelConfig.html#setWriteBufferHighWaterMark(int)"><code>NioChannelConfig.setWriteBufferHighWaterMark(int)</code></a></td>
+</tr>
+<tr>
+<td><code>"writeBufferLowWaterMark"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioChannelConfig.html#setWriteBufferLowWaterMark(int)"><code>NioChannelConfig.setWriteBufferLowWaterMark(int)</code></a></td>
+</tr>
+<tr>
+<td><code>"writeSpinCount"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioChannelConfig.html#setWriteSpinCount(int)"><code>NioChannelConfig.setWriteSpinCount(int)</code></a></td>
+</tr>
+<tr>
+<td><code>"receiveBufferSizePredictor"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioSocketChannelConfig.html#setReceiveBufferSizePredictor(org.jboss.netty.channel.ReceiveBufferSizePredictor)"><code>setReceiveBufferSizePredictor(ReceiveBufferSizePredictor)</code></a></td>
+</tr>
+<tr>
+<td><code>"receiveBufferSizePredictorFactory"</code></td>
+<td><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioSocketChannelConfig.html#setReceiveBufferSizePredictorFactory(org.jboss.netty.channel.ReceiveBufferSizePredictorFactory)"><code>setReceiveBufferSizePredictorFactory(ReceiveBufferSizePredictorFactory)</code></a></td>
+</tr>
+</tbody>
+</table>
+<h4>3.2. <a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelFactory.html" target="_blank">ChannelFactory</a></h4>
+<p>ChannelFactory是创建Channel实例的工厂类。根据服务器和客户端类型的不同，使用的工厂类也各不相同。</p>
+<p>ChannelFactory分为NIO和OIO两种，一般来说，都使用NIO。</p>
+<p>经常使用的一般是下面三种：</p>
+<ul>
+<li><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioServerSocketChannelFactory.html" target="_blank">NioServerSocketChannelFactory</a>：初始化需要两个线程池，一个boss（一个线程绑定一个端口，根据服务器绑定的端口，可能需要多个boss线程），一个worker</li>
+<li><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioClientSocketChannelFactory.html" target="_blank">NioClientSocketChannelFactory</a>：基本上和服务端的工厂类一致，也需要两个线程池</li>
+<li><a href="http://netty.io/3.6/api/org/jboss/netty/channel/socket/nio/NioDatagramChannelFactory.html" target="_blank">NioDatagramChannelFactory</a>：初始化只需要一个线程池就够了，给worker使用，因为不需要boss来分配连接</li>
+</ul>
+<h4>3.3. <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/util/concurrent/Executors.html" target="_blank">Executors</a></h4>
+<p>这东西就是 <a href="http://docs.oracle.com/javase/1.5.0/docs/api/java/util/concurrent/Executors.html" target="_blank">java.util.concurrent.Executors</a> ，用来辅助创建线程池。</p>
+<h4>3.4. <a href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html" target="_blank">Channel</a></h4>
+<p>Channel是一个非常重要的对象，就是netty里的连接。</p>
+<p>A channel provides a user:</p>
+<ul>
+<li>the current state of the channel (e.g. is it open? is it connected?),</li>
+<li>the <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelConfig.html">configuration parameters</a> of the channel (e.g. receive buffer size),</li>
+<li>the I/O operations that the channel supports (e.g. read, write, connect, and bind), and</li>
+<li>the <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelPipeline.html"><code>ChannelPipeline</code></a> which handles all <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelEvent.html">I/O events and requests</a> associated with the channel.</li>
+</ul>
+<h4>3.5. <a href="http://netty.io/3.6/api/org/jboss/netty/channel/group/ChannelGroup.html" target="_blank">ChannelGroup</a></h4>
+<p>如其名，主要用来维护Channel组，并可以执行批量操作。</p>
+<blockquote><p>A thread-safe <a title="class or interface in java.util" href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html?is-external=true"><code>Set</code></a> that contains open <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a>s and provides various bulk operations on them. Using <a title="interface in org.jboss.netty.channel.group" href="http://netty.io/3.6/api/org/jboss/netty/channel/group/ChannelGroup.html"><code>ChannelGroup</code></a>, you can categorize <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a>s into a meaningful group (e.g. on a per-service or per-state basis.) A closed <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a> is automatically removed from the collection, so that you don't need to worry about the life cycle of the added <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a>. A <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a> can belong to more than one <a title="interface in org.jboss.netty.channel.group" href="http://netty.io/3.6/api/org/jboss/netty/channel/group/ChannelGroup.html"><code>ChannelGroup</code></a>.</p></blockquote>
+<h4>3.6. <a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelPipelineFactory.html" target="_blank">ChannelPipelineFactory</a></h4>
+<p>为新创建的Channel创建对应的ChannelPipline的工厂类，在Bootstrap实例化的时候就被分配给Bootstrap，负责为服务器或者客户端提供Pipline。</p>
+<blockquote><p>When a <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ServerChannel.html">server-side channel</a> accepts a new incoming connection, a new child channel is created for each newly accepted connection. A new child channel uses a new <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelPipeline.html"><code>ChannelPipeline</code></a>, which is created by the <code><a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelPipelineFactory.html">ChannelPipelineFactory</a> </code>specified in the server-side channel's <a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelConfig.html#getPipelineFactory()"><code>"pipelineFactory"</code></a> option.</p>
+<p>Also, when a <a title="class in org.jboss.netty.bootstrap" href="http://netty.io/3.6/api/org/jboss/netty/bootstrap/ClientBootstrap.html"><code>ClientBootstrap</code></a> or <a title="class in org.jboss.netty.bootstrap" href="http://netty.io/3.6/api/org/jboss/netty/bootstrap/ConnectionlessBootstrap.html"><code>ConnectionlessBootstrap</code></a> creates a new channel, it uses the <a href="http://netty.io/3.6/api/org/jboss/netty/bootstrap/Bootstrap.html#getPipelineFactory()"><code>"pipelineFactory"</code></a> property to create a new <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelPipeline.html"><code>ChannelPipeline</code></a> for each new channel.</p></blockquote>
+<h4>3.7. <a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelEvent.html" target="_blank">ChannelEvent</a></h4>
+<p>流转在ChannelPipline中的事件，由注册在ChannelPipline中的ChannelHandler来负责处理。事件也分为UpStream和DownStream两种，我们会在讲Pipline的时候进行详细分解。</p>
+<p>详细的事件分类和事件类型，请参考官方文档。</p>
+<h4>3.8. <a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelHandler.html" target="_blank">ChannelHandler</a></h4>
+<p>注册在ChannelPipline中的处理器，用来处理或者截取ChannelEvent进行处理，返回值永远是一个ChannelEvent，交由Pipline中注册的下一个处理器进行处理。</p>
+<blockquote><p>Handles or intercepts a <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelEvent.html"><code>ChannelEvent</code></a>, and sends a <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelEvent.html"><code>ChannelEvent</code></a> to the next handler in a <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelPipeline.html"><code>ChannelPipeline</code></a>.</p></blockquote>
+<p>这里的Handler可以做的事情应该说是五花八门，什么都有。包含了解决粘包，解码，获取消息，进行处理，加码，进行发送等等。凡是收到消息进行响应的过程（UpStream）和发送消息进行通知的过程（DownStream）都由Handler处理。</p>
+<p>几个附属于ChannelHandler的概念，需要了解的，请阅读官方文档：</p>
+<ul>
+<li><span style="line-height: 12px;">Sub-types<br />
+</span></li>
+<li>Context</li>
+<li>State management</li>
+<li>Using an attachment</li>
+<li>Using a ChannelLocal</li>
+<li>The @Sharable annotation</li>
+</ul>
+<h4>3.9. <a href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelPipeline.html" target="_blank">ChannelPipeline</a></h4>
+<p>ChannelPipline是注册了一系列用来处理Channel内消息事件的管线。这根管线内根据方向，分为UpStream和DownStream两种。</p>
+<ul>
+<li><span style="line-height: 12px;">UpStream：向上的数据流，也就是客户端向服务器发送的数据流，会由pipline中注册的handler的第一个执行到最后一个，当然会被执行的都是上行处理handler或者双向handler</span></li>
+<li>DownStream：向下的数据流，也就是服务器向客户端发送的数据流，会由pipline中注册的handler的最后一个执行到第一个，会被执行的都是下行处理handler或者双向handler</li>
+</ul>
+<p>我们来看一张Pipline的flow图：</p>
+<p><a href="/uploads/2013/08/PIPLINE_FLOW.jpg"><img class="alignnone size-full wp-image-5520" alt="PIPLINE_FLOW" src="/assets/PIPLINE_FLOW.jpg" width="450" height="536" /></a></p>
+<p>&nbsp;</p>
+<p>[codesyntax lang="java5"]</p>
+<pre>return new ChannelPipelineFactory() {
+    public ChannelPipeline getPipeline() throws Exception {
+        ChannelPipeline pipeline = Channels.pipeline();
+
+        pipeline.addLast("frameDecoder", new ProtobufVarint32FrameDecoder());
+        pipeline.addLast("protobufDecoder", new ProtobufDecoder(Communication.XjfMessage.getDefaultInstance()));
+
+        pipeline.addLast("frameEncoder", new ProtobufVarint32LengthFieldPrepender());
+        pipeline.addLast("protobufEncoder", new ProtobufEncoder());
+
+        pipeline.addLast("handler", new XjfNettyServerHandler());
+
+        return pipeline;
+    }
+};</pre>
+<p>[/codesyntax]</p>
+<p>上面这段代码中，UpStream会经过"frameDecoder"然后是"protobufDecoder"然后到"handler"，结束。而DownStream则会经过"handler"然后是"protobufEncoder"然后是"frameEncoder"，结束。</p>
+<h4>3.10. <a href="http://netty.io/3.6/api/org/jboss/netty/buffer/ChannelBuffer.html" target="_blank">ChannelBuffer</a></h4>
+<p>ChannelBuffer用来存储并操作读写的网络数据。</p>
+<ul>
+<li><a href="http://netty.io/3.6/api/org/jboss/netty/buffer/HeapChannelBuffer.html" target="_blank">HeapChannelBuffer</a>：是Netty读网络数据时默认使用的ChannelBuffer，这里的Heap就是Java堆的意思，因为 读SocketChannel的数据是要经过ByteBuffer的，而ByteBuffer实际操作的就是个byte数组，所以 ChannelBuffer的内部就包含了一个byte数组，使得ByteBuffer和ChannelBuffer之间的转换是零拷贝方式。HeapChannelBuffer是个大小固定的buffer，为了不至于分配的Buffer的 大小不太合适，Netty在分配Buffer时会参考上次请求需要的大小。</li>
+<li><a href="http://netty.io/3.6/api/org/jboss/netty/buffer/DynamicChannelBuffer.html" target="_blank">DynamicChannelBuffer</a>：相比于HeapChannelBuffer，DynamicChannelBuffer可动态自适 应大 小。对于在DecodeHandler中的写数据操作，在数据大小未知的情况下，通常使用DynamicChannelBuffer。</li>
+</ul>
+<h4>3.11. <a href="http://docs.jboss.org/netty/3.1/guide/html/architecture.html#d0e2063" target="_blank">Codec Framework</a></h4>
+<p>从业务逻辑代码中分离协议处理部分是一个很不错的想法。然而如果一切从零开始便会遭遇到实现上的复杂性。你不得不处理分段的消息。一些协议是多层的（例如构建在其他低层协议之上的协议）。一些协议过于复杂以致难以在一台主机（single state machine）上实现。</p>
+<p>因此，一个好的网络应用框架应该提供一种可扩展，可重用，可单元测试并且是多层的codec框架，为用户提供易维护的codec代码。Netty提供了一组构建在其核心模块之上的codec实现，这些简单的或者高级的codec实现帮你解决了大部分在你进行协议处理开发过程会遇到的问题，无论这些协议是简单的还是复杂的，二进制的或是简单文本的。</p>
+<p>参考：<a href="http://netty.io/3.6/api/org/jboss/netty/handler/codec/frame/FrameDecoder.html" target="_blank">FrameDecoder</a>，<a href="http://netty.io/3.6/api/org/jboss/netty/handler/codec/frame/FrameDecoder.html" target="_blank">FrameEncoder</a></p>
+<h4>3.12. <a href="http://netty.io/3.6/api/org/jboss/netty/handler/execution/MemoryAwareThreadPoolExecutor.html" target="_blank">MemoryAwareThreadPoolExecutor</a></h4>
+<p>这个线程池在使用的时候是放在ChannelPipline中，用来队列heavy business logic的ChannelHandler的，因为netty内部的异步事件都基于高响应的基础来进行设计的，如果某一个ChannelHandler在响应上花了很长时间的话，某一个线程就会被卡死在那个点上，无法进行后续请求的响应，那么系统的吞吐量就会明显下降。这个时候，我们就需要使用线程池来队列执行响应缓慢的heavy logic ChannelHandler。</p>
+<p>这个线程池是基于内存消耗来判断是否队列需要阻塞。可控制Executor中待处理任务的上限（超过上限时，后续进来的任务将被阻塞），并可控制单个Channel待处理任务的上限。</p>
+<p>官方文档：</p>
+<blockquote><p>A <a title="class or interface in java.util.concurrent" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/ThreadPoolExecutor.html?is-external=true"><code>ThreadPoolExecutor</code></a> which blocks the task submission when there's too many tasks in the queue. Both per-<a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a> and per-<a title="class or interface in java.util.concurrent" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executor.html?is-external=true"><code>Executor</code></a> limitation can be applied.</p>
+<p>When a task (i.e. <a title="class or interface in java.lang" href="http://docs.oracle.com/javase/7/docs/api/java/lang/Runnable.html?is-external=true"><code>Runnable</code></a>) is submitted, <a title="class in org.jboss.netty.handler.execution" href="http://netty.io/3.6/api/org/jboss/netty/handler/execution/MemoryAwareThreadPoolExecutor.html"><code>MemoryAwareThreadPoolExecutor</code></a> calls <a href="http://netty.io/3.6/api/org/jboss/netty/util/ObjectSizeEstimator.html#estimateSize(java.lang.Object)"><code>ObjectSizeEstimator.estimateSize(Object)</code></a> to get the estimated size of the task in bytes to calculate the amount of memory occupied by the unprocessed tasks.</p>
+<p>If the total size of the unprocessed tasks exceeds either per-<a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a> or per-<a title="class or interface in java.util.concurrent" href="http://docs.oracle.com/javase/7/docs/api/java/util/concurrent/Executor.html?is-external=true"><code>Executor</code></a> threshold, any further <a href="http://netty.io/3.6/api/org/jboss/netty/handler/execution/MemoryAwareThreadPoolExecutor.html#execute(java.lang.Runnable)"><code>execute(Runnable)</code></a> call will block until the tasks in the queue are processed so that the total size goes under the threshold.</p></blockquote>
+<p>这个线程池的执行顺序是没有保证的：</p>
+<blockquote><p>Please note that this executor does not maintain the order of the <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/ChannelEvent.html"><code>ChannelEvent</code></a>s for the same <a title="interface in org.jboss.netty.channel" href="http://netty.io/3.6/api/org/jboss/netty/channel/Channel.html"><code>Channel</code></a>. For example, you can even receive a <code>"channelClosed"</code> event before a <code>"messageReceived"</code> event, as depicted by the following diagram. For example, the events can be processed as depicted below:</p></blockquote>
+<p><a href="/uploads/2013/08/NOT_ORDERED.png"><img class="alignnone  wp-image-5524" alt="NOT_ORDERED" src="/assets/NOT_ORDERED.png" width="629" height="110" /></a></p>
+<h5>3.13.  <a href="http://netty.io/3.6/api/org/jboss/netty/handler/execution/OrderedMemoryAwareThreadPoolExecutor.html" target="_blank">OrderedMemoryAwareThreadPoolExecutor</a></h5>
+<p>基本同上，可以保证同一Channel中处理的事件流的顺序性，这主要是控制事件在异步处理模式下可能出现的错误的事件顺序，但它并不保证同一Channel中的事件都在一个线程中执行（通常也没必要）。</p>
+<p><a href="/uploads/2013/08/ORDERED.png"><img class="alignnone  wp-image-5525" alt="ORDERED" src="/assets/ORDERED.png" width="687" height="107" /></a></p>
+<h2>问题</h2>
+<ul>
+<li><span style="line-height: 12px;">NIO和OIO在netty中究竟差别体现在什么地方？</span></li>
+<li>在使用Netty制作一个保持大量TCP连接的服务器的时候，到底应该怎么管理这么多的连接，并保持其live？</li>
+</ul>
+<h2>资料</h2>
+<ul>
+<li><span style="line-height: 12px;"><a href="http://www.blogjava.net/hankchen/archive/2012/04/08/373572.html" target="_blank">Netty长连接的事件处理顺序问题</a>（基于案例分析的netty架构分析和executor问题分析）<br />
+</span></li>
+<li><a href="http://milk-36.iteye.com/blog/740284" target="_blank">netty 使用注意事项</a>（不得在pipline内构造executor和timeout）</li>
+<li><a href="http://zenzhong8383.blogspot.com/2013/05/netty-experience-zh.html" target="_blank">Netty使用经验</a>（内存控制，输出控制，几个重要瓶颈）</li>
+<li><a href="http://coder.beitown.com/archives/396" target="_blank">Netty游戏服务器开发——利用Channel绑定机制 共享聊天服务器与逻辑服务器信息</a>（真实案例的分析）</li>
+<li><a href="http://stackoverflow.com/questions/15818767/what-events-do-i-need-to-listen-to-in-order-to-reuse-a-client-connection-in-nett" target="_blank">What events do I need to listen to in order to reuse a client connection in Netty (getting “Connection reset by peer”)?</a></li>
+<li><a href="http://blog.csdn.net/shagoo/article/details/8028813" target="_blank">[Java] Netty Websocket Server Javascript Client</a>（websocket的实现）</li>
+<li><a href="http://www.oschina.net/question/12_8749" target="_blank">Netty NIO 框架性能压测-短链接-对比Tomcat</a></li>
+<li><a href="http://www.iamcoding.com/?p=278" target="_blank">利用netty搭建高性能游戏server</a>（简单分析和例子）</li>
+<li><a href="http://stackoverflow.com/questions/10170564/in-netty-we-can-only-write-and-receive-data-less-than-1024bytes-how-we-can-wri" target="_blank">in netty, we can only write and receive data less than 1024bytes: how we can write or receive more?</a>（主要看遇到的问题的解决）</li>
+<li><a href="http://flychao88.iteye.com/blog/1553058" target="_blank">使用JAVA操作netty框架</a>（架构分析）</li>
+<li><a href="https://code.google.com/p/netty-protobuf-rpc/">netty-protobuf-rpc</a>（基于netty的opensource的rpc框架）</li>
+<li><a href="http://www.blogjava.net/yongboy/archive/2012/05/21/378723.html" target="_blank">socketio-netty(socket.io 服务器端JAVA实现) 近期升级手记</a>（socketio的实现）</li>
+<li><a href="http://seeallhearall.blogspot.com/2012/05/netty-tutorial-part-1-introduction-to.html" target="_blank">Netty Tutorial Part 1: Introduction to Netty</a>（非官方）</li>
+<li><a href="http://seeallhearall.blogspot.com/2012/06/netty-tutorial-part-15-on-channel.html" target="_blank">Netty Tutorial Part 1.5: On Channel Handlers and Channel Options</a>（非官方）</li>
+<li><a href="http://rdc.taobao.com/team/jm/archives/423" target="_blank">淘宝 Netty代码分析</a></li>
+<li><a href="http://www.oschina.net/question/109006_26717" target="_blank">测试 netty 多个客户端，轮询发送消息，容易产生异常</a>（已解决）</li>
+<li><a href="http://stackoverflow.com/questions/8655973/latency-in-netty-due-to-passing-requests-from-boss-thread-to-worker-thread" target="_blank">latency in netty due to passing requests from boss thread to worker thread?</a></li>
+<li><a href="http://stackoverflow.com/questions/10336672/netty-different-pipeline-per-udp-datagram" target="_blank">Netty Different Pipeline Per UDP Datagram</a></li>
+<li><a href="http://stackoverflow.com/questions/8056732/how-best-to-specify-a-protobuf-for-use-with-netty-preferably-using-the-built-in" target="_blank">How best to specify a Protobuf for use with Netty (preferably using the built-in protobuf support)</a></li>
+</ul>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2013/08/netty/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

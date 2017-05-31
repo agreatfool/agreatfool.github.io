@@ -1,0 +1,351 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>在OSX下安装PHP-Pear | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2012/02/osx-php-pear-installation/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2012/02/osx-php-pear-installation/">在OSX下安装PHP-Pear</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>15 Feb 2012</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MAC">MAC</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/OSX">OSX</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Pear">Pear</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/PHP">PHP</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2>1. 简介</h2>
+<p>Pear对PHP来说就类似于MacPort对MAC的用处，它可以用来安装和管理PHP的一系列第三方组件。因为我习惯于直接下载源码包进行组件的安装，所以一直都没装PHP的Pear。不过因为很多第三方的组件官方推荐的安装方式都是通过Pear，所以还是有必要安装了解下这个东西。</p>
+<p>说实在的，当我看到这玩意的官方安装guide的时候我真的吓了一跳，日啊，居然要我下一个php脚本，然后用php命令行去跑这个脚本？你就不能给我源码包么？或者是bash脚本也行啊。我的OSX因为使用php5.2.17版本，所以导致了cli和cgi的版本脱节，貌似cgi的安装路径和cli还不一致。所以我不是很想通过cli脚本进行安装。后来发现这个问题他们也考虑到了，有web页面版本的安装脚本。</p>
+<p>官方guide页面：<a title="Manual :: Getting and installing the PEAR package manager" href="http://pear.php.net/manual/en/installation.getting.php" target="_blank">http://pear.php.net/manual/en/installation.getting.php</a></p>
+<h2>2. 通过web脚本安装</h2>
+<p>那么首先就通过web页面进行安装，官方guide里有讲：</p>
+<blockquote><p>If you are running your site at a web hosting provider with no direct access to the server (via local logins, Telnet or SSH), you can use the PEAR Installer using the Web Frontend or <a href="http://pear.php.net/manual/en/installation.shared.php">(S)FTP</a>.</p>
+<p>Go to <a href="http://pear.php.net/go-pear" target="_blank">go-pear</a> and save as <tt>go-pear.php</tt>. Copy <tt>go-pear.php</tt> to your server and open the corresponding URL in your browser, for example <tt>http://example.com/pear/go-pear.php</tt>.</p></blockquote>
+<p>当需要使用web页面进行安装的时候，只要按上面的步骤进行就可以了。</p>
+<p>然后发现这玩意不行，因为项目转移到git的原因，web页面版本的脚本会出问题，问题的原因巨二无比，是因为需要的源代码下不到。报错：</p>
+<blockquote><p>Unknown location: /pear/pear-core/branches/PEAR_1_4/PEAR.php</p></blockquote>
+<p>源代码：<a href="http://svn.php.net/viewvc/pear/pear-core/branches/PEAR_1_4/PEAR.php" target="_blank">http://svn.php.net/viewvc/pear/pear-core/branches/PEAR_1_4/PEAR.php</a> 因为代码迁移的问题而不存在了。所以安装就因为缺少文件而失败了。好了，此路不通，我们换个思路。</p>
+<h2>3. 通过cli脚本安装</h2>
+<p>因为web脚本安装因为源代码的问题而不能进行下去，那么只能通过命令行cli的脚本进行安装。这里下载最新的cli安装脚本：<a href="http://pear.php.net/go-pear.phar" target="_blank">http://pear.php.net/go-pear.phar</a>，然后创建目录/Users/jonathan/prog/pear，将这个脚本扔到这个目录下。执行php go-pear.phar。</p>
+<blockquote>
+<pre>Below is a suggested file layout for your new PEAR installation.  To
+change individual locations, type the number in front of the
+directory.  Type 'all' to change all of them or simply press Enter to
+accept these locations.
+
+ 1. Installation base ($prefix)                   : /Users/jonathan/prog/pear
+ 2. Temporary directory for processing            : /tmp/pear/install
+ 3. Temporary directory for downloads             : /tmp/pear/install
+ 4. Binaries directory                            : /Users/jonathan/prog/pear/bin
+ 5. PHP code directory ($php_dir)                 : /Users/jonathan/prog/pear/share/pear
+ 6. Documentation directory                       : /Users/jonathan/prog/pear/docs
+ 7. Data directory                                : /Users/jonathan/prog/pear/data
+ 8. User-modifiable configuration files directory : /Users/jonathan/prog/pear/cfg
+ 9. Public Web Files directory                    : /Users/jonathan/prog/pear/www
+10. Tests directory                               : /Users/jonathan/prog/pear/tests
+11. Name of configuration file                    : /Users/jonathan/prog/pear/.pearrc
+
+1-11, 'all' or Enter to continue:
+Beginning install...
+
+Configuration written to /Users/jonathan/prog/pear/.pearrc...
+Initialized registry...
+
+Preparing to install...
+installing phar:///Users/jonathan/prog/go-pear.phar/PEAR/go-pear-tarballs/Archive_Tar-1.3.7.tar...
+installing phar:///Users/jonathan/prog/go-pear.phar/PEAR/go-pear-tarballs/Console_Getopt-1.3.0.tar...
+installing phar:///Users/jonathan/prog/go-pear.phar/PEAR/go-pear-tarballs/PEAR-1.9.4.tar...
+installing phar:///Users/jonathan/prog/go-pear.phar/PEAR/go-pear-tarballs/Structures_Graph-1.0.4.tar...
+installing phar:///Users/jonathan/prog/go-pear.phar/PEAR/go-pear-tarballs/XML_Util-1.2.1.tar...
+install ok: channel://pear.php.net/Archive_Tar-1.3.7
+install ok: channel://pear.php.net/Console_Getopt-1.3.0
+install ok: channel://pear.php.net/Structures_Graph-1.0.4
+install ok: channel://pear.php.net/XML_Util-1.2.1
+install ok: channel://pear.php.net/PEAR-1.9.4
+PEAR: Optional feature webinstaller available (PEAR's web-based installer)
+PEAR: Optional feature gtkinstaller available (PEAR's PHP-GTK-based installer)
+PEAR: Optional feature gtk2installer available (PEAR's PHP-GTK2-based installer)
+PEAR: To install optional features use "pear install pear/PEAR#featurename"
+
+******************************************************************************
+WARNING!  The include_path defined in the currently used php.ini does not
+contain the PEAR PHP directory you just specified:
+&lt;/Users/jonathan/prog/pear/share/pear&gt;
+If the specified directory is also not in the include_path used by
+your scripts, you will have problems getting any PEAR packages working.
+
+Current include path           : .:
+Configured directory           : /Users/jonathan/prog/pear/share/pear
+Currently used php.ini (guess) :
+Press Enter to continue: 
+
+** WARNING! Old version found at /Users/jonathan/prog/pear/bin, please remove it or be sure to use the new /Users/jonathan/prog/pear/bin/pear command
+
+The 'pear' command is now at your service at /Users/jonathan/prog/pear/bin/pear
+
+** The 'pear' command is not currently in your PATH, so you need to
+** use '/Users/jonathan/prog/pear/bin/pear' until you have added
+** '/Users/jonathan/prog/pear/bin' to your PATH environment variable.
+
+Run it without parameters to see the available actions, try 'pear list'
+to see what packages are installed, or 'pear help' for help.
+
+For more information about PEAR, see:
+
+http://pear.php.net/faq.php
+
+http://pear.php.net/manual/
+
+Thanks for using go-pear!</pre>
+</blockquote>
+<p>简单看下安装过程，还是有几个问题需要手动处理下。</p>
+<p>首先需要理解下pear的工作原理，pear其实就是一个代码管理工具，它负责的就是将PHP第三方组件的代码下载下来，然后进行位置和版本的管理（PHP的代码不需要编译部署等步骤）。所以我在文章一开始的担心：cgi和cli的PHP不是一个版本，在这里是不需要的。因为只要php.ini配置将pear管理的代码库列入到include_path里去，无论cgi还是cli都能正确识别和执行所需要的PHP组件代码。所以我们要把代码管理库的位置（这里是/Users/jonathan/prog/pear/share/pear），写入到cgi的php.ini的include_path里。</p>
+<p>接下来我们要处理的问题是pear的二进制命令行工具/Users/jonathan/prog/pear/bin/pear并不在系统的PATH里，所以你在命令行里直接打pear命令是没有效果的，这里我们需要修改/etc/profile，将/Users/jonathan/prog/pear/bin写入到PATH里。</p>
+<p>OK，重启机器和php-cgi。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2012/02/osx-php-pear-installation/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

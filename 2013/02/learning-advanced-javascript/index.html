@@ -1,0 +1,1569 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>John Resig - Learning Advanced JavaScript | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2013/02/learning-advanced-javascript/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2013/02/learning-advanced-javascript/">John Resig - Learning Advanced JavaScript</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>28 Feb 2013</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>John Resig最近在他的博客上更新了一个系列学习导读，标题是Learning Advanced JavaScript，感觉写得非常有价值，这里一边学习一边翻译。原帖地址：<a href="http://ejohn.org/apps/learn/" target="_blank">http://ejohn.org/apps/learn/</a></p>
+<h2>索引</h2>
+<ul>
+<li><a href="#pt1">1) Our Goal</a></li>
+<li><a href="#pt2">2) Defining Functions</a></li>
+<li><a href="#pt3">3) Named Functions</a></li>
+<li><a href="#pt4">4) Functions as Objects</a></li>
+<li><a href="#pt5">5) Context</a></li>
+<li><a href="#pt6">6) Instantiation</a></li>
+<li><a href="#pt7">7) Flexible Arguments</a></li>
+<li><a href="#pt8">8) Closures</a></li>
+<li><a href="#pt9">9) Temporary Scope</a></li>
+<li><a href="#pt10">10) Function Prototypes</a></li>
+<li><a href="#pt11">11) Instance Type</a></li>
+<li><a href="#pt12">12) Inheritance</a></li>
+<li><a href="#pt13">13) Built-in Prototypes</a></li>
+<li><a href="#pt14">14) Enforcing Function Context</a></li>
+<li><a href="#pt15">15) Bonus: Function Length</a></li>
+</ul>
+<h2><a name="pt1"></a>1) Our Goal</h2>
+<p>目标：能理解下面的函数：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>// The .bind method from Prototype.js 
+Function.prototype.bind = function(){ 
+  var fn = this, args = Array.prototype.slice.call(arguments), object = args.shift(); 
+  return function(){ 
+    return fn.apply(object, 
+      args.concat(Array.prototype.slice.call(arguments))); 
+  }; 
+};</pre>
+<p>[/codesyntax]</p>
+<p>一些我们能使用的帮助函数：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>assert( true, "I'll pass." ); 
+assert( "truey", "So will I." ); 
+assert( false, "I'll fail." ); 
+assert( null, "So will I." ); 
+log( "Just a simple log", "of", "values.", true ); 
+error( "I'm an error!" );</pre>
+<pre>/*</pre>
+<p>PASS I'll pass.<br />
+PASS So will I.<br />
+FAIL I'll fail.<br />
+FAIL So will I.<br />
+LOG Just a simple log of values. true<br />
+ERROR I'm an error!</p>
+<pre>*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt2"></a>2) Defining Functions</h2>
+<p>我们可以用什么方法定义函数?</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function isNimble(){ return true; } 
+var canFly = function(){ return true; }; 
+window.isDeadly = function(){ return true; }; 
+log(isNimble, canFly, isDeadly);
+/*
+LOG function isNimble(){ return true; } function (){ return true; } function (){ return true; }
+*/</pre>
+<p>[/codesyntax]</p>
+<p>函数定义的顺序是否有影响？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var canFly = function(){ return true; }; 
+window.isDeadly = function(){ return true; }; 
+assert( isNimble() &amp;&amp; canFly() &amp;&amp; isDeadly(), "Still works, even though isNimble is moved." ); 
+function isNimble(){ return true; }
+/*
+PASS Still works, even though isNimble is moved.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>定义的函数在哪里能被访问到？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>assert( typeof canFly == "undefined", "canFly doesn't get that benefit." ); 
+assert( typeof isDeadly == "undefined", "Nor does isDeadly." ); 
+var canFly = function(){ return true; }; 
+window.isDeadly = function(){ return true; };
+/*
+PASS canFly doesn't get that benefit.
+PASS Nor does isDeadly.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>函数能被定义在return语句之下吗？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function stealthCheck(){ 
+  assert( stealth(), "We'll never get below the return, but that's OK!" ); 
+
+  return stealth(); 
+
+  function stealth(){ return true; } 
+} 
+
+stealthCheck();
+/*
+PASS We'll never get below the return, but that's OK!
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt3"></a>3) Named Functions</h2>
+<p>我们可以通过名字，在一个函数内部调用它自己：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function yell(n){ 
+  return n &gt; 0 ? yell(n-1) + "a" : "hiy"; 
+} 
+assert( yell(4) == "hiyaaaa", "Calling the function by itself comes naturally." );
+/*
+PASS Calling the function by itself comes naturally.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>什么是函数的名字？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var ninja = function myNinja(){ 
+  assert( ninja == myNinja, "This function is named two things - at once!" ); 
+}; 
+ninja(); 
+assert( typeof myNinja == "undefined", "But myNinja isn't defined outside of the function." ); 
+log( ninja );
+/*
+PASS This function is named two things - at once!
+PASS But myNinja isn't defined outside of the function.
+LOG function myNinja(){ assert( ninja == myNinja, "This function is named two things - at once!" ); }
+*/</pre>
+<p>[/codesyntax]</p>
+<p>我们甚至可以将其定义为一个对象属性的匿名函数：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var ninja = { 
+  yell: function(n){ 
+    return n &gt; 0 ? ninja.yell(n-1) + "a" : "hiy"; 
+  } 
+}; 
+assert( ninja.yell(4) == "hiyaaaa", "A single object isn't too bad, either." );
+/*
+PASS A single object isn't too bad, either.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>那假设我们将原对象移除的话会发生什么？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var ninja = { 
+  yell: function(n){ 
+    return n &gt; 0 ? ninja.yell(n-1) + "a" : "hiy"; 
+  } 
+}; 
+assert( ninja.yell(4) == "hiyaaaa", "A single object isn't too bad, either." ); 
+
+var samurai = { yell: ninja.yell }; 
+var ninja = null; 
+
+try { 
+  samurai.yell(4); 
+} catch(e){ 
+  assert( false, "Uh, this isn't good! Where'd ninja.yell go?" ); 
+}
+/*
+PASS A single object isn't too bad, either.
+FAIL Uh, this isn't good! Where'd ninja.yell go?
+*/</pre>
+<p>[/codesyntax]</p>
+<p>让我们给匿名函数一个名字！</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var ninja = {
+  yell: function yell(n){
+    return n &gt; 0 ? yell(n-1) + "a" : "hiy";
+  }
+};
+assert( ninja.yell(4) == "hiyaaaa", "Works as we would expect it to!" );
+
+var samurai = { yell: ninja.yell };
+var ninja = null;
+assert( samurai.yell(4) == "hiyaaaa", "The method correctly calls itself." );
+/*
+PASS Works as we would expect it to!
+PASS The method correctly calls itself.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>如果不给匿名函数名字的话会怎么样？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var ninja = { 
+  yell: function(n){ 
+    return n &gt; 0 ? arguments.callee(n-1) + "a" : "hiy"; 
+  } 
+}; 
+assert( ninja.yell(4) == "hiyaaaa", "arguments.callee is the function itself." );
+/*
+PASS arguments.callee is the function itself.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt4"></a>4) Functions as Objects</h2>
+<p>函数和对象究竟有多像？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var obj = {}; 
+var fn = function(){}; 
+assert( obj &amp;&amp; fn, "Both the object and function exist." );
+/*
+PASS Both the object and function exist.
+*/</pre>
+<pre id="pre">var obj = {}; 
+var fn = function(){}; 
+obj.prop = "some value"; 
+fn.prop = "some value"; 
+assert( obj.prop == fn.prop, "Both are objects, both have the property." );
+/*
+PASS Both are objects, both have the property.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>是否可能缓存函数的返回值？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function getElements( name ) { 
+  var results; 
+
+  if ( getElements.cache[name] ) { 
+    results = getElements.cache[name]; 
+  } else { 
+    results = document.getElementsByTagName(name); 
+    getElements.cache[name] = results; 
+  } 
+
+  return results; 
+} 
+getElements.cache = {}; 
+
+log( "Elements found: ", getElements("pre").length ); 
+log( "Cache found: ", getElements.cache.pre.length );
+/*
+LOG Elements found: 76
+LOG Cache found: 76
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：你能缓存这个函数的返回值吗？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function isPrime( num ) { 
+  var prime = num != 1; // Everything but 1 can be prime 
+  for ( var i = 2; i &lt; num; i++ ) { 
+    if ( num % i == 0 ) { 
+      prime = false; 
+      break; 
+    } 
+  } 
+  return prime; 
+} 
+
+assert( isPrime(5), "Make sure the function works, 5 is prime." ); 
+assert( isPrime.cache[5], "Is the answer cached?" );
+/*
+PASS Make sure the function works, 5 is prime.
+ERROR Cannot read property '5' of undefined
+*/</pre>
+<p>[/codesyntax]</p>
+<p>一种缓存方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function isPrime( num ) { 
+  if ( isPrime.cache[ num ] != null ) 
+    return isPrime.cache[ num ]; 
+
+  var prime = num != 1; // Everything but 1 can be prime 
+  for ( var i = 2; i &lt; num; i++ ) { 
+    if ( num % i == 0 ) { 
+      prime = false; 
+      break; 
+    } 
+  } 
+
+  isPrime.cache[ num ] = prime 
+
+  return prime; 
+} 
+
+isPrime.cache = {}; 
+
+assert( isPrime(5), "Make sure the function works, 5 is prime." ); 
+assert( isPrime.cache[5], "Make sure the answer is cached." );
+/*
+PASS Make sure the function works, 5 is prime.
+PASS Make sure the answer is cached.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt5"></a>5) Context</h2>
+<p>当一个函数是一个对象的属性的时候，会发生什么？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var katana = { 
+  isSharp: true, 
+  use: function(){ 
+    this.isSharp = !this.isSharp; 
+  } 
+}; 
+katana.use(); 
+assert( !katana.isSharp, "Verify the value of isSharp has been changed." );
+/*
+PASS Verify the value of isSharp has been changed.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>到底上下文对象具体代表了什么意思？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function katana(){ 
+  this.isSharp = true; 
+} 
+katana(); 
+assert( isSharp === true, "A global object now exists with that name and value." ); 
+
+var shuriken = { 
+  toss: function(){ 
+    this.isSharp = true; 
+  } 
+}; 
+shuriken.toss(); 
+assert( shuriken.isSharp === true, "When it's an object property, the value is set within the object." );
+/*
+PASS A global object now exists with that name and value.
+PASS When it's an object property, the value is set within the object.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>如何改变一个函数的上下文对象？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var object = {}; 
+function fn(){ 
+  return this; 
+} 
+assert( fn() == this, "The context is the global object." ); 
+assert( fn.call(object) == object, "The context is changed to a specific object." );
+/*
+PASS The context is the global object.
+PASS The context is changed to a specific object.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>不同的改变上下文对象的方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function add(a, b){ 
+  return a + b; 
+} 
+assert( add.call(this, 1, 2) == 3, ".call() takes individual arguments" ); 
+assert( add.apply(this, [1, 2]) == 3, ".apply() takes an array of arguments" );
+/*
+PASS .call() takes individual arguments
+PASS .apply() takes an array of arguments
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：如何才能实现一个带回调的循环？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function loop(array, fn){ 
+  for ( var i = 0; i &lt; array.length; i++ ) { 
+    // Implement me! 
+  } 
+} 
+var num = 0; 
+loop([0, 1, 2], function(value){ 
+  assert(value == num++, "Make sure the contents are as we expect it."); 
+  assert(this instanceof Array, "The context should be the full array."); 
+});</pre>
+<p>[/codesyntax]</p>
+<p>一种实现：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function loop(array, fn){ 
+  for ( var i = 0; i &lt; array.length; i++ ) 
+    fn.call( array, array[i], i ); 
+} 
+var num = 0; 
+loop([0, 1, 2], function(value, i){ 
+  assert(value == num++, "Make sure the contents are as we expect it."); 
+  assert(this instanceof Array, "The context should be the full array."); 
+});
+/*
+PASS Make sure the contents are as we expect it.
+PASS The context should be the full array.
+PASS Make sure the contents are as we expect it.
+PASS The context should be the full array.
+PASS Make sure the contents are as we expect it.
+PASS The context should be the full array.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt6"></a>6) Instantiation</h2>
+<p>new操作符究竟做了什么？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){ 
+  this.name = "Ninja"; 
+} 
+
+var ninjaA = Ninja(); 
+assert( !ninjaA, "Is undefined, not an instance of Ninja." ); 
+
+var ninjaB = new Ninja(); 
+assert( ninjaB.name == "Ninja", "Property exists on the ninja instance." );
+/*
+PASS Is undefined, not an instance of Ninja.
+PASS Property exists on the ninja instance.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>我们可以使用"this"将匿名函数的上下文对象指向Ninja对象：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){ 
+  this.swung = false; 
+
+  // Should return true 
+  this.swingSword = function(){ 
+    this.swung = !this.swung; 
+    return this.swung; 
+  }; 
+} 
+
+var ninja = new Ninja(); 
+assert( ninja.swingSword(), "Calling the instance method." ); 
+assert( ninja.swung, "The ninja has swung the sword." ); 
+
+var ninjaB = new Ninja(); 
+assert( !ninjaB.swung, "Make sure that the ninja has not swung his sword." );
+/*
+PASS Calling the instance method.
+PASS The ninja has swung the sword.
+PASS Make sure that the ninja has not swung his sword.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：添加一个方法，为ninja写入一个名字：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(name){ 
+  // Implement! 
+} 
+
+var ninja = new Ninja("John"); 
+assert( ninja.name == "John", "The name has been set on initialization" ); 
+
+ninja.changeName("Bob"); 
+assert( ninja.name == "Bob", "The name was successfully changed." );</pre>
+<p>[/codesyntax]</p>
+<p>添加一个新的属性和方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(name){ 
+  this.changeName = function(name){ 
+    this.name = name; 
+  }; 
+
+  this.changeName( name ); 
+} 
+
+var ninja = new Ninja("John"); 
+assert( ninja.name == "John", "The name has been set on initialization" ); 
+
+ninja.changeName("Bob"); 
+assert( ninja.name == "Bob", "The name was successfully changed." );
+/*
+PASS The name has been set on initialization
+PASS The name was successfully changed.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>当我们忘记使用new操作符的时候，会发生什么？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function User(first, last){ 
+  this.name = first + " " + last; 
+} 
+
+var user = User("John", "Resig"); 
+assert( typeof user == "undefined", "Since new wasn't used, the instance is undefined." );
+/*
+PASS Since new wasn't used, the instance is undefined.
+*/</pre>
+<pre id="pre">function User(first, last){ 
+  this.name = first + " " + last; 
+} 
+
+window.name = "Resig"; 
+var user = User("John", name); 
+
+assert( name == "John Resig", "The name variable is accidentally overridden." );
+/*
+PASS The name variable is accidentally overridden.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>我们必须保证总是使用了new操作符：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function User(first, last){ 
+  if ( !(this instanceof User) ) 
+    return new User(first, last); 
+
+  this.name = first + " " + last; 
+} 
+
+var name = "Resig"; 
+var user = User("John", name); 
+
+assert( user, "This was defined correctly, even if it was by mistake." ); 
+assert( name == "Resig", "The right name was maintained." );
+/*
+PASS This was defined correctly, even if it was by mistake.
+PASS The right name was maintained.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：是否有更其他更通用的方法来做这个事情？</p>
+<p>一种使用arguments.callee的方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function User(first, last){ 
+  if ( !(this instanceof arguments.callee) ) 
+    return new User(first, last); 
+
+  this.name = first + " " + last; 
+} 
+
+var name = "Resig"; 
+var user = User("John", name); 
+
+assert( user, "This was defined correctly, even if it was by mistake." ); 
+assert( name == "Resig", "The right name was maintained." );
+/*
+PASS This was defined correctly, even if it was by mistake.
+PASS The right name was maintained.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt7"></a>7) Flexible Arguments</h2>
+<p>使用可变数量的参数：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function merge(root){ 
+  for ( var i = 1; i &lt; arguments.length; i++ ) 
+    for ( var key in arguments[i] ) 
+      root[key] = arguments[i][key]; 
+  return root; 
+} 
+
+var merged = merge({name: "John"}, {city: "Boston"}); 
+assert( merged.name == "John", "The original name is intact." ); 
+assert( merged.city == "Boston", "And the city has been copied over." );
+/*
+PASS The original name is intact.
+PASS And the city has been copied over.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>如何在一个数组中找到最小/最大的数字？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function smallest(array){ 
+  return Math.min.apply( Math, array ); 
+} 
+function largest(array){ 
+  return Math.max.apply( Math, array ); 
+} 
+assert(smallest([0, 1, 2, 3]) == 0, "Locate the smallest value."); 
+assert(largest([0, 1, 2, 3]) == 3, "Locate the largest value.");
+/*
+PASS Locate the smallest value.
+PASS Locate the largest value.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>另一种方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function smallest(){ 
+  return Math.min.apply( Math, arguments ); 
+} 
+function largest(){ 
+  return Math.max.apply( Math, arguments ); 
+} 
+assert(smallest(0, 1, 2, 3) == 0, "Locate the smallest value."); 
+assert(largest(0, 1, 2, 3) == 3, "Locate the largest value.");
+/*
+PASS Locate the smallest value.
+PASS Locate the largest value.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>啊哦，这里出了什么问题？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function highest(){ 
+  return arguments.sort(function(a,b){ 
+    return b - a; 
+  }); 
+} 
+assert(highest(1, 1, 2, 3)[0] == 3, "Get the highest value."); 
+assert(highest(3, 1, 2, 3, 4, 5)[1] == 4, "Verify the results.");
+/*
+ERROR Object # has no method 'sort'
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：我们需要将类数组的对象转换成真正的数组。有什么javascript内置的函数能帮忙的么？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>// Hint: Arrays have .slice and .splice methods which return new arrays. 
+function highest(){ 
+  return makeArray(arguments).slice(1).sort(function(a,b){ 
+    return b - a; 
+  }); 
+} 
+
+function makeArray(array){ 
+  // Implement me! 
+} 
+
+// Expecting: [3,2,1] 
+assert(highest(1, 1, 2, 3)[0] == 3, "Get the highest value."); 
+// Expecting: [5,4,3,2,1] 
+assert(highest(3, 1, 2, 3, 4, 5)[1] == 4, "Verify the results.");</pre>
+<p>[/codesyntax]</p>
+<p>解决方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function highest(){ 
+  return makeArray(arguments).sort(function(a,b){ 
+    return b - a; 
+  }); 
+} 
+
+function makeArray(array){ 
+  return Array().slice.call( array ); 
+} 
+
+assert(highest(1, 1, 2, 3)[0] == 3, "Get the highest value."); 
+assert(highest(3, 1, 2, 3, 4, 5)[1] == 4, "Verify the results.");
+/*
+PASS Get the highest value.
+PASS Verify the results.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：实现一个乘法函数（第一个参数与最大的数的乘法）</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function multiMax(multi){ 
+  // Make an array of all but the first argument 
+  var allButFirst = ___; 
+
+  // Find the largest number in that array of arguments 
+  var largestAllButFirst = ___; 
+
+  // Return the multiplied result 
+  return multi * largestAllButFirst; 
+} 
+assert( multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)" );</pre>
+<p>[/codesyntax]</p>
+<p>我们可以使用call和apply来制作一个解决方案：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function multiMax(multi){ 
+  // Make an array of all but the first argument 
+  var allButFirst = Array().slice.call( arguments, 1 ); 
+
+  // Find the largest number in that array of arguments 
+  var largestAllButFirst = Math.max.apply( Math, allButFirst ); 
+
+  // Return the multiplied result 
+  return multi * largestAllButFirst; 
+} 
+assert( multiMax(3, 1, 2, 3) == 9, "3*3=9 (First arg, by largest.)" );
+/*
+<b>PASS</b> 3*3=9 (First arg, by largest.)
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt8"></a>8) Closures</h2>
+<p>一个基本的闭包：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var num = 10; 
+
+function addNum(myNum){ 
+  return num + myNum; 
+} 
+
+assert( addNum(5) == 15, "Add two numbers together, one from a closure." );
+/*
+PASS Add two numbers together, one from a closure.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>那为什么这个不正确？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var num = 10; 
+
+function addNum(myNum){ 
+  return num + myNum; 
+} 
+
+num = 15; 
+
+assert( addNum(5) == 15, "Add two numbers together, one from a closure." );
+/*
+FAIL Add two numbers together, one from a closure.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>闭包经常被用在回调函数中：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var results = jQuery("#results").html("&lt;li&gt;Loading...&lt;/li&gt;"); 
+
+jQuery.get("test.html", function(html){ 
+  results.html( html ); 
+  assert( results, "The element to append to, via a closure." ); 
+});
+/*
+I'm from test.html!
+PASS The element to append to, via a closure.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>它们也经常被用在定时器中：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var count = 0; 
+
+var timer = setInterval(function(){ 
+  if ( count &lt; 5 ) { 
+    log( "Timer call: ", count ); 
+    count++; 
+  } else { 
+    assert( count == 5, "Count came via a closure, accessed each step." ); 
+    assert( timer, "The timer reference is also via a closure." ); 
+    clearInterval( timer ); 
+  } 
+}, 100);
+/*
+LOG Timer call: 0
+LOG Timer call: 1
+LOG Timer call: 2
+LOG Timer call: 3
+LOG Timer call: 4
+PASS Count came via a closure, accessed each step.
+PASS The timer reference is also via a closure.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>它们也经常被使用在事件监听中：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var count = 1; 
+var elem = document.createElement("li"); 
+elem.innerHTML = "Click me!"; 
+elem.onclick = function(){ 
+  log( "Click #", count++ ); 
+}; 
+document.getElementById("results").appendChild( elem ); 
+assert( elem.parentNode, "Clickable element appended." );
+/*</pre>
+<p>Click me!<br />
+PASS Clickable element appended.<br />
+LOG Click # 1<br />
+LOG Click # 2</p>
+<pre>*/</pre>
+<p>[/codesyntax]</p>
+<p>在闭包中活用私有变量：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){ 
+  var slices = 0; 
+
+  this.getSlices = function(){ 
+    return slices; 
+  }; 
+  this.slice = function(){ 
+    slices++; 
+  }; 
+} 
+
+var ninja = new Ninja(); 
+ninja.slice(); 
+assert( ninja.getSlices() == 1, "We're able to access the internal slice data." ); 
+assert( ninja.slices === undefined, "And the private data is inaccessible to us." );
+/*
+PASS We're able to access the internal slice data.
+PASS And the private data is inaccessible to us.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>什么是变量的值？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var a = 5; 
+function runMe(a){ 
+ assert( a == ___, "Check the value of a." ); 
+
+ function innerRun(){ 
+   assert( b == ___, "Check the value of b." ); 
+   assert( c == ___, "Check the value of c." ); 
+ } 
+
+ var b = 7; 
+ innerRun(); 
+ var c = 8; 
+} 
+runMe(6); 
+
+for ( var d = 0; d &lt; 3; d++ ) { 
+ setTimeout(function(){ 
+   assert( d == ___, "Check the value of d." ); 
+ }, 100); 
+}</pre>
+<p>[/codesyntax]</p>
+<p>最后一个的做法非常狡猾，我们会在后面提到：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var a = 5; 
+function runMe(a){ 
+ assert( a == 6, "Check the value of a." ); 
+
+ function innerRun(){ 
+   assert( b == 7, "Check the value of b." ); 
+   assert( c == undefined, "Check the value of c." ); 
+ } 
+
+ var b = 7; 
+ innerRun(); 
+ var c = 8; 
+} 
+runMe(6); 
+
+for ( var d = 0; d &lt; 3; d++ ) { 
+ setTimeout(function(){ 
+   assert( d == 3, "Check the value of d." ); 
+ }, 100); 
+}
+/*
+PASS Check the value of a.
+PASS Check the value of b.
+PASS Check the value of c.
+PASS Check the value of d.
+PASS Check the value of d.
+PASS Check the value of d.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt9"></a>9) Temporary Scope</h2>
+<p>自动执行，临时，函数</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>(function(){ 
+  var count = 0; 
+
+  var timer = setInterval(function(){ 
+    if ( count &lt; 5 ) { 
+      log( "Timer call: ", count ); 
+      count++; 
+    } else { 
+      assert( count == 5, "Count came via a closure, accessed each step." ); 
+      assert( timer, "The timer reference is also via a closure." ); 
+      clearInterval( timer ); 
+    } 
+  }, 100); 
+})(); 
+
+assert( typeof count == "undefined", "count doesn't exist outside the wrapper" ); 
+assert( typeof timer == "undefined", "neither does timer" );
+/*
+PASS count doesn't exist outside the wrapper
+PASS neither does timer
+LOG Timer call: 0
+LOG Timer call: 1
+LOG Timer call: 2
+LOG Timer call: 3
+LOG Timer call: 4
+PASS Count came via a closure, accessed each step.
+PASS The timer reference is also via a closure.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>现在我们可以操作循环和闭包了：(注：这里大家可以尝试下将(function() {})(d)这个部分，换成直接写成js功能，你就会了解两者之间的区别了)</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>for ( var d = 0; d &lt; 3; d++ ) (function(d){ 
+ setTimeout(function(){ 
+   log( "Value of d: ", d ); 
+   assert( d == d, "Check the value of d." ); 
+ }, d * 200); 
+})(d);
+/*
+LOG Value of d: 0
+PASS Check the value of d.
+LOG Value of d: 1
+PASS Check the value of d.
+LOG Value of d: 2
+PASS Check the value of d.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>匿名包装起来的函数，也非常适合用来包装js类包：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>(function(){ 
+  var myLib = window.myLib = function(){ 
+    // Initialize 
+  }; 
+
+  // ... 
+})();</pre>
+<p>[/codesyntax]</p>
+<p>另外一种方法来包装类包：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var myLib = (function(){ 
+  function myLib(){ 
+    // Initialize 
+  } 
+
+  // ... 
+
+  return myLib; 
+})();</pre>
+<p>[/codesyntax]</p>
+<p>小测试：修复下面的循环闭包</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var count = 0; 
+for ( var i = 0; i &lt; 4; i++ ) { 
+  setTimeout(function(){ 
+    assert( i == count++, "Check the value of i." ); 
+  }, i * 200); 
+}
+/*
+FAIL Check the value of i.
+FAIL Check the value of i.
+FAIL Check the value of i.
+FAIL Check the value of i.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>解决方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var count = 0; 
+for ( var i = 0; i &lt; 4; i++ ) (function(i){ 
+  setTimeout(function(){ 
+    assert( i == count++, "Check the value of i." ); 
+  }, i * 200); 
+})(i);</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt10"></a>10) Function Prototypes</h2>
+<p>向一个函数中添加原型方法：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){} 
+
+Ninja.prototype.swingSword = function(){ 
+  return true; 
+}; 
+
+var ninjaA = Ninja(); 
+assert( !ninjaA, "Is undefined, not an instance of Ninja." ); 
+
+var ninjaB = new Ninja(); 
+assert( ninjaB.swingSword(), "Method exists and is callable." );
+/*
+PASS Is undefined, not an instance of Ninja.
+PASS Method exists and is callable.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>定义在构造函数中的属性会覆盖原型属性：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){ 
+  this.swingSword = function(){ 
+    return true; 
+  }; 
+} 
+
+// Should return false, but will be overridden 
+Ninja.prototype.swingSword = function(){ 
+  return false; 
+}; 
+
+var ninja = new Ninja(); 
+assert( ninja.swingSword(), "Calling the instance method, not the prototype method." );
+/*
+PASS Calling the instance method, not the prototype method.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>原型属性将会影响到所有由同一个构造函数实例化的对象，即便该对象是在这个原型属性添加之前实例化的：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){ 
+  this.swung = true; 
+} 
+
+var ninjaA = new Ninja(); 
+var ninjaB = new Ninja(); 
+
+Ninja.prototype.swingSword = function(){ 
+  return this.swung; 
+}; 
+
+assert( ninjaA.swingSword(), "Method exists, even out of order." ); 
+assert( ninjaB.swingSword(), "and on all instantiated objects." );
+/*
+PASS Method exists, even out of order.
+PASS and on all instantiated objects.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：编写一个可链式调用的Ninja方法</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){ 
+  this.swung = true; 
+} 
+
+var ninjaA = new Ninja(); 
+var ninjaB = new Ninja(); 
+
+// Add a method to the Ninja prototype which 
+// returns itself and modifies swung 
+
+assert( !ninjaA.swing().swung, "Verify that the swing method exists and returns an instance." ); 
+assert( !ninjaB.swing().swung, "and that it works on all Ninja instances." );</pre>
+<p>[/codesyntax]</p>
+<p>解决方案：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){ 
+  this.swung = true; 
+} 
+
+var ninjaA = new Ninja(); 
+var ninjaB = new Ninja(); 
+
+Ninja.prototype.swing = function(){ 
+  this.swung = false; 
+  return this; 
+}; 
+
+assert( !ninjaA.swing().swung, "Verify that the swing method exists and returns an instance." ); 
+assert( !ninjaB.swing().swung, "and that it works on all Ninja instances." );
+/*
+PASS Verify that the swing method exists and returns an instance.
+PASS and that it works on all Ninja instances.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt11"></a>11) Instance Type</h2>
+<p>测试对象的基础：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){} 
+
+var ninja = new Ninja(); 
+
+assert( typeof ninja == "object", "However the type of the instance is still an object." );   
+assert( ninja instanceof Ninja, "The object was instantiated properly." ); 
+assert( ninja.constructor == Ninja, "The ninja object was created by the Ninja function." );
+/*
+PASS However the type of the instance is still an object.
+PASS The object was instantiated properly.
+PASS The ninja object was created by the Ninja function.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>我们也可以使用对象的构造函数来创建其他实例：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Ninja(){} 
+var ninja = new Ninja(); 
+var ninjaB = new ninja.constructor(); 
+
+assert( ninjaB instanceof Ninja, "Still a ninja object." );
+/*
+PASS Still a ninja object.
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：创建另外的Ninja实例</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var ninja = (function(){ 
+ function Ninja(){} 
+ return new Ninja(); 
+})(); 
+
+// Make another instance of Ninja 
+var ninjaB = ___; 
+
+assert( ninja.constructor == ninjaB.constructor, "The ninjas come from the same source." );</pre>
+<p>[/codesyntax]</p>
+<p>解决方案：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var ninja = (function(){ 
+ function Ninja(){} 
+ return new Ninja(); 
+})(); 
+
+// Make another instance of Ninja 
+var ninjaB = new ninja.constructor(); 
+
+assert( ninja.constructor == ninjaB.constructor, "The ninjas come from the same source." );
+/*
+PASS The ninjas come from the same source.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt12"></a>12) Inheritance</h2>
+<p>原型继承工作的基础：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Person(){} 
+Person.prototype.dance = function(){}; 
+
+function Ninja(){} 
+
+// Achieve similar, but non-inheritable, results 
+Ninja.prototype = Person.prototype; 
+Ninja.prototype = { dance: Person.prototype.dance }; 
+
+assert( (new Ninja()) instanceof Person, "Will fail with bad prototype chain." ); 
+
+// Only this maintains the prototype chain 
+Ninja.prototype = new Person(); 
+
+var ninja = new Ninja(); 
+assert( ninja instanceof Ninja, "ninja receives functionality from the Ninja prototype" ); 
+assert( ninja instanceof Person, "... and the Person prototype" ); 
+assert( ninja instanceof Object, "... and the Object prototype" );
+/*
+FAIL Will fail with bad prototype chain.
+PASS ninja receives functionality from the Ninja prototype
+PASS ... and the Person prototype
+PASS ... and the Object prototype
+*/</pre>
+<p>[/codesyntax]</p>
+<p>小测试：尝试创建一个自己的继承</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Person(){} 
+Person.prototype.getName = function(){ 
+  return this.name; 
+}; 
+
+// Implement a function that inherits from Person 
+// and sets a name in the constructor 
+
+var me = new Me(); 
+assert( me.getName(), "A name was set." );</pre>
+<p>[/codesyntax]</p>
+<p>解决方案：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function Person(){} 
+Person.prototype.getName = function(){ 
+  return this.name; 
+}; 
+
+function Me(){ 
+  this.name = "John Resig"; 
+} 
+Me.prototype = new Person(); 
+
+var me = new Me(); 
+assert( me.getName(), "A name was set." );
+/*
+PASS A name was set.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt13"></a>13) Built-in Prototypes</h2>
+<p>我们也可以改变javascript内建对象的原型：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>if (!Array.prototype.forEach) { 
+  Array.prototype.forEach = function(fn){ 
+    for ( var i = 0; i &lt; this.length; i++ ) { 
+      fn( this[i], i, this ); 
+    } 
+  }; 
+} 
+
+["a", "b", "c"].forEach(function(value, index, array){ 
+  assert( value, "Is in position " + index + " out of " + (array.length - 1) ); 
+});
+/*
+PASS Is in position 0 out of 2
+PASS Is in position 1 out of 2
+PASS Is in position 2 out of 2
+*/</pre>
+<p>[/codesyntax]</p>
+<p>记住：改变原型是一件非常危险的事情</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>Object.prototype.keys = function(){ 
+  var keys = []; 
+  for ( var i in this ) 
+    keys.push( i ); 
+  return keys; 
+}; 
+
+var obj = { a: 1, b: 2, c: 3 }; 
+
+assert( obj.keys().length == 3, "We should only have 3 properties." ); 
+
+delete Object.prototype.keys;
+/*
+FAIL We should only have 3 properties.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt14"></a>14) Enforcing Function Context</h2>
+<p>当我们尝试将一个对象的方法绑定到一个点击事件上的时候，发生了什么？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>var Button = { 
+  click: function(){ 
+    this.clicked = true; 
+  } 
+}; 
+
+var elem = document.createElement("li"); 
+elem.innerHTML = "Click me!"; 
+elem.onclick = Button.click; 
+document.getElementById("results").appendChild(elem); 
+
+elem.onclick(); 
+assert( elem.clicked, "The clicked property was accidentally set on the element" );
+/*
+Click me!
+PASS The clicked property was accidentally set on the element
+*/</pre>
+<p>[/codesyntax]</p>
+<p>我们需要保持它的上下文对象是原来的对象：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function bind(context, name){ 
+  return function(){ 
+    return context[name].apply(context, arguments); 
+  }; 
+} 
+
+var Button = { 
+  click: function(){ 
+    this.clicked = true; 
+  } 
+}; 
+
+var elem = document.createElement("li"); 
+elem.innerHTML = "Click me!"; 
+elem.onclick = bind(Button, "click"); 
+document.getElementById("results").appendChild(elem); 
+
+elem.onclick(); 
+assert( Button.clicked, "The clicked property was correctly set on the object" );
+/*
+Click me!
+PASS The clicked property was correctly set on the object
+*/</pre>
+<p>[/codesyntax]</p>
+<p>为所有的函数添加一个方法来强制制定上下文对象：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>Function.prototype.bind = function(object){ 
+  var fn = this; 
+  return function(){ 
+    return fn.apply(object, arguments); 
+  }; 
+}; 
+
+var Button = { 
+  click: function(){ 
+    this.clicked = true; 
+  } 
+}; 
+
+var elem = document.createElement("li"); 
+elem.innerHTML = "Click me!"; 
+elem.onclick = Button.click.bind(Button); 
+document.getElementById("results").appendChild(elem); 
+
+elem.onclick(); 
+assert( Button.clicked, "The clicked property was correctly set on the object" );
+/*
+Click me!
+PASS The clicked property was correctly set on the object
+*/</pre>
+<p>[/codesyntax]</p>
+<p>我们的终极目标（来自Prototype.js的.bind函数）：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>Function.prototype.bind = function(){ 
+  var fn = this, args = Array.prototype.slice.call(arguments), object = args.shift(); 
+  return function(){ 
+    return fn.apply(object, 
+      args.concat(Array.prototype.slice.call(arguments))); 
+  }; 
+}; 
+
+var Button = { 
+  click: function(value){ 
+    this.clicked = value; 
+  } 
+}; 
+
+var elem = document.createElement("li"); 
+elem.innerHTML = "Click me!"; 
+elem.onclick = Button.click.bind(Button, false); 
+document.getElementById("results").appendChild(elem); 
+
+elem.onclick(); 
+assert( Button.clicked === false, "The clicked property was correctly set on the object" );
+/*
+Click me!
+PASS The clicked property was correctly set on the object
+*/</pre>
+<p>[/codesyntax]</p>
+<h2><a name="pt15"></a>15) Bonus: Function Length</h2>
+<p>函数的length属性能发挥什么作用？</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function makeNinja(name){} 
+function makeSamurai(name, rank){} 
+assert( makeNinja.length == 1, "Only expecting a single argument" ); 
+assert( makeSamurai.length == 2, "Multiple arguments expected" );
+/*
+PASS Only expecting a single argument
+PASS Multiple arguments expected
+*/</pre>
+<p>[/codesyntax]</p>
+<p>我们可以使用这个东西来实现方法重载：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function addMethod(object, name, fn){ 
+  // Save a reference to the old method 
+  var old = object[ name ]; 
+
+  // Overwrite the method with our new one 
+  object[ name ] = function(){ 
+    // Check the number of incoming arguments, 
+    // compared to our overloaded function 
+    if ( fn.length == arguments.length ) 
+      // If there was a match, run the function 
+      return fn.apply( this, arguments ); 
+
+    // Otherwise, fallback to the old method 
+    else if ( typeof old === "function" ) 
+      return old.apply( this, arguments ); 
+  }; 
+}</pre>
+<p>[/codesyntax]</p>
+<p>完整的例子：</p>
+<p>[codesyntax lang="javascript"]</p>
+<pre>function addMethod(object, name, fn){ 
+  // Save a reference to the old method 
+  var old = object[ name ]; 
+
+  // Overwrite the method with our new one 
+  object[ name ] = function(){ 
+    // Check the number of incoming arguments, 
+    // compared to our overloaded function 
+    if ( fn.length == arguments.length ) 
+      // If there was a match, run the function 
+      return fn.apply( this, arguments ); 
+
+    // Otherwise, fallback to the old method 
+    else if ( typeof old === "function" ) 
+      return old.apply( this, arguments ); 
+  }; 
+} 
+
+function Ninjas(){ 
+  var ninjas = [ "Dean Edwards", "Sam Stephenson", "Alex Russell" ]; 
+  addMethod(this, "find", function(){ 
+    return ninjas; 
+  }); 
+  addMethod(this, "find", function(name){ 
+    var ret = []; 
+    for ( var i = 0; i &lt; ninjas.length; i++ ) 
+      if ( ninjas[i].indexOf(name) == 0 ) 
+        ret.push( ninjas[i] ); 
+    return ret; 
+  }); 
+  addMethod(this, "find", function(first, last){ 
+    var ret = []; 
+    for ( var i = 0; i &lt; ninjas.length; i++ ) 
+      if ( ninjas[i] == (first + " " + last) ) 
+        ret.push( ninjas[i] ); 
+    return ret; 
+  }); 
+} 
+
+var ninjas = new Ninjas(); 
+assert( ninjas.find().length == 3, "Finds all ninjas" ); 
+assert( ninjas.find("Sam").length == 1, "Finds ninjas by first name" ); 
+assert( ninjas.find("Dean", "Edwards").length == 1, "Finds ninjas by first and last name" ); 
+assert( ninjas.find("Alex", "X", "Russell") == null, "Does nothing" );
+/*
+PASS Finds all ninjas
+PASS Finds ninjas by first name
+PASS Finds ninjas by first and last name
+PASS Does nothing
+*/</pre>
+<p>[/codesyntax]</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2013/02/learning-advanced-javascript/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

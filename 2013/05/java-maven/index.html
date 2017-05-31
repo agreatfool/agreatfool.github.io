@@ -1,0 +1,607 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Java Maven使用 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2013/05/java-maven/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2013/05/java-maven/">Java Maven使用</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>03 May 2013</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Java">Java</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Maven">Maven</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h3>1. Maven是什么</h3>
+<p>在使用之前，我们需要了解maven是什么。在我理解，maven是一个功能非常强大的java自动化工具，包括了解决包依赖，代码生成、编译、测试、打包、部署等等系列功能。其中包依赖问题的解决是我对其非常欣赏的一点，这有点像nodejs的npm。此外maven还支持第三方编写的plugin，基本上能做到无限扩展。</p>
+<p>maven主页：<a href="http://maven.apache.org/" target="_blank">http://maven.apache.org/</a></p>
+<p>guide页：<a href="http://maven.apache.org/guides/getting-started/index.html" target="_blank">http://maven.apache.org/guides/getting-started/index.html</a></p>
+<h3>2. Maven的安装</h3>
+<p>Maven当前版本有2和3两个稳定版本，我现在使用的是2。安装很简单 sudo port -v install maven2。</p>
+<p>安装完成后：</p>
+<ul>
+<li>maven2的可执行文件在 /usr/bin/mvn</li>
+<li>maven2的安装目录在 /usr/share/maven</li>
+<li>maven2的资源目录以及配置文件目录在当前用户文件夹下：~/.m2/</li>
+</ul>
+<p>我比较有强迫症，所以我手动修改了maven2的目录地址：</p>
+<ul>
+<li>资源目录：/Users/jonathan/prog/Java/maven2/repository</li>
+<li>配置文件：/Users/jonathan/prog/Java/maven2/settings.xml</li>
+</ul>
+<p>maven在执行过程中需要的第三方依赖包，都会下载到上面列出的资源目录下。可以手动删除里面的内容，在下次执行的时候会重新下载。</p>
+<h3>3. Maven的系列概念</h3>
+<p>在开始使用maven之前，我们需要了解一系列的maven概念，否则你会不知道该怎么使用maven。</p>
+<h4>3.1 认识pom.xml</h4>
+<p>maven的功能完全由pom.xml这个文件的内容控制，我们只需要编写这个xml文件就好了。然后在pom.xml同级的文件夹中，执行mvn compile、package、install等命令行命令就可以了。</p>
+<h4>3.2 文件夹位置的约定</h4>
+<p>如果要使用maven来维护你的项目的话，你必须要遵守maven的文件夹结构约定（参见这个链接：<a href="http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html" target="_blank">http://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html</a>，和 <a href="http://maven.apache.org/guides/getting-started/index.html#How_do_I_make_my_first_Maven_project" target="_blank">http://maven.apache.org/guides/getting-started/index.html#How_do_I_make_my_first_Maven_project</a>）。如果不这样构造文件夹结构的话，maven是没有办法找到你的代码文件来进行编译的，同时也没办法找到你的测试代码文件来运行测试用例。</p>
+<p>除了app的源代码文件和测试用例的源代码文件，resources文件夹我并没有放在 src/main/resources 这个位置，config文件夹我也没有放在 src/main/config 这个位置，因为这两块我希望自己管理，而不是直接打包到jar文件内。下面我会说到的。</p>
+<p>范例：</p>
+<blockquote>
+<pre>my-app
+|-- pom.xml
+`-- src
+    |-- main
+    |   `-- java
+    |       `-- com
+    |           `-- mycompany
+    |               `-- app
+    |                   `-- App.java
+    `-- test
+        `-- java
+            `-- com
+                `-- mycompany
+                    `-- app
+                        `-- AppTest.java</pre>
+</blockquote>
+<h4>3.3 Maven的build lifecycle概念以及phase概念</h4>
+<p>maven对于java项目的整个生命周期已经有一个非常清晰的定义，也就是lifecycle这个概念。当中的每一个步骤，则被称为phase。这两个概念很重要，因为在下面的plugin使用中，使用者经常需要定义该plugin需要启动处理的phase。</p>
+<p>具体的请参见：<a href="http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html" target="_blank">http://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html</a></p>
+<h3>4. Maven的使用</h3>
+<p>maven的使用就是pom.xml的编写，开发者除此之外不需要做其他事情。接下来我们就一个个介绍如何编写pom.xml来实现我们项目开发中需要的系列功能。</p>
+<h4>4.1 包依赖管理</h4>
+<p>刚才也说了，maven最重要的功能块就是解决项目的包依赖管理，你只需要在pom.xml中描述好你的项目所需要的依赖包，maven自然会给你下载好，并放到maven的repository里。当然，你在运行你的项目的时候，千万记得要将maven的repository加入到你项目的classpath里去。或者你也可以制作一个standalone的jar包，将所有的依赖代码都注入进去。</p>
+<p>下面给出xml例子：</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+    ...
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;io.netty&lt;/groupId&gt;
+            &lt;artifactId&gt;netty&lt;/artifactId&gt;
+            &lt;version&gt;3.6.3.Final&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;log4j&lt;/groupId&gt;
+            &lt;artifactId&gt;log4j&lt;/artifactId&gt;
+            &lt;version&gt;1.2.14&lt;/version&gt;
+            &lt;scope&gt;compile&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+    ...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.2 输出文件夹的清理</h4>
+<p>如果你不指定maven clean这个命令的话，maven默认是不会清理target这个输出文件夹的，新生成的文件会覆盖老的文件，但是废弃的旧文件不会被删除。当然，这不是我们所期望的，我们希望的是无论我们使用maven的什么命令，旧的target都应该被删除。这里我们可以使用maven的一个plugin，来为我们完成这个工作：</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.5&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;auto-clean&lt;/id&gt;
+                    &lt;phase&gt;initialize&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;clean&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.3 源代码打包</h4>
+<p>除了classes文件打包的jar文件之外，我们有的时候也需要附上source code源代码，这个时候就需要这个插件进行源代码jar的打包了。</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-source-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.2.1&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;attach-sources&lt;/id&gt;
+                    &lt;phase&gt;verify&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;jar-no-fork&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.4 javaDoc打包</h4>
+<p>同样的，我们有的时候也需要注释的java doc的jar包。</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-javadoc-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.9&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;attach-javadocs&lt;/id&gt;
+                    &lt;phase&gt;verify&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;jar&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.5 All In One 打包工具</h4>
+<p>有的时候我们需要将所有的依赖包与我们自己的代码打成一个jar包。比如说我自己做的java框架，我希望项目中使用到的依赖jar包只有它个，那么我就需要把所有的代码打到这个jar包里。</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-assembly-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.4&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;descriptorRefs&gt;
+                    &lt;descriptorRef&gt;jar-with-dependencies&lt;/descriptorRef&gt;
+                &lt;/descriptorRefs&gt;
+            &lt;/configuration&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;make-jar-with-dependencies&lt;/id&gt;
+                    &lt;phase&gt;package&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;single&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.6 Shade Plugin</h4>
+<p>在我们使用4.5的工具将所有jar包打成一个包的时候，你会发现，这个jar包的文件名是之前你定义好的文件名，然后加上jar-with-dependencies这个后缀，这明显不是我们想要的。这里我们就可以使用shade插件，将刚才的jar文件替换成我们想要的jar文件名。</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.0&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;phase&gt;package&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;shade&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+            &lt;configuration&gt;
+                &lt;finalName&gt;${finalName}&lt;/finalName&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.7 打包可执行的jar包</h4>
+<p>作为服务器端程序，一般我们需要一个能在命令行下直接启动的jar包。这里我们也可以使用插件进行创建。这里需要解释下，因为我项目中使用都是all in one的jar包，所以classpath可以使用customClasspathLayout这个标签，定义为单一的一个jar文件。<br />
+[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.4&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;archive&gt;
+                    &lt;manifest&gt;
+                        &lt;addClasspath&gt;true&lt;/addClasspath&gt;
+                        &lt;classpathLayoutType&gt;custom&lt;/classpathLayoutType&gt;
+                        &lt;customClasspathLayout&gt;${finalJarName}&lt;/customClasspathLayout&gt;
+                        &lt;mainClass&gt;${mainClass}&lt;/mainClass&gt;
+                    &lt;/manifest&gt;
+                &lt;/archive&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.8 拷贝资源文件</h4>
+<p>项目中我们肯定也会有很多资源文件，比如说配置文件，比如说日志文件，等。这里我们可以使用插件，将资源文件拷贝到我们指定的文件夹。</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;
+            &lt;version&gt;2.6&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;outputDirectory&gt;${project.build.directory}&lt;/outputDirectory&gt;
+                &lt;includeEmptyDirs&gt;true&lt;/includeEmptyDirs&gt;
+                &lt;resources&gt;
+                    &lt;resource&gt;
+                        &lt;directory&gt;${resourceDir}&lt;/directory&gt;
+                    &lt;/resource&gt;
+                &lt;/resources&gt;
+            &lt;/configuration&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;copy-configs-and-logs&lt;/id&gt;
+                    &lt;phase&gt;package&lt;/phase&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;copy-resources&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.9 使用ant命令打包项目</h4>
+<p>jar包制作完成，资源文件拷贝完成，之后我们还需要做的一步就是将所有的东西打包成一个tar.gz压缩包，方便拷贝、发布。使用maven原生的插件不太好做这个事情，这里我们就可以使用maven提供的功能，在maven中跑ant命令。</p>
+<p>这里给出的例子只有一个打包的过程，其实还有很多很多命令可供选用，大家可以参考这里：<a href="https://ant.apache.org/manual/tasksoverview.html" target="_blank">https://ant.apache.org/manual/tasksoverview.html</a></p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+            &lt;version&gt;1.7&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;phase&gt;package&lt;/phase&gt;
+                    &lt;configuration&gt;
+                        &lt;target&gt;
+                            &lt;tar destfile="${project.build.directory}/${finalName}.tar.gz" compression="gzip"&gt;
+                                &lt;tarfileset dir="${project.build.directory}"&gt;
+                                    &lt;include name="${finalJarName}"/&gt;
+                                    &lt;include name="configs/**" /&gt;
+                                    &lt;include name="logs/**"/&gt;
+                                &lt;/tarfileset&gt;
+                            &lt;/tar&gt;
+                        &lt;/target&gt;
+                    &lt;/configuration&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;run&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+<h4>4.10 在maven中执行bash命令</h4>
+<p>有的时候我们需要执行一些外部命令，这个时候就有需求要执行bash脚本。</p>
+<p>[codesyntax lang="xml"]</p>
+<pre>&lt;project&gt;
+...
+&lt;build&gt;
+    &lt;plugins&gt;
+        ...
+        &lt;plugin&gt;
+            &lt;artifactId&gt;maven-antrun-plugin&lt;/artifactId&gt;
+            &lt;version&gt;1.7&lt;/version&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;id&gt;loop-protocol-buffers&lt;/id&gt;
+                    &lt;phase&gt;process-resources&lt;/phase&gt;
+                    &lt;configuration&gt;
+                        &lt;target&gt;
+                            &lt;exec executable="bash"&gt;
+                                &lt;arg value="-c"/&gt;
+                                &lt;arg value="/opt/local/bin/protoc --proto_path=${protobufDir} --java_out=${project.build.sourceDirectory}"/&gt;
+                            &lt;/exec&gt;
+                        &lt;/target&gt;
+                    &lt;/configuration&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;run&lt;/goal&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+        ...
+    &lt;/plugins&gt;
+&lt;/build&gt;
+...
+&lt;/project&gt;</pre>
+<p>[/codesyntax]</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2013/05/java-maven/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

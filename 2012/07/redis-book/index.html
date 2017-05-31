@@ -1,0 +1,405 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Redis Book | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2012/07/redis-book/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2012/07/redis-book/">Redis Book</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>05 Jul 2012</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Redis">Redis</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>这篇文章是一系列redis研究学习的总集篇。文章主要是以提纲、概要的形式将redis的研究学习串联涵盖在一篇文章的篇幅之内，然后在需要细节描述的地方会引用外部的详细描述。</p>
+<p>NoSqlFan是一个非常棒的nosql数据相关前沿技术网站，其中有非常多的redis内容，这里给出它的汇总链接：<a title="Redis资料汇总专题" href="http://blog.nosqlfan.com/html/3537.html" target="_blank">Redis资料汇总专题</a>。<br />
+本文基本只关注在redis作为数据库来看几个比较critical的功能点，关于未提到的一些周边功能，可以查看<a title="Redis系统性介绍" href="http://blog.nosqlfan.com/html/3139.html?ref=rediszt" target="_blank">Redis系统性介绍</a>，这篇文章里有详细的介绍。</p>
+<p>目录</p>
+<ol>
+<li><a title="1. redis的简介、优点及安装" href="#chapter1">redis的简介、优点及安装</a></li>
+<li><a title="2. redis的存储数据类型描述、接口定义及场景范例" href="#chapter2">redis的存储数据类型描述、接口定义及场景范例</a></li>
+<li><a title="3. redis的内存分配逻辑" href="#chapter3">redis的内存分配逻辑</a></li>
+<li><a title="4. redis的持久化策略" href="#chapter4">redis的持久化策略</a></li>
+<li><a title="5. redis的主从策略" href="#chapter5">redis的主从策略</a></li>
+<li><a title="6. redis的集群策略" href="#chapter6">redis的集群策略</a></li>
+<li><a title="7. 参考资料列表" href="#chapter7">参考资料列表</a></li>
+</ol>
+<h1><a name="chapter1"></a>1. redis的简介、优点及安装</h1>
+<h2>1.1 简介</h2>
+<p><strong>RE</strong>mote <strong>DI</strong>ctionary <strong>S</strong>erver(Redis) 是一个由Salvatore Sanfilippo写的key-value存储系统。Redis提供了一些丰富的数据结构，包括 lists, sets, ordered sets 以及 hashes ，当然还有和Memcached一样的 strings结构.Redis当然还包括了对这些数据结构的丰富操作。</p>
+<h2>1.2 redis的优点</h2>
+<ul>
+<li>性能极高 – Redis能支持超过 100K+ 每秒的读写频率。</li>
+<li>丰富的数据类型 – Redis支持二进制案例的 Strings, Lists, Hashes, Sets 及 Ordered Sets 数据类型操作。</li>
+<li>原子 – Redis的所有操作都是原子性的，同时Redis还支持对几个操作全并后的原子性执行。</li>
+<li>丰富的特性 – Redis还支持 publish/subscribe, 通知, key 过期等等特性。</li>
+</ul>
+<h2>1.3 redis的安装</h2>
+<p>安装并不复杂，MAC下的安装请参考我写的blog：<a title="在MAC下安装redis以及其PHP扩展" href="http://xenojoshua.com/2012/07/mac-redis-php-ext-install/" rel="bookmark" target="_blank">在MAC下安装redis以及其PHP扩展</a>。</p>
+<h1><a name="chapter2"></a>2. redis的存储数据类型描述、接口定义及场景范例</h1>
+<p>redis非常特色的一点就是能支持非常丰富的存储数据类型，有Strings、Lists、Hashes、Sets及Ordered Sets。这里就另成一篇，请参考我的另一篇博客：<a title="Redis数据类型介绍接口定义及简单范例" href="http://xenojoshua.com/2012/07/redis-data-type-api-examples/" rel="bookmark" target="_blank">Redis数据类型介绍接口定义及简单范例</a>。</p>
+<h1><a name="chapter3"></a>3. redis的内存分配逻辑</h1>
+<h2>3.1 基础概念</h2>
+<p>redis会将所有的数据从磁盘上导入到内存中，所有的数据操作全部在内存中进行，不存在部分数据在磁盘部分数据在内存里的情况，所以提前预估和节约内存非常重要。</p>
+<h2>3.2 redis的内存分配</h2>
+<p>redis和memcache非常不同的一点其实并不在其支持的数据类型上，而是内存分配上。memcache的内存非配是预分配形式的，以page为分配单位，slabs为分割单位，chunk为存储单位，保证了内存碎片的情况不会发生，当然，内存浪费是这种内存分配方案的坏处。redis则完全自主分配内存，在请求到的时候实时根据内建的算法分配内存，完全自主控制内存的管理。为了屏蔽不同平台之间的差异，以及统计内存占用量等，redis对内存分配函数进行了一层封装，程序中统一使用zmalloc，zfree一系列函数，位于zmalloc.h，zmalloc.c文中。</p>
+<p>上边说过，封装就是为了屏蔽底层平台的差异，同时方便自己实现相关的统计函数。具体来说就是：</p>
+<ul>
+<li>若系统中存在Google的TC_MALLOC库，则使用tc_malloc一族函数代替原本的malloc一族函数。</li>
+<li>若当前系统是Mac系统，则使用&lt;malloc/malloc.h&gt;中的内存分配函数。</li>
+<li>其他情况，在每一段分配好的空间前头，同时多分配一个定长的字段，用来记录分配的空间大小。</li>
+</ul>
+<h2>3.3 版本2.4开始的优化</h2>
+<p>从版本2.4开始，redis使用了一种新的内存分配机制，被称为“jemalloc”。官方博客有介绍：<a title="Everything about Redis 2.4" href="http://antirez.com/post/everything-about-redis-24.html" target="_blank">Everything about Redis 2.4</a>，找到“Jemalloc FTW”部分。我简单翻译如下（难免错漏）：</p>
+<blockquote><p>The jemalloc affair is one of our most fortunate use of external code ever. If you used to follow the Redis developments you know I'm not exactly the kind of guy excited to link some big project to Redis without some huge gain. We don't use libevent, our data structures are implemented in small .c files, and so forth.</p>
+<p>But an allocator is a serious thing. Since we introduced the specially encoded data types Redis started suffering from fragmentation. We tried different things to fix the problem, but basically the Linux default allocator in glibc sucks really, really hard.</p>
+<p>Including jemalloc inside of Redis (no need to have it installed in your computer, just download the Redis tarball as usually and type make) was a huge win. Every single case of fragmentation in real world systems was fixed by this change, and also the amount of memory used dropped a bit.</p>
+<p>So now we build on Linux using Jemalloc by default. Thanks Jemalloc! If you are on osx or *BSD you can still force a jemalloc build with make USE_JEMALLOC=yes, but those other systems have a sane libc malloc so usually this is not required. Also a few of those systems use jemalloc-derived libc malloc implementations.</p></blockquote>
+<p>jemalloc是redis项目迄今为止使用得最好的外部代码之一。如果你一直有跟redis开发工作的话，你应该知道我（原作者）一直认为，如果没有非常大的收益的话，最好不要让redis依赖某些外部大项目。我们并没有使用libevent，我们的数据类型是完全使用小型的.c文件进行实现的，并且将来都将如此。</p>
+<p>但是内存分配工具是一件非常严肃的事情。由于redis添加了一些非常特殊的数据类型支持，导致redis现在开始受到内存碎片的影响。我们尝试了非常多的手段来解决这个问题，但是由于linux默认的glibc内存分配工具异常的烂，导致这个工作非常难以完成。</p>
+<p>将jemalloc引入到redis中是一次巨大的成功（用户没必要在你的系统中手动安装这个软件，只需要下载redis源码进行编译安装就行了）。所有的内存碎片问题通过这次改动得到了修正，并且内存使用量也下降了一点。</p>
+<p>所以现在redis在linux平台上默认使用jemalloc作为内建的内存分配工具。非常感谢jemalloc！如果用户使用的是osx或者*BSD操作系统，你可以使用USE_JEMALLOC=yes这个命令进行编译，来强制redis使用jemalloc。当然其他几个平台都有非常健全的libc malloc，所以一般来说无此必要。此外，那些平台中也有一部分使用的就是jemalloc衍生出来的libc malloc实现。</p>
+<h2>3.4 从源代码数据结构理解内存分配</h2>
+<p>网上有篇非常给力的技术博文，从redis的内存处处结构角度入手，分析源码给出了内存分配的分析。这里做下转帖：<a title="Redis内存存储结构分析" href="http://xenojoshua.com/2012/07/redis-mem-struct-analytics/" target="_blank">Redis内存存储结构分析</a>。</p>
+<h2>3.5 优化</h2>
+<p>经过上面的分析，基本明白了redis的内存处理方式，这里说优化，其实也就是从使用的角度上来进行优化。请参看：<a title="Redis内存容量的预估和优化" href="http://xenojoshua.com/2012/07/redis-mem-optimization/" target="_blank">Redis内存容量的预估和优化</a>。</p>
+<h1><a name="chapter4"></a>4. redis的持久化策略</h1>
+<h2>4.1 简介</h2>
+<p>redis是一个支持持久化的内存数据库，也就是说redis需要经常将内存中的数据同步到磁盘来保证持久化。redis支持两种持久化方式，一种是 Snapshotting（快照）也是默认方式，另一种是Append-only file（缩写aof）的方式。</p>
+<h2>4.2 <strong>Snapshotting模式</strong></h2>
+<p>快照是默认的持久化方式。这种方式是就是将内存中数据以快照的方式写入到二进制文件中,默认的文件名为dump.rdb。可以通过配置设置自动做快照持久化的方式。我们可以配置redis在n秒内如果超过m个key被修改就自动做快照，下面是默认的快照保存配置：</p>
+<p style="padding-left: 30px;">save 900 1  #900秒内如果超过1个key被修改，则发起快照保存<br />
+save 300 10 #300秒内容如超过10个key被修改，则发起快照保存<br />
+save 60 10000</p>
+<p>下面介绍详细的快照保存过程：</p>
+<ol>
+<li>redis调用fork，现在有了子进程和父进程。</li>
+<li>父进程继续处理client请求，子进程负责将内存内容写入到临时文件。由于os的写时复制机制（copy on write)父子进程会共享相同的物理页面，当父进程处理写请求时os会为父进程要修改的页面创建副本，而不是写共享的页面。所以子进程的地址空间内的数 据是fork时刻整个数据库的一个快照。</li>
+<li>当子进程将快照写入临时文件完毕后，用临时文件替换原来的快照文件，然后子进程退出。</li>
+</ol>
+<p>client 也可以使用save或者bgsave命令通知redis做一次快照持久化。save操作是在主线程中保存快照的，由于redis是用一个主线程来处理所有 client的请求，这种方式会阻塞所有client请求。所以不推荐使用。另一点需要注意的是，每次快照持久化都是将内存数据完整写入到磁盘一次，并不是增量的只同步脏数据。如果数据量大的话，而且写操作比较多，必然会引起大量的磁盘io操作，可能会严重影响性能。</p>
+<p>另外由于快照方式是在一定间隔时间做一次的，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改。如果应用要求不能丢失任何修改的话，可以采用aof持久化方式。</p>
+<h2>4.3 <strong>Append-only模式</strong></h2>
+<p>aof 比快照方式有更好的持久化性，是由于在使用aof持久化方式时,redis会将每一个收到的写命令都通过write函数追加到文件中(默认是 appendonly.aof)。当redis重启时会通过重新执行文件中保存的写命令来在内存中重建整个数据库的内容。当然由于os会在内核中缓存 write做的修改，所以可能不是立即写到磁盘上。这样aof方式的持久化也还是有可能会丢失部分修改。不过我们可以通过配置文件告诉redis我们想要 通过fsync函数强制os写入到磁盘的时机。</p>
+<p>有三种方式如下（默认是：每秒fsync一次）：</p>
+<p style="padding-left: 30px;">appendonly yes              //启用aof持久化方式<br />
+# appendfsync always      //每次收到写命令就立即强制写入磁盘，最慢的，但是保证完全的持久化，不推荐使用<br />
+appendfsync everysec     //每秒钟强制写入磁盘一次，在性能和持久化方面做了很好的折中，推荐<br />
+# appendfsync no    //完全依赖os，性能最好,持久化没保证</p>
+<p>aof 的方式也同时带来了另一个问题。持久化文件会变的越来越大。例如我们调用incr test命令100次，文件中必须保存全部的100条命令，其实有99条都是多余的。因为要恢复数据库的状态其实文件中保存一条set test 100就够了。为了压缩aof的持久化文件。redis提供了bgrewriteaof命令。收到此命令redis将使用与快照类似的方式将内存中的数据 以命令的方式保存到临时文件中，最后替换原来的文件。具体过程如下：</p>
+<ol>
+<li>redis调用fork ，现在有父子两个进程。</li>
+<li>子进程根据内存中的数据库快照，往临时文件中写入重建数据库状态的命令。</li>
+<li>父进程继续处理client请求，除了把写命令写入到原来的aof文件中。同时把收到的写命令缓存起来。这样就能保证如果子进程重写失败的话并不会出问题。</li>
+<li>当子进程把快照内容写入已命令方式写到临时文件中后，子进程发信号通知父进程。然后父进程把缓存的写命令也写入到临时文件。</li>
+<li>现在父进程可以使用临时文件替换老的aof文件，并重命名，后面收到的写命令也开始往新的aof文件中追加。</li>
+</ol>
+<p>需要注意到是重写aof文件的操作，并没有读取旧的aof文件，而是将整个内存中的数据库内容用命令的方式重写了一个新的aof文件,这点和快照有点类似。</p>
+<h2>4.4 持久化的官方解析</h2>
+<p>官方博客上有一篇博文非常详细地对redis的持久化进行了分析：<a title="Redis persistence demystified" href="http://antirez.com/post/redis-persistence-demystified.html" target="_blank">Redis persistence demystified</a>。NoSqlFan上有一篇中文翻译，我这里做了转帖：<a title="解密Redis持久化" href="http://xenojoshua.com/2012/07/redis-persistence-demystified/" target="_blank">解密Redis持久化</a>。</p>
+<h1><a name="chapter5"></a>5. redis的主从策略</h1>
+<p>redis主从复制配置和使用都非常简单。通过主从复制可以允许多个slave server拥有和master server相同的数据库副本。</p>
+<p>下面是关于redis主从复制的一些特点：</p>
+<ol>
+<li>master可以有多个slave。</li>
+<li>除了多个slave连到相同的master外，slave也可以连接其他slave形成图状结构。</li>
+<li>主从复制不会阻塞master。也就是说当一个或多个slave与master进行初次同步数据时，master可以继续处理client发来的请求。相反slave在初次同步数据时则会阻塞不能处理client的请求。</li>
+<li>主从复制可以用来提高系统的可伸缩性,我们可以用多个slave 专门用于client的读请求，比如sort操作可以使用slave来处理。也可以用来做简单的数据冗余。</li>
+<li>可以在master禁用数据持久化，只需要注释掉master 配置文件中的所有save配置，然后只在slave上配置数据持久化。</li>
+</ol>
+<p>下面介绍下主从复制的过程：</p>
+<p>当设置好slave服务器后，slave会建立和master的连接，然后发送sync命令。无论是第一次同步建立的连接还是连接断开后的重新连接，master都会启动一个后台进程，将数据库快照保存到文件中，同时master主进程会开始收集新的写命令并缓存起来。后台进程完成写文件后，master就发送文件给slave，slave将文件保存到磁盘上，然后加载到内存恢复数据库快照到slave上。接着master就会把缓存的命令转发给slave。而且后续master收到的写命令都会通过开始建立的连接发送给slave。从master到slave的同步数据的命令和从 client发送的命令使用相同的协议格式。当master和slave的连接断开时slave可以自动重新建立连接。如果master同时收到多个 slave发来的同步连接命令，只会使用启动一个进程来写数据库镜像，然后发送给所有slave。</p>
+<p>配置slave服务器很简单，只需要在配置文件中加入如下配置：</p>
+<p style="padding-left: 30px;">slaveof 192.168.1.1 6379  #指定master的ip和端口</p>
+<h1><a name="chapter6"></a>6. redis的集群策略</h1>
+<h2>6.1 简介</h2>
+<p>redis是没有官方的集群解决方案的。所以当数据量大到单台服务器无法支撑（一般是内存容量不够）的时候，就必须考虑找一种手段来解决集群问题了。官方推荐的手法是在客户端对键值进行hash，然后根据hash的结果将数据分发到不同的redis服务器上进行存储。</p>
+<p>这么做有一个非常明显的缺点，就是rehash，当服务器量再次不足，或者冗余的时候，我们很难将数据再次分配。而且这将是致命的，因为redis服务器一般是作为产品数据库进行利用，而不单单只是像memcache那样作为缓存在使用。memcache的时候，当你rehash，也只不过是暂时的增加了数据库的负载，当丢失的数据重新进入memcache之后，缓存又再次工作了，redis的情况则将是一场灾难。所以目前市面上的产品一般都是将redis作为关键数据（关系、结构）的存储，而由其他稳定可靠的关系型数据库（MySQL）进行实际数据的存储。</p>
+<h2>6.2 第三方集群工具</h2>
+<p>redis-sharding是一个由perl写的redis的proxy，使用它，你可以将数据分布存储在多个redis实例上，而在操作数据时却像只操作一个实例一样。利用它相当于透明地解决了redis单线程无法有效利用多核心服务器的问题。当然，我们更期待官方的cluster方案。</p>
+<p>项目地址：<a title="kni / redis-sharding" href="https://github.com/kni/redis-sharding" target="_blank">https://github.com/kni/redis-sharding</a></p>
+<p>架构：</p>
+<blockquote>
+<pre>                              /- Redis (node 1)
+ Client 1 ---                /-- Redis (node 2)
+              Redis Sharding --- Redis (node 3)
+ Client 2 ---                \-- Redis (node 4)
+                              \- Redis (node 5)</pre>
+</blockquote>
+<p>启动redis-sharding，分别为使用默认host，port与指定host，port的方式：</p>
+<blockquote>
+<pre lang="shell"> perl redis_sharding.pl                             --nodes=10.1.1.2:6380,10.1.1.3:6380,...
+ perl redis_sharding.pl                 --port=6379 --nodes=10.1.1.2:6380,10.1.1.3:6380,...
+ perl redis_sharding.pl --host=10.1.1.1 --port=6379 --nodes=10.1.1.2:6380,10.1.1.3:6380,...</pre>
+</blockquote>
+<p>redis-sharding还支持重新切分数据，但这需要暂时停掉proxy，下面是将原来的db 9的数据重新sharding到B1-B5五个实例上：</p>
+<p>停掉redis-sharding后再执行：</p>
+<blockquote>
+<pre lang="shell">perl resharding.pl --db=9 --from=A1 --nodes=B1,B2,B3,B4,B5
+perl resharding.pl --db=9 --from=A2 --nodes=B1,B2,B3,B4,B5</pre>
+</blockquote>
+<p>然后再启动新的管理B1-B5的redis-sharding实例即可：</p>
+<blockquote>
+<pre lang="shell">perl redis_sharding.pl --nodes=B1,B2,B3,B4,B5</pre>
+</blockquote>
+<h2>6.3 官方解答</h2>
+<p>redis官方也不是完全无视了这个问题。 有一篇官方帖子专门解答了redis工作组的目标：<a title="Redis cluster Specification (work in progress)" href="http://redis.io/topics/cluster-spec/" target="_blank">Redis cluster Specification (work in progress)</a>。NoSqlFan也有翻译，这里还是转帖：<a title="Redis集群功能说明" href="http://xenojoshua.com/2012/07/redis-cluster/" target="_blank">Redis集群功能说明</a>。</p>
+<h1><a name="chapter7"></a>7. 参考资料列表</h1>
+<ul>
+<li><a title="Redis资料汇总专题" href="http://blog.nosqlfan.com/html/3537.html" target="_blank">Redis资料汇总专题</a></li>
+<li><a title="Redis系统性介绍" href="http://blog.nosqlfan.com/html/3139.html?ref=rediszt" target="_blank">Redis系统性介绍</a></li>
+<li><a title="解密Redis持久化" href="http://blog.nosqlfan.com/html/3813.html" target="_blank">解密Redis持久化</a></li>
+<li><a title="redis-sharding – 一个 Redis Proxy" href="http://blog.nosqlfan.com/html/1455.html" target="_blank">redis-sharding – 一个 Redis Proxy</a></li>
+<li><a title="Redis集群功能说明" href="http://blog.nosqlfan.com/html/3302.html?ref=rediszt" target="_blank">Redis集群功能说明</a></li>
+<li><a title="Redis内存容量的预估和优化" href="http://blog.nosqlfan.com/html/3430.html?ref=rediszt" target="_blank">Redis内存容量的预估和优化</a></li>
+<li><a title="Redis内存存储结构分析" href="http://www.searchtb.com/2011/05/redis-storage.html" target="_blank">Redis内存存储结构分析</a></li>
+<li><a title="redis学习笔记之持久化" href="http://www.cnblogs.com/xhan/archive/2011/02/07/1949640.html" target="_blank">redis学习笔记之持久化</a></li>
+<li><a title="redis主从复制" href="http://www.cnblogs.com/redcreen/archive/2011/02/15/1955518.html" target="_blank">redis主从复制</a></li>
+<li><a title="Redis cluster Specification (work in progress)" href="http://redis.io/topics/cluster-spec/" target="_blank">Redis cluster Specification (work in progress)</a></li>
+<li><a title="A fifteen minute introduction to Redis data types" href="http://redis.io/topics/data-types-intro" target="_blank">A fifteen minute introduction to Redis data types</a></li>
+<li><a title="Data types" href="http://redis.io/topics/data-types" target="_blank">Data types</a></li>
+<li><a title="Commands" href="http://redis.io/commands" target="_blank">Commands</a></li>
+<li><a title="Redis persistence demystified" href="http://antirez.com/post/redis-persistence-demystified.html" target="_blank">Redis persistence demystified</a></li>
+<li><a title="Everything about Redis 2.4" href="http://antirez.com/post/everything-about-redis-24.html" target="_blank">Everything about Redis 2.4</a></li>
+</ul>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2012/07/redis-book/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

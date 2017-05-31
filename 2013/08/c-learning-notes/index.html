@@ -1,0 +1,496 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>C++ 学习笔记 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2013/08/c-learning-notes/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2013/08/c-learning-notes/">C++ 学习笔记</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>15 Aug 2013</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/C _ C++">C / C++</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>开始阅读 C++ Primer，留点笔记。</p>
+<h2>2. 变量和基本类型</h2>
+<h5>初始化分为复制初始化和直接初始化：</h5>
+<ul>
+<li>复制初始化：int ival = 1024;</li>
+<li>直接初始化：int ival(1024);</li>
+</ul>
+<h5>初始化不是赋值：</h5>
+<p>初始化指创建变量并给它赋初始值，而赋值则是擦除对象的当前值并用新值代替。</p>
+<h5>定义和声明：</h5>
+<ul>
+<li>定义：为变量分配存储空间，还可以为变量指定初始值</li>
+<li>声明：向程序表名变量的类型和名字</li>
+<li>使用extern来声明变量而不定义它</li>
+</ul>
+<h5>常量：</h5>
+<ul>
+<li>使用const限定符来定义常量</li>
+<li>const对象默认为当前文件的局部变量，必须使用extern使它转为全局变量</li>
+</ul>
+<h5>typedef</h5>
+<p>可以用来定义类型的同义词，e.g typedef int exam_score;</p>
+<h5>头文件</h5>
+<p>避免多重包含，定义预处理器变量来进行检查：</p>
+<p>[codesyntax lang="cpp"]</p>
+<pre>#ifndef ITEM_H
+#define ITEM_H
+    // your head file stuff
+#endif</pre>
+<p>[/codesyntax]</p>
+<h2>3. 标准库类型</h2>
+<h5>std::string</h5>
+<ul>
+<li>字符串字面值和std::string不是同一种类型</li>
+<li>string.size()返回的是string::size_type类型</li>
+<li>和字符串字面值连接的时候，+号左右最起码要有一个string类型，e.g std::string s = "hello, " + "world"; // wrong</li>
+</ul>
+<h5>std:vector</h5>
+<ul>
+<li>vector的size_type需要指明该类型的定义，e.g std::vector&lt;int&gt;::size_type</li>
+<li>vector的迭代器：std::vector&lt;int&gt;::iterator iter = ivec.begin();</li>
+</ul>
+<h2>4. 数组和指针</h2>
+<h5>数组</h5>
+<ul>
+<li>长度固定，无法改变</li>
+<li>使用字符串字面值进行数组的初始化的时候，会自动附带一个空字符（null）</li>
+</ul>
+<h5>指针</h5>
+<ul>
+<li>指针保存的是另一个对象的地址：std::string str = "hello!"; std::string *ptr = &amp;str;</li>
+<li>解引用后能获得其值：std::cout &lt;&lt; *ptr; // hello!</li>
+<li>指针和引用的区别：
+<ul>
+<li>引用总是指向某个对象：定义引用时没有初始化是错误的</li>
+<li>给引用赋值修改的是该引用所关联的对象的值，而给指针赋值则使得指针指向另一个对象
+<ul>
+<li>指针：int ival = 1024, ival2 = 2048; int *ptr = &amp;ival, *ptr2 = &amp;ival2; ptr = ptr2; // ptr now points to ival2</li>
+<li>引用：int &amp;ri = ival, &amp;ri2 = ival2; ri = ri2; // assigns ival2 to ival</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>向指针直接赋值数组，则指向数组的第一位：int ia[] = {1, 2, 3}; int *ptr = ia; // ptr points to ia[0]</li>
+</ul>
+<h5> C风格字符串 ...</h5>
+<h5>创建动态数组 ...</h5>
+<h2>5. 表达式</h2>
+<h5>sizeof</h5>
+<ul>
+<li>cha：或值为char类型的表达式，返回1</li>
+<li>引用：返回存放此引用类型对象所需的内存空间大小</li>
+<li>指针：存放指针所需要的内存大小</li>
+<li>数组：数组元素的sizeof结果 * 数组元素个数
+<ul>
+<li>可用这个特性反向获得数组元素个数：int size = sizeof(ia) / sizeof(*ia);</li>
+</ul>
+</li>
+</ul>
+<h5>new和delete</h5>
+<ul>
+<li>使用new来动态创建对象</li>
+<li>定义变量时，必须指定数据类型和名字，而动态创建的时候，只需要类型，new表达式会返回指向新创建对象的指针
+<ul>
+<li>int *ptr = new int(1024);</li>
+</ul>
+</li>
+<li>使用delete来撤销动态创建的对象</li>
+<li>如果指针指向的不是new动态分配出来的内存地址，则这个delete操作是非法的
+<ul>
+<li>int ival = 24; int *ptr = &amp;ival; delete ptr; // invalid</li>
+<li>int *ptr2 = new int(1024); delete ptr2; // ok</li>
+</ul>
+</li>
+<li>悬垂指针：指针被删除，但是它还指向之前指向的内存地址，容易出错，最好在删除后再将其赋值为0，表示不指向任何内存</li>
+<li>动态分配内存容易出现的错误：
+<ul>
+<li>内存泄漏</li>
+<li>读写已删除的对象</li>
+<li>对向指向同一个内存空间的两个指针执行删除操作</li>
+</ul>
+</li>
+</ul>
+<h5>类型转换 ...</h5>
+<h2>7. 函数</h2>
+<h5>内联函数</h5>
+<ul>
+<li>在函数返回类型前添加inline关键字，就会将该函数转换为内联函数，在编译的时候会在调用该函数的地方“展开”，避免了函数调用的开销。</li>
+<li>内联函数必须在头文件中定义，对编译器显示可见，而不仅仅是声明</li>
+</ul>
+<h5>指向函数的指针 ...</h5>
+<h2>12. 类</h2>
+<h5>全局作用域确定操作符 “::”，访问全局变量</h5>
+<p>[codesyntax lang="cpp"]</p>
+<pre>int height = 123;
+int main() {
+    std::cout &lt;&lt; ::height;</pre>
+<p>[/codesyntax]</p>
+<h5>const构造函数是不需要的</h5>
+<p>创建类型的const对象时，运行一个普通的构造函数来初始化该const对象。</p>
+<h5>构造函数初始化列表</h5>
+<ul>
+<li>有时构造函数初始化列表是必须的
+<ul>
+<li>没有构造函数的类类型的成员，以及const或引用类型的成员，不关是哪种类型，都必须在构造函数初始化列表中进行初始化。因为它们没有，或者没办法使用默认的构造函数进行其自身的初始化。</li>
+<li>所谓的构造函数内赋值，只不过是在构造函数初始化结束后，进入到计算阶段的逻辑。</li>
+</ul>
+</li>
+<li>初始化列表内的初始化顺序是按照成员在类中定义的顺序来的，而不是列表内的编写顺序来的，所以应该按成员的定义顺序来编写初始化列表</li>
+</ul>
+<h5>类的实例化</h5>
+<ul>
+<li>YourClass yourObj(); // 错误！你声明了一个函数</li>
+<li>YourClass yourObj; // 正确！</li>
+<li>YourClass yourObj = YourClass(); // 正确！</li>
+<li>YourClass yourObj* = new YourClass(); // 正确！记住new返回的是一个指针</li>
+</ul>
+<h5>构造函数的隐式转换</h5>
+<ul>
+<li>使用explicit关键字来抑制构造函数的隐式转换</li>
+</ul>
+<h5>友元 ...</h5>
+<h5>static成员</h5>
+<ul>
+<li>static数据成员必须在类定义体的外部定义。不像普通数据成员，static成员不是通过构造函数进行初始化，而是应该在定义时进行初始化。</li>
+</ul>
+<h2>15. 面向对象编程</h2>
+<h5>const</h5>
+<ul>
+<li>const对象只能调用const成员函数。但构造函数和析构函数对这个规则例外，它们从不定义为常量成员，但可被常量对象调用（被自动调用）。它们也能给常量的数据成员赋值，除非数据成员本身是常量。</li>
+<li>我们定义的类的成员函数中，常常有一些成员函数不改变类的数据成员，也就是说，这些函数是"只读"函数，而有一些函数要修改类数据成员的值。如果把不改变数据成员的函数都加上const关键字进行标识，显然，可提高程序的可读性。其实，它还能提高程序的可靠性，已定义成const的成员函数，一旦企图修改数据成员的值，则编译器按错误处理。</li>
+</ul>
+<h5>虚函数 virtual</h5>
+<ul>
+<li>如果没有被声明为virtual，则该函数会被继承，但是无法被重新定义（无法在派生类中重写）。只有被声明为virtual的函数才会在派生类中被覆盖，否则即便派生类重写了该函数，也不会生效。</li>
+<li>如果派生类没有重定义virtual函数，则会使用基类的版本。</li>
+<li>虚函数在运行时会发生动态绑定。在C++中，通过基类的引用（指针）调用虚函数时，发生动态绑定。被调用的函数会根据引用（指针）的实际类型进行调用。</li>
+<li>一旦函数被定义为虚函数，则其一直为虚函数，派生类无法改变。派生类可选择是否在其前面继续添加virtual保留字，但是不会有任何影响。</li>
+<li>覆盖虚函数机制：在某些特定时候，我们可以使用作用域操作符来强制指定虚函数的特定版本
+<ul>
+<li>double d = baseP-&gt;Item_base::net_price(42.1);</li>
+<li>只有成员函数中的代码才应该使用作用域操作符覆盖虚函数机制</li>
+<li>一般用来调用基类版本的函数</li>
+</ul>
+</li>
+</ul>
+<h5>静态类型和动态类型</h5>
+<p>由于继承导致对象的指针和引用具有两种不同的类型。</p>
+<p>对象的静态类型：对象在声明时采用的类型。是在编译期确定的。<br />
+对象的动态类型：目前所指对象的类型。是在运行期决定的。对象的动态类型可以更改，但是静态类型无法更改。</p>
+<p>[codesyntax lang="cpp"]</p>
+<pre>class B {}
+class C : public B {}
+class D : public B {}
+D* pD = new D(); // pD的静态类型是它声明的类型D*，动态类型也是D*
+B* pB = pD; // pB的静态类型是它声明的类型B*，动态类型是pB所指向的对象pD的类型D*
+C* pC = new C();
+pB = pC; // pB的动态类型是可以更改的，现在它的动态类型是C*</pre>
+<p>[/codesyntax]</p>
+<p>静态绑定：绑定的是对象的静态类型，某特性（比如函数）依赖于对象的静态类型，发生在编译期。<br />
+动态绑定：绑定的是对象的动态类型，某特性（比如函数）依赖于对象的动态类型，发生在运行期。</p>
+<p>[codesyntax lang="cpp"]</p>
+<pre>class B {
+    void DoSomething();
+    virtual void vfun();
+}
+class C : public B {
+    void DoSomething(); // 首先说明一下，这个子类重新定义了父类的no-virtual函数，这是一个不好的设计，会导致名称遮掩；这里只是为了说明动态绑定和静态绑定才这样使用。
+    virtual void vfun();
+}
+class D : public B {
+    void DoSomething();
+    virtual void vfun();
+}
+D* pD = new D();
+B* pB = pD;</pre>
+<p>[/codesyntax]</p>
+<p>让我们看一下，pD-&gt;DoSomething()和pB-&gt;DoSomething()调用的是同一个函数吗？<br />
+不是的，虽然pD和pB都指向同一个对象。因为函数DoSomething是一个no-virtual函数，它是静态绑定的，也就是编译器会在编译期根据对象的静态类型来选择函数。pD的静态类型是D*，那么编译器在处理pD-&gt;DoSomething()的时候会将它指向D::DoSomething()。同理，pB的静态类型是B*，那pB-&gt;DoSomething()调用的就是B::DoSomething()。</p>
+<p>让我们再来看一下，pD-&gt;vfun()和pB-&gt;vfun()调用的是同一个函数吗？<br />
+是的。因为vfun是一个虚函数，它动态绑定的，也就是说它绑定的是对象的动态类型，pB和pD虽然静态类型不同，但是他们同时指向一个对象，他们的动态类型是相同的，都是D*，所以，他们的调用的是同一个函数：D::vfun()。</p>
+<p>上面都是针对对象指针的情况，对于引用（reference）的情况同样适用。</p>
+<p>指针和引用的动态类型和静态类型可能会不一致，但是对象的动态类型和静态类型是一致的。</p>
+<p><span style="text-decoration: underline;" data-mce-mark="1">只有虚函数才使用的是动态绑定，其他的全部是静态绑定。</span></p>
+<p>当缺省参数和虚函数一起出现的时候情况有点复杂，极易出错。我们知道，虚函数是动态绑定的，但是为了执行效率，缺省参数是静态绑定的。</p>
+<p>[codesyntax lang="cpp"]</p>
+<pre>class B {
+    virtual void vfun(int i = 10);
+}
+class D : public B {
+    virtual void vfun(int i = 20);
+}
+D* pD = new D();
+B* pB = pD;
+pD-&gt;vfun();
+pB-&gt;vfun();</pre>
+<p>[/codesyntax]</p>
+<p>有上面的分析可知pD-&gt;vfun()和pB-&gt;vfun()调用都是函数D::vfun()，但是他们的缺省参数是多少？<br />
+分析一下，缺省参数是静态绑定的，pD-&gt;vfun()时，pD的静态类型是D*，所以它的缺省参数应该是20；同理，pB-&gt;vfun()的缺省参数应该是10。</p>
+<p><span style="text-decoration: underline;" data-mce-mark="1">“绝不重新定义继承而来的缺省参数（Never redefine function’s inherited default parameters value.）”</span></p>
+<h5>继承的访问控制</h5>
+<ul>
+<li>基类中的private成员，永远不为派生类所见</li>
+<li>公用继承（派生类: public 基类）：基类中的public和protected成员保持其访问控制，继承到派生类中</li>
+<li>受保护继承（派生类: protected 基类）：基类中的public和protected，全部转换为protected，继承到派生类中</li>
+<li>私有继承（派生类: private 基类）：基类中的所有成员，转换为private，继承到派生类中</li>
+<li>派生类中的成员访问只能比基类更严格，而不能更宽松</li>
+<li>派生类的默认继承级别是 private</li>
+<li>结构体的默认继承级别是 public</li>
+</ul>
+<h5>友元关系不能继承</h5>
+<p>基类的友元对派生类的成员没有特殊访问权限。</p>
+<h5>转换与继承 ...</h5>
+<h5>派生类复制构造函数 ...</h5>
+<h5>派生类赋值操作符 ...</h5>
+<h5>派生类析构函数</h5>
+<p>派生类析构函数不负责撤销基类对象的成员。编译器总是显示调用派生类对象基类部分的析构函数。每个析构函数只负责清楚自己的成员。基类总应该定义一个虚析构函数。</p>
+<h5>纯虚函数</h5>
+<p>在函数形参表后面加上 =0 以指定纯虚函数。无法实例化含有纯虚函数的类。</p>
+<h2>16. 模板与泛型编程</h2>
+<h5>模板typename与class的区别</h5>
+<p>没有实际区别，可以互换使用。typename是标准C++的组成部分。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2013/08/c-learning-notes/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

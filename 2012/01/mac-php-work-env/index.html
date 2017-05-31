@@ -1,0 +1,647 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MAC上的PHP工作环境搭建 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2012/01/mac-php-work-env/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2012/01/mac-php-work-env/">MAC上的PHP工作环境搭建</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>01 Jan 2012</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MAC">MAC</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/OSX">OSX</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/PHP">PHP</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>好吧，正好准备将工作环境转换到MAC上，不了解的东西比较多，那么就没办法了，只好自己一步步摸索。这篇文章权作笔记。另，当前的操作系统版本是OSX10.7.2的LION。</p>
+<p>吐槽下，虽然MAC上的操作系统OSX是UNIX like的，不过我贴了个linux标签，反正都差不多啦。。。</p>
+<p><span style="font-size: large;"><strong>Part 1: MacPorts</strong></span></p>
+<p>一步步来，首先需要解决的软件安装工具的问题，毕竟谁也不想php、cgi、mysql一串软件全部自己手动下源码编译吧。所以我们需要安装MacPorts这个软件，这个软件会很方便地提供软件的安装，就像debian、ubuntu的apt和centos的yum一样。</p>
+<p>安装很简单，直接到官网上下编译好的安装包就可以了，只要你在使用的操作系统没有太超前于MacPorts工作小组就行了。否则的话只好自己下载源码编译安装了。</p>
+<p>具体细节就不多说了，直接上官网看就行了：<a title="The MacPorts Project" href="http://www.macports.org/" target="_blank">http://www.macports.org/</a>。需要提一点的是，一般家用的OSX系统下载了官方的安装包也不能直接安装成功，因为MacPorts依赖于Apple的开发软件Xcode，所以需要先到AppleStore上下载并安装Xcode先。恩，就这样。</p>
+<p>另，下文会提到的port load命令，我man了下port的手册，手册里是这么说的：Provides a shortcut to using launchctl to load a port's daemon (as installed in /Library/LaunchDaemons).<br />
+还有就是需要建一个文件夹，很多程序的启动脚本以后都放在一个地方：mkdir /etc/init.d/</p>
+<p><span style="font-size: large;"><strong>Part 2: 安装PHP和<strong>spawn-fcgi</strong></strong></span></p>
+<p>安装完MacPorts之后就比较顺利了，不过PHP还是个坎。关键就在纠结的5.2和5.3的问题，5.3肯定是不装的，那么就是5.2了，而5.2又不是MacPorts的官方标准包，所以安装的时候就多出了很多麻烦事情。另外一点是，MacPorts下的PHP安装没有单独的cgi安装，而是将cgi作为PHP安装的一个参数带了进来，这个比较囧，一开始没搞明白。</p>
+<p>关于安装时候带参数的事情在MacPorts是比较重要的，否则当你安装完毕的时候发现自己需要的东西居然没有那就囧了，具体可以参考：<a title="MacPorts: variants" href="http://guide.macports.org/#development.variants">http://guide.macports.org/#development.variants</a></p>
+<p style="padding-left: 30px;">port -v install php52 +debug +fastcgi +mysql5 +readline +sockets<br />
+port -v install spawn-fcgi</p>
+<p>这里插一句，因为macport在安装软件的时候是没有进度条的，所以我们需要带上-v参数，来查看安装细节。否则有的安装慢的软件，你就不知道它在干嘛了。</p>
+<p>安装完成后，到/opt/local/etc/php5下，cp php.ini-recommended php.ini<br />
+然后修改几个项：</p>
+<p style="padding-left: 30px;">error_reporting = E_ALL &amp; ~E_NOTICE<br />
+display_errors = On<br />
+error_log = /Users/jonathan/logs/php5/error.log<br />
+date.timezone = Asia/Shanghai</p>
+<p>手动创建/Users/jonathan/logs/php5/error.log日志</p>
+<p>启动脚本放在/etc/init.d下，起名php5-cgi，写完后记得给于执行权限chmod +x ./php5-cgi，脚本内容：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#!/bin/bash
+
+DAEMON=/opt/local/bin/spawn-fcgi
+HOST=127.0.0.1
+PORT=9000
+
+PHP_FCGI_CHILDREN=2
+PHP_CGI=/opt/local/bin/php-cgi
+PHP_CGI_NAME=php5-cgi
+
+case "$1" in
+  start)
+        echo -n "Spawning PHP_CGI: "
+        $DAEMON -C $PHP_FCGI_CHILDREN -a $HOST -p $PORT -f $PHP_CGI
+        echo "$PHP_CGI_NAME."
+        ;;
+  stop)
+        echo -n "Stopping PHP_CGI: "
+        killall php-cgi
+        echo "$PHP_CGI_NAME."
+        ;;
+  restart)
+        echo -n "Restarting PHP_CGI: "
+        killall php-cgi
+        sleep 1
+        $DAEMON -C $PHP_FCGI_CHILDREN -a $HOST -p $PORT -f $PHP_CGI
+        echo "$PHP_CGI_NAME."
+        ;;
+  *)
+        echo -n "Usage: $PHP_CGI_NAME {start|stop|restart}" &gt;&amp;2
+        exit 1
+        ;;
+esac
+
+exit 0</pre>
+<p>[/codesyntax]</p>
+<p><span style="font-size: large;"><strong>Part3: 安装Nginx</strong></span></p>
+<p>首先执行安装命令：</p>
+<p style="padding-left: 30px;">port -v install nginx +status +ssl +flv</p>
+<p>到/opt/local/etc/nginx下，执行命令：</p>
+<p style="padding-left: 30px;">cp nginx.conf.example nginx.conf<br />
+mkdir sites-enabled</p>
+<p>接下去需要配置nginx的配置文件，并写一个nginx的启动脚本。配置文件我们这么改：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#user  nobody;
+worker_processes  1;
+
+error_log  /Users/jonathan/logs/nginx/error.log;
+#error_log  /Users/jonathan/logs/nginx/notice.log notice;
+#error_log  /Users/jonathan/logs/nginx/info.log   info;
+
+#pid        logs/nginx.pid;
+
+events {
+    worker_connections  1024;
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+
+    #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+    #                  '$status $body_bytes_sent "$http_referer" '
+    #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+    access_log  /Users/jonathan/logs/nginx/access.log;
+
+    sendfile        on;
+    #tcp_nopush     on;
+
+    #keepalive_timeout  0;
+    keepalive_timeout  65;
+    tcp_nodelay        on;
+
+    gzip  on;
+    gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+
+    include /opt/local/etc/nginx/conf.d/*.conf;
+    include /opt/local/etc/nginx/sites-enabled/*;
+}</pre>
+<p>[/codesyntax]</p>
+<p>接着创建日志文件：</p>
+<p style="padding-left: 30px;">/Users/jonathan/logs/nginx/error.log<br />
+/Users/jonathan/logs/nginx/access.log</p>
+<p>然后在sites-enabled文件夹里创建default这个配置文件：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>server {
+
+    listen   80; ## listen for ipv4
+    listen   [::]:80 default ipv6only=on; ## listen for ipv6
+
+    server_name  localhost;
+
+    access_log  /Users/jonathan/logs/nginx/localhost.access.log;
+
+    location / {
+        root  /Users/jonathan/prog/www;
+        index index.php index.html index.htm;
+    }
+
+    location /doc {
+        root      /usr/share;
+        autoindex on;
+        allow     127.0.0.1;
+        deny      all;
+    }
+
+    location /images {
+        root   /usr/share;
+        autoindex on;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass   127.0.0.1:9000;
+        fastcgi_index  index.php;
+        fastcgi_param  SCRIPT_FILENAME  /Users/jonathan/prog/www$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+}</pre>
+<p>[/codesyntax]</p>
+<p>最后创建localhost的日志：</p>
+<p style="padding-left: 30px;">/Users/jonathan/logs/nginx/localhost.access.log</p>
+<p>启动脚本放在/etc/init.d下，起名nginx，写完后记得给于执行权限chmod +x ./nginx，脚本内容：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#!/bin/bash
+
+DAEMON=/opt/local/sbin/nginx
+NAME=nginx
+DESC=nginx
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+        $DAEMON
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        $DAEMON -s stop
+        echo "$NAME."
+        ;;
+  restart)
+        echo -n "Restarting $DESC: "
+        $DAEMON -s stop
+        sleep 1
+        $DAEMON
+        echo "$NAME."
+        ;;
+  test)
+        echo -n "Testing $DESC: "
+        $DAEMON -t
+        echo "$NAME."
+        ;;
+  *)
+        echo "Usage: $NAME {start|stop|restart|test}" &gt;&amp;2
+        exit 1
+        ;;
+esac
+
+exit 0</pre>
+<p>[/codesyntax]</p>
+<p><span style="font-size: large;"><strong>Part4: 安装MySQL</strong></span></p>
+<p>执行安装命令：</p>
+<p style="padding-left: 30px;">port -v load mysql5-server</p>
+<p>这个命令应该瞬间就完成了，因为在装PHP的时候mysql就一起装好了，虽然我不知道为什么。。。<br />
+这时候虽然mysql是装好了，但是数据库没有初始化完成，所以先要初始化：</p>
+<p style="padding-left: 30px;">/opt/local/lib/mysql5/bin/mysql_install_db</p>
+<p>mysql的daemon在：/opt/local/lib/mysql5/bin/mysqld_safe &amp;<br />
+官方的mysql启动脚本在：/opt/local/share/mysql5/mysql/mysql.server<br />
+官方的mysql的配置文件在：/opt/local/share/mysql5/mysql/my-*.cnf</p>
+<p>接下来轮到我们干活了，先把配置文件放到制定地点：</p>
+<p style="padding-left: 30px;">cp /opt/local/share/mysql5/mysql/my-innodb-heavy-4G.cnf /opt/local/etc/mysql5/my.cnf</p>
+<p>当然要修改点东西，添加项全部添加在[mysqld]下：<br />
+bind-address = 127.0.0.1<br />
+去掉log、和log_warnings前面的注释。</p>
+<p>由于mysql的启动和配置比较复杂，这里不太方便将mysql默认的一系列配置文件导向到我们指定的文件，这里我们使用变通的方法来解决，首先创建文件夹/Users/jonathan/logs/mysql，然后制作软链接将mysql默认的日志文件链接到这个文件夹里。<br />
+安装完成的mysql的默认日志文件夹在：/opt/local/var/db/mysql5</p>
+<p style="padding-left: 30px;">ln -s /opt/local/var/db/mysql5/Jonathans-MacBook-Pro-slow.log /Users/jonathan/logs/mysql/slow.log<br />
+ln -s /opt/local/var/db/mysql5/Jonathans-MacBook-Pro.local.err /Users/jonathan/logs/mysql/error.log<br />
+ln -s /opt/local/var/db/mysql5/Jonathans-MacBook-Pro.log /Users/jonathan/logs/mysql/mysql.log</p>
+<p>配置文件之后是启动脚本，官方的脚本已经够好了，我们只需要把它放到指定地点：</p>
+<p style="padding-left: 30px;">cp  /opt/local/share/mysql5/mysql/mysql.server /etc/init.d/mysql</p>
+<p>恩，这样mysql的配置和启动就没问题了。可能这个时候你会发现直接执行mysql5命令，系统报错说命令未找到。这是因为系统的PATH配置有问题导致的。修复的方法很简单，在/etc/profile里添加这样一句就可以了：</p>
+<p style="padding-left: 30px;">PATH=/opt/local/bin:/opt/local/sbin:/opt/local/lib/mysql5/bin:$PATH</p>
+<p>熟悉linux开发的朋友会发现一个地方很奇怪，一般来说mysql的可执行文件应该叫mysql，但是通过MacPorts安装的mysql的可执行文件名字叫mysql5，这就很囧了。我们可以通过制作软链接的方法来解决这个问题。</p>
+<p style="padding-left: 30px;">cd /opt/local/bin<br />
+ln -s mysql5 mysql</p>
+<p>最后一步是关于安全的，通过MacPorts安装完mysql后官方还提供了一个脚本叫mysql_secure_installation5，执行这个脚本，mysql的安全会被全面检查，并协助你修改不安全的地方。</p>
+<p>至于mysql的远程访问这里顺便提下，第一是要把my.cnf里的bind-address改成127.0.0.1，第二就是要在mysql中创建一个任何ip都可以访问的用户名，最后记得flush privileges。</p>
+<p>至此mysql的安装就完成了，不得不说MacPorts的mysql安装实在是不怎么样，我写了那么多就是弥补官方安装包没做好的事情，囧。</p>
+<p><strong><span style="font-size: large;">Part5: 安装Memcached</span></strong></p>
+<p>执行安装命令：</p>
+<p style="padding-left: 30px;">port -v install memcached</p>
+<p>会有一个依赖包的安装，不过很快就会装完了，很简单的。</p>
+<p>我们需要做的是创建一个启动脚本，/etc/init.d/memcached：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#!/bin/bash
+
+DAEMON=/opt/local/bin/memcached
+NAME=memcached
+DESC=memcached
+
+USER=nobody
+HOST=127.0.0.1
+PORT=11211
+MEM=32
+LOG=/Users/jonathan/logs/memcached/info.log
+
+case "$1" in
+  start)
+        echo -n "Startring $DESC: "
+        $DAEMON -m $MEM -p $PORT -l $HOST -u $USER -d -vv &gt;&gt; $LOG 2&gt;&amp;1
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        killall $NAME
+        echo "$NAME."
+        ;;
+  restart)
+        echo -n "Restarting $DESC: "
+        killall $NAME
+        sleep 1
+        $DAEMON -m $MEM -p $PORT -l $HOST -u $USER -d -vv &gt;&gt; $LOG 2&gt;&amp;1
+        echo "$NAME."
+        ;;
+  *)
+        echo "Usage: $NAME {start|stop|restart}" &gt;&amp;2
+        exit 1
+        ;;
+esac
+
+exit 0</pre>
+<p>[/codesyntax]</p>
+<p>记得赋予可执行权限，最后不要忘记创建日志文件：</p>
+<p style="padding-left: 30px;">chmod +x /etc/init.d/memcached<br />
+touch /Users/jonathan/logs/memcached/info.log</p>
+<p><span style="font-size: large;"><strong>Part6: 安装MongoDB</strong></span></p>
+<p>执行安装命令：</p>
+<p style="padding-left: 30px;">port -v install mongodb</p>
+<p>这个会比较久，耐心等待。</p>
+<p>安装完毕，那么工作开始，创建配置文件：</p>
+<p style="padding-left: 30px;">mkdir /opt/local/etc/mongodb<br />
+touch /opt/local/etc/mongodb/mongo.cnf</p>
+<p>内容如下：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre># Store data path
+dbpath = /opt/local/var/db/mongodb/
+
+# Bind address
+bind_ip = 127.0.0.1
+
+# Running as daemon
+fork = true
+
+# Take log
+logpath = /Users/jonathan/logs/mongodb/info.log
+logappend = true</pre>
+<p>[/codesyntax]</p>
+<p>创建日志文件：</p>
+<p style="padding-left: 30px;">mkdir /Users/jonathan/logs/mongodb<br />
+touch /Users/jonathan/logs/mongodb/info.log</p>
+<p>创建启动脚本，内容如下：</p>
+<p style="padding-left: 30px;">touch /etc/init.d/mongodb<br />
+chmod +x /etc/init.d/mongodb</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#!/bin/bash
+
+DAEMON=/opt/local/bin/mongod
+NAME=mongodb
+DESC=mongodb
+
+PORT=27017
+CONFILE=/opt/local/etc/mongodb/mongo.cnf
+PIDPATH=/opt/local/var/db/mongodb
+PIDFILE=$PIDPATH/mongod.lock
+
+start_mongo() {
+    $DAEMON --port $PORT --pidfilepath $PIDPATH --config $CONFILE  --auth run
+}
+
+stop_mongo() {
+    if [ ! -f "$PIDFILE" ]
+    then
+        echo "MongoDb is not running!"
+        return 1
+    fi
+    pid=`cat $PIDFILE`
+    kill -15 $pid
+    rm $PIDFILE
+}
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+        start_mongo
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        stop_mongo
+        echo "$NAME."
+        ;;
+  restart)
+        echo -n "Restarting $DESC: "
+        stop_mongo
+        sleep 1
+        start_mongo
+        echo "$NAME."
+        ;;
+  *)
+        echo "Usage: $NAME {start|stop|restart}" &gt;&amp;2
+        exit 1
+        ;;
+esac
+
+exit 0</pre>
+<p>[/codesyntax]</p>
+<p>安装完成。</p>
+<p><span style="font-size: large;"><strong>Part7: 安装剩下的PHP扩展</strong></span></p>
+<p>现在我们面对着一个非常麻烦的问题，因为我们安装的PHP的版本是5.2，而不是MacPorts官方默认的5.3，这导致了其余的官方PHP扩展我们都不能用了。因为其余的PHP扩展在安装的时候会检查依赖包，然后发现依赖的php5包没有装，而装了和php5包冲突的php52包，所以安装就没办法执行下去了。这里我们只能手动来下载源码编译安装我们需要的PHP扩展了。</p>
+<p>我们一个个来，首先是memcache。<br />
+因为memcache的安装依赖一个包名叫libmemcached，所以我们先装它，port install libmemcached。<br />
+接下来去<a title="PECL :: Package :: memcache" href="http://pecl.php.net/package/memcache" target="_blank">http://pecl.php.net/package/memcache</a>下载最新的稳定版本2.2.6，下载完成后解压，进入到文件夹里，依次执行以下命令：</p>
+<p style="padding-left: 30px;">phpize<br />
+./configure<br />
+make<br />
+make install</p>
+<p>安装完成的扩展包会放在/opt/local/lib/php/extensions/debug-non-zts-20060613/下。<br />
+接下来我们要编辑下/opt/local/etc/php5/php.ini，把extension_dir这个参数改成上面的文件夹，让PHP能找到系列编译安装完成的扩展so文件。</p>
+<p>接下来我们需要让PHP知道我们添加了这个memcache扩展，一般来说是需要改php.ini文件。但是我不想这么做，否则以后东西越来越多，php.ini文件也会越来越乱。那么怎么办呢？我们可以使用外部ini文件路径来创建自己的子ini配置文件，打开phpinfo()页面，查看一栏叫“Scan this dir for additional .ini files”的，这个文件夹就是子ini配置文件夹。但是你会发现这个文件夹和我们放php.ini的文件夹不是同一个文件夹，这样非常不方便我们记忆和修改，所以这里要做一个文件夹的软链接。</p>
+<p style="padding-left: 30px;">mkdir /opt/local/etc/php5/conf.d<br />
+ln -sF /opt/local/var/db/php5 /opt/local/etc/php5/conf.d</p>
+<p>最后我们需要在conf.d文件夹里创建我们的配置文件memcache.ini，并在里面添加一句extension=memcache.so，就完成了。<br />
+重启php的cgi，现在应该能在phpinfo里查看到memcache的信息了。<br />
+启动完成后我们还需要添加一句话来调整配置：</p>
+<p style="padding-left: 30px;">[memcache]<br />
+memcache.hash_strategy="consistent"</p>
+<p>这个配置会保证memcache的hash算法是一致性算法。</p>
+<p>apc。<br />
+方法和memcache一致，只是下载的地方改下：<a title="PECL :: Package :: APC" href="http://pecl.php.net/package/APC" target="_blank">http://pecl.php.net/package/APC</a>，下载版本选用最新的稳定版本3.1.9。<br />
+在apc.ini文件中添加配置：</p>
+<p style="padding-left: 30px;">[apc]<br />
+apc.enabled=0<br />
+apc.enable_cli=0</p>
+<p>因为在开发环境我们并不需要开启缓存机制，如果有需要做压力测试的时候只要把这两个或者一个值打开就行了。</p>
+<p>xdebug。<br />
+下载：<a title="PECL :: Package :: xdebug" href="http://pecl.php.net/package/xdebug" target="_blank">http://pecl.php.net/package/xdebug</a>，版本2.1.2。<br />
+同样，添加配置：</p>
+<p style="padding-left: 30px;">[xdebug]<br />
+xdebug.profiler_enable=Off<br />
+xdebug.profiler_output_dir=/Users/jonathan/logs/xdebug<br />
+xdebug.profiler_output_name=cachegrind.out.%s.%u.%p<br />
+xdebug.auto_trace=Off<br />
+xdebug.trace_output_dir=/Users/jonathan/logs/xdebug<br />
+xdebug.trace_output_name=trace.%c</p>
+<p>不要忘记位xdebug创建日志文件夹：</p>
+<p style="padding-left: 30px;">touch /Users/jonathan/logs/xdebug</p>
+<p>mongo。<br />
+下载：<a title="PECL :: Package :: mongo" href="http://pecl.php.net/package/mongo" target="_blank">http://pecl.php.net/package/mongo</a>，版本1.2.6。<br />
+添加配置：</p>
+<p style="padding-left: 30px;">[mongo]<br />
+mongo.native_long=true</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2012/01/mac-php-work-env/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

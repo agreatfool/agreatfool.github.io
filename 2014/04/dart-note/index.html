@@ -1,0 +1,323 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Dart 学习笔记 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2014/04/dart-note/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2014/04/dart-note/">Dart 学习笔记</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>21 Apr 2014</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Dart">Dart</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2>1. 简介</h2>
+<p>Google的东西用起来一般感觉都不赖，即便是编程语言，这点也没变。Dart不单单只是一门语言，其相关的配套设施也一应俱全：</p>
+<ul>
+<li><span style="font-size: 12px;" data-mce-mark="1">DartIDE：简单好用的IDE，当然更推荐使用JetBrains系列的IDE，配上Dart的插件</span></li>
+<li><span style="font-size: 12px;" data-mce-mark="1">dartanalyzer：语言分析工具</span></li>
+<li><span style="font-size: 12px;" data-mce-mark="1">dart2js：js转换工具</span></li>
+<li><span style="font-size: 12px;" data-mce-mark="1">dartfmt：代码格式化工具</span></li>
+<li>docgen：文档生成工具</li>
+<li><span style="font-size: 12px;" data-mce-mark="1">pub：官方自带的包管理工具（官方给出解决方案肯定比第三方出包管理工具要好太多太多了）。</span></li>
+</ul>
+<p>Dart给我的印象是多种语言的优点的集合。再深入点，你会发现Dart最主要是受了JavaScript和Java两种语言的影响。设计模式上更倾向于Java，而语言本身的使用则更倾向于JavaScript。从服务器角度来说，Dart和NodeJs是一脉相承的：原生的lambda表达式，原生的异步IO支持，<a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#isolates" target="_blank">单进程的设计</a>，基本上和NodeJs没什么差别。</p>
+<p>在接下来的文章里，主要以外部资源介绍为主，因为google官方给的文章内的指导已经非常到位了，不需要我再写班门弄斧的文字了。这里主要是理清思路。</p>
+<h2>2. 基础资源</h2>
+<ul>
+<li><span style="font-size: 12px;" data-mce-mark="1">官网：</span><a style="font-size: 12px;" href="https://www.dartlang.org/" target="_blank">https://www.dartlang.org/</a></li>
+<li><span style="font-size: 12px;" data-mce-mark="1">初学者：千万不要直接去看官网上的</span><a style="font-size: 12px;" href="https://www.dartlang.org/docs/tutorials/" target="_blank">Tutorials</a><span style="font-size: 12px;" data-mce-mark="1">，绝对是个坑（要先去看语法），官网上针对新手的页面应该是：</span><a style="font-size: 12px;" href="https://www.dartlang.org/docs/" target="_blank">Programmer's Guide</a><span style="font-size: 12px;" data-mce-mark="1">。</span></li>
+<li><span style="font-size: 12px;" data-mce-mark="1">语法指导：</span><a style="font-size: 12px;" href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html" target="_blank">Dart: Up and Running &gt;&gt; Chapter 2. A Tour of the Dart Language</a>，新手第一个要看的东西</li>
+<li><span style="font-size: 12px;" data-mce-mark="1">API文档：</span><a style="font-size: 12px;" href="https://api.dartlang.org/apidocs/channels/stable/dartdoc-viewer/home" target="_blank">Dart API Reference</a>，在需要用某些功能但是不清楚API细节的时候需要查阅的网站</li>
+<li><span style="font-size: 12px;" data-mce-mark="1">Coding Style：</span><a style="font-size: 12px;" href="https://www.dartlang.org/articles/style-guide" target="_blank">Dart Style Guide</a>，官方的指导，掺杂了一些Dart的编程理念，不是单纯的coding style，照做就好</li>
+<li>工具列表：<a href="https://www.dartlang.org/tools/" target="_blank">Dart Tools</a>，上面提及的系列工具的介绍和使用指导</li>
+<li>profile工具：当前版本 - 1.3.0，还未被包含在发布SDK内的profile工具：<a href="https://github.com/dart-lang/dprof" target="_blank">github/dprof</a>，将来会被包含在SDK内发布</li>
+</ul>
+<h2>3. 语法</h2>
+<p>这里简单介绍与其他语言差别比较大的，需要特别注意的点：</p>
+<ul>
+<li>变量的类型可指定，但不强制性要求指定，若指定，则在--checked模式，会进行排错，若不指定，则可以使用 var 来申明变量</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-final-const" target="_blank">Final and Const</a> 的差别，需要了解下。此外，补一篇外部外部文章：<a href="http://news.dartlang.org/2012/06/const-static-final-oh-my.html" target="_blank">Const, Static, Final, Oh my!</a></li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#numbers" target="_blank">整形的长度</a>和别的语言有差异，要注意：-2<sup>53</sup> to 2<sup>53</sup></li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#strings" target="_blank">字符串的连字处理方式</a>比较多，空格也可以，这里可以看下</li>
+<li>if等条件判断的时候，必须为<a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#booleans" target="_blank">布尔型的真</a>才是真：Dart treats all values other than true as false</li>
+<li>使用 =&gt; 的<a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#functions" target="_blank">超缩略函数定义方式</a>，别的语法没的，要注意下，官方命名为：arrow functions</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#functions-optional-parameters" target="_blank">函数的可选参数</a>的定义方式和别的语言不同</li>
+<li>诡异的 <a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#op-arithmetic" target="_blank">~/ 运算符</a>，运算结果是 除以 然后 向下取整，返回值是整形</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-op-type-test" target="_blank">类型检查语法</a>，类似于ActionScript里的语法</li>
+<li>类似于JavaScript里的<a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#for-loops" target="_blank">循环闭包陷阱</a>，在Dart中已经被处理了</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#switch" target="_blank">switch case</a>必须要写break，只有在case内没有逻辑代码的情况下才能顺延，要不然就要使用 continue + label 的方式处理</li>
+<li>语言自带 <a style="font-size: 12px;" href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#assert" target="_blank">assert 函数</a>，但仅在--checked模式下启用</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#exceptions" target="_blank">Exception和Error</a>，此外参考这里，来了解两者之间的差异：<a href="http://stackoverflow.com/questions/17315945/error-vs-exception-in-dart" target="_blank">stackoverflow.com &gt;&gt; Error vs. Exception in Dart</a></li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-exceptions-throw" target="_blank">throw</a> 什么都能扔（真暴力。。。）</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-exceptions-catch" target="_blank">catch</a> 的语法和别的语言有点差异</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#classes" target="_blank">.. 两个点的语法</a>，别的语言没的</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-constructors" target="_blank">构造函数</a>这节仔细看下，很蛋痛，和别的语言完全不同，我觉得这里有点乱搞了，混合了好几种语言的做法</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#classes-getters-and-setters" target="_blank">getters 和 setters</a> 不需要手写</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#classes-operators" target="_blank">操作符重载</a>，这里要注意下，一般比较少见</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-mixins" target="_blank">Mixin</a>，算是个蛮新式的概念，Dart也有</li>
+<li>父类的静态成员不会被子类继承，这个差异很大，见：<a href="http://stackoverflow.com/questions/15860375/variables-is-not-inherited" target="_blank">stackoverflow.com &gt;&gt; Variables is not inherited?</a></li>
+<li>类成员的<a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#libraries" target="_blank">访问可见性</a>和别的语言完全不同，注意</li>
+<li>Dart里的<a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#libraries" target="_blank">类、包加载和管理</a>的手段和Java类似，但功能更强大</li>
+<li>类似于 C / C++ 语法的 <a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#typedefs" target="_blank">Typedefs</a>，要注意下</li>
+<li><a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-metadata" target="_blank">Metadata</a> (Annotation) 的定义和使用</li>
+<li>和别的语言不一样的<a href="https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#comments-doc" target="_blank">注释文档</a>的编写规则</li>
+</ul>
+<h2>4. 教程文章</h2>
+<ul>
+<li><a href="https://www.dartlang.org/articles/idiomatic-dart/" target="_blank">Idiomatic Dart</a>：教你如何使用dart式思考来编程，介绍了一系列dart式的语法和编程方式，基本上在读 <a href="https://www.dartlang.org/articles/style-guide" target="_blank">Dart Style Guide</a> 的时候顺道把这篇也干掉就对了。这篇文章里 <a href="https://www.dartlang.org/articles/idiomatic-dart/#futures" target="_blank">Future.delayed</a> 这段特别值得一读</li>
+<li><a href="https://www.dartlang.org/articles/doc-comment-guidelines/" target="_blank">Guidelines for Dart Doc Comments</a>：怎么写文档注释，主要了解下dart提倡的简单书写，以及在注释中使用markdown</li>
+<li><a href="https://www.dartlang.org/articles/emulating-functions/" target="_blank">Emulating Functions in Dart</a>：讲了在dart中函数动态调用相关的奇技淫巧，call函数，Function.apply函数，typedef函数的类型匹配，noSuchMethod函数，等</li>
+<li><a href="https://www.dartlang.org/articles/mixins/" target="_blank">Mixins in Dart</a>：Mixin 代码混合，在dart里的实现和使用，看下<a href="https://www.dartlang.org/articles/mixins/#syntax-and-semantics" target="_blank">三条原则</a>，和几个例子就差不多了。Dart是没有interface这个关键字的，接口一般使用 abstract class 来定义，这里的 Mixin 也起到了类似的作用</li>
+<li><a href="https://www.dartlang.org/articles/snapshots/" target="_blank">Snapshots in Dart</a>：Dart的代码缓存机制，类似于字节码的东西？大概。官方说明是说能提高启动速度，不过我没看到能提高运行速度的说明</li>
+<li><a href="https://www.dartlang.org/articles/optional-types/" target="_blank">Optional Types in Dart</a>：Dart里动态类型的一些规则和最佳实践，比如说要不要申明、什么时候申明类型啊，--checked模式会检查什么，之类的</li>
+<li><a href="https://www.dartlang.org/articles/event-loop/" target="_blank">The Event Loop and Dart</a>：Dart的event loop是如何工作的，对于没接触过nodejs的人来说，这篇是非常重要的概念帖，里面有几点需要重点理解：
+<ul>
+<li>Dart的queue有两个实现，其先后顺序是不同的，microtask queue会在event queue中的每个event执行之走完：<a href="https://www.dartlang.org/articles/event-loop/#darts-event-loop-and-queues" target="_blank">Dart’s event loop and queues</a></li>
+<li>microtask queue现在的实现有bug，会导致其执行顺序不正常地放到event loop最后：<a href="https://www.dartlang.org/articles/event-loop/#microtask-queue-schedulemicrotask" target="_blank">Microtask queue: scheduleMicrotask()</a></li>
+</ul>
+</li>
+<li><a href="https://www.dartlang.org/articles/numeric-computation/" target="_blank">Numeric Computation</a>：数字类型在Dart VM内的实现，以及如何使用它们，如何提升性能。在dart内部，int申明就有3种隐藏实现。注意<a href="https://www.dartlang.org/articles/numeric-computation/#typed-lists" target="_blank">Typed List</a>这节，以及后续<a href="https://www.dartlang.org/articles/numeric-computation/#pulling-back-the-curtains" target="_blank">Pulling back the curtains</a>这一大节里的优化点。</li>
+<li><a href="https://www.dartlang.org/articles/reflection-with-mirrors/" target="_blank">Reflection in Dart with Mirrors: An Introduction</a>：Dart语言里的反射机制，动态调用，和类定义了解，都需要使用这套工具</li>
+</ul>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2014/04/dart-note/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

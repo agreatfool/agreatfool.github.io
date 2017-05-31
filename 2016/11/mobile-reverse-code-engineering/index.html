@@ -1,0 +1,419 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>移动应用逆向工程 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2016/11/mobile-reverse-code-engineering/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>22 Nov 2016</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MobileDev">MobileDev</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/ReverseCodeEngineering">ReverseCodeEngineering</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Android">Android</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/iOS">iOS</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Unity">Unity</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2 id="section">0. 前言</h2>
+<p>最近也算是开始入坑玩起了移动游戏，同时对游戏的机制和技术也产生了很大兴趣。加上之前很早就想参与下移动应用的开发和移动游戏的开发，于是就想尝试下反向工程该游戏。下文的内容权作笔记。</p>
+
+<h2 id="section-1">1. 准备工作</h2>
+<p>下载游戏的apk和ipa，把后缀名改成zip解压，获得两个版本的文件夹。</p>
+
+<h3 id="android">1.1 Android文件夹</h3>
+<ul>
+  <li>assets：游戏主体，基本上游戏内容都在这里</li>
+  <li>classes.dex：和平台相关的JAVA代码，反编译可以获得源代码</li>
+  <li>lib：都是so文件，游戏运行需要的一系列基本平台类库</li>
+  <li>res：应用程序的各种资源，主要是icon，各种尺寸</li>
+</ul>
+
+<p>游戏代码位置：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> assets/bin/Data/Managed</code></pre></figure>
+
+<h3 id="ios">1.2 iOS文件夹</h3>
+<p>根目录 <code>Payload</code> 文件夹下只有一个文件夹 <code>fatego.app</code>，有用的东西都在 Data 下面，<code>Managed</code> 下面是代码，其他基本上都是资源。</p>
+
+<h2 id="java">2. JAVA反编译</h2>
+<p>反编译dex文件到jar文件，使用命令行工具：<code>dex2jar</code><br />
+安装：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> brew install dex2jar --verbose</code></pre></figure>
+
+<p>安装完之后你找不到这个命令。。。<br />
+该软件命令都是以 <code>d2j-*</code> 开头的，这里我们要用的是：<code>d2j-dex2jar</code></p>
+
+<p>执行命令：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> d2j-dex2jar classes.dex</code></pre></figure>
+
+<p>会在同目录创建一个新文件：<code>classes-dex2jar.jar</code></p>
+
+<p>使用<code>JD-GUI</code>这个软件来打开并查看其中的JAVA代码，主页：<a href="http://jd.benow.ca/">链接</a></p>
+
+<p>当然，因为Unity游戏项目的代码是跨平台的，因此Android平台的class文件内没有什么有价值的东西需要我们仔细阅读。</p>
+
+<h2 id="dll">3. DLL反编译</h2>
+<p>Unity的游戏代码是放在上面所说的<code>Managed</code>文件夹下，游戏代码会被封装成一个DLL：<code>Assembly-CSharp.dll</code><br />
+因此我们需要将这个DLL反编译成C#代码。这里使用的工具是<code>ILSpy</code>，但这款软件是没有MAC版的，在google上找到了MAC的替代品：<a href="https://github.com/aerror2/ILSpy-For-MacOSX">aerror2/ILSpy-For-MacOSX</a></p>
+
+<p>这款软件的安装和使用还有点意思，首先需要安装<code>Xamarin Studio</code>：<a href="https://www.xamarin.com/download">下载</a><br />
+装完了估计还得下载安装<code>Mono套件</code>，这东西不需要担心，在启动<code>Xamarin Studio</code>的时候会提示你没有runtime，需要下载。</p>
+
+<p>接下来：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> git clone git@github.com:aerror2/ILSpy-For-MacOSX.git</code></pre></figure>
+
+<p>使用<code>Xamarin Studio</code>打开克隆下来的sln项目，构建Build完成，生成：<code>ILSpyMac/bin/Debug</code><br />
+该文件夹下都是构建出来的可执行文件，我们需要使用的是：<code>ILSpyMac.exe</code><br />
+接下来执行命令：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> mono ILSpyMac.exe -n 随便输入点名字 DLL文件所在的文件夹</code></pre></figure>
+
+<p>这个命令会扫描刚才输入的<code>DLL文件所在的文件夹</code>，为每个DLL文件创建同名的文件夹，文件夹内都是DLL内解析出来的C#代码文件</p>
+
+<h2 id="so">4. SO反编译</h2>
+<p>MAC下主要是使用工具：<a href="https://www.hopperapp.com/">Hopper Disassembler</a><br />
+这是一个付费软件，自己找破解吧。</p>
+
+<h2 id="unity">5. Unity资源解包</h2>
+<p>资源文件都放在Data文件夹下：<br />
+iOS：<code>Payload/fatego.app/Data/</code><br />
+Android：<code>assets/bin/Data/</code><br />
+以<code>assets</code>为后缀名</p>
+
+<p>这里我们需要工具来解包资源文件，解出我们可理解的图片、文本、模型、音频文件。找这个工具不算顺利，以引擎来看Unity版本更新不算慢，导致工具必须频繁，而不知道为什么，做工具的人也不多，这里我把我用过的踩过坑的历史都写下，以作笔记。<br />
+从结论上来说，现行可用的基本上只有<code>5.4 python-unitypack</code></p>
+
+<h3 id="unity-studio">5.1 Unity Studio</h3>
+<p>主页：<a href="https://github.com/RaduMC/UnityStudio">RaduMC/UnityStudio</a><br />
+介绍：Unity Studio is a tool for exploring, extracting and exporting assets from Unity games and apps.</p>
+
+<p>下载下来是windows下的可执行文件，即exe，MAC和Linux不可用。尝试使用了下，打开assets包是可以，但解包就假死，错误信息没有仔细看，估计是资源包内的格式不支持之类的错误。</p>
+
+<p>Update 2016-11-25:<br />
+找到了作者的<a href="http://www.perfare.net/650.html">博客</a>，11.08刚更新到v0.6.4版本。不过这个版本下载下来也仍旧有报错。<br />
+最后用Windows机器clone了代码库，用VS自己编译了一个版本，这个倒是可以用。将assets整个导出后，Texture2D的文件都是pvr，后面要找工具看是否能转换pvr到png之类的。</p>
+
+<p>Update 2016-11-27:<br />
+在我的WIN7机器上做实验，build出来的版本2D贴图解析肯定有问题，所有的图片不是黑的就是不显示，而使用0.6.4作者官方的最新版本，除了会报<code>无法加载 DLL“PVRTexLibWrapper.dll”</code>之外，非PVR格式的图片都是可以正常预览的。<br />
+在作者的博客上找到了一个<a href="http://www.perfare.net/617.html">提示</a></p>
+
+<blockquote>
+  <p>64位需要Visual C++ 2015</p>
+</blockquote>
+
+<p>尝试到微软官方页面上<a href="https://www.microsoft.com/en-us/download/details.aspx?id=53840">下载</a>然后安装了，结果仍旧没有解决问题。这块仍旧需要Debug。<br />
+但至少知道这个工具的贴图相关技术还是可用的，不过当前PVR的DLL链接有问题。</p>
+
+<p>Update 2016-11-30:<br />
+两次Update里的作者是中国人，非标题下列的原库的作者，所述的库是一个fork库：<br />
+<a href="https://github.com/Perfare/UnityStudio">Perfare/UnityStudio</a></p>
+
+<h3 id="unity-assets-bundle-extractor">5.2 Unity Assets Bundle Extractor</h3>
+<p>主页：<a href="https://github.com/DerPopo/UABE">DerPopo/UABE</a><br />
+论坛：<a href="https://7daystodie.com/forums/showthread.php?22675-Unity-Assets-Bundle-Extractor">Unity Assets Bundle Extractor</a><br />
+介绍：Unity .assets and AssetBundle editor</p>
+
+<p>下载下来就只有一个exe文件，打开就报错说一个DLL不存在，也是不知道怎么用。</p>
+
+<p>Update 2016-11-25:<br />
+之前下的2.0b版本有问题，只有一个可执行文件，前面的几个版本（2.0b之前，含2.0）都是完整的包，可以使用。不过这个软件的导出功能不是很好用，也没有批量操作。</p>
+
+<h3 id="disunity">5.3 DisUnity</h3>
+<p>主页：<a href="https://github.com/ata4/disunity">ata4/disunity</a><br />
+介绍：An experimental command-line toolset for Unity asset and asset bundle files written in Java, mostly designed for extraction.</p>
+
+<p>0.3、0.4、0.5每个版本貌似都是跟进Unity的版本。当前最流行的是 Unity5，但该工具的0.5版本只是一个半成品，可以读assets，但无法解包，是一个废品。<br />
+之前最主流的解包工具就是这款，不知道为什么现在完全不行。该工具使用java编写，支持多平台。</p>
+
+<h3 id="python-unitypack">5.4 python-unitypack</h3>
+<p>主页：<a href="https://github.com/HearthSim/UnityPack/">HearthSim/UnityPack</a><br />
+介绍：A library to deserialize Unity3D Assets and AssetBundles files (*.unity3d).</p>
+
+<p>Python的命令行工具，也可以作为python的代码包来使用在代码中。该工具使用python3编写，使用需要先安装python3：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> brew install python3 --verbose</code></pre></figure>
+
+<p>然后安装工具：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> git clone git@github.com:HearthSim/UnityPack.git
+<span class="lineno">2</span> <span class="nb">cd </span>UnityPack
+<span class="lineno">3</span> ./setup.py install</code></pre></figure>
+
+<p>接下来就可以使用命令进行解包了：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> unityextract --all -o 资源导出路径 ASSETS文件路径</code></pre></figure>
+
+<p>使用后发现贴图Texture的解包需要额外安装东西：</p>
+
+<blockquote>
+  <p>Texture2D objects will be converted to png files. Not all Texture2D formats are supported. Pillow version &gt;= 3.4 is required for this.</p>
+</blockquote>
+
+<p>该类库的页面在：<a href="https://pillow.readthedocs.io/en/latest/installation.html">Pillow (PIL Fork)</a></p>
+
+<p>安装完毕后，解包脚本即可解包贴图Texture了。</p>
+
+<p>后续又发现了新问题，Android和iOS的贴图压缩算法在解包工具的当前版本中没有被处理，解包会报错：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> Android:
+<span class="lineno">2</span> NotImplementedError: Unimplemented format &lt;TextureFormat.ETC_RGB4: 34&gt;
+<span class="lineno">3</span> iOS:
+<span class="lineno">4</span> NotImplementedError: Unimplemented format &lt;TextureFormat.PVRTC_RGB4: 32&gt;</code></pre></figure>
+
+<p>待解决</p>
+
+<h2 id="section-2">6. 读代码</h2>
+<p>在代码反编译完成后，可以使用<code>Xamarin Studio</code>载入代码，方便进行代码阅读。</p>
+
+<p>UPDATE 20161130：<br />
+暂停该工作，优先级较低，进度有问题。任务先转到别的工作。</p>
+
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2016/11/mobile-reverse-code-engineering/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

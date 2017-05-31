@@ -1,0 +1,549 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>memcached完全剖析–1. memcached的基础 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2011/04/memcached-anatomy-001/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2011/04/memcached-anatomy-001/">memcached完全剖析–1. memcached的基础</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>14 Apr 2011</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Memcache">Memcache</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>发表日：2008/7/2<br />
+作者：长野雅广(Masahiro Nagano)<br />
+原文链接：<a href="http://gihyo.jp/dev/feature/01/memcached/0001">http://gihyo.jp/dev/feature/01/memcached/0001</a></p>
+<p>我是<a href="http://mixi.jp/">mixi株式会社</a>开发部系统运营组的长野。 日常负责程序的运营。从今天开始，将分几次针对最近在Web应用的可扩展性领域 的热门话题memcached，与我公司开发部研究开发组的前坂一起， 说明其内部结构和使用。</p>
+<div>
+<p><a id="contents_2"></a></p>
+<ul>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_0">memcached是什么？</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_1">memcached的特征</a>
+<ul>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_2">协议简单</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_3">基于libevent的事件处理</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_4">内置内存存储方式</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_5">memcached不互相通信的分布式</a></li>
+</ul>
+</li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_6">安装memcached</a>
+<ul>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_7">memcached的安装</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_8">memcached的启动</a></li>
+</ul>
+</li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_9">用客户端连接</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_10">使用Cache::Memcached</a>
+<ul>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_11">使用Cache::Memcached连接memcached</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_12">保存数据</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_13">获取数据</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_14">删除数据</a></li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_15">增一和减一操作</a></li>
+</ul>
+</li>
+<li><a href="http://xenojoshua.com/2011/04/memcached-anatomy-001/#content_2_16">总结</a></li>
+</ul>
+</div>
+<h2 id="content_2_0">memcached是什么？</h2>
+<p><a href="http://www.danga.com/memcached/">memcached</a> 是以<a href="http://www.livejournal.com/">LiveJournal</a> 旗下<a href="http://www.danga.com/">Danga Interactive</a> 公司的<a href="http://www.bradfitz.com/">Brad Fitzpatric</a> 为首开发的一款软件。现在已成为 <a href="http://mixi.jp/">mixi</a>、 <a href="http://www.hatena.ne.jp/">hatena</a>、 <a href="http://www.facebook.com/">Facebook</a>、 <a href="http://www.vox.com/">Vox</a>、LiveJournal等众多服务中 提高Web应用扩展性的重要因素。</p>
+<p>许多Web应用都将数据保存到RDBMS中，应用服务器从中读取数据并在浏览器中显示。 但随着数据量的增大、访问的集中，就会出现RDBMS的负担加重、数据库响应恶化、 网站显示延迟等重大影响。</p>
+<p>这时就该memcached大显身手了。memcached是高性能的分布式内存缓存服务器。 一般的使用目的是，通过缓存数据库查询结果，减少数据库访问次数，以提高动态Web应用的速度、 提高可扩展性。</p>
+<div><a href="/uploads/2011/04/memcached-0001-01.png"><img class="alignnone size-full wp-image-372" title="memcached-0001-01" src="/assets/memcached-0001-01.png" alt="" width="451" height="386" /></a></div>
+<p>图1 一般情况下memcached的用途</p>
+<h2 id="content_2_1">memcached的特征</h2>
+<p>memcached作为高速运行的分布式缓存服务器，具有以下的特点。</p>
+<ul>
+<li>协议简单</li>
+<li>基于libevent的事件处理</li>
+<li>内置内存存储方式</li>
+<li>memcached不互相通信的分布式</li>
+</ul>
+<h3 id="content_2_2">协议简单</h3>
+<p>memcached的服务器客户端通信并不使用复杂的XML等格式， 而使用简单的基于文本行的协议。因此，通过telnet 也能在memcached上保存数据、取得数据。下面是例子。</p>
+<p>[codesyntax lang="powershell"]</p>
+<pre>$ telnet localhost 11211
+Trying 127.0.0.1...
+Connected to localhost.localdomain (127.0.0.1).
+Escape character is '^]'.
+set foo 0 0 3     （保存命令）
+bar               （数据）
+STORED            （结果）
+get foo           （取得命令）
+VALUE foo 0 3     （数据）
+bar               （数据）</pre>
+<p>[/codesyntax]</p>
+<p>协议文档位于memcached的源代码内，也可以参考以下的URL。</p>
+<ul>
+<li><a href="http://code.sixapart.com/svn/memcached/trunk/server/doc/protocol.txt">http://code.sixapart.com/svn/memcached/trunk/server/doc/protocol.txt</a></li>
+</ul>
+<h3 id="content_2_3">基于libevent的事件处理</h3>
+<p>libevent是个程序库，它将Linux的epoll、BSD类操作系统的kqueue等事件处理功能 封装成统一的接口。即使对服务器的连接数增加，也能发挥O(1)的性能。 memcached使用这个libevent库，因此能在Linux、BSD、Solaris等操作系统上发挥其高性能。 关于事件处理这里就不再详细介绍，可以参考Dan Kegel的The C10K Problem。</p>
+<ul>
+<li><strong>libevent</strong>: <a href="http://www.monkey.org/~provos/libevent/">http://www.monkey.org/~provos/libevent/</a></li>
+<li><strong>The C10K Problem</strong>: <a href="http://www.kegel.com/c10k.html">http://www.kegel.com/c10k.html</a></li>
+</ul>
+<h3 id="content_2_4">内置内存存储方式</h3>
+<p>为了提高性能，memcached中保存的数据都存储在memcached内置的内存存储空间中。 由于数据仅存在于内存中，因此重启memcached、重启操作系统会导致全部数据消失。 另外，内容容量达到指定值之后，就基于LRU(Least Recently Used)算法自动删除不使用的缓存。 memcached本身是为缓存而设计的服务器，因此并没有过多考虑数据的永久性问题。 关于内存存储的详细信息，本连载的第二讲以后前坂会进行介绍，请届时参考。</p>
+<h3 id="content_2_5">memcached不互相通信的分布式</h3>
+<p>memcached尽管是“分布式”缓存服务器，但服务器端并没有分布式功能。 各个memcached不会互相通信以共享信息。那么，怎样进行分布式呢？ 这完全取决于客户端的实现。本连载也将介绍memcached的分布式。</p>
+<div><a href="/uploads/2011/04/memcached-0001-02.png"><img class="alignnone size-full wp-image-374" title="memcached-0001-02" src="/assets/memcached-0001-02.png" alt="" width="400" height="317" /></a></div>
+<p>图2 memcached的分布式</p>
+<p>接下来简单介绍一下memcached的使用方法。</p>
+<h2 id="content_2_6">安装memcached</h2>
+<p>memcached的安装比较简单，这里稍加说明。</p>
+<p>memcached支持许多平台。</p>
+<ul>
+<li>Linux</li>
+<li>FreeBSD</li>
+<li>Solaris (memcached 1.2.5以上版本)</li>
+<li>Mac OS X</li>
+</ul>
+<p>另外也能安装在Windows上。这里使用Fedora Core 8进行说明。</p>
+<h3 id="content_2_7">memcached的安装</h3>
+<p>运行memcached需要本文开头介绍的libevent库。Fedora 8中有现成的rpm包， 通过yum命令安装即可。</p>
+<p>[codesyntax lang="powershell"]</p>
+<pre>$ sudo yum install libevent libevent-devel</pre>
+<p>[/codesyntax]</p>
+<p>memcached的源代码可以从memcached网站上下载。本文执笔时的最新版本为1.2.5。 Fedora 8虽然也包含了memcached的rpm，但版本比较老。因为源代码安装并不困难， 这里就不使用rpm了。</p>
+<ul>
+<li><strong>下载memcached</strong>：<a href="http://www.danga.com/memcached/download.bml">http://www.danga.com/memcached/download.bml</a></li>
+</ul>
+<p>memcached安装与一般应用程序相同，configure、make、make install就行了。</p>
+<p>[codesyntax lang="powershell"]</p>
+<pre>$ wget http://www.danga.com/memcached/dist/memcached-1.2.5.tar.gz
+$ tar zxf memcached-1.2.5.tar.gz
+$ cd memcached-1.2.5
+$ ./configure
+$ make
+$ sudo make install</pre>
+<p>[/codesyntax]</p>
+<p>默认情况下memcached安装到/usr/local/bin下。</p>
+<h3 id="content_2_8">memcached的启动</h3>
+<p>从终端输入以下命令，启动memcached。</p>
+<p>[codesyntax lang="powershell"]</p>
+<pre>$ /usr/local/bin/memcached -p 11211 -m 64m -vv
+slab class   1: chunk size     88 perslab 11915
+slab class   2: chunk size    112 perslab  9362
+slab class   3: chunk size    144 perslab  7281
+中间省略
+slab class  38: chunk size 391224 perslab     2
+slab class  39: chunk size 489032 perslab     2
+&lt;23 server listening
+&lt;24 send buffer was 110592, now 268435456
+&lt;24 server listening (udp)
+&lt;24 server listening (udp)
+&lt;24 server listening (udp)
+&lt;24 server listening (udp)</pre>
+<p>[/codesyntax]</p>
+<p>这里显示了调试信息。这样就在前台启动了memcached，监听TCP端口11211 最大内存使用量为64M。调试信息的内容大部分是关于存储的信息， 下次连载时具体说明。</p>
+<p>作为daemon后台启动时，只需</p>
+<p>[codesyntax lang="powershell"]</p>
+<pre>$ /usr/local/bin/memcached -p 11211 -m 64m -d</pre>
+<p>[/codesyntax]</p>
+<p>这里使用的memcached启动选项的内容如下。</p>
+<div>
+<table border="0" cellspacing="1">
+<tbody>
+<tr>
+<td>选项</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>-p</td>
+<td>使用的TCP端口。默认为11211</td>
+</tr>
+<tr>
+<td>-m</td>
+<td>最大内存大小。默认为64M</td>
+</tr>
+<tr>
+<td>-vv</td>
+<td>用very vrebose模式启动，调试信息和错误输出到控制台</td>
+</tr>
+<tr>
+<td>-d</td>
+<td>作为daemon在后台启动</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>上面四个是常用的启动选项，其他还有很多，通过</p>
+<p>[codesyntax lang="powershell"]</p>
+<pre>$ /usr/local/bin/memcached -h</pre>
+<p>[/codesyntax]</p>
+<p>命令可以显示。许多选项可以改变memcached的各种行为， 推荐读一读。</p>
+<h2 id="content_2_9">用客户端连接</h2>
+<p>许多语言都实现了连接memcached的客户端，其中以Perl、PHP为主。 仅仅memcached网站上列出的语言就有</p>
+<ul>
+<li>Perl</li>
+<li>PHP</li>
+<li>Python</li>
+<li>Ruby</li>
+<li>C#</li>
+<li>C/C++</li>
+<li>Lua</li>
+</ul>
+<p>等等。</p>
+<ul>
+<li><strong>memcached客户端API</strong>：<a href="http://www.danga.com/memcached/apis.bml">http://www.danga.com/memcached/apis.bml</a></li>
+</ul>
+<p>这里介绍通过mixi正在使用的Perl库链接memcached的方法。</p>
+<h2 id="content_2_10">使用Cache::Memcached</h2>
+<p>Perl的memcached客户端有</p>
+<ul>
+<li>Cache::Memcached</li>
+<li>Cache::Memcached::Fast</li>
+<li>Cache::Memcached::libmemcached</li>
+</ul>
+<p>等几个CPAN模块。这里介绍的Cache::Memcached是memcached的作者Brad Fitzpatric的作品， 应该算是memcached的客户端中应用最为广泛的模块了。</p>
+<ul>
+<li><strong>Cache::Memcached - search.cpan.org</strong>: <a href="http://search.cpan.org/dist/Cache-Memcached/">http://search.cpan.org/dist/Cache-Memcached/</a></li>
+</ul>
+<h3 id="content_2_11">使用Cache::Memcached连接memcached</h3>
+<p>下面的源代码为通过Cache::Memcached连接刚才启动的memcached的例子。</p>
+<p>[codesyntax lang="perl"]</p>
+<pre>#!/usr/bin/perl
+
+use strict;
+use warnings;
+use Cache::Memcached;
+
+my $key = "foo";
+my $value = "bar";
+my $expires = 3600; # 1 hour
+my $memcached = Cache::Memcached-&gt;new({
+    servers =&gt; ["127.0.0.1:11211"],
+    compress_threshold =&gt; 10_000
+});
+
+$memcached-&gt;add($key, $value, $expires);
+my $ret = $memcached-&gt;get($key);
+print "$ret\n";</pre>
+<p>[/codesyntax]</p>
+<p>在这里，为Cache::Memcached指定了memcached服务器的IP地址和一个选项，以生成实例。 Cache::Memcached常用的选项如下所示。</p>
+<div>
+<table border="0" cellspacing="1">
+<tbody>
+<tr>
+<td>选项</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>servers</td>
+<td>用数组指定memcached服务器和端口</td>
+</tr>
+<tr>
+<td>compress_threshold</td>
+<td>数据压缩时使用的值</td>
+</tr>
+<tr>
+<td>namespace</td>
+<td>指定添加到键的前缀</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>另外，Cache::Memcached通过Storable模块可以将Perl的复杂数据序列化之后再保存， 因此散列、数组、对象等都可以直接保存到memcached中。</p>
+<h3 id="content_2_12">保存数据</h3>
+<p>向memcached保存数据的方法有</p>
+<ul>
+<li>add</li>
+<li>replace</li>
+<li>set</li>
+</ul>
+<p>它们的使用方法都相同：</p>
+<p>[codesyntax lang="perl"]</p>
+<pre>my $add = $memcached-&gt;add( '键', '值', '期限' );
+my $replace = $memcached-&gt;replace( '键', '值', '期限' );
+my $set = $memcached-&gt;set( '键', '值', '期限' );</pre>
+<p>[/codesyntax]</p>
+<p>向memcached保存数据时可以指定期限(秒)。不指定期限时，memcached按照LRU算法保存数据。 这三个方法的区别如下：</p>
+<div>
+<table border="0" cellspacing="1">
+<tbody>
+<tr>
+<td>选项</td>
+<td>说明</td>
+</tr>
+<tr>
+<td>add</td>
+<td>仅当存储空间中不存在键相同的数据时才保存</td>
+</tr>
+<tr>
+<td>replace</td>
+<td>仅当存储空间中存在键相同的数据时才保存</td>
+</tr>
+<tr>
+<td>set</td>
+<td>与add和replace不同，无论何时都保存</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="content_2_13">获取数据</h3>
+<p>获取数据可以使用get和get_multi方法。</p>
+<p>[codesyntax lang="perl"]</p>
+<pre>my $val = $memcached-&gt;get('键');
+my $val = $memcached-&gt;get_multi('键1', '键2', '键3', '键4', '键5');</pre>
+<p>[/codesyntax]</p>
+<p>一次取得多条数据时使用get_multi。get_multi可以非同步地同时取得多个键值， 其速度要比循环调用get快数十倍。</p>
+<h3 id="content_2_14">删除数据</h3>
+<p>删除数据使用delete方法，不过它有个独特的功能。</p>
+<p>[codesyntax lang="perl"]</p>
+<pre>$memcached-&gt;delete('键', '阻塞时间(秒)');</pre>
+<p>[/codesyntax]</p>
+<p>删除第一个参数指定的键的数据。第二个参数指定一个时间值，可以禁止使用同样的键保存新数据。 此功能可以用于防止缓存数据的不完整。但是要注意，<strong>set函数忽视该阻塞，照常保存数据</strong></p>
+<h3 id="content_2_15">增一和减一操作</h3>
+<p>可以将memcached上特定的键值作为计数器使用。</p>
+<p>[codesyntax lang="perl"]</p>
+<pre>my $ret = $memcached-&gt;incr('键');
+$memcached-&gt;add('键', 0) unless defined $ret;</pre>
+<p>[/codesyntax]</p>
+<p>增一和减一是原子操作，但未设置初始值时，不会自动赋成0。因此， 应当进行错误检查，必要时加入初始化操作。而且，服务器端也不会对 超过2 <sup>32</sup>时的行为进行检查。</p>
+<h2 id="content_2_16">总结</h2>
+<p>这次简单介绍了memcached，以及它的安装方法、Perl客户端Cache::Memcached的用法。 只要知道，memcached的使用方法十分简单就足够了。</p>
+<p>下次由前坂来说明memcached的内部结构。了解memcached的内部构造， 就能知道如何使用memcached才能使Web应用的速度更上一层楼。 欢迎继续阅读下一章。</p>
+<p><strong>版权声明</strong>：可以任意转载，但转载时必须标明原作者charlee、<a href="http://tech.idv2.com/2008/07/10/memcached-001/">原始链接</a>以及本声明。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2011/04/memcached-anatomy-001/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

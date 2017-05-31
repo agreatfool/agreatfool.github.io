@@ -1,0 +1,308 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gitlab | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2013/10/gitlab/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2013/10/gitlab/">Gitlab</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>30 Oct 2013</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Git">Git</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Gitlab">Gitlab</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>Git作为一种VCS工具在VCS工具群中，基本上就是唯一的选择了，在用过git后，还想回到svn等旧式VCS的开发者应该是不存在的。当然，作为一家私营的企业，私有的git库是必须的，你无法想象一家企业将所有的代码都开源在github上（当然，部分的还是可能的）。这里我们就需要寻找一种方便，强力，高效的git库管理工具。</p>
+<p>现在市面上比较出名的git库管理软件和社区有github和bitbucket，两者都支持免费的开源。前者的私有项目是收费的，后者的私有项目是根据用户数量收费的，个人的私有项目免费。作为公司，当然希望尽量能免费，且有高质量的服务，那就需要开源的工具。我曾经考察过几种开源的git库管理软件，过程和细节就不详述了，当时的结论是gitblit尚堪一用，安装非常简单（一个war包），gitlab很好，但是安装太过复杂。所以当时就开始使用gitblit了，结果发现这玩意用起来功能太少了，连最基本的用户管理和组管理都没有，简直无法接受了。于是又重头回来，拾回gitlab。</p>
+<p>项目github：<a href="https://github.com/gitlabhq/gitlabhq" target="_blank">https://github.com/gitlabhq/gitlabhq</a></p>
+<h2>0. 安装</h2>
+<p>当年就是因为gitlab的安装步骤太骇人才放弃的，回过头来一看，gitlab团队官方的installation guide是针对ubuntu的，如果OS是ubuntu的话，安装起来还不算麻烦，按步骤做就是了。我安装的是最新的<a href="https://github.com/gitlabhq/gitlabhq/tree/6-2-stable" target="_blank">6-2-stable</a>版本，安装手册在：<a href="https://github.com/gitlabhq/gitlabhq/blob/6-2-stable/doc/install/installation.md" target="_blank">https://github.com/gitlabhq/gitlabhq/blob/6-2-stable/doc/install/installation.md</a></p>
+<p>就像我上面说的一样，安装本身基本上不会有什么问题，我遇到的问题是邮件的发送和几个配置项的问题。</p>
+<p>官方文档中要求安装postfix，我尝试了下，安装没问题，但是邮件发不出去，当然我的VPS是有MX record的。接下来就是无尽的配置修改，参考了：</p>
+<ul>
+<li><a href="https://www.digitalocean.com/community/articles/how-to-install-and-setup-postfix-on-ubuntu-12-04" target="_blank">How To Install and Setup Postfix on Ubuntu 12.04</a></li>
+<li><a href="http://1585205.blog.51cto.com/1575205/1153091" target="_blank">linux邮件服务器postfix配置实例</a></li>
+<li><a href="http://linux.vbird.org/linux_server/0380mail.php" target="_blank">鳥哥的 Linux 私房菜 第二十二章、郵件伺服器： Postfix</a></li>
+</ul>
+<p>都没解决问题，一怒之下，决定使用外部的SMTP邮件服务。申请了一个新的gmail账号，通过验证，然后修改配置文件，</p>
+<blockquote><p>/home/git/gitlab/config/environments/production.rb</p></blockquote>
+<p>[codesyntax lang="ruby"]</p>
+<pre>  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+      :address =&gt; 'smtp.gmail.com',
+      :port =&gt; 587,
+      :domain =&gt; 'gmail.com',
+      :authentication =&gt; :plain,
+      :user_name =&gt; 'gitlab.xenojoshua@gmail.com',
+      :password =&gt; '$password',
+      :enable_starttls_auto =&gt; true
+  }</pre>
+<p>[/codesyntax]</p>
+<p>此外，默认的几个配置有必要了解下，都在配置文件</p>
+<blockquote><p>/home/git/gitlab/config/initializers/1_settings.rb</p></blockquote>
+<ul>
+<li>是否允许用户注册： Settings.gitlab['signup_enabled']</li>
+<li>是否允许用户建立组：Settings.gitlab['default_can_create_group']</li>
+<li>默认的用户仓库个数上限：Settings.gitlab['default_projects_limit']</li>
+</ul>
+<p>安装基本上就到这里。</p>
+<h2>1. 优势介绍</h2>
+<h3>1.1 权限管理</h3>
+<p>gitlab有一个非常细致的权限职能划分，将角色分为Guest、Reporter、Developer、Master、Owner这几个。详细的权限列表可以在<a href="http://gitlab.xenojoshua.com/help/permissions" target="_blank">这里查看</a>。</p>
+<h3>1.2 群组管理</h3>
+<p>gitlab允许管理者创建用户组，并以用户组的名义管理项目，在用户组里的用户可以指定身份，并以该身份的权限访问项目。免去了控制单个用户项目权限的繁琐设置（如果没有用户组的话，你很难清除记住每个用户隶属于哪几个项目，且很难观察究竟到底有哪几个人有权限访问项目）。在gitlab里，你只需要以项目组的视角进行管理，观察是否需要向项目组中添加用户或移除用户，并设置添加进来的用户的角色。</p>
+<h3>1.3 下发的用户群组、项目管理能力</h3>
+<p>在创建完用户、用户组，并设置好用户组的Owner之后，下面的管理可以由Owner进行，方便将繁琐的项目的具体维护从运维人员的工作中分离出去（运维也不希望在某个项目需要向项目组中添加、删除成员的时候都要找上门来吧）。在配置中，创建用户和用户组的权利也可以下发到个人用户，非常灵活，当然在公司中是不建议这么做的。</p>
+<h3>1.3 SSH登录管理</h3>
+<p>使用SSH Key进行提交、拉取等所有操作的身份验证，免去了输入和记忆密码的烦恼，而且绝对安全。具体操作请<a href="http://gitlab.xenojoshua.com/help/ssh" target="_blank">查看这里</a>。而且用户能自己修改自己的密码，gitblit连这个都做不到，囧。</p>
+<h3>1.4 API接口及系列Hooks</h3>
+<p>可以使用gitlab提供的系列API接口及Hooks创建监控系统，或者CI系统，或者等等其他的附属功能。请查看：<a href="http://gitlab.xenojoshua.com/help/api" target="_blank">GitLab API</a>，<a href="http://gitlab.xenojoshua.com/help/web_hooks" target="_blank">Web hooks</a>，<a href="http://gitlab.xenojoshua.com/help/system_hooks" target="_blank">System hooks</a>。</p>
+<h3>1.5 Pull Request / Merge Request</h3>
+<p>gitlab支持github式的pull request工作方式，经过无数开源项目验证的最佳“用代码说话”的工作方式。强制开发者进行code review，在最终merge代码到master之前进行团队校验。具体的工作流程，请<a href="https://www.atlassian.com/git/workflows#!workflow-feature-branch" target="_blank">参考这里</a>，是sourcetree开发者atlassian的官方guide文。这个功能能很大程度上弥补公司中code review无法完善执行的弱点，并在gitlab中留下详细的数据，方便日后check。</p>
+<h3>1.6 支持Markdown的Wiki和Comments</h3>
+<p>markdown绝对是“最便于书写”的格式化富文本，可以100%替代word等编辑工具。没有尝试过的都要抓紧学习了，哈哈。gitlab官方支持其方言的markdown，并整合到了wiki、comments等各个部分。参考这里：<a href="https://github.com/gitlabhq/gitlabhq/blob/master/doc/markdown/markdown.md" target="_blank">GitLab Flavored Markdown</a>，基本上就是github的方言。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2013/10/gitlab/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

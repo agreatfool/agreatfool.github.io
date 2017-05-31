@@ -1,0 +1,293 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Memcached深入理解 - memcached的监控 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2011/04/deep-in-memcached-how-to-monitor/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2011/04/deep-in-memcached-how-to-monitor/">Memcached深入理解 - memcached的监控</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>20 Apr 2011</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Memcache">Memcache</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p><a title="Memcached深入理解 – 理解官方protocol中的统计方法" href="http://xenojoshua.com/2011/04/deep-in-memcached-learning-official-protocol-stats/">上一篇文章</a>，我翻译了下官方protocol里的有关stats部分的内容，这是为了监控memcached做准备。现在所有能找到的memcached监控工具，无论是纯数值界面的还是带gui的，从根本上来说都还是调用memcached官方的stats接口来获取服务器数据。所以翻译并理解官方stats接口的返回内容是极其有必要的。那么，准备工作做好了，接下来就让我们来看下memcached监控的主要数值吧。下面直接上数值了，如果有某些参数的意思不明白的话，请看我上一篇protocol翻译文。</p>
+<p><span style="font-size: large;"><strong>1. memcached总览数值：</strong></span></p>
+<p>使用stats命令来查看数据。</p>
+<ul>
+<li><strong>存储对象的总量：</strong>curr_items</li>
+<li><strong>存储对象的增长率：</strong>total_items(now) - total_items(prev) / total_items(prev)</li>
+<li><strong>真实的总内存消耗（字节）：</strong>bytes</li>
+<li><strong>输入数据流量（字节）：</strong>bytes_read</li>
+<li><strong>输出数据流量（字节）：</strong>bytes_written</li>
+<li><strong>LRU回收对象次数：</strong>evictions</li>
+<li><strong>get次数：</strong>cmd_get</li>
+<li><strong>get命中：</strong>get_hits</li>
+<li><strong>get未命中：</strong>get_misses</li>
+<li><strong>get命中率：</strong>get_hits / cmd_get</li>
+<li><strong>delete命中：</strong>delete_hits</li>
+<li><strong>delete未命中：</strong>delete_misses</li>
+<li><strong>delete命中率：</strong>delete_hits / (delete_hits + delete_misses)</li>
+<li><strong>set次数：</strong>cmd_set</li>
+</ul>
+<p><span style="font-size: large;"><strong>2. slabs数值：</strong></span></p>
+<p>slabs的数值需要两个命令来查看，stats items来查看存储对象相关数据，stats slabs来查看slabs的相关数据。注意，以下数据都是以slab为单位的。</p>
+<ul>
+<li><strong>slab存储对象总量：</strong>stats_items.number 或 stats_slabs.used_chunks</li>
+<li><strong>slab中存储对象的最长存活时间：</strong>stats_items.age</li>
+<li><strong>slab中LRU回收对象次数：</strong>stats_items.evicted</li>
+<li><strong>slab的LRU占总LRU百分比：</strong>stats_items.evicted / stats.evictions</li>
+<li><strong>slab真实的总内存消耗（字节）：</strong>stats_slabs.mem_requested</li>
+<li><strong>slab当前可用chunk数：</strong>stats_slabs.free_chunks + stats_slabs.free_chunks_end，为0表示slab已经满了</li>
+<li><strong>slab当前总page数：</strong>stats_slabs.total_pages</li>
+<li><strong>slab当前总chunk数：</strong>stats_slabs.total_chunks</li>
+<li><strong>get命中：</strong>stats_slabs.get_hits</li>
+<li><strong>get命中占全部命中总量的百分比：</strong>stats_slabs.get_hits / stats.get_hits</li>
+<li><strong>delete命中：</strong>stats_slabs.delete_hits</li>
+<li><strong>delete命中占全部命中总量的百分比：</strong>stats_slabs.delete_hits / stats.delete_hits</li>
+<li><strong>set次数：</strong>stats_slabs.cmd_set</li>
+<li><strong>set占全部set总量的百分比：</strong>stats_slabs.cmd_set / stats.cmd_set</li>
+<li><strong>slab当前内存浪费量（百分比）：</strong>(stats_slabs.used_chunks * stats_slabs.chunk_size - stats_slabs.mem_requested) / stats_slabs.mem_requested</li>
+</ul>
+<p>OK，大致上主要的数据就是这些，根据业务需求，可以将这些数据整理并图形化。have fun~</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2011/04/deep-in-memcached-how-to-monitor/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

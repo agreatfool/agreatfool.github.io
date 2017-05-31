@@ -1,0 +1,294 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>详解URL里的#符号 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2011/04/details-about-pound-sign-in-url/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2011/04/details-about-pound-sign-in-url/">详解URL里的#符号</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>12 Apr 2011</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/HTML & CSS">HTML & CSS</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>twitter改版，一个显著变化，就是URL加入了"#!"符号。比如，改版前的用户主页网址为<a href="http://twitter.com/username" target="_blank">http://twitter.com/username</a>。改版后，就变成了<a href="http://twitter.com/#!/username" target="_blank">http://twitter.com/#!/username</a></p>
+<p>这是主流网站第一次将"#"大规模用于重要URL中。这表明井号（Hash）的作用正在被重新认识。本文根据HttpWatch的文章，整理与井号有关的所有重要知识点。</p>
+<p><span style="font-size: large;"><strong>1. #的涵义</strong></span></p>
+<p>#代表网页中的一个位置。其右面的字符，就是该位置的标识符。比如，<a href="http://www.example.com/index.html#print" target="_blank">http://www.example.com/index.html#print</a>，就代表网页index.html的print位置。浏览器读取这个URL后，会自动将print位置滚动至可视区域。</p>
+<p>为网页位置指定标识符，有两个方法。一是使用锚点，比如&lt;a name="print"&gt;&lt;/a&gt;，二是使用id属性，比如&lt;div id="print"&gt;。</p>
+<p><span style="font-size: large;"><strong>2. HTTP请求不包括#</strong></span></p>
+<p>#是用来指导浏览器动作的，对服务器端完全无用。所以，HTTP请求中不包括#。</p>
+<p>比如，访问下面的网址，<a href="http://www.example.com/index.html#print" target="_blank">http://www.example.com/index.html#print</a>。浏览器实际发出的请求是这样的：</p>
+<p>GET /index.html HTTP/1.1<br />
+Host: <a href="http://www.example.com/" target="_blank">www.example.com</a></p>
+<p>可以看到，只是请求index.html，根本没有"#print"的部分。</p>
+<p><span style="font-size: large;"><strong>3. #后的字符</strong></span></p>
+<p>在第一个#后面出现的任何字符，都会被浏览器解读为位置标识符。这意味着，这些字符都不会被发送到服务器端。 比如，下面URL的原意是指定一个颜色值：<a href="http://www.example.com/?color=#fff" target="_blank">http://www.example.com/?color=#fff</a></p>
+<p>但是，浏览器实际发出的请求是：</p>
+<p>GET /?color= HTTP/1.1<br />
+Host: <a href="http://www.example.com/" target="_blank">www.example.com</a></p>
+<p>可以看到，"#fff"被省略了。只有将#转码为%23，浏览器才会将其作为实义字符处理。也就是说，上面的网址应该被写成： <a href="http://example.com/?color=%23fff" target="_blank">http://example.com/?color=%23fff</a></p>
+<p><span style="font-size: large;"><strong>4. 改变#不触发网页重载</strong></span></p>
+<p>单单改变#后的部分，浏览器只会滚动到相应位置，不会重新加载网页。</p>
+<p>比如，从<a href="http://www.example.com/index.html#location1" target="_blank">http://www.example.com/index.html#location1</a>，改成<a href="http://www.example.com/index.html#location2" target="_blank">http://www.example.com/index.html#location2</a></p>
+<p>浏览器不会重新向服务器请求index.html。</p>
+<p><span style="font-size: large;"><strong>5. 改变#会改变浏览器的访问历史</strong></span></p>
+<p>每一次改变#后的部分，都会在浏览器的访问历史中增加一个记录，使用"后退"按钮，就可以回到上一个位置。</p>
+<p>这对于ajax应用程序特别有用，可以用不同的#值，表示不同的访问状态，然后向用户给出可以访问某个状态的链接。</p>
+<p>值得注意的是，上述规则对IE 6和IE 7不成立，它们不会因为#的改变而增加历史记录。</p>
+<p><span style="font-size: large;"><strong>6. window.location.hash读取#值</strong></span></p>
+<p>window.location.hash这个属性可读可写。读取时，可以用来判断网页状态是否改变；写入时，则会在不重载网页的前提下，创造一条访问历史记录。</p>
+<p><span style="font-size: large;"><strong>7. onhashchange事件</strong></span></p>
+<p>这是一个HTML 5新增的事件，当#值发生变化时，就会触发这个事件。IE8+、Firefox 3.6+、Chrome 5+、Safari 4.0+支持该事件。</p>
+<p>它的使用方法有三种：</p>
+<p>window.onhashchange = func;<br />
+&lt;body onhashchange="func();"&gt;<br />
+window.addEventListener("hashchange"， func, false);</p>
+<p>对于不支持onhashchange的浏览器，可以用setInterval监控location.hash的变化。</p>
+<p><span style="font-size: large;"><strong>8. Google抓取#的机制</strong></span></p>
+<p>默认情况下，Google的网络蜘蛛忽视URL的#部分。</p>
+<p>但是，Google还规定，如果你希望Ajax生成的内容被浏览引擎读取，那么URL中可以使用"#!"，Google会自动将其后面的内容转成查询字符串_escaped_fragment_的值。</p>
+<p>比如，Google发现新版twitter的URL如下：<a href="http://twitter.com/#!/username" target="_blank">http://twitter.com/#!/username</a></p>
+<p>就会自动抓取另一个URL：<a href="http://twitter.com/?_escaped_fragment_=/username" target="_blank">http://twitter.com/?_escaped_fragment_=/username</a></p>
+<p>通过这种机制，Google就可以索引动态的Ajax内容。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2011/04/details-about-pound-sign-in-url/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

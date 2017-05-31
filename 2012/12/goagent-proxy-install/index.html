@@ -1,0 +1,271 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>如何架设GoAgent代理 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2012/12/goagent-proxy-install/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2012/12/goagent-proxy-install/">如何架设GoAgent代理</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>05 Dec 2012</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MAC">MAC</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/proxy">proxy</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>参考自：<a title="软矿 &gt;&gt; GoAgent图文设置教程：碉堡了，从此无限制上网。" href="http://www.x-berry.com/goagent" target="_blank">软矿 &gt;&gt; GoAgent图文设置教程：碉堡了，从此无限制上网。</a>和 <a title="狸猫会 &gt;&gt; goagent教程Mac版" href="http://maolihui.com/goagent-mac.html" target="_blank">狸猫会 &gt;&gt; goagent教程Mac版</a></p>
+<p>当然，这种体力活，难点什么的是没有的，按步骤操作就是了。我给的两个链接，前者内容最为丰富，要看完整教程请看前者，后面的链接是针对mac版的，需要在mac上安装的请参阅后者。我这里做一个简洁的步骤介绍。</p>
+<p>1. 注册google账号，有的话可以跳过，条件允许（android手机），并不嫌麻烦的话可以使用两步验证登录保证安全性</p>
+<p>2. 去<a title="Google App Engine" href="https://appengine.google.com/" target="_blank">Google App Engine</a>（直接使用google账户登录），创建一个应用。应用名字（也就是appid）必须唯一，且创建的时候需要手机短信验证</p>
+<p>3. 去<a title="goagent - a gae proxy forked from gappproxy/wallproxy" href="https://code.google.com/p/goagent/" target="_blank">goagent</a>的google code站点获得最新下载（下载包部分win、mac、linux等版本）。本体内容不需要安装，但是需要预先安装好python2.6以上版本，且安装好gevent，mac、linux下的安装请在命令行下输入：curl -k -L http://git.io/I9B7RQ|sh</p>
+<p>4. 修改proxy.ini里的配置。修改local\proxy.ini中的<tt>[gae]</tt>下的appid=你的appid(多appid请用|隔开)</p>
+<p>5. 上传goagent的google app engine配置。这一步win下是双击server\uploader.bat，mac下则是进入server文件夹，在终端下输入python uploader.zip。期间脚本会向你询问你的google账号和密码，给之。</p>
+<p>6. 启动goagent。goagent的实质就是在本地启动一个转接器，将你的http请求全部交付给google app engine，所以本地需要启动一个转接器。win下的启动，运行local/goagent.exe，mac、linux则python local/proxy.py</p>
+<p>7. 启动proxy后发现，某些访问会出现证书出错。解决方法：chrome 出现证书错误警告的话， 可以通过添加 --ignore-certificate-errors 启动参数忽略。在mac下的配置稍显复杂，可以参考：<a title="谷奥 &gt;&gt; 教你给Mac版Chrome增加启动参数" href="http://www.guao.hk/posts/use-a-command-line-argument-automatically-with-chrome-mac.html" target="_blank">谷奥 &gt;&gt; 教你给Mac版Chrome增加启动参数</a>。</p>
+<blockquote><p>$ cd "/Applications/Google Chrome.app/Contents/MacOS/"</p>
+<p>$ sudo mv "Google Chrome" Google.real</p>
+<p>$ sudo printf '#!/bin/bash\ncd "/Applications/Google Chrome.app/Contents/MacOS"\n"/Applications/Google Chrome.app/Contents/MacOS/Google.real" --ignore-certificate-errors "$@"\n' &gt; Google\ Chrome</p>
+<p>$ sudo chmod u+x "Google Chrome"</p></blockquote>
+<p>8. 然后就可以通过127.0.0.1:8087进行proxy访问了。最方便的推荐使用chrome的插件<a title="Chrome Web Store &gt;&gt; Proxy SwitchySharp" href="https://chrome.google.com/webstore/detail/proxy-switchysharp/dpplabbmogkhghncfbfdeeokoefdjegm" target="_blank">Proxy SwitchySharp</a>，安装后导入配置：<a href="https://goagent.googlecode.com/files/SwitchyOptions.bak" rel="nofollow">https://goagent.googlecode.com/files/SwitchyOptions.bak</a>。最后记得将proxy设置在自动切换档，遇到配置在规则列表内的站点地址的时候，proxy会自动切换到proxy访问，而不是通过本地链接访问。这样你在浏览器里的访问就是无缝翻墙的了</p>
+<p>9. 每个Google App Engine每天有1G流量，每天下午4点刷新。不看视频的话，一般用不完。我现在每天用掉0.05%左右。。。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2012/12/goagent-proxy-install/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

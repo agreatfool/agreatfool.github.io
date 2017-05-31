@@ -1,0 +1,400 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>PHP框架系列1 - CakePHP | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2011/10/cakephp-simple-research/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2011/10/cakephp-simple-research/">PHP框架系列1 - CakePHP</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>09 Oct 2011</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Framework">Framework</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/PHP">PHP</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p><span style="font-size: large;"><strong>前言</strong></span></p>
+<p>写在最前面，我考察的版本：cakephp-1.3.12-0-g96a8d97</p>
+<p>都说CakePHP是一个很简单的框架，试了下，觉得还是比较简单的，MVC的流程很清晰。学过JAVA的人可能比较有亲切感，感觉很类似，都是配置多过实际代码的系统。可惜的就是优点和缺点一样都不明显，感觉用和没用差别不是很大，囧。当然也有可能是因为我是粗略地过了一下，看得不是很深入。</p>
+<p>PHP有几个比较common的问题点需要解决，以后框架的考察都根据这些点进行罗列。</p>
+<p><span style="font-size: large;"><strong>1. 资源加载</strong></span></p>
+<p>用过JAVA的开发肯定对JAVA里的import感觉很好，import进来我就可以用了，不用烦恼资源包的加载问题。PHP这方面就做得很差，很多东西都需要自己解决。如果要在PHP里做到自动化类加载的话，必须实现__autoload函数，或者使用spl_autoload_register函数进行自动加载函数的注册。</p>
+<p>CakePHP自带了资源加载方法，具体可以参考：<a title="3.4.4 The App Class" href="http://book.cakephp.org/view/499/The-App-Class" target="_blank">3.4.4 The App Class</a>。不过这个东西不能乱用，它使用的是require方法来加载代码，不小心使用的话会造成重复类定义，参考<a title="PHP的require不能乱用，会导致类和函数重复定义错误" href="http://xenojoshua.com/2011/10/php-require-class-redeclare-error/" target="_blank">这里</a>。<br />
+这里举个例子：<br />
+[codesyntax lang="php"]</p>
+<pre>App::import('Lib', 'ImageManipulation'); //imports app/libs/image_manipulation.php</pre>
+<p>[/codesyntax]</p>
+<p><span style="font-size: large;"><strong>2. Model</strong></span></p>
+<p>CakePHP的模型做得不错。易用性上很好。定义模型只需要建一个模型类文件，内容几乎不用填。数据库的映射它自己会做。可以参考这里：<a title="3.7.1 Understanding Models" href="http://book.cakephp.org/view/67/Understanding-Models" target="_blank">3.7.1 Understanding Models</a>。<br />
+性能我没考察过，默认的layout有输出过sql，简单看了下，貌似写得不太好。。。如果是简单来做网站的话还没问题，需要考虑性能的话，最好还是要深挖一下这块 。</p>
+<p><span style="font-size: large;"><strong>3. View</strong></span></p>
+<p>CakePHP自带的View就不用看了，就是PHP文件，这个也能算是模板么，太囧了。</p>
+<p>没有官方的Smarty支持，只有一个第三方的<a title="Smarty View for 1.2" href="http://bakery.cakephp.org/articles/icedcheese/2008/01/14/smarty-view-for-1-2" target="_blank">smarty插件</a>。我这里比较推荐的方法是完全抛弃cake自带的view系统，只要在controller的action函数里带上$this-&gt;autoRender=false;就能阻止cake自动调用view的事件，然后就能使用smarty进行输出了。</p>
+<p>关于官方自带的view的使用方法，可以简单参考<a title="11.1.8 Creating Post Views" href="http://book.cakephp.org/view/1536/Creating-Post-Views" target="_blank">这个示例</a>，个人感觉就是一个纯PHP文件，实际意义不大，性能上也比不过smarty。关于controller和view之间的交互，可以参考这里：<a title="3.5.4 Controller Methods" href="http://book.cakephp.org/view/977/Controller-Methods" target="_blank">3.5.4 Controller Methods</a>。</p>
+<p>在controller的action函数里使用$this-&gt;layout = 'layout_name';可以从default的layout切换到其他layout。</p>
+<p><span style="font-size: large;"><strong>4. Controller</strong></span></p>
+<p>控制器还是比较好理解的，和传统的控制器基本一致。关于如何向controller传送参数，请参考这里：<a title="3.4.5 Routes Configuration" href="http://book.cakephp.org/view/945/Routes-Configuration#Passing-parameters-to-action-949" target="_blank">3.4.5 Routes Configuration</a>。</p>
+<p><span style="font-size: large;"><strong>5. Business Logic</strong></span></p>
+<p>没看明白业务逻辑应该写在哪里，恩。不过有lib包的加载方法，可以写在lib包里，然后手动加载。</p>
+<p><span style="font-size: large;"><strong>6. Several Knowledge Point</strong></span></p>
+<p>文件的命名是有规范的，按它的规范起名和放置文件的话，很多功能就能自动化，不用手动定义。关于命名规范，可以参考官方文档：<a title="2.4 CakePHP Conventions" href="http://book.cakephp.org/view/22/CakePHP-Conventions" target="_blank">2.4 CakePHP Conventions</a>。</p>
+<p>框架自带的一系列Helper比较扯淡，在PHP页面上把HTML的form和js都生成好，什么代码都在服务端写？这不是什么好主意。当然，看的时间比较短，不知道是不是我理解错了。</p>
+<p><span style="font-size: large;"><strong>7. Simple Sample</strong></span></p>
+<p>简单范例，先上图：</p>
+<p><a href="/uploads/2011/10/cakephp-sample.png"><img class="size-full wp-image-1529 alignnone" title="cakephp-sample" alt="" src="/assets/cakephp-sample.png" width="265" height="137" /></a><a href="/uploads/2011/10/cakephp-sample-db.png"><img class="size-full wp-image-1530 alignnone" title="cakephp-sample-db" alt="" src="/assets/cakephp-sample-db.png" width="580" height="137" /></a><br />
+数据库的表很简单，库php，表users，列id和name。功能就是在首页上显示2个按钮，按search all，显示所有的id和名字在页面上，按search single，根据输入框里输入的用户id进行数据查找并显示。</p>
+<p>首先第一步需要改的是系统默认的router，否则CakePHP将永远将首页定向到默认的介绍页面。编辑app/config/routes.php，将两行代码中的上面那行改掉，编辑成我们定义好的首页controller。<br />
+[codesyntax lang="php"]</p>
+<pre>Router::connect('/', array('controller' =&gt; 'HomePage', 'action' =&gt; 'index'));</pre>
+<p>[/codesyntax]<br />
+这个改动会将首页/定向到自定义的controller，名字是home_page_controller.php，内容如下。<br />
+[codesyntax lang="php"]</p>
+<pre>&lt;?php
+class HomePageController extends AppController {
+    var $name = 'HomePage'; // controller name
+    var $uses = array(); // If you do not wish to use a Model in your controller, set var $uses = array()
+
+    function index() {
+    }
+}</pre>
+<p>[/codesyntax]<br />
+函数index会处理默认的页面请求，里面没有逻辑，所以controller会直接渲染views/home_page/index.ctp。<br />
+[codesyntax lang="html4strict"]</p>
+<pre>&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Open Source PHP Framework Test&lt;/title&gt;
+    &lt;script type="text/javascript" src="../js/jquery-1.4.2.min.js"&gt;&lt;/script&gt;
+    &lt;script type="text/javascript"&gt;
+        function sendSingleRequest() {
+            $.ajax({
+                type: 'post',
+                url: '../users/single/' + $('#uid').val(),
+                dataType: 'html',
+                success: function(data){
+                    console.log(data);
+                    $('#result').html(data);
+                },
+                error: function(e){
+                    console.log(e);
+                    alert(e);
+                }
+            });
+        }
+        function sendAllRequest() {
+            $.ajax({
+                type: 'post',
+                url: '../users/all',
+                dataType: 'html',
+                success: function(data){
+                    console.log(data);
+                    $('#result').html(data);
+                },
+                error: function(e){
+                    console.log(e);
+                    alert(e);
+                }
+            });
+        }
+    &lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div&gt;
+        &lt;div&gt;User Id: &lt;input id="uid" type="text" value="" /&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;input id="searchSingle" type="button" value="search single" onclick="sendSingleRequest();" /&gt;&lt;/div&gt;
+        &lt;div&gt;&lt;input id="searchAll" type="button" value="search all" onclick="sendAllRequest();" /&gt;&lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id="result"&gt;&lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+<p>[/codesyntax]<br />
+同时记得不要忘记为users表创建model，app/model/user.php。<br />
+[codesyntax lang="php"]</p>
+<pre>&lt;?php
+class User extends AppModel {
+    var $name = 'User';
+}</pre>
+<p>[/codesyntax]<br />
+在首页上，无论点击哪个按键都会定向到users_controller.php。<br />
+[codesyntax lang="php"]</p>
+<pre>&lt;?php
+class UsersController extends AppController {
+    var $name = 'Users'; // controller name
+
+    /**
+     * Search all users from Model User,
+     * and rendering with template '/users/list'
+     */
+    function all() {
+        $this-&gt;set('users', $this-&gt;User-&gt;find('all'));
+        $this-&gt;render('/users/list');
+    }
+
+    /**
+    * Search single user from Model User via user id,
+    * and rendering with template '/users/list'
+    */
+    function single($id) {
+        $this-&gt;set('users', $this-&gt;User-&gt;find('all', array ('conditions' =&gt; array ('User.id' =&gt; $id))));
+        $this-&gt;render('/users/list');
+    }
+}</pre>
+<p>[/codesyntax]<br />
+点击搜索单个的话，会定向到users/single/id，也就是single函数，会根据用户id进行查询，然后渲染views/users/list.ctp。<br />
+而点击搜索所有的话，会定向到users/all，也就是all函数，会进行全表查询，然后渲染views/users/list.ctp。<br />
+[codesyntax lang="php"]</p>
+<pre>&lt;table&gt;
+    &lt;tr&gt;
+        &lt;th&gt;ID&lt;/th&gt;
+        &lt;th&gt;NAME&lt;/th&gt;
+    &lt;/tr&gt;
+    &lt;?php foreach ($users as $user) { ?&gt;
+    &lt;tr&gt;
+        &lt;td&gt;&lt;?php echo $user['User']['id']; ?&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;?php echo $user['User']['name']; ?&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;?php } ?&gt;
+&lt;/table&gt;</pre>
+<p>[/codesyntax]<br />
+最后都会显示在以result 为id的div里。</p>
+<p>恩，这个例子很简单吧。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2011/10/cakephp-simple-research/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

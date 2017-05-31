@@ -1,0 +1,766 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Redis内存存储结构分析 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2012/07/redis-mem-struct-analytics/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2012/07/redis-mem-struct-analytics/">Redis内存存储结构分析</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>05 Jul 2012</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Redis">Redis</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>转自：<a title="搜索技术博客－淘宝 Redis内存存储结构分析" href="http://www.searchtb.com/2011/05/redis-storage.html" target="_blank">搜索技术博客－淘宝 Redis内存存储结构分析</a></p>
+<h1>1 Redis 内存存储结构</h1>
+<p>本文是基于 Redis-v2.2.4 版本进行分析.</p>
+<h2>1.1 Redis 内存存储总体结构</h2>
+<p>Redis 是支持多key-value数据库(表)的,并用 RedisDb 来表示一个key-value数据库(表). redisServer 中有一个 redisDb *db; 成员变量, RedisServer 在初始化时,会根据配置文件的 db 数量来创建一个 redisDb 数组. 客户端在连接后,通过 SELECT 指令来选择一个 reidsDb,如果不指定,则缺省是redisDb数组的第1个(即下标是 0 ) redisDb. 一个客户端在选择 redisDb 后,其后续操作都是在此 redisDb 上进行的. 下面会详细介绍一下 redisDb 的内存结构.</p>
+<p><a href="/uploads/2012/07/redis01.jpeg"><img class="alignnone size-full wp-image-2851" title="redis01" src="/assets/redis01.jpeg" alt="" width="601" height="635" /></a></p>
+<p>redis 的内存存储结构示意图</p>
+<p>redisDb 的定义:</p>
+<p>[codesyntax lang="c"]</p>
+<pre>typedef struct redisDb
+
+{
+
+dict *dict;                 /* The keyspace for this DB */
+
+dict *expires;              /* Timeout of keys with a timeout set */
+
+dict *blocking_keys;    /* Keys with clients waiting for data (BLPOP) */
+
+dict *io_keys;              /* Keys with clients waiting for VM I/O */
+
+dict *watched_keys;         /* WATCHED keys for MULTI/EXEC CAS */
+
+int id;
+
+} redisDb;
+
+struct</pre>
+<p>[/codesyntax]</p>
+<p>redisDb 中 ,dict 成员是与实际存储数据相关的. dict 的定义如下:</p>
+<p>[codesyntax lang="c"]</p>
+<pre>typedef struct dictEntry
+
+{
+
+void *key;
+
+void *val;
+
+struct dictEntry *next;
+
+} dictEntry;
+
+typedef struct dictType
+
+{
+
+unsigned int (*hashFunction)(const void *key);
+
+void *(*keyDup)(void *privdata, const void *key);
+
+void *(*valDup)(void *privdata, const void *obj);
+
+int (*keyCompare)(void *privdata, const void *key1, const void *key2);
+
+void (*keyDestructor)(void *privdata, void *key);
+
+void (*valDestructor)(void *privdata, void *obj);
+
+} dictType;
+
+/* This is our hash table structure. Every dictionary has two of this as we
+
+* implement incremental rehashing, for the old to the new table. */
+
+typedef struct dictht
+
+{
+
+dictEntry **table;
+
+unsigned long size;
+
+unsigned long sizemask;
+
+unsigned long used;
+
+} dictht;
+
+typedef struct dict
+
+{
+
+dictType *type;
+
+void *privdata;
+
+dictht ht[2];
+
+int rehashidx; /* rehashing not in progress if rehashidx == -1 */
+
+int iterators; /* number of iterators currently running */
+
+} dict;</pre>
+<p>[/codesyntax]</p>
+<p>dict 是主要是由 struct dictht 的 哈唏表构成的, 之所以定义成长度为2的( dictht ht[2] ) 哈唏表数组,是因为 redis 采用渐进的 rehash,即当需要 rehash 时,每次像 hset,hget 等操作前,先执行N 步 rehash. 这样就把原来一次性的 rehash过程拆散到进行, 防止一次性 rehash 期间 redis 服务能力大幅下降. 这种渐进的 rehash 需要一个额外的 struct dictht 结构来保存.</p>
+<p>struct dictht 主要是由一个 struct dictEntry 指针数组组成的, hash 表的冲突是通过链表法来解决的.</p>
+<p>struct dictEntry 中的 key 指针指向用 sds 类型表示的 key 字符串, val 指针指向一个 struct redisObject 结构体, 其定义如下:</p>
+<p>[codesyntax lang="c"]</p>
+<pre>typedef struct redisObject
+
+{
+
+unsigned type:4;
+
+unsigned storage:2;   /* REDIS_VM_MEMORY or REDIS_VM_SWAPPING */
+
+unsigned encoding:4;
+
+unsigned lru:22;        /* lru time (relative to server.lruclock) */
+
+int refcount;
+
+void *ptr;
+
+/* VM fields are only allocated if VM is active, otherwise the
+
+* object allocation function will just allocate
+
+* sizeof(redisObjct) minus sizeof(redisObjectVM), so using
+
+* Redis without VM active will not have any overhead. */
+
+} robj;
+
+//type 占 4 bit,用来表示 key-value 中 value 值的类型,目前 redis 支持: string, list, set,zset,hash 5种类型的值.
+
+/* Object types */
+
+#define REDIS_STRING 0
+
+#define REDIS_LIST 1
+
+#define REDIS_SET 2
+
+#define REDIS_ZSET 3
+
+#define REDIS_HASH 4
+
+#define REDIS_VMPOINTER 8
+// storage 占 2 bit ,表示 此值是在 内存中,还是 swap 在硬盘上.
+// encoding 占 4 bit ,表示值的编码类型,目前有 8种类型:
+
+/* Objects encoding. Some kind of objects like Strings and Hashes can be
+
+* internally represented in multiple ways. The 'encoding' field of the object
+
+* is set to one of this fields for this object. */
+
+#define REDIS_ENCODING_RAW 0     /* Raw representation */
+
+#define REDIS_ENCODING_INT 1     /* Encoded as integer */
+
+#define REDIS_ENCODING_HT 2      /* Encoded as hash table */
+
+#define REDIS_ENCODING_ZIPMAP 3  /* Encoded as zipmap */
+
+#define REDIS_ENCODING_LINKEDLIST 4 /* Encoded as regular linked list */
+
+#define REDIS_ENCODING_ZIPLIST 5 /* Encoded as ziplist */
+
+#define REDIS_ENCODING_INTSET 6  /* Encoded as intset */
+
+#define REDIS_ENCODING_SKIPLIST 7  /* Encoded as skiplist */
+
+/* 如 type 是 REDIS_STRING 类型的,则其值如果是数字,就可以编码成 REDIS_ENCODING_INT,以节约内存.
+
+* 如 type 是 REDIS_HASH 类型的,如果其 entry 小于配置值: hash-max-zipmap-entries 或 value字符串的长度小于 hash-max-zipmap-value, 则可以编码成 REDIS_ENCODING_ZIPMAP 类型存储,以节约内存. 否则采用 Dict 来存储.
+
+* 如 type 是 REDIS_LIST 类型的,如果其 entry 小于配置值: list-max-ziplist-entries 或 value字符串的长度小于 list-max-ziplist-value, 则可以编码成 REDIS_ENCODING_ZIPLIST 类型存储,以节约内存; 否则采用 REDIS_ENCODING_LINKEDLIST 来存储.
+
+*  如 type 是 REDIS_SET 类型的,如果其值可以表示成数字类型且 entry 小于配置值set-max-intset-entries, 则可以编码成 REDIS_ENCODING_INTSET 类型存储,以节约内存; 否则采用 Dict类型来存储.
+
+*  lru: 是时间戳
+
+*  refcount: 引用次数
+
+*  void * ptr : 指向实际存储的 value 值内存块,其类型可以是 string, set, zset,list,hash ,编码方式可以是上述 encoding 表示的一种.
+
+* 至于一个 key 的 value 采用哪种类型来保存,完全是由客户端的指令来决定的,如 hset ,则值是采用REDIS_HASH 类型表示的,至于那种编码(encoding),则由 redis 根据配置自动决定.
+*/</pre>
+<p>[/codesyntax]</p>
+<h2>1.2 Dict 结构</h2>
+<p><a href="/uploads/2012/07/redis02.jpeg"><img class="alignnone size-full wp-image-2853" title="redis02" src="/assets/redis02.jpeg" alt="" width="581" height="259" /></a></p>
+<p>Dict 结构在&lt;1.1Redis 内存存储结构&gt;; 已经描述过了,这里不再赘述.</p>
+<h2>1.3 zipmap 结构</h2>
+<p>如果redisObject的type 成员值是 REDIS_HASH 类型的,则当该hash 的 entry 小于配置值: hash-max-zipmap-entries 或者value字符串的长度小于 hash-max-zipmap-value, 则可以编码成 REDIS_ENCODING_ZIPMAP 类型存储,以节约内存. 否则采用 Dict 来存储.</p>
+<p>zipmap 其实质是用一个字符串数组来依次保存key和value,查询时是依次遍列每个 key-value 对,直到查到为止. 其结构示意图如下:</p>
+<p><a href="/uploads/2012/07/redis03.jpeg"><img class="alignnone size-full wp-image-2854" title="redis03" src="/assets/redis03.jpeg" alt="" width="575" height="468" /></a></p>
+<p>为了节约内存,这里使用了一些小技巧来保存 key 和 value 的长度. 如果 key 或 value 的长度小于ZIPMAP_BIGLEN(254),则用一个字节来表示,如果大于ZIPMAP_BIGLEN(254),则用5个字节保存,第一个字节为保存ZIPMAP_BIGLEN(254),后面4个字节保存 key或value 的长度.</p>
+<ol>
+<li>初始化时只有2个字节,第1个字节表示 zipmap 保存的 key-value 对的个数(如果key-value 对的个数超过 254,则一直用254来表示, zipmap 中实际保存的 key-value 对个数可以通过 zipmapLen() 函数计算得到).</li>
+<li>hset(nick,wuzhu) 后
+<ul>
+<li>第1个字节保存key-value 对(即 zipmap 的entry 数量)的数量1</li>
+<li>第2个字节保存key_len 值 4</li>
+<li>第3~6 保存 key “nick”</li>
+<li>第 7 字节保存 value_len 值 5</li>
+<li>第 8 字节保存空闭的字节数 0 (当 该 key 的值被重置时,其新值的长度与旧值的长度不一定相等,如果新值长度比旧值的长度大,则 realloc 扩大内存; 如果新值长度比旧值的长度小,且相差大于 4 bytes ,则 realloc 缩小内存,如果相差小于 4,则将值往前移,并用 empty_len 保存空闲的byte 数)</li>
+<li>第 9~13字节保存 value 值 “wuzhu”</li>
+</ul>
+</li>
+<li>hset(age,30) 插入 key-value 对 (“age”,30)</li>
+<li>hset(nick,tide) 插入 key-value 对 (“nick”,”tide”), 后可以看到 empty_len 为1 ,</li>
+</ol>
+<h2>1.4 ziplist 结构</h2>
+<p>如果redisObject的type 成员值是 REDIS_LIST 类型的,则当该list 的 elem数小于配置值: hash-max-ziplist-entries 或者elem_value字符串的长度小于 hash-max-ziplist-value, 则可以编码成 REDIS_ENCODING_ZIPLIST 类型存储,以节约内存. 否则采用 Dict 来存储.</p>
+<p>ziplist 其实质是用一个字符串数组形式的双向链表. 其结构示意图如下:</p>
+<p><a href="/uploads/2012/07/redis04.jpeg"><img class="alignnone size-full wp-image-2855" title="redis04" src="/assets/redis04.jpeg" alt="" width="594" height="624" /></a></p>
+<ol>
+<li>ziplist header由3个字段组成:
+<ul>
+<li>ziplist_bytes: 用一个uint32_t 来保存, 构成 ziplist 的字符串数组的总长度,包括 ziplist header,</li>
+<li>ziplist_tail_offset: 用一个uint32_t 来保存,记录 ziplist 的尾部偏移位置.</li>
+<li>ziplist_length: 用一个 uint16_t 来保存,记录 ziplist 中 elem 的个数</li>
+</ul>
+</li>
+<li>ziplist node 也由 3 部分组成:
+<ul>
+<li>prevrawlen: 保存上一个 ziplist node 的占用的字节数,包括: 保存prevarwlen,currawlen 的字节数和elem value 的字节数.</li>
+<li>currawlen&amp;encoding: 当前elem value 的raw 形式存款所需的字节数及在ziplist 中保存时的编码方式(例如,值可以转换成整数,如示意图中的”1024”, raw_len 是 4 字节,但在 ziplist 保存时转换成 uint16_t 来保存,占2 个字节).</li>
+<li>(编码后的)value</li>
+</ul>
+</li>
+</ol>
+<p>可以通过 prevrawlen 和 currawlen&amp;encoding 来遍列 ziplist.</p>
+<p>ziplist 还能到一些小技巧来节约内存.</p>
+<ul>
+<li>len 的存储: 如果 len 小于 ZIP_BIGLEN(254),则用一个字节来保存; 否则需要 5 个字节来保存,第 1 个字节存 ZIP_BIGLEN,作为标识符.</li>
+<li>value 的存储: 如果 value 是数字类型的,则根据其值的范围转换成 ZIP_INT_16B, ZIP_INT_32B或ZIP_INT_64B 来保存,否则用 raw 形式保存.</li>
+</ul>
+<h2>1.5 adlist 结构</h2>
+<p>[codesyntax lang="c"]</p>
+<pre>typedef struct listNode
+{
+
+struct listNode *prev;
+
+struct listNode *next;
+
+void *value;
+
+} listNode;
+
+typedef struct listIter
+
+{
+
+listNode *next;
+
+int direction;
+
+} listIter;
+
+typedef struct list
+
+{
+
+listNode *head;
+
+listNode *tail;
+
+void *(*dup)(void *ptr);
+
+void (*free)(void *ptr);
+
+int (*match)(void *ptr, void *key);
+
+unsigned int len;
+
+} list;</pre>
+<p>[/codesyntax]</p>
+<p>常见的双向链表,不作分析.</p>
+<h2>1.6 intset 结构</h2>
+<p><a href="/uploads/2012/07/redis05.jpeg"><img class="alignnone size-full wp-image-2856" title="redis05" src="/assets/redis05.jpeg" alt="" width="571" height="392" /></a></p>
+<p>intset 是用一个有序的整数数组来实现集合(set). struct intset 的定义如下:</p>
+<p>[codesyntax lang="c"]</p>
+<pre>typedef struct intset
+
+{
+
+uint32_t encoding;
+
+uint32_t length;
+
+int8_t contents[];
+
+} intset;</pre>
+<p>[/codesyntax]</p>
+<ul>
+<li>encoding: 来标识数组是 int16_t 类型, int32_t 类型还是 int64_t 类型的数组. 至于怎么先择是那种类型的数组,是根据其保存的值的取值范围来决定的,初始化时是 int16_t, 根据 set 中的最大值在 [INT16_MIN, INT16_MAX] , [INT32_MIN, INT32_MAX], [INT64_MIN, INT64_MAX]的那个取值范围来动态确定整个数组的类型. 例如set一开始是 int16_t 类型,当一个取值范围在 [INT32_MIN, INT32_MAX]的值加入到 set 时,则将保存 set 的数组升级成 int32_t 的数组.</li>
+<li>length: 表示 set 中值的个数</li>
+<li>contents: 指向整数数组的指针</li>
+</ul>
+<h2>1.7 zset 结构</h2>
+<p>首先，介绍一下 skip list 的概念，然后再分析 zset 的实现.</p>
+<h3>1.7.1 Skip List 介绍</h3>
+<h4>1.7.1.1 有序链表</h4>
+<p>1) Searching a key in a Sorted linked list</p>
+<p><a href="/uploads/2012/07/redis06.jpeg"><img class="alignnone size-full wp-image-2857" title="redis06" src="/assets/redis06.jpeg" alt="" width="561" height="125" /></a></p>
+<p>[codesyntax lang="c"]</p>
+<pre>//Searching an element &lt;em&gt;x&lt;/em&gt;
+
+cell *p =head ;
+
+while (p-&gt;next-&gt;key &lt; x )  p=p-&gt;next ;
+
+return p ;</pre>
+<p>[/codesyntax]</p>
+<p>Note: we return the element proceeding either the element containing <em>x</em>, or the smallest element with a key larger than <em>x</em> (if <em>x</em> does not exists)</p>
+<p>2) inserting a key into a Sorted linked list</p>
+<p><a href="/uploads/2012/07/redis07.jpeg"><img class="alignnone size-full wp-image-2858" title="redis07" src="/assets/redis07.jpeg" alt="" width="603" height="122" /></a></p>
+<p>[codesyntax lang="c"]</p>
+<pre>//To insert 35 -
+
+p=find(35);
+
+CELL *p1 = (CELL *) malloc(sizeof(CELL));
+
+p1-&gt;key=35;
+
+p1-&gt;next = p-&gt;next ;
+
+p-&gt;next  = p1 ;</pre>
+<p>[/codesyntax]</p>
+<p>3) deleteing a key from a sorted list</p>
+<p><a href="/uploads/2012/07/redis08.jpeg"><img class="alignnone size-full wp-image-2859" title="redis08" src="/assets/redis08.jpeg" alt="" width="555" height="120" /></a></p>
+<p>[codesyntax lang="c"]</p>
+<pre>//To delete 37 -
+
+p=find(37);
+
+CELL *p1 =p-&gt;next;
+
+p-&gt;next = p1-&gt;next ;
+
+free(p1);</pre>
+<p>[/codesyntax]</p>
+<h4>1.7.1.2 SkipList(跳跃表)定义</h4>
+<p>SKIP LIST : A data structure for maintaing a set of keys in a sorted order.</p>
+<p>Consists of several <strong>levels.</strong></p>
+<p>All keys appear in level 1</p>
+<p>Each level is a sorted list.</p>
+<p>If key <em>x</em> appears in level <em>i</em>, then it also appears in all levels below <em>i</em></p>
+<p><a href="/uploads/2012/07/redis09.jpeg"><img class="alignnone size-full wp-image-2860" title="redis09" src="/assets/redis09.jpeg" alt="" width="593" height="253" /></a></p>
+<p>An element in level<em> i </em>points (via down pointer) to the element with the same key in the level below.<em></em></p>
+<p>In each level the keys and appear. (In our implementation, INT_MIN and INT_MAX</p>
+<p>Top points to the smallest element in the highest level.</p>
+<p><a href="/uploads/2012/07/redis10.jpeg"><img class="alignnone size-full wp-image-2861" title="redis10" src="/assets/redis10.jpeg" alt="" width="587" height="254" /></a></p>
+<h4>1.7.1.3 SkipList(跳跃表)操作</h4>
+<p>1) An empty SkipList</p>
+<p><a href="/uploads/2012/07/redis11.jpeg"><img class="alignnone size-full wp-image-2862" title="redis11" src="/assets/redis11.jpeg" alt="" width="580" height="93" /></a></p>
+<p>2) Finding an element with key <em>x</em></p>
+<p><a href="/uploads/2012/07/redis12.jpeg"><img class="alignnone size-full wp-image-2863" title="redis12" src="/assets/redis12.jpeg" alt="" width="604" height="183" /></a></p>
+<p>[codesyntax lang="c"]</p>
+<pre>p=top
+
+While(1)
+
+{
+
+while (p-&gt;next-&gt;key &lt; x ) p=p-&gt;next;
+
+If (p-&gt;down == NULL ) return p-&gt;next
+
+p=p-&gt;down ;
+
+}</pre>
+<p>[/codesyntax]</p>
+<p>Observe that we return <em>x</em>, if exists, or <em>succ(x)</em> if <em>x</em> is not in the SkipList</p>
+<p>3) Inserting new element <em>X</em></p>
+<p>&nbsp;</p>
+<p>Determine <strong><em>k</em></strong> the number of levels in which <em>x</em> participates (explained later)</p>
+<p>Do find(x), and insert x to the appropriate places in the lowest <strong><em>k</em></strong> levels. (after the elements at which the search path turns down or terminates)</p>
+<p>Example – inserting 119. <strong><em>k</em></strong>=2<em></em></p>
+<p>If <strong><em>k </em></strong>is larger than the current number of levels, add new levels (and update top)</p>
+<p>Example – inser(119) when k=4</p>
+<p><a href="/uploads/2012/07/redis13.jpeg"><img class="alignnone size-full wp-image-2864" title="redis13" src="/assets/redis13.jpeg" alt="" width="570" height="231" /></a></p>
+<p>Determining <em>k</em></p>
+<p>k – the number of levels at which an element x participate.</p>
+<p>Use a random function OurRnd() — returns 1 or 0 (True/False) with equal probability.</p>
+<p>k=1 ;</p>
+<p>While( OurRnd() ) k++ ;</p>
+<p>Deleteing a key <em>x</em></p>
+<p>Find x in all the levels it participates, and delete it using the standard ‘delete from a linked list’ method.</p>
+<p>If one or more of the upper levels are empty, remove them (and update top)</p>
+<p><a href="/uploads/2012/07/redis14.jpeg"><img class="alignnone size-full wp-image-2865" title="redis14" src="/assets/redis14.jpeg" alt="" width="567" height="187" /></a></p>
+<p>Facts about SkipList</p>
+<p>The expected number of levels is O( log <em>n</em> )</p>
+<p>(here <em>n</em> is the numer of elements)</p>
+<p>The expected time for insert/delete/find is O( log <em>n</em> )</p>
+<p>The expected size (number of cells) is O(<em>n </em>)</p>
+<h3>1.7.2 redis SkipList 实现</h3>
+<p>/* ZSETs use a specialized version of Skiplists */</p>
+<p>[codesyntax lang="c"]</p>
+<pre>typedef struct zskiplistNode
+
+{
+
+robj *obj;
+
+double score;
+
+struct zskiplistNode *backward;
+
+struct zskiplistLevel
+
+{
+
+struct zskiplistNode *forward;
+
+unsigned int span;
+
+} level[];
+
+} zskiplistNode;
+
+typedef struct zskiplist
+
+{
+
+struct zskiplistNode *header, *tail;
+
+unsigned long length;
+
+int level;
+
+} zskiplist;
+
+typedef struct zset
+
+{
+
+dict *dict;
+
+zskiplist *zsl;
+
+} zset;</pre>
+<p>[/codesyntax]</p>
+<p>zset 的实现用到了2个数据结构: hash_table 和 skip list (跳跃表),其中 hash table 是使用 redis 的 dict 来实现的,主要是为了保证查询效率为 O(1),而 skip list (跳跃表) 是用来保证元素有序并能够保证 INSERT 和 REMOVE 操作是 O(logn)的复杂度。</p>
+<p>1) zset初始化状态</p>
+<p>createZsetObject函数来创建并初始化一个 zset</p>
+<p>[codesyntax lang="c"]</p>
+<pre>robj *createZsetObject(void)
+
+{
+
+zset *zs = zmalloc(sizeof(*zs));
+
+robj *o;
+
+zs-&gt;dict = dictCreate(&amp;zsetDictType,NULL);
+
+zs-&gt;zsl = zslCreate();
+
+o = createObject(REDIS_ZSET,zs);
+
+o-&gt;encoding = REDIS_ENCODING_SKIPLIST;
+
+return o;
+
+}</pre>
+<p>[/codesyntax]</p>
+<p>zslCreate()函数用来创建并初如化一个 skiplist。 其中，skiplist 的 level 最大值为 ZSKIPLIST_MAXLEVEL=32 层。</p>
+<p>[codesyntax lang="c"]</p>
+<pre>zskiplist *zslCreate(void)
+
+{
+
+int j;
+
+zskiplist *zsl;
+
+zsl = zmalloc(sizeof(*zsl));
+
+zsl-&gt;level = 1;
+
+zsl-&gt;length = 0;
+
+zsl-&gt;header = zslCreateNode(ZSKIPLIST_MAXLEVEL,0,NULL);
+
+for (j = 0; j &lt; ZSKIPLIST_MAXLEVEL; j++) {
+
+zsl-&gt;header-&gt;level[j].forward = NULL;
+
+zsl-&gt;header-&gt;level[j].span = 0;
+
+}
+
+zsl-&gt;header-&gt;backward = NULL;
+
+zsl-&gt;tail = NULL;
+
+return zsl;
+
+}</pre>
+<p>[/codesyntax]</p>
+<p><a href="/uploads/2012/07/redis15.jpeg"><img class="alignnone size-full wp-image-2866" title="redis15" src="/assets/redis15.jpeg" alt="" width="475" height="658" /></a></p>
+<p>2) ZADD myzset 1 “one”</p>
+<p>ZADD 命令格式：</p>
+<p>ZADD key score member</p>
+<ol>
+<li>根据 key 从 redisDb 进行查询，返回 zset 对象。</li>
+<li>以 member 作为 key,score 作为 value ，向 zset的 dict 进行中插入;</li>
+<li>如果返回成功，表明 member 没有在 dict 中出现过，直接向 skiplist 进行插入。</li>
+<li>如果步骤返回失败，表明以 member 已经在 dict中出现过，则需要先从 skiplist 中删除，然后以现在的 score 值重新插入。</li>
+</ol>
+<p><a href="/uploads/2012/07/redis16.jpeg"><img class="alignnone size-full wp-image-2867" title="redis16" src="/assets/redis16.jpeg" alt="" width="481" height="500" /></a></p>
+<p>3) ZADD myzset 3 “three”</p>
+<p><a href="/uploads/2012/07/redis17.jpeg"><img class="alignnone size-full wp-image-2868" title="redis17" src="/assets/redis17.jpeg" alt="" width="462" height="463" /></a></p>
+<p>4) ZADD myzset 2 “two”</p>
+<p><a href="/uploads/2012/07/redis18.jpeg"><img class="alignnone size-full wp-image-2869" title="redis18" src="/assets/redis18.jpeg" alt="" width="457" height="429" /></a></p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2012/07/redis-mem-struct-analytics/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

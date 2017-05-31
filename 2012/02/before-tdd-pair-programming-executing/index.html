@@ -1,0 +1,295 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>写于TDD和Pair Programming实施之前 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2012/02/before-tdd-pair-programming-executing/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2012/02/before-tdd-pair-programming-executing/">写于TDD和Pair Programming实施之前</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>09 Feb 2012</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Pair-Programming">Pair-Programming</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/TDD">TDD</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2>1. 前言</h2>
+<p>公司准备试点施行TDD和Pair Programming，很奇妙的两个东西，都是我在7年编程经历里想都没想过，并很难接受的东西。先说TDD。TDD是一种很违背自然思考的事情，一般我们做事情的时候总是先做事情然后再来检查，所以一般都是写代码先，然后再写test case，这是很自然的想法。而TDD则要求我们将测试代码写在逻辑代码之前，囧啊。然后是pair programming。在我的认知范围内，包括我自己，应该所有的程序员都不希望在自己写代码的时候旁边有个人看着你，甚至对你写的代码指指点点。所以这两个东西在很多软件公司，是推行不开来的。但是从另一个方面来看，存在即合理，这个东西既然有人提倡（公司的CTO也是大力提倡者），那么肯定有其意义所在。周2，大家开了个会，把所有的点都过了下，会上我仔细思考了下这两个东西，发现所得颇多，这里权作下笔记。</p>
+<h2>2. TDD解决了什么</h2>
+<p>我们看这两个东西首先先要了解这两个东西解决了什么问题。就我个人理解，TDD解决的问题有两个，第一个是开发普遍测试不足的问题。我们老是会为自己找这样那样的理由、借口，来回避逻辑代码开发完成后的测试代码。第二个是设计验证问题。我们经常会遇到一个情况，那就是设计老是被改动，而我们很难在设计进行规划的时候就参与并在逻辑代码开发之前找到问题，反而直接栽进代码开发里面去了。</p>
+<p>关于第二点，稍微解释下。一般来说我们接到设计之后，就直接进行程序设计了，然后就是开发。在这样的流程下，你很少会仔细考虑“design”这个东西。而使用TDD的一个很重要的目的就是让程序也参与到检验设计中去，在一个设计完成后，程序需要首先理解设计，然后编写test case来验证这个设计，最后才是逻辑代码的编写。</p>
+<p>以上两点是我对TDD的看法，比较粗浅。关于TDD的领会我暂时只有这点，我觉得我还没完全明白TDD，这里就暂且带过，等以后有了实际经验再来补充。接下来我们看一下结对编程。</p>
+<h2>3. Pair Programming解决了什么</h2>
+<p>Pair Programming，结对编程又解决了什么问题。我个人觉得它解决了一个程序开发中很关键的问题，那就是review、检查。大家肯定都听说过code review这玩意，这东西其实是软件开发中很重要的一个环节。它重要在哪里，有几点：</p>
+<ul>
+<li>帮助大项目中的每个程序员了解并非自己负责部分的逻辑。</li>
+<li>团队协作，高效地找出代码中的问题。</li>
+<li>保证代码质量，防止单一程序员容易导致的钻牛角尖问题。</li>
+</ul>
+<p>而在实际开发过程中，因为这样那样的原因，实际能做到code review，并将它做好，做出实际效果的项目团队应该是很少的。这里结对编程就能在很大程度上保证上述3个问题的解决，并减轻大型项目code review的难度和成本。</p>
+<p>我们回顾下软件开发的流程，一般首先是设计，然后是编程，最后是review。为了保证质量，在这三个过程中首先设计和review这两个部分应该是由一个人为核心主导然后团队执行的。这样才能保证设计和review的质量。而编程我们一般都会使用coding style和comments来提高代码整体的风格一致和可读性。我想说的是，只有当上述的内容都被完美贯彻的时候，项目的代码质量才能得到完全的保障。无论哪个环节，只要有一个环节脱节了，势必会埋下这样那样的隐患。举例来说，编程的时候的coding style和comments，当执行不到位的时候，后续的review以及人员替换后的维护都会造成问题。代码很难看懂，那就别谈什么维护了。</p>
+<p>而普通的代码review也有其缺陷，那就是对代码质量的补救是“事后型”的，什么意思呢，就是说当你发现问题的时候，问题其实已经发生了。而结对编程则能很大程度上避免这种情况的发生，问题发生的时候，结对编程的两个人至少会有一个人发现问题，并将问题扼杀在萌芽状态。</p>
+<p>总结下结对编程和非结对编程的优缺点。</p>
+<p>结对编程的优点：</p>
+<ul>
+<li>容易保证质量，高质量保证开发时段涵盖了软件开发的整个生命周期，不容易出问题</li>
+<li>review及解决问题在问题萌芽状态，高效</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>执行要求较高，两个结对的程序员工作时间必须重合，且对人员的质量也有要求，两个不靠谱的程序员结对并不能保证质量</li>
+</ul>
+<p>非结对编程的优点：</p>
+<ul>
+<li>工作时间自由度高</li>
+<li>团队中人员要求不至于太高</li>
+<li><del>（我本来想写“高效”，后来想想完全不是这么回事。高效的前提是程序员都qualified，而如果程序员都qualified的话，那当然每个人都是高效的。但是如果每个程序员都qualified的话那我们的讨论也就没有意义了，因为无论使用什么开发方式，这个团队的产出质量和效率都是能得到保证的。）</del></li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>几个软件开发的关键点难于长时间彻底执行，很难保证开发周期中所有时间段都被高质量开发涵盖到</li>
+<li>review为事后型，即便问题被及时解决，付出的代价也比较高昂</li>
+</ul>
+<h2>4. 后话</h2>
+<p>以上是一些关于TDD和结对编程开会培训后的思考，写在TDD和结对编程执行之前，权作笔记，留待后考。</p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2012/02/before-tdd-pair-programming-executing/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

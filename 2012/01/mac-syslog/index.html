@@ -1,0 +1,414 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>关于MAC下的syslog系统 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2012/01/mac-syslog/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2012/01/mac-syslog/">关于MAC下的syslog系统</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>13 Jan 2012</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/ASL">ASL</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MAC">MAC</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/OSX">OSX</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Syslog">Syslog</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <p>说到mac下的syslog的使用问题，简直就是噩梦啊。。。哎。本来以为mac是基于FreeBSD的UNIX系统，应该和普通的*inx系统没啥差别的，没想到这个东西纠结了我2天时间。</p>
+<p><span style="font-size: large;"><strong>1. OSX自带的syslogd</strong></span></p>
+<p>最早还是使用php的时候发现了问题。打日志的时候发现只有高于notice级别的日志被记录了下来，debug和info级别的都被忽略掉了。</p>
+<p>一开始我以为是osx自带的syslogd的配置没配好，查了下/etc/syslog.conf，发现配置里的内容都是没有问题的。我尝试了添加一些配置，*.debug之类的，发现都没作用。甚至后来我在配置文件的最后加了一行：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>*.*        /var/log/messages</pre>
+<p>[/codesyntax]</p>
+<p>把所有的消息输出都集中到/var/log/messages这个消息文件里，发现还是没有作用。到这个份上这个问题肯定就不是syslogd的问题了，肯定是别的什么东西在影响结果。</p>
+<p><span style="font-size: large;"><strong>2. 在OSX下安装syslog-ng</strong></span></p>
+<p>在syslogd怎么都搞不定的情况下，我看了几篇关于syslog-ng的文章，于是就准备尝试下这个东西，看看能不能绕过上面的问题。安装的过程还是很坎坷的，囧。</p>
+<p>首先，进行安装。安装本身是没什么问题的，东西也不大，很快就能装好了。不过接下来的很多步骤就比较烦了，这里我简单列下。</p>
+<p style="padding-left: 30px;">port -v install syslog-ng</p>
+<p>官方的配置文件是放在/opt/local/etc/syslog-ng.conf-dist，这里不太符合我们的配置文件放置规则。于是，</p>
+<p style="padding-left: 30px;">mkdir /opt/local/etc/syslog-ng<br />
+mv /opt/local/etc/syslog-ng.conf-dist /opt/local/etc/syslog-ng<br />
+cp /opt/local/etc/syslog-ng/syslog-ng.conf-dist /opt/local/etc/syslog-ng/syslog-ng.conf</p>
+<p>然后修改配置文件的内容，#号注释掉的都是原来的配置内容，下面一行的内容则是我们更改后的内容：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#version 3.0
+@version: 3.0
+
+#destination syslog { file("/var/log/syslog"); };
+destination d_syslog { file("/var/log/syslog.log"); };
+
+#destination console_all { file("/dev/tty12"); };
+destination console_all { file("/dev/console"); };
+
+#filter f_syslog { not facility(authpriv, mail); };
+filter f_syslog { facility(local0); };
+
+#log { source(src); filter(f_syslog); destination(syslog); };
+log { source(src); filter(f_syslog); destination(d_syslog); };</pre>
+<p>[/codesyntax]</p>
+<p>这样修改之后，官方的配置文件启动的时候就不会有报错了。<br />
+然后就是启动脚本，touch /etc/init.d/syslog-ng，chmod +x /etc/init.d/syslog-ng，内容如下：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#!/bin/bash
+
+DAEMON=/opt/local/sbin/syslog-ng
+PIDFILE=/opt/local/var/syslog-ng.pid
+CONFILE=/opt/local/etc/syslog-ng/syslog-ng.conf
+NAME=syslog-ng
+DESC=syslog-ng
+
+start_syslog() {
+    $DAEMON --pidfile=$PIDFILE --cfgfile=$CONFILE
+}
+
+stop_syslog() {
+    if [ ! -f "$PIDFILE" ]
+    then
+        echo "syslog-ng is not running!"
+        return 1
+    fi
+    pid=`cat $PIDFILE`
+    kill -15 $pid
+}
+
+case "$1" in
+  start)
+        echo -n "Starting $DESC: "
+        start_syslog
+        echo "$NAME."
+        ;;
+  stop)
+        echo -n "Stopping $DESC: "
+        stop_syslog
+        echo "$NAME."
+        ;;
+  restart)
+        echo -n "Restarting $DESC: "
+        stop_syslog
+        sleep 1
+        start_syslog
+        echo "$NAME."
+        ;;
+  *)
+        echo "Usage: $NAME {start|stop|restart}" &gt;&amp;2
+        exit 1
+        ;;
+esac
+
+exit 0</pre>
+<p>[/codesyntax]</p>
+<p>恩，安装步骤到这里就结束了，启动和配置都没有问题了。安装的过程有很大一部分参照了<a title="Running syslog-ng on Snow Leopard" href="http://www.marcsturlese.com/2010/10/18/running-syslog-ng-on-snow-leopard/" target="_blank">这个博客</a>的指导。</p>
+<p>但是，结果还是没有解决问题，不如说是添加了新的问题，囧。安装完的syslog-ng什么日志都显示不出来，除了syslog-ng自身“internal”的日志，比如说启动和关闭，其他的日志都显示不出来。这完全就派不上用场了。我仔细查了syslog-ng<a title="The syslog-ng 3.0 Administrator Guide#3.3. Sources and source drivers" href="http://www.balabit.com/sites/default/files/documents/syslog-ng-v3.0-guide-admin-en.html/index.html-single.html#sources" target="_blank">官方的配置指导</a>，并仔细检查了source源，实在找不出任何问题。</p>
+<p>虽然syslog-ng的官方文档中是没有包含mac的osx系统的，但是还是有FreeBSD的。几次配置调整还是无法解决问题后，我查了几篇博客，找到一篇比较好的<a title="Logging with syslog-ng" href="http://72.14.189.113/howto/logging/syslog-ng/" target="_blank">syslog-ng配置博客</a>，里面有专门一段介绍如何在mac下配置syslog-ng，果然还是参照FreeBSD的配置进行的。我按照这个博客的配置，把配置文件更新成了：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>@version: 3.0
+
+options {
+  dir_perm(0755);
+  perm(0644);
+  create_dirs(yes);
+
+  use_fqdn(yes);
+  log_fifo_size(4096);
+};
+
+source local {
+  unix-dgram("/var/run/syslog");
+  #udp(ip(127.0.0.1) port(514));
+  internal();
+};
+
+source s_kernel {
+  file("/dev/klog");
+};
+
+destination d_messages { file("/var/log/messages"); };
+
+log { source(local); source(s_kernel); destination(d_messages); };</pre>
+<p>[/codesyntax]</p>
+<p>恩，结果还是没有解决syslog-ng没有日志的问题。于是乎，syslog-ng也废掉了。虽然syslog-ng并没有解决我的问题，但是在配置的过程中和syslogd比较了下，syslog-ng的日志来源分配、日志过滤等功能还是强过syslogd甚多，比syslogd好用太多太多了。特别是对业务逻辑比较复杂的应用来说，日志的分割使用，syslog-ng是占绝对优势的。</p>
+<p><span style="font-size: large;"><strong>3. 苹果的ASL</strong></span></p>
+<p>在查博客的过程中，一个名字被我注意到了，这个玩意就是苹果官方出品的日志系统ASL（Apple System Log）。这套东西只在apple的产品中使用，包括mac上的osx和iphone、ipad上的ios。这套东西和syslogd之间的关系我还不是很明白，究竟是syslogd在asl之上？还是asl在syslogd之上？因为在日志系统上花的无谓的时间已经太多了，我就没再花时间仔细研究asl这个东西。</p>
+<p>后来的解决方法还是很简单的，修改下/etc/asl.conf的配置：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>#? [= Facility internal] ignore
+? [= Facility internal] store
+
+#? [&lt;= Level notice] store
+? [&lt;= Level debug] store</pre>
+<p>[/codesyntax]</p>
+<p>就两句话，问题就解决了，其实第一句的作用我还不是很确定。不过第二句绝对是解决问题的关键，本来asl只会存储从notice到emergency级别的消息，现在我这么一改，则会存储从debug到emergency所有级别的消息。这个东西的生效还有点小问题，我当时修改完这个配置文件之后，重启了asl和syslogd，问题并没有解决，当时还纠结了很久。等到一天之后，我开始再处理这个问题，发现已经好了。现在还不能确定到底是重启脚本使用得不正确，还是asl还有别的什么相关的服务也是需要一起重启的，嘛，这个问题就暂时放一边了。</p>
+<p>需要注意的是，只修改上述的asl配置文件，php的日志还是不能完整显示出来。需要在php脚本里再加一句：</p>
+<p>[codesyntax lang="php"]</p>
+<pre>openlog('php-cgi', LOG_PID | LOG_PERROR, LOG_LOCAL0);</pre>
+<p>[/codesyntax]</p>
+<p>然后，debug和info级别的日志就能显示出来了，暂时我还不知道是为什么。我猜是因为facility的问题，在这句openlog命令中，php指定了输出日志的facility，可能就是这个东西影响了结果。嘛，暂时就不管那么多了，在这个问题上我已经浪费了够多的时间了，现在能用就好，其他的问题等以后再来看。</p>
+<p>最后再啰嗦下我找到的重启官方syslogd和asl的方法：</p>
+<p>[codesyntax lang="bash"]</p>
+<pre>launchctl unload /System/Library/LaunchDaemons/com.apple.aslmanager.plist
+launchctl load /System/Library/LaunchDaemons/com.apple.aslmanager.plist
+launchctl unload /System/Library/LaunchDaemons/com.apple.syslogd.plist
+launchctl load /System/Library/LaunchDaemons/com.apple.syslogd.plist</pre>
+<p>[/codesyntax]</p>
+<p><span style="font-size: large;"><strong>4. Solution</strong></span></p>
+<p>上面一堆废话说的是我解决问题的过程。总结下。解决方法：</p>
+<ul>
+<li>按步骤1，创建监听所有管道所有级别的syslogd日志文件。</li>
+<li>按步骤3，修改苹果ASL配置文件，并保证你的php脚本顶部有openlog函数来定义日志输出的facility。记得要重启ASL和syslogd。</li>
+<li>在你的日志文件夹下创建messages日志的软连接。ln -s /var/log/messages /Users/jonathan/logs/messages。</li>
+</ul>
+<p>Ok，完成了，放心打日志吧。当然，这些工作，特别是php脚本的openlog，是在MAC这个比较奇怪的日志系统上才需要的，一般来说如果你在别的*inx系统上话，是不需要做这些事情的。</p>
+<p><span style="font-size: large;"><strong>5. Issues</strong></span></p>
+<p>把我在日志系统中遇到的系列未解决问题罗列下，有时间方便以后再回过头来看。</p>
+<ul>
+<li>syslog-ng在mac下为什么什么日志都无法收到，是配置的问题，还是日志源的问题，或者是asl的影响？</li>
+<li>asl的定位是在syslogd之上还是之下？它们是怎么协调工作的？asl具体负责什么工作？</li>
+<li>php在mac下的debug和info级别日志显示，为什么必须使用openlog函数进行facility的定位？究竟是因为asl对facility的过滤？还是openlog中其他参数的影响？</li>
+</ul>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+    <li><a href="/2016/11/mobile-reverse-code-engineering/">移动应用逆向工程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2012/01/mac-syslog/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
