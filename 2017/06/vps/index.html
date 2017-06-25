@@ -1,0 +1,437 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>自建SS安装 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2017/06/vps/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive.html">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories.html">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags.html">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about.html">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2017/06/vps/">自建SS安装</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>25 Jun 2017</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Vultr">Vultr</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/VPS">VPS</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2 id="section">0. 前言</h2>
+<p>GreenVPN本周挂了，噩耗啊。服务时间最长，我觉得应该是一辈子不会挂的最后防线居然就这么轻易挂了。看来还是得自己搭VPS作为自己的最后防线。否则第三方的服务哪天挂了，我真的就闭耳塞听了。</p>
+
+<h2 id="vps">1. VPS</h2>
+<p>名字就不提了，反正越少人知道越好。本来想用$2.5的Instance，卖完了。接着想索性换一样价格的Linode，结果Linode的$5也卖完了。最后还是用了$5的Instance，等有$2.5的时候再换下来。</p>
+
+<h2 id="section-1">2. 安装</h2>
+<p>### 2.0 系统<br />
+操作系统选的是最新的ubuntu，17.04   <br />
+<code>bash
+cat /etc/issue
+# Ubuntu 17.04 \n \l
+sudo lsb_release -a
+# No LSB modules are available.
+# Distributor ID:	Ubuntu
+# Description:	Ubuntu 17.04
+# Release:	17.04
+# Codename:	zesty
+uname -r
+# 4.10.0-20-generic
+</code></p>
+
+<h3 id="bbr">2.1 启用BBR</h3>
+<pre><code class="language-bash">echo "net.core.default_qdisc=fq" &gt;&gt; /etc/sysctl.conf
+echo "net.ipv4.tcp_congestion_control=bbr" &gt;&gt; /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
+# net.ipv6.conf.all.accept_ra = 2
+# net.core.default_qdisc = fq
+# net.ipv4.tcp_congestion_control = bbr
+sysctl net.ipv4.tcp_available_congestion_control
+# net.ipv4.tcp_available_congestion_control = bbr cubic reno
+lsmod | grep bbr
+# tcp_bbr                20480  0
+</code></pre>
+
+<h3 id="libsodium">2.1 安装libsodium</h3>
+<p>详见：<a href="https://github.com/breakwa11/shadowsocks-rss/wiki/libsodium">Link</a></p>
+
+<pre><code class="language-bash">apt-get install build-essential
+wget https://github.com/jedisct1/libsodium/releases/download/1.0.12/libsodium-1.0.12.tar.gz
+tar xf libsodium-1.0.12.tar.gz &amp;&amp; cd libsodium-1.0.12
+./configure &amp;&amp; make -j2 &amp;&amp; make install
+ldconfig
+</code></pre>
+
+<h3 id="ss">2.2 安装SS</h3>
+<p>详见：<a href="https://github.com/breakwa11/shadowsocks-rss/wiki/Server-Setup">Link</a></p>
+
+<pre><code class="language-bash">git clone -b manyuser https://github.com/shadowsocksr/shadowsocksr.git
+cd shadowsocksr
+bash initcfg.sh
+</code></pre>
+
+<h3 id="python">2.3 安装python</h3>
+<pre><code class="language-bash">apt-get install checkinstall
+apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+
+wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
+tar xzf Python-2.7.13.tgz
+cd Python-2.7.13
+./configure
+make install
+</code></pre>
+
+<h3 id="section-2">2.4 创建命令脚本和运维环境</h3>
+<p>修改文件limit<br />
+<code>bash
+echo "fs.file-max=1024000" &gt;&gt; /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
+echo "*               soft    nofile           512000" &gt;&gt; /etc/security/limits.conf
+echo "*               hard    nofile          1024000" &gt;&gt; /etc/security/limits.conf
+</code></p>
+
+<p>日志和启动文件<br />
+<code>bash
+touch shadowsocks.sh
+chmod +x ./shadowsocks.sh
+ln -s /var/log/shadowsocksr.log ./shadowsocksr.log
+</code></p>
+
+<p>vim shadowsocks.sh<br />
+```bash<br />
+#!/bin/bash<br />
+BASEDIR=$(dirname “$0”)<br />
+CMD=${BASEDIR}/shadowsocksr/shadowsocks/server.py<br />
+CONF=${BASEDIR}/shadowsocksr/user-config.json</p>
+
+<p>cd ${BASEDIR}</p>
+
+<p>if [ “$1” == “start” ];then<br />
+    ulimit -n 512000<br />
+    python ${CMD} -c ${CONF} -d start<br />
+elif [ “$1” == “restart” ];then<br />
+    ulimit -n 512000<br />
+    python ${CMD} -c ${CONF} -d restart<br />
+elif [ “$1” == “stop” ];then<br />
+    ulimit -n 512000<br />
+    python ${CMD} -c ${CONF} -d stop<br />
+else<br />
+    echo “Usage: ./shadowsocks.sh start|stop|restart”<br />
+fi<br />
+```</p>
+
+<p>vim shadowsocksr/user-config.json<br />
+```json<br />
+{<br />
+    “server”: “0.0.0.0”,<br />
+    “server_ipv6”: “::”,<br />
+    “server_port”: 8038,<br />
+    “local_address”: “127.0.0.1”,<br />
+    “local_port”: 1080,</p>
+
+<pre><code>"password": "$URPWD",
+"method": "aes-256-cfb",
+"protocol": "auth_aes128_md5",
+"protocol_param": "",
+"obfs": "http_simple",
+"obfs_param": "",
+"speed_limit_per_con": 0,
+"speed_limit_per_user": 0,
+
+"additional_ports" : {},
+"additional_ports_only" : false,
+"timeout": 120,
+"udp_timeout": 60,
+"dns_ipv6": false,
+"connect_verbose_info": 0,
+"redirect": ["bing.com", "cloudflare.com:443"],
+"fast_open": false } ```
+</code></pre>
+
+<p>MAC客户端安装基本上和服务器差不多，git clone下来，bash生成config json，从服务器拷贝一份也行。然后只要把客户端的port和服务端的ip配下，就好了。    <br />
+MAC自启动脚本    <br />
+vim org.shadowsocks.macos.plist<br />
+```XML<br />
+<?xml version="1.0" encoding="UTF-8"?><br />
+&lt;!DOCTYPE plist PUBLIC “-//Apple//DTD PLIST 1.0//EN” “http://www.apple.com/DTDs/PropertyList-1.0.dtd”&gt;</p>
+<plist version="1.0">
+<dict>
+    <key>GroupName</key>
+    <string>wheel</string>
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false />
+    </dict>
+    <key>Label</key>
+    <string>org.shadowsocksr.macos</string>
+    <key>WorkingDirectory</key>
+    <string>$PATH_TO_shadowsocksr</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python</string>
+            <string>shadowsocks/local.py</string>
+            <string>-c</string>
+            <string>user-config.json</string>
+            <string>-d</string>
+            <string>start</string>
+    </array>
+    <key>RunAtLoad</key>
+    <true />
+    <key>StandardErrorPath</key>
+    <string>/var/log/shadowsocksr.log</string>
+    <key>StandardOutPath</key>
+    <string>/var/log/shadowsocksr.log</string>
+    <key>UserName</key>
+    <string>root</string>
+</dict>
+</plist>
+
+<pre><code>
+MAC启动
+```bash
+vim /Library/LaunchDaemons/org.shadowsocks.macos.plist
+sudo launchctl load ./org.shadowsocks.macos.plist
+</code></pre>
+
+<p>观察日志<br />
+<code>bash
+tail -f ./shadowsocksr.log
+</code></p>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/06/vps/">自建SS安装</a></li>
+    
+    <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
+    
+    <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
+    
+    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
+    
+    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2017/06/vps/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

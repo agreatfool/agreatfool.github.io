@@ -7,6 +7,195 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>自建SS安装</title>
+				<description>&lt;h2 id=&quot;section&quot;&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;GreenVPN本周挂了，噩耗啊。服务时间最长，我觉得应该是一辈子不会挂的最后防线居然就这么轻易挂了。看来还是得自己搭VPS作为自己的最后防线。否则第三方的服务哪天挂了，我真的就闭耳塞听了。&lt;/p&gt;
+
+&lt;h2 id=&quot;vps&quot;&gt;1. VPS&lt;/h2&gt;
+&lt;p&gt;名字就不提了，反正越少人知道越好。本来想用$2.5的Instance，卖完了。接着想索性换一样价格的Linode，结果Linode的$5也卖完了。最后还是用了$5的Instance，等有$2.5的时候再换下来。&lt;/p&gt;
+
+&lt;h2 id=&quot;section-1&quot;&gt;2. 安装&lt;/h2&gt;
+&lt;p&gt;### 2.0 系统&lt;br /&gt;
+操作系统选的是最新的ubuntu，17.04   &lt;br /&gt;
+&lt;code&gt;bash
+cat /etc/issue
+# Ubuntu 17.04 \n \l
+sudo lsb_release -a
+# No LSB modules are available.
+# Distributor ID:	Ubuntu
+# Description:	Ubuntu 17.04
+# Release:	17.04
+# Codename:	zesty
+uname -r
+# 4.10.0-20-generic
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;bbr&quot;&gt;2.1 启用BBR&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;echo &quot;net.core.default_qdisc=fq&quot; &amp;gt;&amp;gt; /etc/sysctl.conf
+echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &amp;gt;&amp;gt; /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
+# net.ipv6.conf.all.accept_ra = 2
+# net.core.default_qdisc = fq
+# net.ipv4.tcp_congestion_control = bbr
+sysctl net.ipv4.tcp_available_congestion_control
+# net.ipv4.tcp_available_congestion_control = bbr cubic reno
+lsmod | grep bbr
+# tcp_bbr                20480  0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;libsodium&quot;&gt;2.1 安装libsodium&lt;/h3&gt;
+&lt;p&gt;详见：&lt;a href=&quot;https://github.com/breakwa11/shadowsocks-rss/wiki/libsodium&quot;&gt;Link&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;apt-get install build-essential
+wget https://github.com/jedisct1/libsodium/releases/download/1.0.12/libsodium-1.0.12.tar.gz
+tar xf libsodium-1.0.12.tar.gz &amp;amp;&amp;amp; cd libsodium-1.0.12
+./configure &amp;amp;&amp;amp; make -j2 &amp;amp;&amp;amp; make install
+ldconfig
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;ss&quot;&gt;2.2 安装SS&lt;/h3&gt;
+&lt;p&gt;详见：&lt;a href=&quot;https://github.com/breakwa11/shadowsocks-rss/wiki/Server-Setup&quot;&gt;Link&lt;/a&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;git clone -b manyuser https://github.com/shadowsocksr/shadowsocksr.git
+cd shadowsocksr
+bash initcfg.sh
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;python&quot;&gt;2.3 安装python&lt;/h3&gt;
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;apt-get install checkinstall
+apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+
+wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
+tar xzf Python-2.7.13.tgz
+cd Python-2.7.13
+./configure
+make install
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;section-2&quot;&gt;2.4 创建命令脚本和运维环境&lt;/h3&gt;
+&lt;p&gt;修改文件limit&lt;br /&gt;
+&lt;code&gt;bash
+echo &quot;fs.file-max=1024000&quot; &amp;gt;&amp;gt; /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf
+echo &quot;*               soft    nofile           512000&quot; &amp;gt;&amp;gt; /etc/security/limits.conf
+echo &quot;*               hard    nofile          1024000&quot; &amp;gt;&amp;gt; /etc/security/limits.conf
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;日志和启动文件&lt;br /&gt;
+&lt;code&gt;bash
+touch shadowsocks.sh
+chmod +x ./shadowsocks.sh
+ln -s /var/log/shadowsocksr.log ./shadowsocksr.log
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;vim shadowsocks.sh&lt;br /&gt;
+```bash&lt;br /&gt;
+#!/bin/bash&lt;br /&gt;
+BASEDIR=$(dirname “$0”)&lt;br /&gt;
+CMD=${BASEDIR}/shadowsocksr/shadowsocks/server.py&lt;br /&gt;
+CONF=${BASEDIR}/shadowsocksr/user-config.json&lt;/p&gt;
+
+&lt;p&gt;cd ${BASEDIR}&lt;/p&gt;
+
+&lt;p&gt;if [ “$1” == “start” ];then&lt;br /&gt;
+    ulimit -n 512000&lt;br /&gt;
+    python ${CMD} -c ${CONF} -d start&lt;br /&gt;
+elif [ “$1” == “restart” ];then&lt;br /&gt;
+    ulimit -n 512000&lt;br /&gt;
+    python ${CMD} -c ${CONF} -d restart&lt;br /&gt;
+elif [ “$1” == “stop” ];then&lt;br /&gt;
+    ulimit -n 512000&lt;br /&gt;
+    python ${CMD} -c ${CONF} -d stop&lt;br /&gt;
+else&lt;br /&gt;
+    echo “Usage: ./shadowsocks.sh start|stop|restart”&lt;br /&gt;
+fi&lt;br /&gt;
+```&lt;/p&gt;
+
+&lt;p&gt;vim shadowsocksr/user-config.json&lt;br /&gt;
+```json&lt;br /&gt;
+{&lt;br /&gt;
+    “server”: “0.0.0.0”,&lt;br /&gt;
+    “server_ipv6”: “::”,&lt;br /&gt;
+    “server_port”: 8038,&lt;br /&gt;
+    “local_address”: “127.0.0.1”,&lt;br /&gt;
+    “local_port”: 1080,&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&quot;password&quot;: &quot;$URPWD&quot;,
+&quot;method&quot;: &quot;aes-256-cfb&quot;,
+&quot;protocol&quot;: &quot;auth_aes128_md5&quot;,
+&quot;protocol_param&quot;: &quot;&quot;,
+&quot;obfs&quot;: &quot;http_simple&quot;,
+&quot;obfs_param&quot;: &quot;&quot;,
+&quot;speed_limit_per_con&quot;: 0,
+&quot;speed_limit_per_user&quot;: 0,
+
+&quot;additional_ports&quot; : {},
+&quot;additional_ports_only&quot; : false,
+&quot;timeout&quot;: 120,
+&quot;udp_timeout&quot;: 60,
+&quot;dns_ipv6&quot;: false,
+&quot;connect_verbose_info&quot;: 0,
+&quot;redirect&quot;: [&quot;bing.com&quot;, &quot;cloudflare.com:443&quot;],
+&quot;fast_open&quot;: false } ```
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;MAC客户端安装基本上和服务器差不多，git clone下来，bash生成config json，从服务器拷贝一份也行。然后只要把客户端的port和服务端的ip配下，就好了。    &lt;br /&gt;
+MAC自启动脚本    &lt;br /&gt;
+vim org.shadowsocks.macos.plist&lt;br /&gt;
+```XML&lt;br /&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;br /&gt;
+&amp;lt;!DOCTYPE plist PUBLIC “-//Apple//DTD PLIST 1.0//EN” “http://www.apple.com/DTDs/PropertyList-1.0.dtd”&amp;gt;&lt;/p&gt;
+&lt;plist version=&quot;1.0&quot;&gt;
+&lt;dict&gt;
+    &lt;key&gt;GroupName&lt;/key&gt;
+    &lt;string&gt;wheel&lt;/string&gt;
+    &lt;key&gt;KeepAlive&lt;/key&gt;
+    &lt;dict&gt;
+        &lt;key&gt;SuccessfulExit&lt;/key&gt;
+        &lt;false /&gt;
+    &lt;/dict&gt;
+    &lt;key&gt;Label&lt;/key&gt;
+    &lt;string&gt;org.shadowsocksr.macos&lt;/string&gt;
+    &lt;key&gt;WorkingDirectory&lt;/key&gt;
+    &lt;string&gt;$PATH_TO_shadowsocksr&lt;/string&gt;
+    &lt;key&gt;ProgramArguments&lt;/key&gt;
+    &lt;array&gt;
+        &lt;string&gt;/usr/bin/python&lt;/string&gt;
+            &lt;string&gt;shadowsocks/local.py&lt;/string&gt;
+            &lt;string&gt;-c&lt;/string&gt;
+            &lt;string&gt;user-config.json&lt;/string&gt;
+            &lt;string&gt;-d&lt;/string&gt;
+            &lt;string&gt;start&lt;/string&gt;
+    &lt;/array&gt;
+    &lt;key&gt;RunAtLoad&lt;/key&gt;
+    &lt;true /&gt;
+    &lt;key&gt;StandardErrorPath&lt;/key&gt;
+    &lt;string&gt;/var/log/shadowsocksr.log&lt;/string&gt;
+    &lt;key&gt;StandardOutPath&lt;/key&gt;
+    &lt;string&gt;/var/log/shadowsocksr.log&lt;/string&gt;
+    &lt;key&gt;UserName&lt;/key&gt;
+    &lt;string&gt;root&lt;/string&gt;
+&lt;/dict&gt;
+&lt;/plist&gt;
+
+&lt;pre&gt;&lt;code&gt;
+MAC启动
+```bash
+vim /Library/LaunchDaemons/org.shadowsocks.macos.plist
+sudo launchctl load ./org.shadowsocks.macos.plist
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;观察日志&lt;br /&gt;
+&lt;code&gt;bash
+tail -f ./shadowsocksr.log
+&lt;/code&gt;&lt;/p&gt;
+</description>
+				<pubDate>Sun, 25 Jun 2017 12:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/06/vps/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/06/vps/</guid>
+			</item>
+		
+			<item>
 				<title>域名迁移</title>
 				<description>&lt;h2 id=&quot;section&quot;&gt;0. 前言&lt;/h2&gt;
 &lt;p&gt;最近人民币贬值厉害，贬值预期完全没有消散，估计后面还得大贬。这也就意味着以美元、港元等外币计价的付费业务后续都会涨价，因此我最近在更新大量的注册服务，提前付费，把时间拉得很长，避免后续的贬值损失。当然，这么做的首要条件必须是服务供应商值得信任，后续不会出问题。看了下自己的域名服务，上次注册续费之后是到21年，虽然时间上来看还早，还是得操作下。&lt;/p&gt;
@@ -1121,83 +1310,6 @@ Exception: error!!!&lt;/pre&gt;
 				<pubDate>Mon, 07 Jul 2014 13:06:38 +0800</pubDate>
 				<link>https://xenojoshua.com/2014/07/yale-open-course-listening-to-music/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2014/07/yale-open-course-listening-to-music/</guid>
-			</item>
-		
-			<item>
-				<title>Dart 学习笔记</title>
-				<description>&lt;h2&gt;1. 简介&lt;/h2&gt;
-&lt;p&gt;Google的东西用起来一般感觉都不赖，即便是编程语言，这点也没变。Dart不单单只是一门语言，其相关的配套设施也一应俱全：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;DartIDE：简单好用的IDE，当然更推荐使用JetBrains系列的IDE，配上Dart的插件&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;dartanalyzer：语言分析工具&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;dart2js：js转换工具&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;dartfmt：代码格式化工具&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;docgen：文档生成工具&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;pub：官方自带的包管理工具（官方给出解决方案肯定比第三方出包管理工具要好太多太多了）。&lt;/span&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Dart给我的印象是多种语言的优点的集合。再深入点，你会发现Dart最主要是受了JavaScript和Java两种语言的影响。设计模式上更倾向于Java，而语言本身的使用则更倾向于JavaScript。从服务器角度来说，Dart和NodeJs是一脉相承的：原生的lambda表达式，原生的异步IO支持，&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#isolates&quot; target=&quot;_blank&quot;&gt;单进程的设计&lt;/a&gt;，基本上和NodeJs没什么差别。&lt;/p&gt;
-&lt;p&gt;在接下来的文章里，主要以外部资源介绍为主，因为google官方给的文章内的指导已经非常到位了，不需要我再写班门弄斧的文字了。这里主要是理清思路。&lt;/p&gt;
-&lt;h2&gt;2. 基础资源&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;官网：&lt;/span&gt;&lt;a style=&quot;font-size: 12px;&quot; href=&quot;https://www.dartlang.org/&quot; target=&quot;_blank&quot;&gt;https://www.dartlang.org/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;初学者：千万不要直接去看官网上的&lt;/span&gt;&lt;a style=&quot;font-size: 12px;&quot; href=&quot;https://www.dartlang.org/docs/tutorials/&quot; target=&quot;_blank&quot;&gt;Tutorials&lt;/a&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;，绝对是个坑（要先去看语法），官网上针对新手的页面应该是：&lt;/span&gt;&lt;a style=&quot;font-size: 12px;&quot; href=&quot;https://www.dartlang.org/docs/&quot; target=&quot;_blank&quot;&gt;Programmer&#39;s Guide&lt;/a&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;。&lt;/span&gt;&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;语法指导：&lt;/span&gt;&lt;a style=&quot;font-size: 12px;&quot; href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html&quot; target=&quot;_blank&quot;&gt;Dart: Up and Running &amp;gt;&amp;gt; Chapter 2. A Tour of the Dart Language&lt;/a&gt;，新手第一个要看的东西&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;API文档：&lt;/span&gt;&lt;a style=&quot;font-size: 12px;&quot; href=&quot;https://api.dartlang.org/apidocs/channels/stable/dartdoc-viewer/home&quot; target=&quot;_blank&quot;&gt;Dart API Reference&lt;/a&gt;，在需要用某些功能但是不清楚API细节的时候需要查阅的网站&lt;/li&gt;
-&lt;li&gt;&lt;span style=&quot;font-size: 12px;&quot; data-mce-mark=&quot;1&quot;&gt;Coding Style：&lt;/span&gt;&lt;a style=&quot;font-size: 12px;&quot; href=&quot;https://www.dartlang.org/articles/style-guide&quot; target=&quot;_blank&quot;&gt;Dart Style Guide&lt;/a&gt;，官方的指导，掺杂了一些Dart的编程理念，不是单纯的coding style，照做就好&lt;/li&gt;
-&lt;li&gt;工具列表：&lt;a href=&quot;https://www.dartlang.org/tools/&quot; target=&quot;_blank&quot;&gt;Dart Tools&lt;/a&gt;，上面提及的系列工具的介绍和使用指导&lt;/li&gt;
-&lt;li&gt;profile工具：当前版本 - 1.3.0，还未被包含在发布SDK内的profile工具：&lt;a href=&quot;https://github.com/dart-lang/dprof&quot; target=&quot;_blank&quot;&gt;github/dprof&lt;/a&gt;，将来会被包含在SDK内发布&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;3. 语法&lt;/h2&gt;
-&lt;p&gt;这里简单介绍与其他语言差别比较大的，需要特别注意的点：&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;变量的类型可指定，但不强制性要求指定，若指定，则在--checked模式，会进行排错，若不指定，则可以使用 var 来申明变量&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-final-const&quot; target=&quot;_blank&quot;&gt;Final and Const&lt;/a&gt; 的差别，需要了解下。此外，补一篇外部外部文章：&lt;a href=&quot;http://news.dartlang.org/2012/06/const-static-final-oh-my.html&quot; target=&quot;_blank&quot;&gt;Const, Static, Final, Oh my!&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#numbers&quot; target=&quot;_blank&quot;&gt;整形的长度&lt;/a&gt;和别的语言有差异，要注意：-2&lt;sup&gt;53&lt;/sup&gt; to 2&lt;sup&gt;53&lt;/sup&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#strings&quot; target=&quot;_blank&quot;&gt;字符串的连字处理方式&lt;/a&gt;比较多，空格也可以，这里可以看下&lt;/li&gt;
-&lt;li&gt;if等条件判断的时候，必须为&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#booleans&quot; target=&quot;_blank&quot;&gt;布尔型的真&lt;/a&gt;才是真：Dart treats all values other than true as false&lt;/li&gt;
-&lt;li&gt;使用 =&amp;gt; 的&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#functions&quot; target=&quot;_blank&quot;&gt;超缩略函数定义方式&lt;/a&gt;，别的语法没的，要注意下，官方命名为：arrow functions&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#functions-optional-parameters&quot; target=&quot;_blank&quot;&gt;函数的可选参数&lt;/a&gt;的定义方式和别的语言不同&lt;/li&gt;
-&lt;li&gt;诡异的 &lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#op-arithmetic&quot; target=&quot;_blank&quot;&gt;~/ 运算符&lt;/a&gt;，运算结果是 除以 然后 向下取整，返回值是整形&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-op-type-test&quot; target=&quot;_blank&quot;&gt;类型检查语法&lt;/a&gt;，类似于ActionScript里的语法&lt;/li&gt;
-&lt;li&gt;类似于JavaScript里的&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#for-loops&quot; target=&quot;_blank&quot;&gt;循环闭包陷阱&lt;/a&gt;，在Dart中已经被处理了&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#switch&quot; target=&quot;_blank&quot;&gt;switch case&lt;/a&gt;必须要写break，只有在case内没有逻辑代码的情况下才能顺延，要不然就要使用 continue + label 的方式处理&lt;/li&gt;
-&lt;li&gt;语言自带 &lt;a style=&quot;font-size: 12px;&quot; href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#assert&quot; target=&quot;_blank&quot;&gt;assert 函数&lt;/a&gt;，但仅在--checked模式下启用&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#exceptions&quot; target=&quot;_blank&quot;&gt;Exception和Error&lt;/a&gt;，此外参考这里，来了解两者之间的差异：&lt;a href=&quot;http://stackoverflow.com/questions/17315945/error-vs-exception-in-dart&quot; target=&quot;_blank&quot;&gt;stackoverflow.com &amp;gt;&amp;gt; Error vs. Exception in Dart&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-exceptions-throw&quot; target=&quot;_blank&quot;&gt;throw&lt;/a&gt; 什么都能扔（真暴力。。。）&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-exceptions-catch&quot; target=&quot;_blank&quot;&gt;catch&lt;/a&gt; 的语法和别的语言有点差异&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#classes&quot; target=&quot;_blank&quot;&gt;.. 两个点的语法&lt;/a&gt;，别的语言没的&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-constructors&quot; target=&quot;_blank&quot;&gt;构造函数&lt;/a&gt;这节仔细看下，很蛋痛，和别的语言完全不同，我觉得这里有点乱搞了，混合了好几种语言的做法&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#classes-getters-and-setters&quot; target=&quot;_blank&quot;&gt;getters 和 setters&lt;/a&gt; 不需要手写&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#classes-operators&quot; target=&quot;_blank&quot;&gt;操作符重载&lt;/a&gt;，这里要注意下，一般比较少见&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-mixins&quot; target=&quot;_blank&quot;&gt;Mixin&lt;/a&gt;，算是个蛮新式的概念，Dart也有&lt;/li&gt;
-&lt;li&gt;父类的静态成员不会被子类继承，这个差异很大，见：&lt;a href=&quot;http://stackoverflow.com/questions/15860375/variables-is-not-inherited&quot; target=&quot;_blank&quot;&gt;stackoverflow.com &amp;gt;&amp;gt; Variables is not inherited?&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;类成员的&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#libraries&quot; target=&quot;_blank&quot;&gt;访问可见性&lt;/a&gt;和别的语言完全不同，注意&lt;/li&gt;
-&lt;li&gt;Dart里的&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#libraries&quot; target=&quot;_blank&quot;&gt;类、包加载和管理&lt;/a&gt;的手段和Java类似，但功能更强大&lt;/li&gt;
-&lt;li&gt;类似于 C / C++ 语法的 &lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#typedefs&quot; target=&quot;_blank&quot;&gt;Typedefs&lt;/a&gt;，要注意下&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#ch02-metadata&quot; target=&quot;_blank&quot;&gt;Metadata&lt;/a&gt; (Annotation) 的定义和使用&lt;/li&gt;
-&lt;li&gt;和别的语言不一样的&lt;a href=&quot;https://www.dartlang.org/docs/dart-up-and-running/contents/ch02.html#comments-doc&quot; target=&quot;_blank&quot;&gt;注释文档&lt;/a&gt;的编写规则&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;4. 教程文章&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/idiomatic-dart/&quot; target=&quot;_blank&quot;&gt;Idiomatic Dart&lt;/a&gt;：教你如何使用dart式思考来编程，介绍了一系列dart式的语法和编程方式，基本上在读 &lt;a href=&quot;https://www.dartlang.org/articles/style-guide&quot; target=&quot;_blank&quot;&gt;Dart Style Guide&lt;/a&gt; 的时候顺道把这篇也干掉就对了。这篇文章里 &lt;a href=&quot;https://www.dartlang.org/articles/idiomatic-dart/#futures&quot; target=&quot;_blank&quot;&gt;Future.delayed&lt;/a&gt; 这段特别值得一读&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/doc-comment-guidelines/&quot; target=&quot;_blank&quot;&gt;Guidelines for Dart Doc Comments&lt;/a&gt;：怎么写文档注释，主要了解下dart提倡的简单书写，以及在注释中使用markdown&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/emulating-functions/&quot; target=&quot;_blank&quot;&gt;Emulating Functions in Dart&lt;/a&gt;：讲了在dart中函数动态调用相关的奇技淫巧，call函数，Function.apply函数，typedef函数的类型匹配，noSuchMethod函数，等&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/mixins/&quot; target=&quot;_blank&quot;&gt;Mixins in Dart&lt;/a&gt;：Mixin 代码混合，在dart里的实现和使用，看下&lt;a href=&quot;https://www.dartlang.org/articles/mixins/#syntax-and-semantics&quot; target=&quot;_blank&quot;&gt;三条原则&lt;/a&gt;，和几个例子就差不多了。Dart是没有interface这个关键字的，接口一般使用 abstract class 来定义，这里的 Mixin 也起到了类似的作用&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/snapshots/&quot; target=&quot;_blank&quot;&gt;Snapshots in Dart&lt;/a&gt;：Dart的代码缓存机制，类似于字节码的东西？大概。官方说明是说能提高启动速度，不过我没看到能提高运行速度的说明&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/optional-types/&quot; target=&quot;_blank&quot;&gt;Optional Types in Dart&lt;/a&gt;：Dart里动态类型的一些规则和最佳实践，比如说要不要申明、什么时候申明类型啊，--checked模式会检查什么，之类的&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/event-loop/&quot; target=&quot;_blank&quot;&gt;The Event Loop and Dart&lt;/a&gt;：Dart的event loop是如何工作的，对于没接触过nodejs的人来说，这篇是非常重要的概念帖，里面有几点需要重点理解：
-&lt;ul&gt;
-&lt;li&gt;Dart的queue有两个实现，其先后顺序是不同的，microtask queue会在event queue中的每个event执行之走完：&lt;a href=&quot;https://www.dartlang.org/articles/event-loop/#darts-event-loop-and-queues&quot; target=&quot;_blank&quot;&gt;Dart’s event loop and queues&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;microtask queue现在的实现有bug，会导致其执行顺序不正常地放到event loop最后：&lt;a href=&quot;https://www.dartlang.org/articles/event-loop/#microtask-queue-schedulemicrotask&quot; target=&quot;_blank&quot;&gt;Microtask queue: scheduleMicrotask()&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/numeric-computation/&quot; target=&quot;_blank&quot;&gt;Numeric Computation&lt;/a&gt;：数字类型在Dart VM内的实现，以及如何使用它们，如何提升性能。在dart内部，int申明就有3种隐藏实现。注意&lt;a href=&quot;https://www.dartlang.org/articles/numeric-computation/#typed-lists&quot; target=&quot;_blank&quot;&gt;Typed List&lt;/a&gt;这节，以及后续&lt;a href=&quot;https://www.dartlang.org/articles/numeric-computation/#pulling-back-the-curtains&quot; target=&quot;_blank&quot;&gt;Pulling back the curtains&lt;/a&gt;这一大节里的优化点。&lt;/li&gt;
-&lt;li&gt;&lt;a href=&quot;https://www.dartlang.org/articles/reflection-with-mirrors/&quot; target=&quot;_blank&quot;&gt;Reflection in Dart with Mirrors: An Introduction&lt;/a&gt;：Dart语言里的反射机制，动态调用，和类定义了解，都需要使用这套工具&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				<pubDate>Mon, 21 Apr 2014 15:10:38 +0800</pubDate>
-				<link>https://xenojoshua.com/2014/04/dart-note/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2014/04/dart-note/</guid>
 			</item>
 		
 	</channel>
