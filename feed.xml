@@ -15,10 +15,11 @@
 &lt;p&gt;名字就不提了，反正越少人知道越好。本来想用$2.5的Instance，卖完了。接着想索性换一样价格的Linode，结果Linode的$5也卖完了。最后还是用了$5的Instance，等有$2.5的时候再换下来。&lt;/p&gt;
 
 &lt;h2 id=&quot;section-1&quot;&gt;2. 安装&lt;/h2&gt;
-&lt;p&gt;### 2.0 系统&lt;br /&gt;
-操作系统选的是最新的ubuntu，17.04   &lt;br /&gt;
-&lt;code&gt;bash
-cat /etc/issue
+
+&lt;h3 id=&quot;section-2&quot;&gt;2.0 系统&lt;/h3&gt;
+&lt;p&gt;操作系统选的是最新的ubuntu，17.04&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;cat /etc/issue
 # Ubuntu 17.04 \n \l
 sudo lsb_release -a
 # No LSB modules are available.
@@ -28,9 +29,10 @@ sudo lsb_release -a
 # Codename:	zesty
 uname -r
 # 4.10.0-20-generic
-&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&quot;bbr&quot;&gt;2.1 启用BBR&lt;/h3&gt;
+
 &lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;echo &quot;net.core.default_qdisc=fq&quot; &amp;gt;&amp;gt; /etc/sysctl.conf
 echo &quot;net.ipv4.tcp_congestion_control=bbr&quot; &amp;gt;&amp;gt; /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
@@ -62,6 +64,7 @@ bash initcfg.sh
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h3 id=&quot;python&quot;&gt;2.3 安装python&lt;/h3&gt;
+
 &lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;apt-get install checkinstall
 apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 
@@ -72,123 +75,125 @@ cd Python-2.7.13
 make install
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;h3 id=&quot;section-2&quot;&gt;2.4 创建命令脚本和运维环境&lt;/h3&gt;
-&lt;p&gt;修改文件limit&lt;br /&gt;
-&lt;code&gt;bash
-echo &quot;fs.file-max=1024000&quot; &amp;gt;&amp;gt; /etc/sysctl.conf
+&lt;h3 id=&quot;section-3&quot;&gt;2.4 创建命令脚本和运维环境&lt;/h3&gt;
+&lt;p&gt;修改文件limit&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;echo &quot;fs.file-max=1024000&quot; &amp;gt;&amp;gt; /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 echo &quot;*               soft    nofile           512000&quot; &amp;gt;&amp;gt; /etc/security/limits.conf
 echo &quot;*               hard    nofile          1024000&quot; &amp;gt;&amp;gt; /etc/security/limits.conf
-&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;日志和启动文件&lt;br /&gt;
-&lt;code&gt;bash
-touch shadowsocks.sh
+&lt;p&gt;日志和启动文件&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;touch shadowsocks.sh
 chmod +x ./shadowsocks.sh
 ln -s /var/log/shadowsocksr.log ./shadowsocksr.log
-&lt;/code&gt;&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;vim shadowsocks.sh&lt;br /&gt;
-```bash&lt;br /&gt;
-#!/bin/bash&lt;br /&gt;
-BASEDIR=$(dirname “$0”)&lt;br /&gt;
-CMD=${BASEDIR}/shadowsocksr/shadowsocks/server.py&lt;br /&gt;
-CONF=${BASEDIR}/shadowsocksr/user-config.json&lt;/p&gt;
+&lt;p&gt;vim shadowsocks.sh&lt;/p&gt;
 
-&lt;p&gt;cd ${BASEDIR}&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;#!/bin/bash
+BASEDIR=$(dirname &quot;$0&quot;)
+CMD=${BASEDIR}/shadowsocksr/shadowsocks/server.py
+CONF=${BASEDIR}/shadowsocksr/user-config.json
 
-&lt;p&gt;if [ “$1” == “start” ];then&lt;br /&gt;
-    ulimit -n 512000&lt;br /&gt;
-    python ${CMD} -c ${CONF} -d start&lt;br /&gt;
-elif [ “$1” == “restart” ];then&lt;br /&gt;
-    ulimit -n 512000&lt;br /&gt;
-    python ${CMD} -c ${CONF} -d restart&lt;br /&gt;
-elif [ “$1” == “stop” ];then&lt;br /&gt;
-    ulimit -n 512000&lt;br /&gt;
-    python ${CMD} -c ${CONF} -d stop&lt;br /&gt;
-else&lt;br /&gt;
-    echo “Usage: ./shadowsocks.sh start|stop|restart”&lt;br /&gt;
-fi&lt;br /&gt;
-```&lt;/p&gt;
+cd ${BASEDIR}
 
-&lt;p&gt;vim shadowsocksr/user-config.json&lt;br /&gt;
-```json&lt;br /&gt;
-{&lt;br /&gt;
-    “server”: “0.0.0.0”,&lt;br /&gt;
-    “server_ipv6”: “::”,&lt;br /&gt;
-    “server_port”: 8038,&lt;br /&gt;
-    “local_address”: “127.0.0.1”,&lt;br /&gt;
-    “local_port”: 1080,&lt;/p&gt;
+if [ &quot;$1&quot; == &quot;start&quot; ];then
+    ulimit -n 512000
+    python ${CMD} -c ${CONF} -d start
+elif [ &quot;$1&quot; == &quot;restart&quot; ];then
+    ulimit -n 512000
+    python ${CMD} -c ${CONF} -d restart
+elif [ &quot;$1&quot; == &quot;stop&quot; ];then
+    ulimit -n 512000
+    python ${CMD} -c ${CONF} -d stop
+else
+    echo &quot;Usage: ./shadowsocks.sh start|stop|restart&quot;
+fi
+&lt;/code&gt;&lt;/pre&gt;
 
-&lt;pre&gt;&lt;code&gt;&quot;password&quot;: &quot;$URPWD&quot;,
-&quot;method&quot;: &quot;aes-256-cfb&quot;,
-&quot;protocol&quot;: &quot;auth_aes128_md5&quot;,
-&quot;protocol_param&quot;: &quot;&quot;,
-&quot;obfs&quot;: &quot;http_simple&quot;,
-&quot;obfs_param&quot;: &quot;&quot;,
-&quot;speed_limit_per_con&quot;: 0,
-&quot;speed_limit_per_user&quot;: 0,
+&lt;p&gt;vim shadowsocksr/user-config.json&lt;/p&gt;
 
-&quot;additional_ports&quot; : {},
-&quot;additional_ports_only&quot; : false,
-&quot;timeout&quot;: 120,
-&quot;udp_timeout&quot;: 60,
-&quot;dns_ipv6&quot;: false,
-&quot;connect_verbose_info&quot;: 0,
-&quot;redirect&quot;: [&quot;bing.com&quot;, &quot;cloudflare.com:443&quot;],
-&quot;fast_open&quot;: false } ```
+&lt;pre&gt;&lt;code class=&quot;language-json&quot;&gt;{
+    &quot;server&quot;: &quot;0.0.0.0&quot;,
+    &quot;server_ipv6&quot;: &quot;::&quot;,
+    &quot;server_port&quot;: 8038,
+    &quot;local_address&quot;: &quot;127.0.0.1&quot;,
+    &quot;local_port&quot;: 1080,
+
+    &quot;password&quot;: &quot;$URPWD&quot;,
+    &quot;method&quot;: &quot;aes-256-cfb&quot;,
+    &quot;protocol&quot;: &quot;auth_aes128_md5&quot;,
+    &quot;protocol_param&quot;: &quot;&quot;,
+    &quot;obfs&quot;: &quot;http_simple&quot;,
+    &quot;obfs_param&quot;: &quot;&quot;,
+    &quot;speed_limit_per_con&quot;: 0,
+    &quot;speed_limit_per_user&quot;: 0,
+
+    &quot;additional_ports&quot; : {},
+    &quot;additional_ports_only&quot; : false,
+    &quot;timeout&quot;: 120,
+    &quot;udp_timeout&quot;: 60,
+    &quot;dns_ipv6&quot;: false,
+    &quot;connect_verbose_info&quot;: 0,
+    &quot;redirect&quot;: [&quot;bing.com&quot;, &quot;cloudflare.com:443&quot;],
+    &quot;fast_open&quot;: false
+}
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;MAC客户端安装基本上和服务器差不多，git clone下来，bash生成config json，从服务器拷贝一份也行。然后只要把客户端的port和服务端的ip配下，就好了。    &lt;br /&gt;
 MAC自启动脚本    &lt;br /&gt;
-vim org.shadowsocks.macos.plist&lt;br /&gt;
-```XML&lt;br /&gt;
-&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;br /&gt;
-&amp;lt;!DOCTYPE plist PUBLIC “-//Apple//DTD PLIST 1.0//EN” “http://www.apple.com/DTDs/PropertyList-1.0.dtd”&amp;gt;&lt;/p&gt;
-&lt;plist version=&quot;1.0&quot;&gt;
-&lt;dict&gt;
-    &lt;key&gt;GroupName&lt;/key&gt;
-    &lt;string&gt;wheel&lt;/string&gt;
-    &lt;key&gt;KeepAlive&lt;/key&gt;
-    &lt;dict&gt;
-        &lt;key&gt;SuccessfulExit&lt;/key&gt;
-        &lt;false /&gt;
-    &lt;/dict&gt;
-    &lt;key&gt;Label&lt;/key&gt;
-    &lt;string&gt;org.shadowsocksr.macos&lt;/string&gt;
-    &lt;key&gt;WorkingDirectory&lt;/key&gt;
-    &lt;string&gt;$PATH_TO_shadowsocksr&lt;/string&gt;
-    &lt;key&gt;ProgramArguments&lt;/key&gt;
-    &lt;array&gt;
-        &lt;string&gt;/usr/bin/python&lt;/string&gt;
-            &lt;string&gt;shadowsocks/local.py&lt;/string&gt;
-            &lt;string&gt;-c&lt;/string&gt;
-            &lt;string&gt;user-config.json&lt;/string&gt;
-            &lt;string&gt;-d&lt;/string&gt;
-            &lt;string&gt;start&lt;/string&gt;
-    &lt;/array&gt;
-    &lt;key&gt;RunAtLoad&lt;/key&gt;
-    &lt;true /&gt;
-    &lt;key&gt;StandardErrorPath&lt;/key&gt;
-    &lt;string&gt;/var/log/shadowsocksr.log&lt;/string&gt;
-    &lt;key&gt;StandardOutPath&lt;/key&gt;
-    &lt;string&gt;/var/log/shadowsocksr.log&lt;/string&gt;
-    &lt;key&gt;UserName&lt;/key&gt;
-    &lt;string&gt;root&lt;/string&gt;
-&lt;/dict&gt;
-&lt;/plist&gt;
+vim org.shadowsocks.macos.plist&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;
-MAC启动
-```bash
-vim /Library/LaunchDaemons/org.shadowsocks.macos.plist
+&lt;pre&gt;&lt;code class=&quot;language-XML&quot;&gt;&amp;lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&amp;gt;
+&amp;lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&amp;gt;
+&amp;lt;plist version=&quot;1.0&quot;&amp;gt;
+&amp;lt;dict&amp;gt;
+    &amp;lt;key&amp;gt;GroupName&amp;lt;/key&amp;gt;
+    &amp;lt;string&amp;gt;wheel&amp;lt;/string&amp;gt;
+    &amp;lt;key&amp;gt;KeepAlive&amp;lt;/key&amp;gt;
+    &amp;lt;dict&amp;gt;
+        &amp;lt;key&amp;gt;SuccessfulExit&amp;lt;/key&amp;gt;
+        &amp;lt;false/&amp;gt;
+    &amp;lt;/dict&amp;gt;
+    &amp;lt;key&amp;gt;Label&amp;lt;/key&amp;gt;
+    &amp;lt;string&amp;gt;org.shadowsocksr.macos&amp;lt;/string&amp;gt;
+    &amp;lt;key&amp;gt;WorkingDirectory&amp;lt;/key&amp;gt;
+    &amp;lt;string&amp;gt;$PATH_TO_shadowsocksr&amp;lt;/string&amp;gt;
+    &amp;lt;key&amp;gt;ProgramArguments&amp;lt;/key&amp;gt;
+    &amp;lt;array&amp;gt;
+        &amp;lt;string&amp;gt;/usr/bin/python&amp;lt;/string&amp;gt;
+            &amp;lt;string&amp;gt;shadowsocks/local.py&amp;lt;/string&amp;gt;
+            &amp;lt;string&amp;gt;-c&amp;lt;/string&amp;gt;
+            &amp;lt;string&amp;gt;user-config.json&amp;lt;/string&amp;gt;
+            &amp;lt;string&amp;gt;-d&amp;lt;/string&amp;gt;
+            &amp;lt;string&amp;gt;start&amp;lt;/string&amp;gt;
+    &amp;lt;/array&amp;gt;
+    &amp;lt;key&amp;gt;RunAtLoad&amp;lt;/key&amp;gt;
+    &amp;lt;true/&amp;gt;
+    &amp;lt;key&amp;gt;StandardErrorPath&amp;lt;/key&amp;gt;
+    &amp;lt;string&amp;gt;/var/log/shadowsocksr.log&amp;lt;/string&amp;gt;
+    &amp;lt;key&amp;gt;StandardOutPath&amp;lt;/key&amp;gt;
+    &amp;lt;string&amp;gt;/var/log/shadowsocksr.log&amp;lt;/string&amp;gt;
+    &amp;lt;key&amp;gt;UserName&amp;lt;/key&amp;gt;
+    &amp;lt;string&amp;gt;root&amp;lt;/string&amp;gt;
+&amp;lt;/dict&amp;gt;
+&amp;lt;/plist&amp;gt;
+
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;MAC启动&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;vim /Library/LaunchDaemons/org.shadowsocks.macos.plist
 sudo launchctl load ./org.shadowsocks.macos.plist
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;观察日志&lt;br /&gt;
-&lt;code&gt;bash
-tail -f ./shadowsocksr.log
-&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;观察日志&lt;/p&gt;
+
+&lt;pre&gt;&lt;code class=&quot;language-bash&quot;&gt;tail -f ./shadowsocksr.log
+&lt;/code&gt;&lt;/pre&gt;
 </description>
 				<pubDate>Sun, 25 Jun 2017 12:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/06/vps/</link>
