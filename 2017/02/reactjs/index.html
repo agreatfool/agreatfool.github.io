@@ -107,32 +107,32 @@
               </div>
               <div class="post-content">
                 <div id="toc" class="toc"></div>
-                <h2 id="section">0. 思路整理</h2>
+                <h2 id="0-思路整理">0. 思路整理</h2>
 <p>React值不值得学习好用不好用基本上就不需要多说了。这篇文章基本上就把我这边的学习心得进行整理，记录。React的学习的难点在于整体的生态系统太过庞大，而React本身提供的功能是相当有限的，就导致了使用者必须整合各种工具和第三方的组件，拔升了学习的曲线。这篇学习笔记的重点就在于将生态系统和各组件之间的关系解释清楚。</p>
 
-<h2 id="react">1. React</h2>
+<h2 id="1-react">1. React</h2>
 <p><a href="https://facebook.github.io/react/">React</a>就只是一个<code>View</code>。提供了JSX语法，用HTML语言或Native的组件来进行展示上的工作。最关键的是一个Component概念，所有的React对象都是一个Component，只要知道这点就可以了。</p>
 
 <p>需要了解的使用语法：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> 
-<span class="lineno"> 3</span> <span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno"> 4</span>     <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-<span class="lineno"> 5</span>         <span class="k">return</span> <span class="p">(</span>
-<span class="lineno"> 6</span>             <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="err">\</span><span class="p">{</span><span class="nx">marginTop</span><span class="o">:</span> <span class="mi">100</span><span class="err">\</span><span class="p">}}</span><span class="o">&gt;</span>
-<span class="lineno"> 7</span>                 <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="nx">Sample</span> <span class="nx">Text</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/Text&gt;</span>
-<span class="lineno"> 8</span>             <span class="o">&lt;</span><span class="err">/View&gt;</span>
-<span class="lineno"> 9</span>         <span class="p">);</span>
-<span class="lineno">10</span>     <span class="p">}</span>
-<span class="lineno">11</span> <span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="kr">export</span> <span class="k">default</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno"> 4 </span>    <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+<span class="lineno"> 5 </span>        <span class="k">return</span> <span class="p">(</span>
+<span class="lineno"> 6 </span>            <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=</span><span class="p">{</span><span class="err">\</span><span class="p">{</span><span class="nx">marginTop</span><span class="o">:</span> <span class="mi">100</span><span class="err">\</span><span class="p">}}</span><span class="o">&gt;</span>
+<span class="lineno"> 7 </span>                <span class="o">&lt;</span><span class="nx">Text</span><span class="o">&gt;</span><span class="nx">Sample</span> <span class="nx">Text</span><span class="p">.</span><span class="o">&lt;</span><span class="err">/Text&gt;</span>
+<span class="lineno"> 8 </span>            <span class="o">&lt;</span><span class="err">/View&gt;</span>
+<span class="lineno"> 9 </span>        <span class="p">);</span>
+<span class="lineno">10 </span>    <span class="p">}</span>
+<span class="lineno">11 </span><span class="p">}</span></code></pre></figure>
 
-<h2 id="redux">2. Redux</h2>
+<h2 id="2-redux">2. Redux</h2>
 <p><a href="https://github.com/reactjs/redux">Redux</a>是<a href="https://facebook.github.io/flux/docs/overview.html">Flux</a>架构的一种实现，用来进行数据流的处理和控制。简单来说就是类似于MVC中的<code>Controller</code>还有<code>Model</code>两部分的组合。这里我们需要厘清Redux中的几个核心概念 / 组件。</p>
 
 <p>这里也附带提供<a href="http://cn.redux.js.org/index.html">中文手册</a>的访问地址。</p>
 
-<h3 id="section-1">2.1 概念梳理及数据流转</h3>
+<h3 id="21-概念梳理及数据流转">2.1 概念梳理及数据流转</h3>
 <p>Redux中的核心概念：</p>
 
 <ul>
@@ -143,158 +143,158 @@
   <li>dispatch：<code>store.dispatch(Action)</code>，激发<code>Action</code>的触发器；Action本身只是一个对象，并不会自行流转到Reducer，需要Store进行dispatch，才会启动数据流转</li>
 </ul>
 
-<p>流转：<br />
+<p>流转：
 Store =&gt; store.dispatch =&gt; Action created from <code>ActionCreator()</code> =&gt; Reducer =&gt; Store changed</p>
 
-<h3 id="reducer">2.2 Reducer</h3>
+<h3 id="22-reducer">2.2 Reducer</h3>
 <p>重申一下，Reducer是一个函数。签名如下：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="kr">export</span> <span class="nx">type</span> <span class="nx">Reducer</span><span class="o">&lt;</span><span class="nx">S</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">A</span> <span class="kr">extends</span> <span class="nx">Action</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">state</span><span class="o">:</span> <span class="nx">S</span><span class="p">,</span> <span class="nx">action</span><span class="o">:</span> <span class="nx">A</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">S</span><span class="p">;</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">export</span> <span class="nx">type</span> <span class="nx">Reducer</span><span class="o">&lt;</span><span class="nx">S</span><span class="o">&gt;</span> <span class="o">=</span> <span class="o">&lt;</span><span class="nx">A</span> <span class="kr">extends</span> <span class="nx">Action</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">state</span><span class="o">:</span> <span class="nx">S</span><span class="p">,</span> <span class="nx">action</span><span class="o">:</span> <span class="nx">A</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">S</span><span class="p">;</span></code></pre></figure>
 
 <p>使用上也很简单，其实就只是一个接受两个参数的函数：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="kd">let</span> <span class="nx">reducer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">2</span>     <span class="kd">let</span> <span class="nx">cloned</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">state</span><span class="p">);</span> <span class="c1">// 永远记得需要clone state后修改，而不是直接修改state</span>
-<span class="lineno">3</span>     <span class="k">if</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s2">&quot;ACT_UPDATE_TEXT&quot;</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">4</span>         <span class="c1">// 判断类型Action类型是不是当前reducer应该处理的，如果是，则根据业务修改state里的数据</span>
-<span class="lineno">5</span>     <span class="p">}</span>
-<span class="lineno">6</span>     <span class="k">return</span> <span class="nx">cloned</span><span class="p">;</span>
-<span class="lineno">7</span> <span class="p">};</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kd">let</span> <span class="nx">reducer</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">2 </span>    <span class="kd">let</span> <span class="nx">cloned</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">state</span><span class="p">);</span> <span class="c1">// 永远记得需要clone state后修改，而不是直接修改state</span>
+<span class="lineno">3 </span>    <span class="k">if</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">type</span> <span class="o">===</span> <span class="s2">&quot;ACT_UPDATE_TEXT&quot;</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">4 </span>        <span class="c1">// 判断类型Action类型是不是当前reducer应该处理的，如果是，则根据业务修改state里的数据</span>
+<span class="lineno">5 </span>    <span class="p">}</span>
+<span class="lineno">6 </span>    <span class="k">return</span> <span class="nx">cloned</span><span class="p">;</span>
+<span class="lineno">7 </span><span class="p">};</span></code></pre></figure>
 
 <p>上面的例子只是一个很简单的<code>单Action</code>Reducer，后续我们会介绍如何将大量的Reducer组织起来，让React应用进行统一使用。</p>
 
-<h3 id="action">2.3 Action</h3>
+<h3 id="23-action">2.3 Action</h3>
 <p>重申一下，Action就只是一个对象。签名如下：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">Action</span> <span class="p">{</span>
-<span class="lineno">2</span>   <span class="nx">type</span><span class="o">:</span> <span class="nx">any</span><span class="p">;</span>
-<span class="lineno">3</span> <span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">Action</span> <span class="p">{</span>
+<span class="lineno">2 </span>  <span class="nx">type</span><span class="o">:</span> <span class="nx">any</span><span class="p">;</span>
+<span class="lineno">3 </span><span class="p">}</span></code></pre></figure>
 
 <p>对应的需要有一个创建Action的ActionCreator。签名如下：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">A</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno">2</span>   <span class="p">(...</span><span class="nx">args</span><span class="o">:</span> <span class="nx">any</span><span class="p">[])</span><span class="o">:</span> <span class="nx">A</span><span class="p">;</span>
-<span class="lineno">3</span> <span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">A</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno">2 </span>  <span class="p">(...</span><span class="nx">args</span><span class="o">:</span> <span class="nx">any</span><span class="p">[])</span><span class="o">:</span> <span class="nx">A</span><span class="p">;</span>
+<span class="lineno">3 </span><span class="p">}</span></code></pre></figure>
 
 <p>使用上也很简单：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">ActionCreator</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> 
-<span class="lineno"> 3</span> <span class="kr">export</span> <span class="kr">const</span> <span class="nx">ACT_UPDATE_TEXT</span> <span class="o">=</span> <span class="s2">&quot;ACT_UPDATE_TEXT&quot;</span><span class="p">;</span> <span class="c1">// 类型常量</span>
-<span class="lineno"> 4</span> 
-<span class="lineno"> 5</span> <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionUpdateText</span> <span class="p">{</span> <span class="c1">// Action结构</span>
-<span class="lineno"> 6</span>     <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno"> 7</span>     <span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno"> 8</span> <span class="p">}</span>
-<span class="lineno"> 9</span> 
-<span class="lineno">10</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">ACTUpdateText</span><span class="o">:</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">ActionUpdateText</span><span class="o">&gt;</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">11</span>     <span class="k">return</span> <span class="p">{</span>
-<span class="lineno">12</span>         <span class="nx">type</span><span class="o">:</span> <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span>
-<span class="lineno">13</span>         <span class="nx">text</span><span class="o">:</span> <span class="nx">text</span>
-<span class="lineno">14</span>     <span class="p">};</span>
-<span class="lineno">15</span> <span class="p">};</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">ActionCreator</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="kr">export</span> <span class="kr">const</span> <span class="nx">ACT_UPDATE_TEXT</span> <span class="o">=</span> <span class="s2">&quot;ACT_UPDATE_TEXT&quot;</span><span class="p">;</span> <span class="c1">// 类型常量</span>
+<span class="lineno"> 4 </span>
+<span class="lineno"> 5 </span><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionUpdateText</span> <span class="p">{</span> <span class="c1">// Action结构</span>
+<span class="lineno"> 6 </span>    <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="lineno"> 7 </span>    <span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="lineno"> 8 </span><span class="p">}</span>
+<span class="lineno"> 9 </span>
+<span class="lineno">10 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">ACTUpdateText</span><span class="o">:</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">ActionUpdateText</span><span class="o">&gt;</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">11 </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="lineno">12 </span>        <span class="nx">type</span><span class="o">:</span> <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span>
+<span class="lineno">13 </span>        <span class="nx">text</span><span class="o">:</span> <span class="nx">text</span>
+<span class="lineno">14 </span>    <span class="p">};</span>
+<span class="lineno">15 </span><span class="p">};</span></code></pre></figure>
 
-<h3 id="store">2.4 Store</h3>
+<h3 id="24-store">2.4 Store</h3>
 <p>重申，只是一个对象。使用者应该在该对象根目录下面创建组件 / 页面对应的namespace，以便进行数据管理：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="p">{</span>
-<span class="lineno">2</span>     <span class="s2">&quot;ComponentTextInput&quot;</span><span class="o">:</span> <span class="p">{</span>
-<span class="lineno">3</span>         <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;current user input text.&quot;</span>
-<span class="lineno">4</span>     <span class="p">},</span>
-<span class="lineno">5</span>     <span class="s2">&quot;ComponentA&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
-<span class="lineno">6</span>     <span class="s2">&quot;ComponentB&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
-<span class="lineno">7</span>     <span class="p">...</span>
-<span class="lineno">8</span> <span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="p">{</span>
+<span class="lineno">2 </span>    <span class="s2">&quot;ComponentTextInput&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">3 </span>        <span class="s2">&quot;text&quot;</span><span class="o">:</span> <span class="s2">&quot;current user input text.&quot;</span>
+<span class="lineno">4 </span>    <span class="p">},</span>
+<span class="lineno">5 </span>    <span class="s2">&quot;ComponentA&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
+<span class="lineno">6 </span>    <span class="s2">&quot;ComponentB&quot;</span><span class="o">:</span> <span class="p">{</span> <span class="p">...</span> <span class="p">},</span>
+<span class="lineno">7 </span>    <span class="p">...</span>
+<span class="lineno">8 </span><span class="p">}</span></code></pre></figure>
 
 <p>创建Store实例：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">createStore</span><span class="p">,</span> <span class="nx">applyMiddleware</span><span class="p">,</span> <span class="nx">combineReducers</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
-<span class="lineno">2</span> 
-<span class="lineno">3</span> <span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
-<span class="lineno">4</span>     <span class="nx">combineReducers</span><span class="p">({</span>
-<span class="lineno">5</span>         <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">reducer</span> <span class="c1">// 表示Store中，NamespaceOfTheComponent下的所有数据会交由reducer这个函数处理</span>
-<span class="lineno">6</span>     <span class="p">})</span>
-<span class="lineno">7</span> <span class="p">);</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">createStore</span><span class="p">,</span> <span class="nx">applyMiddleware</span><span class="p">,</span> <span class="nx">combineReducers</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
+<span class="lineno">2 </span>
+<span class="lineno">3 </span><span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+<span class="lineno">4 </span>    <span class="nx">combineReducers</span><span class="p">({</span>
+<span class="lineno">5 </span>        <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">reducer</span> <span class="c1">// 表示Store中，NamespaceOfTheComponent下的所有数据会交由reducer这个函数处理</span>
+<span class="lineno">6 </span>    <span class="p">})</span>
+<span class="lineno">7 </span><span class="p">);</span></code></pre></figure>
 
 <p>dispatch是Store实例的一个函数，只有这个函数可以进行<code>Action</code>事件的触发。</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="nx">ACTUpdateText</span><span class="p">(</span><span class="s2">&quot;New Text to be updated into store.&quot;</span><span class="p">));</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="nx">store</span><span class="p">.</span><span class="nx">dispatch</span><span class="p">(</span><span class="nx">ACTUpdateText</span><span class="p">(</span><span class="s2">&quot;New Text to be updated into store.&quot;</span><span class="p">));</span></code></pre></figure>
 
-<h2 id="section-2">3. 问题与思考</h2>
+<h2 id="3-问题与思考">3. 问题与思考</h2>
 <p>介绍到这里我们先暂停下。React负责View的展示，Redux则负责数据的处理和消息流转。看上去这两者结合的很好，非常匹配，但实际使用中我们会发现，其实还有很多问题等待解决。这两者都在自己的领域上发挥了很好的作用，但是要让他们合起来一起好好工作，还有很多细节需要调整。</p>
 
-<h3 id="store-1">3.1 Store的全局性</h3>
+<h3 id="31-store的全局性">3.1 Store的全局性</h3>
 <p>在上面我们说到Store的时候，可以看到，Store是需要创建出实例的，并且有且唯一只有一个实例。而且，所有的事件触发都需要从<code>store.dispatch</code>开始。那么问题就来了，在进行组件封装的时候，组件、甚至是子组件，如何能够或得到store实例以进行事件和数据处理？为了解决这个问题，React官方提供了一个组件<a href="https://github.com/reactjs/react-redux"><code>react-redux</code></a>。这个组件使用依赖注入的方式，将React和Redux进行了很好的绑定，将Redux的Store和自定义的Action输送到了React的Component内部，方便使用。</p>
 
-<h3 id="section-3">3.2 异步调用</h3>
+<h3 id="32-异步调用">3.2 异步调用</h3>
 <p>在上面说到Action和Reducer的时候，我们说过，这两者都是很纯粹的JS对象和函数，ActionCreator也是很纯粹的函数。但实际在进行应用程序制作的时候，我们不可避免的需要使用到异步函数，来进行外部IO、API调用等等。那么，应对这种需求，我们如何进行处理呢。这里就不得不提到一个第三方的组件：<a href="https://github.com/gaearon/redux-thunk"><code>redux-thunk</code></a>。具体的概念可以看官方文档，在本文中我们不会具体涉及到该组件的使用，它是一个进阶的技巧，本文主旨在于梳理React整体的生态和组件整合。</p>
 
-<h3 id="section-4">3.3 组件整合</h3>
+<h3 id="33-组件整合">3.3 组件整合</h3>
 <p>编写React我们必然会编写大量的组件，为了代码复用，也为了代码管理。那么我们创建出来的大量Action及Reducer都需要管理。Action会映射到本组件内，所以管理上问题还不大。而Reducer则是需要统一绑定到Store上，这部分就需要小心处理了。后续我们会讲解这部分工作如何处理。</p>
 
-<h2 id="react-redux">4. react-redux</h2>
+<h2 id="4-react-redux">4. react-redux</h2>
 <p>这个组件一共提供了两个部分，都非常简洁，但很重要。</p>
 
-<h3 id="jsxprovider">4.1 JSX组件Provider</h3>
+<h3 id="41-jsx组件provider">4.1 JSX组件Provider</h3>
 <p>这个JSX组件我们需要应用在根节点的组件上，将根节点组件的所有JSX都包裹在其中即可：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">View</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-native&quot;</span><span class="p">;</span>
-<span class="lineno"> 3</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">createStore</span><span class="p">,</span> <span class="nx">applyMiddleware</span><span class="p">,</span> <span class="nx">combineReducers</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 4</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">Provider</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 5</span> 
-<span class="lineno"> 6</span> <span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
-<span class="lineno"> 7</span>     <span class="nx">combineReducers</span><span class="p">({</span>
-<span class="lineno"> 8</span>         <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">reducer</span> <span class="c1">// 表示Store中，NameSpaceOfTheComponent下的所有数据会交由reducer这个函数处理</span>
-<span class="lineno"> 9</span>     <span class="p">})</span>
-<span class="lineno">10</span> <span class="p">);</span>
-<span class="lineno">11</span> 
-<span class="lineno">12</span> <span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno">13</span>     <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-<span class="lineno">14</span>         <span class="k">return</span> <span class="p">(</span>
-<span class="lineno">15</span>             <span class="o">&lt;</span><span class="nx">Provider</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">store</span><span class="p">}</span><span class="o">&gt;</span>
-<span class="lineno">16</span>                 <span class="o">&lt;</span><span class="nx">Router</span><span class="o">&gt;</span>
-<span class="lineno">17</span>                     <span class="o">&lt;</span><span class="nx">View</span><span class="o">&gt;</span> <span class="p">...</span> <span class="o">&lt;</span><span class="err">/View&gt;</span>
-<span class="lineno">18</span>                 <span class="o">&lt;</span><span class="err">/Router&gt;</span>
-<span class="lineno">19</span>             <span class="o">&lt;</span><span class="err">/Provider&gt;</span>
-<span class="lineno">20</span>         <span class="p">);</span>
-<span class="lineno">21</span>     <span class="p">}</span>
-<span class="lineno">22</span> <span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">View</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-native&quot;</span><span class="p">;</span>
+<span class="lineno"> 3 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">createStore</span><span class="p">,</span> <span class="nx">applyMiddleware</span><span class="p">,</span> <span class="nx">combineReducers</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 4 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">Provider</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span><span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+<span class="lineno"> 7 </span>    <span class="nx">combineReducers</span><span class="p">({</span>
+<span class="lineno"> 8 </span>        <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">reducer</span> <span class="c1">// 表示Store中，NameSpaceOfTheComponent下的所有数据会交由reducer这个函数处理</span>
+<span class="lineno"> 9 </span>    <span class="p">})</span>
+<span class="lineno">10 </span><span class="p">);</span>
+<span class="lineno">11 </span>
+<span class="lineno">12 </span><span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno">13 </span>    <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+<span class="lineno">14 </span>        <span class="k">return</span> <span class="p">(</span>
+<span class="lineno">15 </span>            <span class="o">&lt;</span><span class="nx">Provider</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">store</span><span class="p">}</span><span class="o">&gt;</span>
+<span class="lineno">16 </span>                <span class="o">&lt;</span><span class="nx">Router</span><span class="o">&gt;</span>
+<span class="lineno">17 </span>                    <span class="o">&lt;</span><span class="nx">View</span><span class="o">&gt;</span> <span class="p">...</span> <span class="o">&lt;</span><span class="err">/View&gt;</span>
+<span class="lineno">18 </span>                <span class="o">&lt;</span><span class="err">/Router&gt;</span>
+<span class="lineno">19 </span>            <span class="o">&lt;</span><span class="err">/Provider&gt;</span>
+<span class="lineno">20 </span>        <span class="p">);</span>
+<span class="lineno">21 </span>    <span class="p">}</span>
+<span class="lineno">22 </span><span class="p">}</span></code></pre></figure>
 
-<h3 id="connect">4.2 connect函数</h3>
+<h3 id="42-connect函数">4.2 connect函数</h3>
 <p>该函数是用来将Action和State注入到组件内所用的一个函数。</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">bindActionCreators</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 3</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">connect</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 4</span> 
-<span class="lineno"> 5</span> <span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno"> 6</span>     <span class="p">...</span>
-<span class="lineno"> 7</span> <span class="p">}</span>
-<span class="lineno"> 8</span> 
-<span class="lineno"> 9</span> <span class="kr">export</span> <span class="k">default</span> <span class="nx">connect</span><span class="p">(</span>
-<span class="lineno">10</span>     <span class="c1">// bind state</span>
-<span class="lineno">11</span>     <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
-<span class="lineno">12</span>         <span class="c1">// Store[&quot;NamespaceOfTheComponent&quot;] 会被注入到 App 的 this.props 里面</span>
-<span class="lineno">13</span>         <span class="c1">// 可以通过 this.props[&quot;NamespaceOfTheComponent&quot;] 进行访问，并且会侦听Reducer对这部分数据的修改</span>
-<span class="lineno">14</span>         <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">state</span><span class="p">[</span><span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="p">]</span>
-<span class="lineno">15</span>     <span class="p">}),</span>
-<span class="lineno">16</span>     <span class="c1">// bind dispatch action</span>
-<span class="lineno">17</span>     <span class="p">(</span><span class="nx">dispatch</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
-<span class="lineno">18</span>         <span class="nx">actions</span><span class="o">:</span> <span class="nx">bindActionCreators</span><span class="p">({</span>
-<span class="lineno">19</span>             <span class="c1">// 这两个 ActionCreator 会被注入到 App 的 this.props.actions 里面</span>
-<span class="lineno">20</span>             <span class="c1">// 可以通过 this.props.actions.ACTUpdateText(&quot;Updated&quot;) 进行使用</span>
-<span class="lineno">21</span>             <span class="c1">// 注意看，被注入进去的 ActionCreator 是不需要主动dispatch的，在进行调用的同时就自动dispatch出去了</span>
-<span class="lineno">22</span>             <span class="nx">ACTUpdateText</span><span class="p">,</span> 
-<span class="lineno">23</span>             <span class="nx">ACTClearText</span>
-<span class="lineno">24</span>         <span class="p">},</span> <span class="nx">dispatch</span><span class="p">),</span>
-<span class="lineno">25</span>         <span class="c1">// 最后加的这个dispatch，表示dispatch函数会被注入到 App 的 this.props 里面</span>
-<span class="lineno">26</span>         <span class="c1">// 可以通过 this.props.dispatch(ActionCreator) 进行使用</span>
-<span class="lineno">27</span>         <span class="nx">dispatch</span>
-<span class="lineno">28</span>     <span class="p">})</span>
-<span class="lineno">29</span> <span class="p">)(</span><span class="nx">App</span><span class="p">);</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">bindActionCreators</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 3 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">connect</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 4 </span>
+<span class="lineno"> 5 </span><span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno"> 6 </span>    <span class="p">...</span>
+<span class="lineno"> 7 </span><span class="p">}</span>
+<span class="lineno"> 8 </span>
+<span class="lineno"> 9 </span><span class="kr">export</span> <span class="k">default</span> <span class="nx">connect</span><span class="p">(</span>
+<span class="lineno">10 </span>    <span class="c1">// bind state</span>
+<span class="lineno">11 </span>    <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+<span class="lineno">12 </span>        <span class="c1">// Store[&quot;NamespaceOfTheComponent&quot;] 会被注入到 App 的 this.props 里面</span>
+<span class="lineno">13 </span>        <span class="c1">// 可以通过 this.props[&quot;NamespaceOfTheComponent&quot;] 进行访问，并且会侦听Reducer对这部分数据的修改</span>
+<span class="lineno">14 </span>        <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">state</span><span class="p">[</span><span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="p">]</span>
+<span class="lineno">15 </span>    <span class="p">}),</span>
+<span class="lineno">16 </span>    <span class="c1">// bind dispatch action</span>
+<span class="lineno">17 </span>    <span class="p">(</span><span class="nx">dispatch</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+<span class="lineno">18 </span>        <span class="nx">actions</span><span class="o">:</span> <span class="nx">bindActionCreators</span><span class="p">({</span>
+<span class="lineno">19 </span>            <span class="c1">// 这两个 ActionCreator 会被注入到 App 的 this.props.actions 里面</span>
+<span class="lineno">20 </span>            <span class="c1">// 可以通过 this.props.actions.ACTUpdateText(&quot;Updated&quot;) 进行使用</span>
+<span class="lineno">21 </span>            <span class="c1">// 注意看，被注入进去的 ActionCreator 是不需要主动dispatch的，在进行调用的同时就自动dispatch出去了</span>
+<span class="lineno">22 </span>            <span class="nx">ACTUpdateText</span><span class="p">,</span> 
+<span class="lineno">23 </span>            <span class="nx">ACTClearText</span>
+<span class="lineno">24 </span>        <span class="p">},</span> <span class="nx">dispatch</span><span class="p">),</span>
+<span class="lineno">25 </span>        <span class="c1">// 最后加的这个dispatch，表示dispatch函数会被注入到 App 的 this.props 里面</span>
+<span class="lineno">26 </span>        <span class="c1">// 可以通过 this.props.dispatch(ActionCreator) 进行使用</span>
+<span class="lineno">27 </span>        <span class="nx">dispatch</span>
+<span class="lineno">28 </span>    <span class="p">})</span>
+<span class="lineno">29 </span><span class="p">)(</span><span class="nx">App</span><span class="p">);</span></code></pre></figure>
 
-<h2 id="section-5">5. 组件整合</h2>
+<h2 id="5-组件整合">5. 组件整合</h2>
 <p>现在整理下思路：</p>
 
 <ul>
@@ -310,55 +310,55 @@ Store =&gt; store.dispatch =&gt; Action created from <code>ActionCreator()</code
   <li>组件的Reducer</li>
 </ol>
 
-<h3 id="action-1">5.1 Action</h3>
+<h3 id="51-action">5.1 Action</h3>
 <p>在之前的connect函数教程中，我们提到了，组件内使用到的ActionCreator都需要使用connect再注入到组件内，转完成一个能直接使用的类dispatch的函数。因此在每个组件对外暴露的地方，我们简单将所有的Action归并到一个对象内即可：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">bindActionCreators</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 3</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">connect</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 4</span> 
-<span class="lineno"> 5</span> <span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno"> 6</span>     <span class="p">...</span>
-<span class="lineno"> 7</span> <span class="p">}</span>
-<span class="lineno"> 8</span> 
-<span class="lineno"> 9</span> <span class="kd">let</span> <span class="nx">ACTUpdateText</span> <span class="o">=</span> <span class="p">...;</span>
-<span class="lineno">10</span> <span class="kd">let</span> <span class="nx">ACTClearText</span> <span class="o">=</span> <span class="p">...;</span>
-<span class="lineno">11</span> 
-<span class="lineno">12</span> <span class="kr">export</span> <span class="k">default</span> <span class="nx">connect</span><span class="p">(</span>
-<span class="lineno">13</span>     <span class="c1">// bind state</span>
-<span class="lineno">14</span>     <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
-<span class="lineno">15</span>         <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">state</span><span class="p">[</span><span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="p">]</span>
-<span class="lineno">16</span>     <span class="p">}),</span>
-<span class="lineno">17</span>     <span class="c1">// bind dispatch action</span>
-<span class="lineno">18</span>     <span class="p">(</span><span class="nx">dispatch</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
-<span class="lineno">19</span>         <span class="nx">actions</span><span class="o">:</span> <span class="nx">bindActionCreators</span><span class="p">({</span>
-<span class="lineno">20</span>             <span class="nx">ACTUpdateText</span><span class="p">,</span> 
-<span class="lineno">21</span>             <span class="nx">ACTClearText</span>
-<span class="lineno">22</span>         <span class="p">},</span> <span class="nx">dispatch</span><span class="p">),</span>
-<span class="lineno">23</span>         <span class="nx">dispatch</span>
-<span class="lineno">24</span>     <span class="p">})</span>
-<span class="lineno">25</span> <span class="p">)(</span><span class="nx">App</span><span class="p">);</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">bindActionCreators</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 3 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">connect</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 4 </span>
+<span class="lineno"> 5 </span><span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno"> 6 </span>    <span class="p">...</span>
+<span class="lineno"> 7 </span><span class="p">}</span>
+<span class="lineno"> 8 </span>
+<span class="lineno"> 9 </span><span class="kd">let</span> <span class="nx">ACTUpdateText</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="lineno">10 </span><span class="kd">let</span> <span class="nx">ACTClearText</span> <span class="o">=</span> <span class="p">...;</span>
+<span class="lineno">11 </span>
+<span class="lineno">12 </span><span class="kr">export</span> <span class="k">default</span> <span class="nx">connect</span><span class="p">(</span>
+<span class="lineno">13 </span>    <span class="c1">// bind state</span>
+<span class="lineno">14 </span>    <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+<span class="lineno">15 </span>        <span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="o">:</span> <span class="nx">state</span><span class="p">[</span><span class="s2">&quot;NamespaceOfTheComponent&quot;</span><span class="p">]</span>
+<span class="lineno">16 </span>    <span class="p">}),</span>
+<span class="lineno">17 </span>    <span class="c1">// bind dispatch action</span>
+<span class="lineno">18 </span>    <span class="p">(</span><span class="nx">dispatch</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+<span class="lineno">19 </span>        <span class="nx">actions</span><span class="o">:</span> <span class="nx">bindActionCreators</span><span class="p">({</span>
+<span class="lineno">20 </span>            <span class="nx">ACTUpdateText</span><span class="p">,</span> 
+<span class="lineno">21 </span>            <span class="nx">ACTClearText</span>
+<span class="lineno">22 </span>        <span class="p">},</span> <span class="nx">dispatch</span><span class="p">),</span>
+<span class="lineno">23 </span>        <span class="nx">dispatch</span>
+<span class="lineno">24 </span>    <span class="p">})</span>
+<span class="lineno">25 </span><span class="p">)(</span><span class="nx">App</span><span class="p">);</span></code></pre></figure>
 
-<h3 id="reducer-1">5.2 Reducer</h3>
+<h3 id="52-reducer">5.2 Reducer</h3>
 <p>Reducer的整合更麻烦点，因为Reducer最终是要整合到唯一的Store上的，在代码上反应在<code>createStore</code>函数的使用上。因此所有的Reducer我们需要手动整理到一个单独的文件内进行暴露。</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="c1">// file Reducers.ts</span>
-<span class="lineno"> 2</span> <span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">TextInputReducer</span> <span class="nx">from</span> <span class="s2">&quot;../component/text_input/Reducer&quot;</span><span class="p">;</span>
-<span class="lineno"> 3</span> <span class="p">...</span>
-<span class="lineno"> 4</span> 
-<span class="lineno"> 5</span> <span class="kr">export</span> <span class="k">default</span> <span class="p">{</span>
-<span class="lineno"> 6</span>     <span class="p">[</span><span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">StateName</span><span class="p">]</span><span class="o">:</span> <span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">Reducers</span><span class="p">,</span>
-<span class="lineno"> 7</span>     <span class="p">...</span>
-<span class="lineno"> 8</span> <span class="p">};</span>
-<span class="lineno"> 9</span> 
-<span class="lineno">10</span> <span class="c1">// file App.ts 根节点组件</span>
-<span class="lineno">11</span> <span class="kr">import</span> <span class="nx">Reducers</span> <span class="nx">from</span> <span class="s2">&quot;../app/Reducers&quot;</span><span class="p">;</span>
-<span class="lineno">12</span> 
-<span class="lineno">13</span> <span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
-<span class="lineno">14</span>     <span class="nx">combineReducers</span><span class="p">(</span><span class="nx">Reducers</span><span class="p">)</span>
-<span class="lineno">15</span> <span class="p">);</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="c1">// file Reducers.ts</span>
+<span class="lineno"> 2 </span><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">TextInputReducer</span> <span class="nx">from</span> <span class="s2">&quot;../component/text_input/Reducer&quot;</span><span class="p">;</span>
+<span class="lineno"> 3 </span><span class="p">...</span>
+<span class="lineno"> 4 </span>
+<span class="lineno"> 5 </span><span class="kr">export</span> <span class="k">default</span> <span class="p">{</span>
+<span class="lineno"> 6 </span>    <span class="p">[</span><span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">StateName</span><span class="p">]</span><span class="o">:</span> <span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">Reducers</span><span class="p">,</span>
+<span class="lineno"> 7 </span>    <span class="p">...</span>
+<span class="lineno"> 8 </span><span class="p">};</span>
+<span class="lineno"> 9 </span>
+<span class="lineno">10 </span><span class="c1">// file App.ts 根节点组件</span>
+<span class="lineno">11 </span><span class="kr">import</span> <span class="nx">Reducers</span> <span class="nx">from</span> <span class="s2">&quot;../app/Reducers&quot;</span><span class="p">;</span>
+<span class="lineno">12 </span>
+<span class="lineno">13 </span><span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+<span class="lineno">14 </span>    <span class="nx">combineReducers</span><span class="p">(</span><span class="nx">Reducers</span><span class="p">)</span>
+<span class="lineno">15 </span><span class="p">);</span></code></pre></figure>
 
-<h2 id="section-6">6. 最终代码范例</h2>
+<h2 id="6-最终代码范例">6. 最终代码范例</h2>
 <p>文件结构：</p>
 
 <pre><code>src / 
@@ -374,156 +374,156 @@ Store =&gt; store.dispatch =&gt; Action created from <code>ActionCreator()</code
 
 <p>File <code>App.tsx</code></p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">View</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-native&quot;</span><span class="p">;</span>
-<span class="lineno"> 3</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">createStore</span><span class="p">,</span> <span class="nx">combineReducers</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 4</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">Provider</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 5</span> 
-<span class="lineno"> 6</span> <span class="kr">import</span> <span class="nx">Reducers</span> <span class="nx">from</span> <span class="s2">&quot;./app/Reducers&quot;</span><span class="p">;</span>
-<span class="lineno"> 7</span> 
-<span class="lineno"> 8</span> <span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
-<span class="lineno"> 9</span>     <span class="nx">combineReducers</span><span class="p">(</span><span class="nx">Reducers</span><span class="p">)</span>
-<span class="lineno">10</span> <span class="p">);</span>
-<span class="lineno">11</span> 
-<span class="lineno">12</span> <span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno">13</span>     <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-<span class="lineno">14</span>         <span class="k">return</span> <span class="p">(</span>
-<span class="lineno">15</span>             <span class="o">&lt;</span><span class="nx">Provider</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">store</span><span class="p">}</span><span class="o">&gt;</span>
-<span class="lineno">16</span>                 <span class="o">&lt;</span><span class="nx">View</span><span class="o">&gt;</span>
-<span class="lineno">17</span>                     <span class="o">&lt;</span><span class="nx">TextInputApp</span> <span class="o">/&gt;</span>
-<span class="lineno">18</span>                 <span class="o">&lt;</span><span class="err">/View&gt;</span>
-<span class="lineno">19</span>             <span class="o">&lt;</span><span class="err">/Provider&gt;</span>
-<span class="lineno">20</span>         <span class="p">);</span>
-<span class="lineno">21</span>     <span class="p">}</span>
-<span class="lineno">22</span> <span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">View</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-native&quot;</span><span class="p">;</span>
+<span class="lineno"> 3 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">createStore</span><span class="p">,</span> <span class="nx">combineReducers</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 4 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">Provider</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span><span class="kr">import</span> <span class="nx">Reducers</span> <span class="nx">from</span> <span class="s2">&quot;./app/Reducers&quot;</span><span class="p">;</span>
+<span class="lineno"> 7 </span>
+<span class="lineno"> 8 </span><span class="kr">const</span> <span class="nx">store</span> <span class="o">=</span> <span class="nx">createStore</span><span class="p">(</span>
+<span class="lineno"> 9 </span>    <span class="nx">combineReducers</span><span class="p">(</span><span class="nx">Reducers</span><span class="p">)</span>
+<span class="lineno">10 </span><span class="p">);</span>
+<span class="lineno">11 </span>
+<span class="lineno">12 </span><span class="kr">export</span> <span class="kr">class</span> <span class="nx">App</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno">13 </span>    <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+<span class="lineno">14 </span>        <span class="k">return</span> <span class="p">(</span>
+<span class="lineno">15 </span>            <span class="o">&lt;</span><span class="nx">Provider</span> <span class="nx">store</span><span class="o">=</span><span class="p">{</span><span class="nx">store</span><span class="p">}</span><span class="o">&gt;</span>
+<span class="lineno">16 </span>                <span class="o">&lt;</span><span class="nx">View</span><span class="o">&gt;</span>
+<span class="lineno">17 </span>                    <span class="o">&lt;</span><span class="nx">TextInputApp</span> <span class="o">/&gt;</span>
+<span class="lineno">18 </span>                <span class="o">&lt;</span><span class="err">/View&gt;</span>
+<span class="lineno">19 </span>            <span class="o">&lt;</span><span class="err">/Provider&gt;</span>
+<span class="lineno">20 </span>        <span class="p">);</span>
+<span class="lineno">21 </span>    <span class="p">}</span>
+<span class="lineno">22 </span><span class="p">}</span></code></pre></figure>
 
 <p>File <code>app / Reducers.ts</code></p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">TextInputReducer</span> <span class="nx">from</span> <span class="s2">&quot;../component/text_input/Reducer&quot;</span><span class="p">;</span>
-<span class="lineno">2</span> 
-<span class="lineno">3</span> <span class="kr">export</span> <span class="k">default</span> <span class="p">{</span>
-<span class="lineno">4</span>     <span class="p">[</span><span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">StateName</span><span class="p">]</span><span class="o">:</span> <span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">Reducers</span>
-<span class="lineno">5</span> <span class="p">};</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">import</span> <span class="o">*</span> <span class="nx">as</span> <span class="nx">TextInputReducer</span> <span class="nx">from</span> <span class="s2">&quot;../component/text_input/Reducer&quot;</span><span class="p">;</span>
+<span class="lineno">2 </span>
+<span class="lineno">3 </span><span class="kr">export</span> <span class="k">default</span> <span class="p">{</span>
+<span class="lineno">4 </span>    <span class="p">[</span><span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">StateName</span><span class="p">]</span><span class="o">:</span> <span class="nx">TextInputReducer</span><span class="p">.</span><span class="nx">Reducers</span>
+<span class="lineno">5 </span><span class="p">};</span></code></pre></figure>
 
 <p>File <code>component / text_input / Action.ts</code></p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">ActionCreator</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> 
-<span class="lineno"> 3</span> <span class="kr">export</span> <span class="kr">const</span> <span class="nx">ACT_UPDATE_TEXT</span> <span class="o">=</span> <span class="s2">&quot;ACT_UPDATE_TEXT&quot;</span><span class="p">;</span>
-<span class="lineno"> 4</span> <span class="kr">export</span> <span class="kr">const</span> <span class="nx">ACT_CLEAR_TEXT</span> <span class="o">=</span> <span class="s2">&quot;ACT_CLEAR_TEXT&quot;</span><span class="p">;</span>
-<span class="lineno"> 5</span> 
-<span class="lineno"> 6</span> <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionUpdateText</span> <span class="p">{</span>
-<span class="lineno"> 7</span>     <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno"> 8</span>     <span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno"> 9</span> <span class="p">}</span>
-<span class="lineno">10</span> 
-<span class="lineno">11</span> <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionClearText</span> <span class="p">{</span>
-<span class="lineno">12</span>     <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno">13</span> <span class="p">}</span>
-<span class="lineno">14</span> 
-<span class="lineno">15</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">ACTUpdateText</span><span class="o">:</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">ActionUpdateText</span><span class="o">&gt;</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">16</span>     <span class="k">return</span> <span class="p">{</span>
-<span class="lineno">17</span>         <span class="nx">type</span><span class="o">:</span> <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span>
-<span class="lineno">18</span>         <span class="nx">text</span><span class="o">:</span> <span class="nx">text</span>
-<span class="lineno">19</span>     <span class="p">};</span>
-<span class="lineno">20</span> <span class="p">};</span>
-<span class="lineno">21</span> 
-<span class="lineno">22</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">ACTClearText</span><span class="o">:</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">ActionClearText</span><span class="o">&gt;</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
-<span class="lineno">23</span>     <span class="k">return</span> <span class="p">{</span>
-<span class="lineno">24</span>         <span class="nx">type</span><span class="o">:</span> <span class="nx">ACT_CLEAR_TEXT</span>
-<span class="lineno">25</span>     <span class="p">};</span>
-<span class="lineno">26</span> <span class="p">};</span>
-<span class="lineno">27</span> 
-<span class="lineno">28</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">Actions</span> <span class="o">=</span> <span class="p">{</span>
-<span class="lineno">29</span>     <span class="nx">ACTUpdateText</span><span class="p">,</span>
-<span class="lineno">30</span>     <span class="nx">ACTClearText</span>
-<span class="lineno">31</span> <span class="p">};</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">ActionCreator</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;redux&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="kr">export</span> <span class="kr">const</span> <span class="nx">ACT_UPDATE_TEXT</span> <span class="o">=</span> <span class="s2">&quot;ACT_UPDATE_TEXT&quot;</span><span class="p">;</span>
+<span class="lineno"> 4 </span><span class="kr">export</span> <span class="kr">const</span> <span class="nx">ACT_CLEAR_TEXT</span> <span class="o">=</span> <span class="s2">&quot;ACT_CLEAR_TEXT&quot;</span><span class="p">;</span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionUpdateText</span> <span class="p">{</span>
+<span class="lineno"> 7 </span>    <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="lineno"> 8 </span>    <span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="lineno"> 9 </span><span class="p">}</span>
+<span class="lineno">10 </span>
+<span class="lineno">11 </span><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ActionClearText</span> <span class="p">{</span>
+<span class="lineno">12 </span>    <span class="nx">type</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="lineno">13 </span><span class="p">}</span>
+<span class="lineno">14 </span>
+<span class="lineno">15 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">ACTUpdateText</span><span class="o">:</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">ActionUpdateText</span><span class="o">&gt;</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">16 </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="lineno">17 </span>        <span class="nx">type</span><span class="o">:</span> <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span>
+<span class="lineno">18 </span>        <span class="nx">text</span><span class="o">:</span> <span class="nx">text</span>
+<span class="lineno">19 </span>    <span class="p">};</span>
+<span class="lineno">20 </span><span class="p">};</span>
+<span class="lineno">21 </span>
+<span class="lineno">22 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">ACTClearText</span><span class="o">:</span> <span class="nx">ActionCreator</span><span class="o">&lt;</span><span class="nx">ActionClearText</span><span class="o">&gt;</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+<span class="lineno">23 </span>    <span class="k">return</span> <span class="p">{</span>
+<span class="lineno">24 </span>        <span class="nx">type</span><span class="o">:</span> <span class="nx">ACT_CLEAR_TEXT</span>
+<span class="lineno">25 </span>    <span class="p">};</span>
+<span class="lineno">26 </span><span class="p">};</span>
+<span class="lineno">27 </span>
+<span class="lineno">28 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">Actions</span> <span class="o">=</span> <span class="p">{</span>
+<span class="lineno">29 </span>    <span class="nx">ACTUpdateText</span><span class="p">,</span>
+<span class="lineno">30 </span>    <span class="nx">ACTClearText</span>
+<span class="lineno">31 </span><span class="p">};</span></code></pre></figure>
 
 <p>File <code>component / text_input / App.tsx</code></p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">View</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-native&quot;</span><span class="p">;</span>
-<span class="lineno"> 3</span> 
-<span class="lineno"> 4</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">Actions</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./Action&quot;</span><span class="p">;</span>
-<span class="lineno"> 5</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">StateName</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./State&quot;</span><span class="p">;</span>
-<span class="lineno"> 6</span> 
-<span class="lineno"> 7</span> <span class="kr">export</span> <span class="kr">class</span> <span class="nx">Application</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno"> 8</span>     <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
-<span class="lineno"> 9</span>         <span class="k">return</span> <span class="p">(</span>
-<span class="lineno">10</span>             <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=&gt;</span>
-<span class="lineno">11</span>                 <span class="p">...</span>
-<span class="lineno">12</span>             <span class="o">&lt;</span><span class="err">/View&gt;</span>
-<span class="lineno">13</span>         <span class="p">);</span>
-<span class="lineno">14</span>     <span class="p">};</span>
-<span class="lineno">15</span> <span class="p">}</span>
-<span class="lineno">16</span> 
-<span class="lineno">17</span> <span class="kr">export</span> <span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">(</span>
-<span class="lineno">18</span>    <span class="c1">// bind state</span>
-<span class="lineno">19</span>    <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
-<span class="lineno">20</span>        <span class="nx">StateName</span><span class="o">:</span> <span class="nx">state</span><span class="p">[</span><span class="nx">StateName</span><span class="p">]</span>
-<span class="lineno">21</span>    <span class="p">}),</span>
-<span class="lineno">22</span>    <span class="c1">// bind dispatch action</span>
-<span class="lineno">23</span>    <span class="p">(</span><span class="nx">dispatch</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
-<span class="lineno">24</span>        <span class="nx">actions</span><span class="o">:</span> <span class="nx">bindActionCreators</span><span class="p">(</span><span class="nx">Actions</span><span class="p">,</span> <span class="nx">dispatch</span><span class="p">),</span>
-<span class="lineno">25</span>        <span class="nx">dispatch</span>
-<span class="lineno">26</span>    <span class="p">})</span>
-<span class="lineno">27</span> <span class="p">)(</span><span class="nx">Application</span><span class="p">);</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="nx">React</span><span class="p">,</span> <span class="p">{</span><span class="nx">Component</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">View</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;react-native&quot;</span><span class="p">;</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">Actions</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./Action&quot;</span><span class="p">;</span>
+<span class="lineno"> 5 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">StateName</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./State&quot;</span><span class="p">;</span>
+<span class="lineno"> 6 </span>
+<span class="lineno"> 7 </span><span class="kr">export</span> <span class="kr">class</span> <span class="nx">Application</span> <span class="kr">extends</span> <span class="nx">Component</span><span class="o">&lt;</span><span class="nx">any</span><span class="p">,</span> <span class="nx">any</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno"> 8 </span>    <span class="nx">render</span><span class="p">()</span> <span class="p">{</span>
+<span class="lineno"> 9 </span>        <span class="k">return</span> <span class="p">(</span>
+<span class="lineno">10 </span>            <span class="o">&lt;</span><span class="nx">View</span> <span class="nx">style</span><span class="o">=&gt;</span>
+<span class="lineno">11 </span>                <span class="p">...</span>
+<span class="lineno">12 </span>            <span class="o">&lt;</span><span class="err">/View&gt;</span>
+<span class="lineno">13 </span>        <span class="p">);</span>
+<span class="lineno">14 </span>    <span class="p">};</span>
+<span class="lineno">15 </span><span class="p">}</span>
+<span class="lineno">16 </span>
+<span class="lineno">17 </span><span class="kr">export</span> <span class="kr">const</span> <span class="nx">App</span> <span class="o">=</span> <span class="nx">connect</span><span class="p">(</span>
+<span class="lineno">18 </span>   <span class="c1">// bind state</span>
+<span class="lineno">19 </span>   <span class="p">(</span><span class="nx">state</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+<span class="lineno">20 </span>       <span class="nx">StateName</span><span class="o">:</span> <span class="nx">state</span><span class="p">[</span><span class="nx">StateName</span><span class="p">]</span>
+<span class="lineno">21 </span>   <span class="p">}),</span>
+<span class="lineno">22 </span>   <span class="c1">// bind dispatch action</span>
+<span class="lineno">23 </span>   <span class="p">(</span><span class="nx">dispatch</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">({</span>
+<span class="lineno">24 </span>       <span class="nx">actions</span><span class="o">:</span> <span class="nx">bindActionCreators</span><span class="p">(</span><span class="nx">Actions</span><span class="p">,</span> <span class="nx">dispatch</span><span class="p">),</span>
+<span class="lineno">25 </span>       <span class="nx">dispatch</span>
+<span class="lineno">26 </span>   <span class="p">})</span>
+<span class="lineno">27 </span><span class="p">)(</span><span class="nx">Application</span><span class="p">);</span></code></pre></figure>
 
 <p>File <code>component / text_input / Reducer.ts</code></p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno"> 1</span> <span class="kr">import</span> <span class="p">{</span><span class="nx">State</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./State&quot;</span><span class="p">;</span>
-<span class="lineno"> 2</span> <span class="kr">import</span> <span class="p">{</span>
-<span class="lineno"> 3</span>     <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span> <span class="nx">ACT_CLEAR_TEXT</span><span class="p">,</span>
-<span class="lineno"> 4</span>     <span class="nx">ActionUpdateText</span><span class="p">,</span> <span class="nx">ActionClearText</span>
-<span class="lineno"> 5</span> <span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./Action&quot;</span><span class="p">;</span>
-<span class="lineno"> 6</span> 
-<span class="lineno"> 7</span> <span class="kr">export</span> <span class="p">{</span><span class="nx">StateName</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./State&quot;</span><span class="p">;</span>
-<span class="lineno"> 8</span> 
-<span class="lineno"> 9</span> <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ReducerInterface</span><span class="o">&lt;</span><span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
-<span class="lineno">10</span>     <span class="nx">action</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno">11</span>     <span class="nx">reducer</span><span class="o">:</span> <span class="nx">Reducer</span><span class="o">&lt;</span><span class="nx">S</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="lineno">12</span> <span class="p">}</span>
-<span class="lineno">13</span> 
-<span class="lineno">14</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">RDCUpdateText</span> <span class="o">=</span> <span class="p">{</span>
-<span class="lineno">15</span>     <span class="nx">action</span><span class="o">:</span> <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span>
-<span class="lineno">16</span>     <span class="nx">reducer</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">state</span><span class="o">:</span> <span class="nx">State</span><span class="p">,</span> <span class="nx">action</span><span class="o">:</span> <span class="nx">ActionUpdateText</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">17</span>         <span class="nx">state</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">action</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
-<span class="lineno">18</span>         <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
-<span class="lineno">19</span>     <span class="p">}</span>
-<span class="lineno">20</span> <span class="p">}</span> <span class="nx">as</span> <span class="nx">ReducerInterface</span><span class="o">&lt;</span><span class="nx">State</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="lineno">21</span> 
-<span class="lineno">22</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">RDCClearText</span> <span class="o">=</span> <span class="p">{</span>
-<span class="lineno">23</span>     <span class="nx">action</span><span class="o">:</span> <span class="nx">ACT_CLEAR_TEXT</span><span class="p">,</span>
-<span class="lineno">24</span>     <span class="nx">reducer</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">state</span><span class="o">:</span> <span class="nx">State</span><span class="p">,</span> <span class="nx">action</span><span class="o">:</span> <span class="nx">ActionClearText</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">25</span>         <span class="nx">state</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
-<span class="lineno">26</span>         <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
-<span class="lineno">27</span>     <span class="p">}</span>
-<span class="lineno">28</span> <span class="p">}</span> <span class="nx">as</span> <span class="nx">ReducerInterface</span><span class="o">&lt;</span><span class="nx">State</span><span class="o">&gt;</span><span class="p">;</span>
-<span class="lineno">29</span> 
-<span class="lineno">30</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">Reducers</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">31</span>     <span class="kd">let</span> <span class="nx">cloned</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">state</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="p">{}</span> <span class="o">:</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">state</span><span class="p">);</span>
-<span class="lineno">32</span> 
-<span class="lineno">33</span>     <span class="kd">let</span> <span class="nx">reducers</span> <span class="o">=</span> <span class="p">[</span>
-<span class="lineno">34</span>         <span class="nx">RDCUpdateText</span><span class="p">,</span>
-<span class="lineno">35</span>         <span class="nx">RDCClearText</span>
-<span class="lineno">36</span>     <span class="p">]</span>
-<span class="lineno">37</span>     <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">reducerInterface</span> <span class="nx">of</span> <span class="nx">reducers</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">38</span>         <span class="k">if</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="nx">reducerInterface</span><span class="p">.</span><span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">39</span>             <span class="nx">cloned</span> <span class="o">=</span> <span class="nx">reducerInterface</span><span class="p">.</span><span class="nx">reducer</span><span class="p">(</span><span class="nx">cloned</span><span class="p">,</span> <span class="nx">action</span><span class="p">);</span>
-<span class="lineno">40</span>             <span class="k">break</span><span class="p">;</span>
-<span class="lineno">41</span>         <span class="p">}</span>
-<span class="lineno">42</span>     <span class="p">}</span>
-<span class="lineno">43</span> 
-<span class="lineno">44</span>     <span class="k">return</span> <span class="nx">cloned</span><span class="p">;</span>
-<span class="lineno">45</span> <span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">import</span> <span class="p">{</span><span class="nx">State</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./State&quot;</span><span class="p">;</span>
+<span class="lineno"> 2 </span><span class="kr">import</span> <span class="p">{</span>
+<span class="lineno"> 3 </span>    <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span> <span class="nx">ACT_CLEAR_TEXT</span><span class="p">,</span>
+<span class="lineno"> 4 </span>    <span class="nx">ActionUpdateText</span><span class="p">,</span> <span class="nx">ActionClearText</span>
+<span class="lineno"> 5 </span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./Action&quot;</span><span class="p">;</span>
+<span class="lineno"> 6 </span>
+<span class="lineno"> 7 </span><span class="kr">export</span> <span class="p">{</span><span class="nx">StateName</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;./State&quot;</span><span class="p">;</span>
+<span class="lineno"> 8 </span>
+<span class="lineno"> 9 </span><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">ReducerInterface</span><span class="o">&lt;</span><span class="nx">S</span><span class="o">&gt;</span> <span class="p">{</span>
+<span class="lineno">10 </span>    <span class="nx">action</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="lineno">11 </span>    <span class="nx">reducer</span><span class="o">:</span> <span class="nx">Reducer</span><span class="o">&lt;</span><span class="nx">S</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="lineno">12 </span><span class="p">}</span>
+<span class="lineno">13 </span>
+<span class="lineno">14 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">RDCUpdateText</span> <span class="o">=</span> <span class="p">{</span>
+<span class="lineno">15 </span>    <span class="nx">action</span><span class="o">:</span> <span class="nx">ACT_UPDATE_TEXT</span><span class="p">,</span>
+<span class="lineno">16 </span>    <span class="nx">reducer</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">state</span><span class="o">:</span> <span class="nx">State</span><span class="p">,</span> <span class="nx">action</span><span class="o">:</span> <span class="nx">ActionUpdateText</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">17 </span>        <span class="nx">state</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="nx">action</span><span class="p">.</span><span class="nx">text</span><span class="p">;</span>
+<span class="lineno">18 </span>        <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
+<span class="lineno">19 </span>    <span class="p">}</span>
+<span class="lineno">20 </span><span class="p">}</span> <span class="nx">as</span> <span class="nx">ReducerInterface</span><span class="o">&lt;</span><span class="nx">State</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="lineno">21 </span>
+<span class="lineno">22 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">RDCClearText</span> <span class="o">=</span> <span class="p">{</span>
+<span class="lineno">23 </span>    <span class="nx">action</span><span class="o">:</span> <span class="nx">ACT_CLEAR_TEXT</span><span class="p">,</span>
+<span class="lineno">24 </span>    <span class="nx">reducer</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">state</span><span class="o">:</span> <span class="nx">State</span><span class="p">,</span> <span class="nx">action</span><span class="o">:</span> <span class="nx">ActionClearText</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">25 </span>        <span class="nx">state</span><span class="p">.</span><span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+<span class="lineno">26 </span>        <span class="k">return</span> <span class="nx">state</span><span class="p">;</span>
+<span class="lineno">27 </span>    <span class="p">}</span>
+<span class="lineno">28 </span><span class="p">}</span> <span class="nx">as</span> <span class="nx">ReducerInterface</span><span class="o">&lt;</span><span class="nx">State</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="lineno">29 </span>
+<span class="lineno">30 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">Reducers</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">state</span><span class="p">,</span> <span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">31 </span>    <span class="kd">let</span> <span class="nx">cloned</span> <span class="o">=</span> <span class="k">typeof</span> <span class="nx">state</span> <span class="o">===</span> <span class="s1">&#39;undefined&#39;</span> <span class="o">?</span> <span class="p">{}</span> <span class="o">:</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">assign</span><span class="p">({},</span> <span class="nx">state</span><span class="p">);</span>
+<span class="lineno">32 </span>
+<span class="lineno">33 </span>    <span class="kd">let</span> <span class="nx">reducers</span> <span class="o">=</span> <span class="p">[</span>
+<span class="lineno">34 </span>        <span class="nx">RDCUpdateText</span><span class="p">,</span>
+<span class="lineno">35 </span>        <span class="nx">RDCClearText</span>
+<span class="lineno">36 </span>    <span class="p">]</span>
+<span class="lineno">37 </span>    <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">reducerInterface</span> <span class="k">of</span> <span class="nx">reducers</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">38 </span>        <span class="k">if</span> <span class="p">(</span><span class="nx">action</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="nx">reducerInterface</span><span class="p">.</span><span class="nx">action</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">39 </span>            <span class="nx">cloned</span> <span class="o">=</span> <span class="nx">reducerInterface</span><span class="p">.</span><span class="nx">reducer</span><span class="p">(</span><span class="nx">cloned</span><span class="p">,</span> <span class="nx">action</span><span class="p">);</span>
+<span class="lineno">40 </span>            <span class="k">break</span><span class="p">;</span>
+<span class="lineno">41 </span>        <span class="p">}</span>
+<span class="lineno">42 </span>    <span class="p">}</span>
+<span class="lineno">43 </span>
+<span class="lineno">44 </span>    <span class="k">return</span> <span class="nx">cloned</span><span class="p">;</span>
+<span class="lineno">45 </span><span class="p">}</span></code></pre></figure>
 
 <p>File <code>component / text_input / State.ts</code></p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="lineno">1</span> <span class="kr">export</span> <span class="kr">interface</span> <span class="nx">State</span> <span class="p">{</span>
-<span class="lineno">2</span>     <span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno">3</span> <span class="p">}</span>
-<span class="lineno">4</span> 
-<span class="lineno">5</span> <span class="kr">export</span> <span class="kd">let</span> <span class="nx">StateName</span> <span class="o">=</span> <span class="s2">&quot;ComponentTextInput&quot;</span><span class="p">;</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">export</span> <span class="kr">interface</span> <span class="nx">State</span> <span class="p">{</span>
+<span class="lineno">2 </span>    <span class="nx">text</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+<span class="lineno">3 </span><span class="p">}</span>
+<span class="lineno">4 </span>
+<span class="lineno">5 </span><span class="kr">export</span> <span class="kd">let</span> <span class="nx">StateName</span> <span class="o">=</span> <span class="s2">&quot;ComponentTextInput&quot;</span><span class="p">;</span></code></pre></figure>
 
 
               </div>
@@ -541,15 +541,15 @@ Store =&gt; store.dispatch =&gt; Action created from <code>ActionCreator()</code
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2017/09/jekyll-installation/">Jekyll的安装</a></li>
+    
+    <li><a href="/2017/09/react-native-navigation/">ReactNative的Navigation</a></li>
+    
     <li><a href="/2017/06/vps/">自建SS安装</a></li>
     
     <li><a href="/2017/03/domain-transfer/">域名迁移</a></li>
     
     <li><a href="/2017/02/reactjs/">ReactJs学习笔记</a></li>
-    
-    <li><a href="/2016/12/typescript-vscode/">TypeScript及VsCode学习笔记</a></li>
-    
-    <li><a href="/2016/12/why-open-source/">为什么需要参与开源项目</a></li>
     
   </ul>
 </div>
