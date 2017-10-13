@@ -7,6 +7,58 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>关于移动设备唯一标识生成</title>
+				<description>&lt;h1 id=&quot;关于移动设备唯一标识生成&quot;&gt;关于移动设备唯一标识生成&lt;/h1&gt;
+
+&lt;h2 id=&quot;1-ios&quot;&gt;1. iOS&lt;/h2&gt;
+&lt;p&gt;iOS的设备唯一标志无法通过操作系统官方的API直接获得，只能由应用程序根据一定的算法来程序生成。&lt;/p&gt;
+
+&lt;p&gt;主要的生成要素有两项：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;IDFV：Vindor标示符，适用于对内：例如分析用户在应用内的行为等。来源是应用的bundle id，e.g com.shinezone。每个发行商的发行的应用的IDFV是一致的。&lt;/li&gt;
+  &lt;li&gt;IDFA：广告标示符，适用于对外：例如广告推广，换量等跨应用的用户追踪等。来源是系统API，设备唯一。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;但IDFA非广告应用不得使用（&lt;a href=&quot;https://developer.apple.com/app-store/review/rejections/cn/&quot;&gt;来源&lt;/a&gt;）：&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;广告&lt;/p&gt;
+
+  &lt;p&gt;在你提交 app 以供审核时，将向你询问你的 app 是否使用“广告标识符”(IDFA) 来投放广告。如果你指出 app 使用 IDFA，但是没有广告功能或无法正常显示广告，则你的 app 可能被拒绝。请务必在 iOS 设备上对你的 app 进行测试，以确定广告是否可以正常工作。同样，如果你指出你的 app 未使用 IDFA，但可以显示广告，则会将你的 app 置于“无效的二进制文件”状态。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;2-android&quot;&gt;2. Android&lt;/h2&gt;
+&lt;p&gt;Android的设备唯一标志生成和iOS的方案相同，也是按程序算法生成的。但其算法不受应用、发行商等要素的影响，只要同设备，生成的ID即一致。&lt;/p&gt;
+
+&lt;h2 id=&quot;3-问题&quot;&gt;3. 问题&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;A、B两个同公司的应用，是否能在同一玩家游玩的时候对他们进行识别&lt;/li&gt;
+  &lt;li&gt;A、B两个不同公司的应用，是否有什么办法能在同一玩家游玩的时候对他们进行识别&lt;/li&gt;
+  &lt;li&gt;A、B两个不同公司的应用，在植入了同一款广告应用之后，该广告应用是否能对使用这两个应用的玩家进行识别&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;4-结论&quot;&gt;4. 结论&lt;/h2&gt;
+&lt;h3 id=&quot;41-ios&quot;&gt;4.1 iOS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;非广告应用：
+    &lt;ul&gt;
+      &lt;li&gt;问题1：可识别&lt;/li&gt;
+      &lt;li&gt;问题2：不可识别&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;广告应用：都可以识别&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;42-android&quot;&gt;4.2 Android&lt;/h3&gt;
+&lt;p&gt;无关是否广告应用，也无关公司所属。都可以识别。&lt;/p&gt;
+</description>
+				<pubDate>Fri, 13 Oct 2017 12:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/10/mobile-uuid/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/10/mobile-uuid/</guid>
+			</item>
+		
+			<item>
 				<title>Jekyll的安装</title>
 				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
 &lt;p&gt;今天写了一篇文章，发布的时候居然告诉我jekyll没有安装，估计是之前系统更新的问题，只能重新装一遍。结果问题还真不少，这里简单记录下。&lt;/p&gt;
@@ -1254,63 +1306,6 @@ Android：&lt;code&gt;assets/bin/Data/&lt;/code&gt;
 				<pubDate>Wed, 18 Mar 2015 13:24:39 +0800</pubDate>
 				<link>https://xenojoshua.com/2015/03/xiaomi-jawbone-up/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2015/03/xiaomi-jawbone-up/</guid>
-			</item>
-		
-			<item>
-				<title>MAC下privoxy安装使用，及问题解决</title>
-				<description>&lt;h2&gt;1. 前言&lt;/h2&gt;
-&lt;p&gt;很久没写博客了，各种各样的原因。本来这篇也不是很想写的，不过考虑到privoxy安装时候遇到的那么多问题，还是记录一下会比较好。&lt;/p&gt;
-&lt;p&gt;这里先说下安装privoxy的目的，因为现在使用自己的ShadowSocks，提供稳定的XXX。而SS是socks5代理，不支持HTTP。这里我们就需要使用一个软件将socks5转换成HTTP代理。查下来privoxy算是一个比较好的工具。&lt;/p&gt;
-&lt;h2&gt;2. 安装&lt;/h2&gt;
-&lt;p&gt;安装就一句话，直接就完成了。&lt;/p&gt;
-&lt;p&gt;[codesyntax lang=&quot;bash&quot;]&lt;/p&gt;
-&lt;p&gt;brew install privoxy&lt;/p&gt;
-&lt;pre&gt;&lt;/pre&gt;
-&lt;p&gt;[/codesyntax]&lt;/p&gt;
-&lt;p&gt;主要我们要看下配置文件里的几个选项：&lt;/p&gt;
-&lt;p&gt;[codesyntax lang=&quot;bash&quot;]&lt;/p&gt;
-&lt;pre&gt;confdir /usr/local/etc/privoxy #配置文件位置，一般不改
-logdir /usr/local/var/log/privoxy #日志文件位置，一般不改
-logfile logfile #日志文件名字，一般不改
-#日志级别，默认完全不打开，只记录fatal，需要自行编辑打开
-debug     1 #记录请求地址
-debug  1024 #记录被拒的请求及理由
-debug  4096 #记录启动信息及警告
-debug  8192 #记录非致命错误
-listen-address  127.0.0.1:8118 #本地地址监听
-forward-socks5   /               127.0.0.1:1080 #代理转发的源，这里填SS地址&lt;/pre&gt;
-&lt;p&gt;[/codesyntax]&lt;/p&gt;
-&lt;p&gt;如果需要开机启动，可以安装brew提示的内容，将plist文件放到指定地点&lt;/p&gt;
-&lt;h2&gt;3. 查错&lt;/h2&gt;
-&lt;p&gt;默认安装完后有几个问题比较麻烦&lt;/p&gt;
-&lt;h3&gt;3.1 日志无输出&lt;/h3&gt;
-&lt;p&gt;观察下来刚才配置文件里定义的日志没有任何输出，问题在于privoxy的mac plist文件编写有问题：去掉启动参数里的--no-daemon就OK了。这个参数是指在命令行下启动，并将日志输出到控制台中，debug时候用，自然没有日志输出了。&lt;/p&gt;
-&lt;h3&gt;3.2 日志显示不停重启&lt;/h3&gt;
-&lt;p&gt;[codesyntax lang=&quot;bash&quot;]&lt;/p&gt;
-&lt;pre&gt;2015-03-04 13:53:00.718 000003c0 Fatal error: can't bind to 127.0.0.1:8118: There may be another Privoxy or some other proxy running on port 8118
-2015-03-04 13:53:10.792 000003c0 Info: Privoxy version 3.0.22
-2015-03-04 13:53:10.792 000003c0 Info: Program name: /usr/local/Cellar/privoxy/3.0.22/sbin/privoxy
-2015-03-04 13:53:10.792 000003c0 Info: Loading filter file: /usr/local/etc/privoxy/default.filter
-2015-03-04 13:53:10.795 000003c0 Info: Loading filter file: /usr/local/etc/privoxy/user.filter
-2015-03-04 13:53:10.795 000003c0 Info: Loading actions file: /usr/local/etc/privoxy/match-all.action
-2015-03-04 13:53:10.795 000003c0 Info: Loading actions file: /usr/local/etc/privoxy/default.action
-2015-03-04 13:53:10.801 000003c0 Info: Loading actions file: /usr/local/etc/privoxy/user.action
-2015-03-04 13:53:10.802 000003c0 Fatal error: can't bind to 127.0.0.1:8118: There may be another Privoxy or some other proxy running on port 8118
-2015-03-04 13:53:20.874 000003c0 Info: Privoxy version 3.0.22
-2015-03-04 13:53:20.874 000003c0 Info: Program name: /usr/local/Cellar/privoxy/3.0.22/sbin/privoxy
-2015-03-04 13:53:20.874 000003c0 Info: Loading filter file: /usr/local/etc/privoxy/default.filter
-2015-03-04 13:53:20.877 000003c0 Info: Loading filter file: /usr/local/etc/privoxy/user.filter
-2015-03-04 13:53:20.877 000003c0 Info: Loading actions file: /usr/local/etc/privoxy/match-all.action
-2015-03-04 13:53:20.877 000003c0 Info: Loading actions file: /usr/local/etc/privoxy/default.action
-2015-03-04 13:53:20.883 000003c0 Info: Loading actions file: /usr/local/etc/privoxy/user.action
-2015-03-04 13:53:20.884 000003c0 Fatal error: can't bind to 127.0.0.1:8118: There may be another Privoxy or some other proxy running on port 8118&lt;/pre&gt;
-&lt;p&gt;[/codesyntax]&lt;/p&gt;
-&lt;p&gt;10秒一次，日志显示不停在启动privoxy，导致一直绑定失败（之前的没关，当然绑定失败）。还是plist文件的问题，将 KeepAlive 置成false就OK了。&lt;/p&gt;
-&lt;p&gt;基本上就这些了，记录一下，以防以后需要。&lt;/p&gt;
-</description>
-				<pubDate>Wed, 04 Mar 2015 14:01:50 +0800</pubDate>
-				<link>https://xenojoshua.com/2015/03/mac-privoxy-install-debug/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2015/03/mac-privoxy-install-debug/</guid>
 			</item>
 		
 	</channel>
