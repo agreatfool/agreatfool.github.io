@@ -52,6 +52,31 @@
 
 &lt;h3 id=&quot;42-android&quot;&gt;4.2 Android&lt;/h3&gt;
 &lt;p&gt;无关是否广告应用，也无关公司所属。都可以识别。&lt;/p&gt;
+
+&lt;h2 id=&quot;5-验证&quot;&gt;5. 验证&lt;/h2&gt;
+&lt;p&gt;上述结论需要实际实验来进行验证，这里的验证主要是iOS操作系统，无Android部分。测试环境：iPhone7 Plus | iOS 10.3.3&lt;/p&gt;
+
+&lt;p&gt;经实际应用测试，上述的结论没有问题。&lt;/p&gt;
+
+&lt;h2 id=&quot;6-风险点&quot;&gt;6. 风险点&lt;/h2&gt;
+&lt;h3 id=&quot;61-ios&quot;&gt;6.1 iOS&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;在本机所有相同BundleID的应用都被删除的情况下，IDFV会被重置&lt;/li&gt;
+  &lt;li&gt;在开启限制广告跟踪开关的情况下，IDFA无法生成（为0）&lt;/li&gt;
+  &lt;li&gt;开关过一次广告跟踪开关之后，本机的IDFA会重置&lt;/li&gt;
+  &lt;li&gt;刷机和还原系统会重置一切&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;62-android&quot;&gt;6.2 Android&lt;/h3&gt;
+&lt;p&gt;以下行为会改变Android的唯一标识：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;刷机&lt;/li&gt;
+  &lt;li&gt;还原系统&lt;/li&gt;
+  &lt;li&gt;用户更换手机Sim卡&lt;/li&gt;
+  &lt;li&gt;厂商的Bug，定制后的系统，可能多个设备具有一样的Android ID&lt;/li&gt;
+  &lt;li&gt;用户对应用的授权变动&lt;/li&gt;
+&lt;/ul&gt;
 </description>
 				<pubDate>Fri, 13 Oct 2017 12:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/10/mobile-uuid/</link>

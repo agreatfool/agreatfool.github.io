@@ -148,6 +148,31 @@
 <h3 id="42-android">4.2 Android</h3>
 <p>无关是否广告应用，也无关公司所属。都可以识别。</p>
 
+<h2 id="5-验证">5. 验证</h2>
+<p>上述结论需要实际实验来进行验证，这里的验证主要是iOS操作系统，无Android部分。测试环境：iPhone7 Plus | iOS 10.3.3</p>
+
+<p>经实际应用测试，上述的结论没有问题。</p>
+
+<h2 id="6-风险点">6. 风险点</h2>
+<h3 id="61-ios">6.1 iOS</h3>
+<ul>
+  <li>在本机所有相同BundleID的应用都被删除的情况下，IDFV会被重置</li>
+  <li>在开启限制广告跟踪开关的情况下，IDFA无法生成（为0）</li>
+  <li>开关过一次广告跟踪开关之后，本机的IDFA会重置</li>
+  <li>刷机和还原系统会重置一切</li>
+</ul>
+
+<h3 id="62-android">6.2 Android</h3>
+<p>以下行为会改变Android的唯一标识：</p>
+
+<ul>
+  <li>刷机</li>
+  <li>还原系统</li>
+  <li>用户更换手机Sim卡</li>
+  <li>厂商的Bug，定制后的系统，可能多个设备具有一样的Android ID</li>
+  <li>用户对应用的授权变动</li>
+</ul>
+
               </div>
               
               <div id="disqus_thread">
