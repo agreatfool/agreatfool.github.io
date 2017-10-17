@@ -11,16 +11,14 @@
 				<description>&lt;h1 id=&quot;关于移动设备唯一标识生成&quot;&gt;关于移动设备唯一标识生成&lt;/h1&gt;
 
 &lt;h2 id=&quot;1-ios&quot;&gt;1. iOS&lt;/h2&gt;
-&lt;p&gt;iOS的设备唯一标志无法通过操作系统官方的API直接获得，只能由应用程序根据一定的算法来程序生成。&lt;/p&gt;
-
-&lt;p&gt;主要的生成要素有两项：&lt;/p&gt;
+&lt;p&gt;iOS的设备唯一标志由iOS系统直接给予，根据应用类型不同分两类：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;IDFV：Vindor标示符，适用于对内：例如分析用户在应用内的行为等。来源是应用的bundle id，e.g com.shinezone。每个发行商的发行的应用的IDFV是一致的。&lt;/li&gt;
-  &lt;li&gt;IDFA：广告标示符，适用于对外：例如广告推广，换量等跨应用的用户追踪等。来源是系统API，设备唯一。&lt;/li&gt;
+  &lt;li&gt;IDFV：Vindor标示符，适用于对内：例如分析用户在应用内的行为等。来源是应用的bundle id，e.g com.shinezone。每个发行商的发行的应用的IDFV是一致的。任何应用可以使用。&lt;/li&gt;
+  &lt;li&gt;IDFA：广告标示符，适用于对外：例如广告推广，换量等跨应用的用户追踪等。来源是系统API，设备唯一。仅广告应用可用。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;但IDFA非广告应用不得使用（&lt;a href=&quot;https://developer.apple.com/app-store/review/rejections/cn/&quot;&gt;来源&lt;/a&gt;）：&lt;/p&gt;
+&lt;p&gt;IDFA非广告应用不得使用（&lt;a href=&quot;https://developer.apple.com/app-store/review/rejections/cn/&quot;&gt;来源&lt;/a&gt;）：&lt;/p&gt;
 &lt;blockquote&gt;
   &lt;p&gt;广告&lt;/p&gt;
 
@@ -28,7 +26,7 @@
 &lt;/blockquote&gt;
 
 &lt;h2 id=&quot;2-android&quot;&gt;2. Android&lt;/h2&gt;
-&lt;p&gt;Android的设备唯一标志生成和iOS的方案相同，也是按程序算法生成的。但其算法不受应用、发行商等要素的影响，只要同设备，生成的ID即一致。&lt;/p&gt;
+&lt;p&gt;Android的设备唯一标志由系统内的几个信息组合按程序算法生成。其算法不受应用、发行商等要素的影响，只要同设备，生成的ID即一致。&lt;/p&gt;
 
 &lt;h2 id=&quot;3-问题&quot;&gt;3. 问题&lt;/h2&gt;
 

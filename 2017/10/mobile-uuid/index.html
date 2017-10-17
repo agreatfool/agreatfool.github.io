@@ -106,16 +106,14 @@
                 <h1 id="关于移动设备唯一标识生成">关于移动设备唯一标识生成</h1>
 
 <h2 id="1-ios">1. iOS</h2>
-<p>iOS的设备唯一标志无法通过操作系统官方的API直接获得，只能由应用程序根据一定的算法来程序生成。</p>
-
-<p>主要的生成要素有两项：</p>
+<p>iOS的设备唯一标志由iOS系统直接给予，根据应用类型不同分两类：</p>
 
 <ul>
-  <li>IDFV：Vindor标示符，适用于对内：例如分析用户在应用内的行为等。来源是应用的bundle id，e.g com.shinezone。每个发行商的发行的应用的IDFV是一致的。</li>
-  <li>IDFA：广告标示符，适用于对外：例如广告推广，换量等跨应用的用户追踪等。来源是系统API，设备唯一。</li>
+  <li>IDFV：Vindor标示符，适用于对内：例如分析用户在应用内的行为等。来源是应用的bundle id，e.g com.shinezone。每个发行商的发行的应用的IDFV是一致的。任何应用可以使用。</li>
+  <li>IDFA：广告标示符，适用于对外：例如广告推广，换量等跨应用的用户追踪等。来源是系统API，设备唯一。仅广告应用可用。</li>
 </ul>
 
-<p>但IDFA非广告应用不得使用（<a href="https://developer.apple.com/app-store/review/rejections/cn/">来源</a>）：</p>
+<p>IDFA非广告应用不得使用（<a href="https://developer.apple.com/app-store/review/rejections/cn/">来源</a>）：</p>
 <blockquote>
   <p>广告</p>
 
@@ -123,7 +121,7 @@
 </blockquote>
 
 <h2 id="2-android">2. Android</h2>
-<p>Android的设备唯一标志生成和iOS的方案相同，也是按程序算法生成的。但其算法不受应用、发行商等要素的影响，只要同设备，生成的ID即一致。</p>
+<p>Android的设备唯一标志由系统内的几个信息组合按程序算法生成。其算法不受应用、发行商等要素的影响，只要同设备，生成的ID即一致。</p>
 
 <h2 id="3-问题">3. 问题</h2>
 
