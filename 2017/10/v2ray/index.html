@@ -166,32 +166,31 @@ www路径：/var/www/html
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>acme.sh --issue -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> -w /var/www/html</code></pre></figure>
 
-<blockquote>
-  <p>root@vultr:~/opt# acme.sh –issue -d ${domain} -w /var/www/html
+<pre><code>root@vultr:~/opt# acme.sh --issue -d ${domain} -w /var/www/html
 [Tue Oct 24 09:00:39 UTC 2017] Registering account
 [Tue Oct 24 09:00:40 UTC 2017] Registered
 [Tue Oct 24 09:00:40 UTC 2017] Update account tos info success.
-[Tue Oct 24 09:00:40 UTC 2017] ACCOUNT_THUMBPRINT=’…’
+[Tue Oct 24 09:00:40 UTC 2017] ACCOUNT_THUMBPRINT='...'
 [Tue Oct 24 09:00:40 UTC 2017] Creating domain key
 [Tue Oct 24 09:00:40 UTC 2017] The domain key is here: /root/.acme.sh/${domain}/${domain}.key
-[Tue Oct 24 09:00:40 UTC 2017] Single domain=’${domain}’
+[Tue Oct 24 09:00:40 UTC 2017] Single domain='${domain}'
 [Tue Oct 24 09:00:40 UTC 2017] Getting domain auth token for each domain
-[Tue Oct 24 09:00:40 UTC 2017] Getting webroot for domain=’${domain}’
-[Tue Oct 24 09:00:40 UTC 2017] Getting new-authz for domain=’${domain}’
+[Tue Oct 24 09:00:40 UTC 2017] Getting webroot for domain='${domain}'
+[Tue Oct 24 09:00:40 UTC 2017] Getting new-authz for domain='${domain}'
 [Tue Oct 24 09:00:41 UTC 2017] The new-authz request is ok.
 [Tue Oct 24 09:00:41 UTC 2017] Verifying:${domain}
 [Tue Oct 24 09:00:44 UTC 2017] Success
 [Tue Oct 24 09:00:44 UTC 2017] Verify finished, start to sign.
 /root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input
 [Tue Oct 24 09:00:45 UTC 2017] Cert success.
-—–BEGIN CERTIFICATE—–
-…
-—–END CERTIFICATE—–
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
 [Tue Oct 24 09:00:45 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer
 [Tue Oct 24 09:00:45 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key
 [Tue Oct 24 09:00:45 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer
-[Tue Oct 24 09:00:45 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer</p>
-</blockquote>
+[Tue Oct 24 09:00:45 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer
+</code></pre>
 
 <p>安装证书：</p>
 
@@ -251,21 +250,20 @@ www路径：/var/www/html
 
 <p>时间没到命令并不会直接刷新证书，要尝试的话，可以添加 –force 来强制执行：</p>
 
-<blockquote>
-  <p>[Tue Oct 24 09:48:45 UTC 2017] ===Starting cron===
-[Tue Oct 24 09:48:45 UTC 2017] Renew: ‘${domain}’
-[Tue Oct 24 09:48:45 UTC 2017] Single domain=’${domain}’
+<pre><code>[Tue Oct 24 09:48:45 UTC 2017] ===Starting cron===
+[Tue Oct 24 09:48:45 UTC 2017] Renew: '${domain}'
+[Tue Oct 24 09:48:45 UTC 2017] Single domain='${domain}'
 [Tue Oct 24 09:48:45 UTC 2017] Getting domain auth token for each domain
-[Tue Oct 24 09:48:45 UTC 2017] Getting webroot for domain=’${domain}’
-[Tue Oct 24 09:48:45 UTC 2017] Getting new-authz for domain=’${domain}’
+[Tue Oct 24 09:48:45 UTC 2017] Getting webroot for domain='${domain}'
+[Tue Oct 24 09:48:45 UTC 2017] Getting new-authz for domain='${domain}'
 [Tue Oct 24 09:48:46 UTC 2017] The new-authz request is ok.
 [Tue Oct 24 09:48:46 UTC 2017] ${domain} is already verified, skip http-01.
 [Tue Oct 24 09:48:46 UTC 2017] Verify finished, start to sign.
 /root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input
 [Tue Oct 24 09:48:47 UTC 2017] Cert success.
-—–BEGIN CERTIFICATE—–
-…
-—–END CERTIFICATE—–
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE-----
 [Tue Oct 24 09:48:47 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer
 [Tue Oct 24 09:48:47 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key
 [Tue Oct 24 09:48:47 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer
@@ -274,8 +272,8 @@ www路径：/var/www/html
 [Tue Oct 24 09:48:47 UTC 2017] Installing full chain to:/var/www/ssl/${domain}.key.pem
 [Tue Oct 24 09:48:47 UTC 2017] Run reload cmd: sudo service nginx force-reload
 [Tue Oct 24 09:48:47 UTC 2017] Reload success
-[Tue Oct 24 09:48:47 UTC 2017] ===End cron===</p>
-</blockquote>
+[Tue Oct 24 09:48:47 UTC 2017] ===End cron===
+</code></pre>
 
 <h3 id="34-配置v2ray服务器">3.4 配置V2Ray服务器</h3>
 <p>编辑配置文件<code>/etc/v2ray/config.json</code>：</p>
