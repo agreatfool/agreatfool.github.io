@@ -39,9 +39,9 @@
 &lt;p&gt;几个位置信息：&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;bin命令：/usr/bin/v2ray/v2ray
-配置文件：/etc/v2ray/config.json
-service：/lib/systemd/system/v2ray.service
+  &lt;p&gt;bin命令：/usr/bin/v2ray/v2ray  &lt;br /&gt;
+配置文件：/etc/v2ray/config.json  &lt;br /&gt;
+service：/lib/systemd/system/v2ray.service  &lt;br /&gt;
 日志指定是放在配置文件里的：log.access 和 log.error，一般放在：/var/log/v2ray/access.log 和 /var/log/v2ray/error.log&lt;/p&gt;
 &lt;/blockquote&gt;
 
