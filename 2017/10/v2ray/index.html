@@ -213,25 +213,24 @@ www路径：/var/www/html
 
 <p>修改 Nginx 配置：</p>
 
-<pre><code>http {
-    # 新增
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    ssl_prefer_server_ciphers on;
-    # 兼容其他老浏览器的 ssl_ciphers 设置请访问 https://wiki.mozilla.org/Security/Server_Side_TLS
-
-    server {
-        listen 80 default_server;
-        # 新增
-        listen 443 ssl;
-        ssl_certificate         /var/www/ssl/${domain}.key.pem;
-        ssl_certificate_key     /var/www/ssl/${domain}.key;
-        # ssl_dhparam 
-        ssl_dhparam             /var/www/ssl/dhparam.pem;
-
-        # 其他省略
-    }
-}
-</code></pre>
+<figure class="highlight"><pre><code class="language-apache" data-lang="apache"><span></span><span class="lineno"> 1 </span><span class="nb">http</span> {
+<span class="lineno"> 2 </span>    <span class="c"># 新增</span>
+<span class="lineno"> 3 </span>    <span class="nb">ssl_protocols</span> TLSv1 TLSv1.1 TLSv1.2;
+<span class="lineno"> 4 </span>    <span class="nb">ssl_prefer_server_ciphers</span> <span class="k">on</span>;
+<span class="lineno"> 5 </span>    <span class="c"># 兼容其他老浏览器的 ssl_ciphers 设置请访问 https://wiki.mozilla.org/Security/Server_Side_TLS</span>
+<span class="lineno"> 6 </span>
+<span class="lineno"> 7 </span>    <span class="nb">server</span> {
+<span class="lineno"> 8 </span>        <span class="nb">listen</span> <span class="m">80</span> default_server;
+<span class="lineno"> 9 </span>        <span class="c"># 新增</span>
+<span class="lineno">10 </span>        <span class="nb">listen</span> <span class="m">443</span> ssl;
+<span class="lineno">11 </span>        <span class="nb">ssl_certificate</span>         <span class="sx">/var/www/ssl/</span>${domain}.key.pem;
+<span class="lineno">12 </span>        <span class="nb">ssl_certificate_key</span>     <span class="sx">/var/www/ssl/</span>${domain}.key;
+<span class="lineno">13 </span>        <span class="c"># ssl_dhparam </span>
+<span class="lineno">14 </span>        <span class="nb">ssl_dhparam</span>             <span class="sx">/var/www/ssl/dhparam.pem</span>;
+<span class="lineno">15 </span>
+<span class="lineno">16 </span>        <span class="c"># 其他省略</span>
+<span class="lineno">17 </span>    <span class="err">}</span>
+<span class="lineno">18 </span><span class="err">}</span></code></pre></figure>
 
 <p>使用检测工具查看安全评级：<code>https://www.ssllabs.com/ssltest/analyze.html?d=${domain}</code></p>
 
@@ -325,15 +324,14 @@ www路径：/var/www/html
 <h3 id="35-配置nginx">3.5 配置Nginx</h3>
 <p>在之前安装HTTPS更改过的nginx配置中再添加一个location：</p>
 
-<pre><code>location /serv/ {
-    proxy_redirect off;
-    proxy_pass http://127.0.0.1:10000;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $http_host;
-}
-</code></pre>
+<figure class="highlight"><pre><code class="language-apache" data-lang="apache"><span></span><span class="lineno">1 </span><span class="nb">location</span> <span class="sx">/serv/</span> {
+<span class="lineno">2 </span>    <span class="nb">proxy_redirect</span> <span class="k">off</span>;
+<span class="lineno">3 </span>    <span class="nb">proxy_pass</span> http://127.0.0.1:10000;
+<span class="lineno">4 </span>    <span class="nb">proxy_http_version</span> <span class="m">1</span>.1;
+<span class="lineno">5 </span>    <span class="nb">proxy_set_header</span> Upgrade $http_upgrade;
+<span class="lineno">6 </span>    <span class="nb">proxy_set_header</span> Connection <span class="s2">&quot;upgrade&quot;</span>;
+<span class="lineno">7 </span>    <span class="nb">proxy_set_header</span> Host $http_host;
+<span class="lineno">8 </span><span class="err">}</span></code></pre></figure>
 
 <p>重启nginx：</p>
 
