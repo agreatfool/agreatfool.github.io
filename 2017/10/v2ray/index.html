@@ -1,0 +1,588 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>V2Ray安装教程 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2017/10/v2ray/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2017/10/v2ray/">V2Ray安装教程</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>23 Oct 2017</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/VPS">VPS</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/V2Ray">V2Ray</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2 id="0-前言">0. 前言</h2>
+<p>今年的形势非常严峻，年中的时候未雨绸缪准备了下55R，结果没多久就不行了，现在明显是被墙嗅探到，使用几分钟之后就IP无法ping通，停止使用后IP恢复。鉴于55的作者及55R的作者相继仙隐，放弃这个软件是比较正确的选择。找了一圈，看来只有v2ray还能看一看。</p>
+
+<h2 id="1-v2ray">1. V2Ray</h2>
+<p>几个信息来源这里简单列下：</p>
+
+<ul>
+  <li><a href="https://www.v2ray.com/">V2Ray 用户手册</a>：官方手册，基本上什么都有了</li>
+  <li><a href="https://toutyrater.github.io/">V2Ray 配置指南</a>：一篇第三方的配置指南，可以一看，不过更新一般有点滞后，可以作为参考</li>
+  <li><a href="https://htfy96.github.io/v2ray-config-gen">V2Ray配置生成器</a>：第三方的配置生成辅助工具，新手可以用一下</li>
+</ul>
+
+<p>文章：</p>
+
+<ul>
+  <li><a href="https://vinga.fun/v2ray/">V2Ray安全混淆教程</a>：用的工具有点小众，作为程序员可以不需要这个工具，拓扑结构可以看下</li>
+  <li><a href="https://www.sairai.bid/v2-memo/">V2Ray安装使用手记</a>：比较通俗易懂的一篇文章，推荐</li>
+  <li><a href="https://toutyrater.github.io/advanced/websocket.html">WebSocket</a>：其实就是列表第一篇教程的官方推荐三方教程，所以看这篇就够</li>
+</ul>
+
+<h2 id="2-拓扑结构">2. 拓扑结构</h2>
+
+<h2 id="3-安装">3. 安装</h2>
+<h3 id="31-v2ray本体">3.1 V2Ray本体</h3>
+<p>官方有提供安装脚本，直接使用即可：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>bash &lt;<span class="o">(</span>curl -L -s https://install.direct/go.sh<span class="o">)</span></code></pre></figure>
+
+<p>几个位置信息：</p>
+
+<blockquote>
+  <p>bin命令：/usr/bin/v2ray/v2ray
+配置文件：/etc/v2ray/config.json
+service：/lib/systemd/system/v2ray.service
+日志指定是放在配置文件里的：log.access 和 log.error，一般放在：/var/log/v2ray/access.log 和 /var/log/v2ray/error.log</p>
+</blockquote>
+
+<h3 id="32-安装nginx">3.2 安装nginx</h3>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>apt-get install nginx</code></pre></figure>
+
+<p>nginx的几个信息：</p>
+
+<blockquote>
+  <p>配置路径：/etc/nginx
+www路径：/var/www/html
+日志：/var/log/nginx</p>
+</blockquote>
+
+<h3 id="33-安装证书">3.3 安装证书</h3>
+<p>参考这篇文章：<a href="https://ruby-china.org/topics/31983">使用 acme.sh 给 Nginx 安装 Let’ s Encrypt 提供的免费 SSL 证书</a></p>
+
+<p>安装 acme.sh 命令：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>curl https://get.acme.sh <span class="p">|</span> sh
+<span class="lineno">2 </span><span class="nb">source</span> ~/.bashrc</code></pre></figure>
+
+<p>申请证书：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>acme.sh --issue -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> -w /var/www/html</code></pre></figure>
+
+<blockquote>
+  <p>root@vultr:~/opt# acme.sh –issue -d ${domain} -w /var/www/html
+[Tue Oct 24 09:00:39 UTC 2017] Registering account
+[Tue Oct 24 09:00:40 UTC 2017] Registered
+[Tue Oct 24 09:00:40 UTC 2017] Update account tos info success.
+[Tue Oct 24 09:00:40 UTC 2017] ACCOUNT_THUMBPRINT=’…’
+[Tue Oct 24 09:00:40 UTC 2017] Creating domain key
+[Tue Oct 24 09:00:40 UTC 2017] The domain key is here: /root/.acme.sh/${domain}/${domain}.key
+[Tue Oct 24 09:00:40 UTC 2017] Single domain=’${domain}’
+[Tue Oct 24 09:00:40 UTC 2017] Getting domain auth token for each domain
+[Tue Oct 24 09:00:40 UTC 2017] Getting webroot for domain=’${domain}’
+[Tue Oct 24 09:00:40 UTC 2017] Getting new-authz for domain=’${domain}’
+[Tue Oct 24 09:00:41 UTC 2017] The new-authz request is ok.
+[Tue Oct 24 09:00:41 UTC 2017] Verifying:${domain}
+[Tue Oct 24 09:00:44 UTC 2017] Success
+[Tue Oct 24 09:00:44 UTC 2017] Verify finished, start to sign.
+/root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input
+[Tue Oct 24 09:00:45 UTC 2017] Cert success.
+—–BEGIN CERTIFICATE—–
+…
+—–END CERTIFICATE—–
+[Tue Oct 24 09:00:45 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer
+[Tue Oct 24 09:00:45 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key
+[Tue Oct 24 09:00:45 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer
+[Tue Oct 24 09:00:45 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer</p>
+</blockquote>
+
+<p>安装证书：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>acme.sh --installcert -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> <span class="se">\</span>
+<span class="lineno">2 </span>        --keypath       /var/www/ssl/<span class="si">${</span><span class="nv">domain</span><span class="si">}</span>.key  <span class="se">\</span>
+<span class="lineno">3 </span>        --fullchainpath /var/www/ssl/<span class="si">${</span><span class="nv">domain</span><span class="si">}</span>.key.pem <span class="se">\</span>
+<span class="lineno">4 </span>        --reloadcmd     <span class="s2">&quot;sudo service nginx force-reload&quot;</span></code></pre></figure>
+
+<blockquote>
+  <p>[Tue Oct 24 09:23:54 UTC 2017] Installing key to:/var/www/ssl/${domain}.key
+[Tue Oct 24 09:23:54 UTC 2017] Installing full chain to:/var/www/ssl/${domain}.key.pem
+[Tue Oct 24 09:23:54 UTC 2017] Run reload cmd: sudo service nginx force-reload
+[Tue Oct 24 09:23:54 UTC 2017] Reload success</p>
+</blockquote>
+
+<p>生成 dhparam.pem 文件：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>openssl dhparam -out /var/www/ssl/dhparam.pem <span class="m">2048</span></code></pre></figure>
+
+<p>修改 Nginx 配置：</p>
+
+<pre><code>http {
+    # 新增
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    # 兼容其他老浏览器的 ssl_ciphers 设置请访问 https://wiki.mozilla.org/Security/Server_Side_TLS
+
+    server {
+        listen 80 default_server;
+        # 新增
+        listen 443 ssl;
+        ssl_certificate         /var/www/ssl/${domain}.key.pem;
+        ssl_certificate_key     /var/www/ssl/${domain}.key;
+        # ssl_dhparam 
+        ssl_dhparam             /var/www/ssl/dhparam.pem;
+
+        # 其他省略
+    }
+}
+</code></pre>
+
+<p>使用检测工具查看安全评级：<code>https://www.ssllabs.com/ssltest/analyze.html?d=${domain}</code></p>
+
+<p>使用 crontab 命令查看 acme.sh 添加的证书刷新脚本：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>crontab -l</code></pre></figure>
+
+<p>并手动尝试执行，看下结果：</p>
+
+<blockquote>
+  <p>[Tue Oct 24 09:47:37 UTC 2017] ===Starting cron===
+[Tue Oct 24 09:47:37 UTC 2017] Renew: ‘${domain}’
+[Tue Oct 24 09:47:37 UTC 2017] Skip, Next renewal time is: Sat Dec 23 09:00:45 UTC 2017
+[Tue Oct 24 09:47:37 UTC 2017] Add ‘–force’ to force to renew.
+[Tue Oct 24 09:47:37 UTC 2017] Skipped ${domain}
+[Tue Oct 24 09:47:37 UTC 2017] ===End cron===</p>
+</blockquote>
+
+<p>时间没到命令并不会直接刷新证书，要尝试的话，可以添加 –force 来强制执行：</p>
+
+<blockquote>
+  <p>[Tue Oct 24 09:48:45 UTC 2017] ===Starting cron===
+[Tue Oct 24 09:48:45 UTC 2017] Renew: ‘${domain}’
+[Tue Oct 24 09:48:45 UTC 2017] Single domain=’${domain}’
+[Tue Oct 24 09:48:45 UTC 2017] Getting domain auth token for each domain
+[Tue Oct 24 09:48:45 UTC 2017] Getting webroot for domain=’${domain}’
+[Tue Oct 24 09:48:45 UTC 2017] Getting new-authz for domain=’${domain}’
+[Tue Oct 24 09:48:46 UTC 2017] The new-authz request is ok.
+[Tue Oct 24 09:48:46 UTC 2017] ${domain} is already verified, skip http-01.
+[Tue Oct 24 09:48:46 UTC 2017] Verify finished, start to sign.
+/root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input
+[Tue Oct 24 09:48:47 UTC 2017] Cert success.
+—–BEGIN CERTIFICATE—–
+…
+—–END CERTIFICATE—–
+[Tue Oct 24 09:48:47 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer
+[Tue Oct 24 09:48:47 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key
+[Tue Oct 24 09:48:47 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer
+[Tue Oct 24 09:48:47 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer
+[Tue Oct 24 09:48:47 UTC 2017] Installing key to:/var/www/ssl/${domain}.key
+[Tue Oct 24 09:48:47 UTC 2017] Installing full chain to:/var/www/ssl/${domain}.key.pem
+[Tue Oct 24 09:48:47 UTC 2017] Run reload cmd: sudo service nginx force-reload
+[Tue Oct 24 09:48:47 UTC 2017] Reload success
+[Tue Oct 24 09:48:47 UTC 2017] ===End cron===</p>
+</blockquote>
+
+<h3 id="34-配置v2ray服务器">3.4 配置V2Ray服务器</h3>
+<p>编辑配置文件<code>/etc/v2ray/config.json</code>：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="p">{</span>
+<span class="lineno"> 2 </span>    <span class="s2">&quot;log&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno"> 3 </span>        <span class="s2">&quot;access&quot;</span><span class="o">:</span> <span class="s2">&quot;/var/log/v2ray/access.log&quot;</span><span class="p">,</span>
+<span class="lineno"> 4 </span>        <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="s2">&quot;/var/log/v2ray/error.log&quot;</span><span class="p">,</span>
+<span class="lineno"> 5 </span>        <span class="s2">&quot;loglevel&quot;</span><span class="o">:</span> <span class="s2">&quot;warning&quot;</span>
+<span class="lineno"> 6 </span>    <span class="p">},</span>
+<span class="lineno"> 7 </span>    <span class="s2">&quot;inbound&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno"> 8 </span>        <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">10000</span><span class="p">,</span>
+<span class="lineno"> 9 </span>        <span class="s2">&quot;listen&quot;</span><span class="o">:</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+<span class="lineno">10 </span>        <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;vmess&quot;</span><span class="p">,</span>
+<span class="lineno">11 </span>        <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">12 </span>            <span class="s2">&quot;clients&quot;</span><span class="o">:</span> <span class="p">[</span>
+<span class="lineno">13 </span>                <span class="p">{</span>
+<span class="lineno">14 </span>                    <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;${UUID}&quot;</span><span class="p">,</span>
+<span class="lineno">15 </span>                    <span class="s2">&quot;level&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="lineno">16 </span>                    <span class="s2">&quot;alterId&quot;</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+<span class="lineno">17 </span>                    <span class="s2">&quot;security&quot;</span><span class="o">:</span> <span class="s2">&quot;aes-128-cfb&quot;</span>
+<span class="lineno">18 </span>                <span class="p">}</span>
+<span class="lineno">19 </span>            <span class="p">]</span>
+<span class="lineno">20 </span>        <span class="p">},</span>
+<span class="lineno">21 </span>        <span class="s2">&quot;streamSettings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">22 </span>            <span class="s2">&quot;network&quot;</span><span class="o">:</span> <span class="s2">&quot;ws&quot;</span><span class="p">,</span>
+<span class="lineno">23 </span>            <span class="s2">&quot;security&quot;</span><span class="o">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+<span class="lineno">24 </span>            <span class="s2">&quot;wsSettings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">25 </span>                <span class="s2">&quot;connectionReuse&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+<span class="lineno">26 </span>                <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="s2">&quot;/serv/&quot;</span>
+<span class="lineno">27 </span>            <span class="p">}</span>
+<span class="lineno">28 </span>        <span class="p">}</span>
+<span class="lineno">29 </span>    <span class="p">},</span>
+<span class="lineno">30 </span>    <span class="s2">&quot;outbound&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">31 </span>        <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;freedom&quot;</span><span class="p">,</span>
+<span class="lineno">32 </span>        <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{}</span>
+<span class="lineno">33 </span>    <span class="p">}</span>
+<span class="lineno">34 </span><span class="p">}</span></code></pre></figure>
+
+<p>使用命令启动v2ray：</p>
+
+<blockquote>
+  <p>service v2ray start</p>
+</blockquote>
+
+<h3 id="35-配置nginx">3.5 配置Nginx</h3>
+<p>在之前安装HTTPS更改过的nginx配置中再添加一个location：</p>
+
+<pre><code>location /serv/ {
+    proxy_redirect off;
+    proxy_pass http://127.0.0.1:10000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $http_host;
+}
+</code></pre>
+
+<p>重启nginx：</p>
+
+<blockquote>
+  <p>service nginx restart</p>
+</blockquote>
+
+<h3 id="36-配置本地v2ray">3.6 配置本地V2Ray</h3>
+<p>仍旧编辑config.json文件：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="p">{</span>
+<span class="lineno"> 2 </span>    <span class="s2">&quot;log&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno"> 3 </span>        <span class="s2">&quot;access&quot;</span><span class="o">:</span> <span class="s2">&quot;.../log/access.log&quot;</span><span class="p">,</span>
+<span class="lineno"> 4 </span>        <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="s2">&quot;.../log/error.log&quot;</span><span class="p">,</span>
+<span class="lineno"> 5 </span>        <span class="s2">&quot;loglevel&quot;</span><span class="o">:</span> <span class="s2">&quot;warning&quot;</span>
+<span class="lineno"> 6 </span>    <span class="p">},</span>
+<span class="lineno"> 7 </span>    <span class="s2">&quot;inbound&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno"> 8 </span>        <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">10801</span><span class="p">,</span>
+<span class="lineno"> 9 </span>        <span class="s2">&quot;listen&quot;</span><span class="o">:</span> <span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span>
+<span class="lineno">10 </span>        <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;socks&quot;</span><span class="p">,</span>
+<span class="lineno">11 </span>        <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">12 </span>            <span class="s2">&quot;auth&quot;</span><span class="o">:</span> <span class="s2">&quot;noauth&quot;</span><span class="p">,</span>
+<span class="lineno">13 </span>            <span class="s2">&quot;udp&quot;</span><span class="o">:</span> <span class="kc">false</span>
+<span class="lineno">14 </span>        <span class="p">}</span>
+<span class="lineno">15 </span>    <span class="p">},</span>
+<span class="lineno">16 </span>    <span class="s2">&quot;outbound&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">17 </span>        <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;vmess&quot;</span><span class="p">,</span>
+<span class="lineno">18 </span>        <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">19 </span>            <span class="s2">&quot;vnext&quot;</span><span class="o">:</span> <span class="p">[</span>
+<span class="lineno">20 </span>                <span class="p">{</span>
+<span class="lineno">21 </span>                    <span class="s2">&quot;address&quot;</span><span class="o">:</span> <span class="s2">&quot;${domain}&quot;</span><span class="p">,</span>
+<span class="lineno">22 </span>                    <span class="s2">&quot;port&quot;</span><span class="o">:</span> <span class="mi">443</span><span class="p">,</span>
+<span class="lineno">23 </span>                    <span class="s2">&quot;users&quot;</span><span class="o">:</span> <span class="p">[</span>
+<span class="lineno">24 </span>                        <span class="p">{</span>
+<span class="lineno">25 </span>                            <span class="s2">&quot;id&quot;</span><span class="o">:</span> <span class="s2">&quot;${UUID}&quot;</span><span class="p">,</span>
+<span class="lineno">26 </span>                            <span class="s2">&quot;level&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="lineno">27 </span>                            <span class="s2">&quot;alterId&quot;</span><span class="o">:</span> <span class="mi">64</span><span class="p">,</span>
+<span class="lineno">28 </span>                            <span class="s2">&quot;security&quot;</span><span class="o">:</span> <span class="s2">&quot;aes-128-cfb&quot;</span>
+<span class="lineno">29 </span>                        <span class="p">}</span>
+<span class="lineno">30 </span>                    <span class="p">]</span>
+<span class="lineno">31 </span>                <span class="p">}</span>
+<span class="lineno">32 </span>            <span class="p">]</span>
+<span class="lineno">33 </span>        <span class="p">},</span>
+<span class="lineno">34 </span>        <span class="s2">&quot;streamSettings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">35 </span>            <span class="s2">&quot;network&quot;</span><span class="o">:</span> <span class="s2">&quot;ws&quot;</span><span class="p">,</span>
+<span class="lineno">36 </span>            <span class="s2">&quot;security&quot;</span><span class="o">:</span> <span class="s2">&quot;tls&quot;</span><span class="p">,</span>
+<span class="lineno">37 </span>            <span class="s2">&quot;wsSettings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">38 </span>                <span class="s2">&quot;connectionReuse&quot;</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+<span class="lineno">39 </span>                <span class="s2">&quot;path&quot;</span><span class="o">:</span> <span class="s2">&quot;/serv/&quot;</span>
+<span class="lineno">40 </span>            <span class="p">},</span>
+<span class="lineno">41 </span>            <span class="s2">&quot;tlsSettings&quot;</span><span class="o">:</span> <span class="p">{</span>
+<span class="lineno">42 </span>                <span class="s2">&quot;serverName&quot;</span><span class="o">:</span> <span class="s2">&quot;${domain}&quot;</span><span class="p">,</span>
+<span class="lineno">43 </span>                <span class="s2">&quot;allowInsecure&quot;</span><span class="o">:</span> <span class="kc">false</span>
+<span class="lineno">44 </span>            <span class="p">}</span>
+<span class="lineno">45 </span>        <span class="p">}</span>
+<span class="lineno">46 </span>    <span class="p">}</span>
+<span class="lineno">47 </span><span class="p">}</span></code></pre></figure>
+
+<p>启动本地的v2ray：</p>
+
+<blockquote>
+  <p>v2ray -config …/config.json</p>
+</blockquote>
+
+<h3 id="37-制作mac启动文件">3.7 制作MAC启动文件</h3>
+<p>vim org.v2ray.macos.plist</p>
+
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span></span><span class="lineno"> 1 </span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="lineno"> 2 </span><span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
+<span class="lineno"> 3 </span><span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
+<span class="lineno"> 4 </span><span class="nt">&lt;dict&gt;</span>
+<span class="lineno"> 5 </span>	<span class="nt">&lt;key&gt;</span>GroupName<span class="nt">&lt;/key&gt;</span>
+<span class="lineno"> 6 </span>	<span class="nt">&lt;string&gt;</span>wheel<span class="nt">&lt;/string&gt;</span>
+<span class="lineno"> 7 </span>	<span class="nt">&lt;key&gt;</span>KeepAlive<span class="nt">&lt;/key&gt;</span>
+<span class="lineno"> 8 </span>	<span class="nt">&lt;dict&gt;</span>
+<span class="lineno"> 9 </span>		<span class="nt">&lt;key&gt;</span>SuccessfulExit<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">10 </span>		<span class="nt">&lt;false/&gt;</span>
+<span class="lineno">11 </span>	<span class="nt">&lt;/dict&gt;</span>
+<span class="lineno">12 </span>	<span class="nt">&lt;key&gt;</span>Label<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">13 </span>	<span class="nt">&lt;string&gt;</span>org.v2ray.macos<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">14 </span>	<span class="nt">&lt;key&gt;</span>WorkingDirectory<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">15 </span>	<span class="nt">&lt;string&gt;</span>.../V2Ray/<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">16 </span>	<span class="nt">&lt;key&gt;</span>ProgramArguments<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">17 </span>	<span class="nt">&lt;array&gt;</span>
+<span class="lineno">18 </span>		<span class="nt">&lt;string&gt;</span>.../V2Ray/v2ray/v2ray<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">19 </span>		<span class="nt">&lt;string&gt;</span>-config<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">20 </span>		<span class="nt">&lt;string&gt;</span>config/config.json<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">21 </span>	<span class="nt">&lt;/array&gt;</span>
+<span class="lineno">22 </span>	<span class="nt">&lt;key&gt;</span>RunAtLoad<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">23 </span>	<span class="nt">&lt;true/&gt;</span>
+<span class="lineno">24 </span>	<span class="nt">&lt;key&gt;</span>StandardErrorPath<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">25 </span>	<span class="nt">&lt;string&gt;</span>.../V2Ray/log/error.log<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">26 </span>	<span class="nt">&lt;key&gt;</span>StandardOutPath<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">27 </span>	<span class="nt">&lt;string&gt;</span>.../V2Ray/log/access.log<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">28 </span>	<span class="nt">&lt;key&gt;</span>UserName<span class="nt">&lt;/key&gt;</span>
+<span class="lineno">29 </span>	<span class="nt">&lt;string&gt;</span>root<span class="nt">&lt;/string&gt;</span>
+<span class="lineno">30 </span><span class="nt">&lt;/dict&gt;</span>
+<span class="lineno">31 </span><span class="nt">&lt;/plist&gt;</span></code></pre></figure>
+
+<p>MAC启动</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>vim /Library/LaunchDaemons/org.v2ray.macos.plist
+<span class="lineno">2 </span>sudo launchctl load ./org.v2ray.macos.plist</code></pre></figure>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/10/v2ray/">V2Ray安装教程</a></li>
+    
+    <li><a href="/2017/10/mobile-uuid/">关于移动设备唯一标识生成</a></li>
+    
+    <li><a href="/2017/09/jekyll-installation/">Jekyll的安装</a></li>
+    
+    <li><a href="/2017/09/react-native-navigation/">ReactNative的Navigation</a></li>
+    
+    <li><a href="/2017/06/vps/">自建SS安装</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2017/10/v2ray/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

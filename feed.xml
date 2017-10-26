@@ -7,6 +7,346 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>V2Ray安装教程</title>
+				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;今年的形势非常严峻，年中的时候未雨绸缪准备了下55R，结果没多久就不行了，现在明显是被墙嗅探到，使用几分钟之后就IP无法ping通，停止使用后IP恢复。鉴于55的作者及55R的作者相继仙隐，放弃这个软件是比较正确的选择。找了一圈，看来只有v2ray还能看一看。&lt;/p&gt;
+
+&lt;h2 id=&quot;1-v2ray&quot;&gt;1. V2Ray&lt;/h2&gt;
+&lt;p&gt;几个信息来源这里简单列下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.v2ray.com/&quot;&gt;V2Ray 用户手册&lt;/a&gt;：官方手册，基本上什么都有了&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://toutyrater.github.io/&quot;&gt;V2Ray 配置指南&lt;/a&gt;：一篇第三方的配置指南，可以一看，不过更新一般有点滞后，可以作为参考&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://htfy96.github.io/v2ray-config-gen&quot;&gt;V2Ray配置生成器&lt;/a&gt;：第三方的配置生成辅助工具，新手可以用一下&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;文章：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://vinga.fun/v2ray/&quot;&gt;V2Ray安全混淆教程&lt;/a&gt;：用的工具有点小众，作为程序员可以不需要这个工具，拓扑结构可以看下&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.sairai.bid/v2-memo/&quot;&gt;V2Ray安装使用手记&lt;/a&gt;：比较通俗易懂的一篇文章，推荐&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://toutyrater.github.io/advanced/websocket.html&quot;&gt;WebSocket&lt;/a&gt;：其实就是列表第一篇教程的官方推荐三方教程，所以看这篇就够&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;2-拓扑结构&quot;&gt;2. 拓扑结构&lt;/h2&gt;
+
+&lt;h2 id=&quot;3-安装&quot;&gt;3. 安装&lt;/h2&gt;
+&lt;h3 id=&quot;31-v2ray本体&quot;&gt;3.1 V2Ray本体&lt;/h3&gt;
+&lt;p&gt;官方有提供安装脚本，直接使用即可：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;bash &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;curl -L -s https://install.direct/go.sh&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;几个位置信息：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;bin命令：/usr/bin/v2ray/v2ray
+配置文件：/etc/v2ray/config.json
+service：/lib/systemd/system/v2ray.service
+日志指定是放在配置文件里的：log.access 和 log.error，一般放在：/var/log/v2ray/access.log 和 /var/log/v2ray/error.log&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;32-安装nginx&quot;&gt;3.2 安装nginx&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;apt-get install nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;nginx的几个信息：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;配置路径：/etc/nginx
+www路径：/var/www/html
+日志：/var/log/nginx&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;33-安装证书&quot;&gt;3.3 安装证书&lt;/h3&gt;
+&lt;p&gt;参考这篇文章：&lt;a href=&quot;https://ruby-china.org/topics/31983&quot;&gt;使用 acme.sh 给 Nginx 安装 Let’ s Encrypt 提供的免费 SSL 证书&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;安装 acme.sh 命令：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;curl https://get.acme.sh &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; sh
+&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;申请证书：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;acme.sh --issue -d &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; -w /var/www/html&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;root@vultr:~/opt# acme.sh –issue -d ${domain} -w /var/www/html
+[Tue Oct 24 09:00:39 UTC 2017] Registering account
+[Tue Oct 24 09:00:40 UTC 2017] Registered
+[Tue Oct 24 09:00:40 UTC 2017] Update account tos info success.
+[Tue Oct 24 09:00:40 UTC 2017] ACCOUNT_THUMBPRINT=’…’
+[Tue Oct 24 09:00:40 UTC 2017] Creating domain key
+[Tue Oct 24 09:00:40 UTC 2017] The domain key is here: /root/.acme.sh/${domain}/${domain}.key
+[Tue Oct 24 09:00:40 UTC 2017] Single domain=’${domain}’
+[Tue Oct 24 09:00:40 UTC 2017] Getting domain auth token for each domain
+[Tue Oct 24 09:00:40 UTC 2017] Getting webroot for domain=’${domain}’
+[Tue Oct 24 09:00:40 UTC 2017] Getting new-authz for domain=’${domain}’
+[Tue Oct 24 09:00:41 UTC 2017] The new-authz request is ok.
+[Tue Oct 24 09:00:41 UTC 2017] Verifying:${domain}
+[Tue Oct 24 09:00:44 UTC 2017] Success
+[Tue Oct 24 09:00:44 UTC 2017] Verify finished, start to sign.
+/root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input
+[Tue Oct 24 09:00:45 UTC 2017] Cert success.
+—–BEGIN CERTIFICATE—–
+…
+—–END CERTIFICATE—–
+[Tue Oct 24 09:00:45 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer
+[Tue Oct 24 09:00:45 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key
+[Tue Oct 24 09:00:45 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer
+[Tue Oct 24 09:00:45 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;安装证书：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;acme.sh --installcert -d &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;        --keypath       /var/www/ssl/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;.key  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;3 &lt;/span&gt;        --fullchainpath /var/www/ssl/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;.key.pem &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;4 &lt;/span&gt;        --reloadcmd     &lt;span class=&quot;s2&quot;&gt;&amp;quot;sudo service nginx force-reload&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[Tue Oct 24 09:23:54 UTC 2017] Installing key to:/var/www/ssl/${domain}.key
+[Tue Oct 24 09:23:54 UTC 2017] Installing full chain to:/var/www/ssl/${domain}.key.pem
+[Tue Oct 24 09:23:54 UTC 2017] Run reload cmd: sudo service nginx force-reload
+[Tue Oct 24 09:23:54 UTC 2017] Reload success&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;生成 dhparam.pem 文件：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;openssl dhparam -out /var/www/ssl/dhparam.pem &lt;span class=&quot;m&quot;&gt;2048&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;修改 Nginx 配置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;http {
+    # 新增
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_prefer_server_ciphers on;
+    # 兼容其他老浏览器的 ssl_ciphers 设置请访问 https://wiki.mozilla.org/Security/Server_Side_TLS
+
+    server {
+        listen 80 default_server;
+        # 新增
+        listen 443 ssl;
+        ssl_certificate         /var/www/ssl/${domain}.key.pem;
+        ssl_certificate_key     /var/www/ssl/${domain}.key;
+        # ssl_dhparam 
+        ssl_dhparam             /var/www/ssl/dhparam.pem;
+
+        # 其他省略
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用检测工具查看安全评级：&lt;code&gt;https://www.ssllabs.com/ssltest/analyze.html?d=${domain}&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;使用 crontab 命令查看 acme.sh 添加的证书刷新脚本：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;crontab -l&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;并手动尝试执行，看下结果：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[Tue Oct 24 09:47:37 UTC 2017] ===Starting cron===
+[Tue Oct 24 09:47:37 UTC 2017] Renew: ‘${domain}’
+[Tue Oct 24 09:47:37 UTC 2017] Skip, Next renewal time is: Sat Dec 23 09:00:45 UTC 2017
+[Tue Oct 24 09:47:37 UTC 2017] Add ‘–force’ to force to renew.
+[Tue Oct 24 09:47:37 UTC 2017] Skipped ${domain}
+[Tue Oct 24 09:47:37 UTC 2017] ===End cron===&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;时间没到命令并不会直接刷新证书，要尝试的话，可以添加 –force 来强制执行：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;[Tue Oct 24 09:48:45 UTC 2017] ===Starting cron===
+[Tue Oct 24 09:48:45 UTC 2017] Renew: ‘${domain}’
+[Tue Oct 24 09:48:45 UTC 2017] Single domain=’${domain}’
+[Tue Oct 24 09:48:45 UTC 2017] Getting domain auth token for each domain
+[Tue Oct 24 09:48:45 UTC 2017] Getting webroot for domain=’${domain}’
+[Tue Oct 24 09:48:45 UTC 2017] Getting new-authz for domain=’${domain}’
+[Tue Oct 24 09:48:46 UTC 2017] The new-authz request is ok.
+[Tue Oct 24 09:48:46 UTC 2017] ${domain} is already verified, skip http-01.
+[Tue Oct 24 09:48:46 UTC 2017] Verify finished, start to sign.
+/root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input
+[Tue Oct 24 09:48:47 UTC 2017] Cert success.
+—–BEGIN CERTIFICATE—–
+…
+—–END CERTIFICATE—–
+[Tue Oct 24 09:48:47 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer
+[Tue Oct 24 09:48:47 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key
+[Tue Oct 24 09:48:47 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer
+[Tue Oct 24 09:48:47 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer
+[Tue Oct 24 09:48:47 UTC 2017] Installing key to:/var/www/ssl/${domain}.key
+[Tue Oct 24 09:48:47 UTC 2017] Installing full chain to:/var/www/ssl/${domain}.key.pem
+[Tue Oct 24 09:48:47 UTC 2017] Run reload cmd: sudo service nginx force-reload
+[Tue Oct 24 09:48:47 UTC 2017] Reload success
+[Tue Oct 24 09:48:47 UTC 2017] ===End cron===&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;34-配置v2ray服务器&quot;&gt;3.4 配置V2Ray服务器&lt;/h3&gt;
+&lt;p&gt;编辑配置文件&lt;code&gt;/etc/v2ray/config.json&lt;/code&gt;：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt; 1 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2 &lt;/span&gt;    &lt;span class=&quot;s2&quot;&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 3 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;access&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/var/log/v2ray/access.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;error&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/var/log/v2ray/error.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 5 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;loglevel&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;warning&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 6 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7 &lt;/span&gt;    &lt;span class=&quot;s2&quot;&gt;&amp;quot;inbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 8 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;127.0.0.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;10 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;vmess&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;11 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;12 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;clients&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;13 &lt;/span&gt;                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;14 &lt;/span&gt;                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${UUID}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;15 &lt;/span&gt;                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;16 &lt;/span&gt;                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;alterId&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;17 &lt;/span&gt;                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;aes-128-cfb&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;18 &lt;/span&gt;                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;19 &lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;20 &lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;21 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;streamSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;22 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;network&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;ws&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;23 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;auto&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;24 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;wsSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;25 &lt;/span&gt;                &lt;span class=&quot;s2&quot;&gt;&amp;quot;connectionReuse&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;26 &lt;/span&gt;                &lt;span class=&quot;s2&quot;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/serv/&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;27 &lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;28 &lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;29 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;30 &lt;/span&gt;    &lt;span class=&quot;s2&quot;&gt;&amp;quot;outbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;31 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;freedom&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;32 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;33 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;34 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;使用命令启动v2ray：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;service v2ray start&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;35-配置nginx&quot;&gt;3.5 配置Nginx&lt;/h3&gt;
+&lt;p&gt;在之前安装HTTPS更改过的nginx配置中再添加一个location：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;location /serv/ {
+    proxy_redirect off;
+    proxy_pass http://127.0.0.1:10000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection &quot;upgrade&quot;;
+    proxy_set_header Host $http_host;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;重启nginx：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;service nginx restart&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;36-配置本地v2ray&quot;&gt;3.6 配置本地V2Ray&lt;/h3&gt;
+&lt;p&gt;仍旧编辑config.json文件：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt; 1 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2 &lt;/span&gt;    &lt;span class=&quot;s2&quot;&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 3 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;access&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;.../log/access.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;error&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;.../log/error.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 5 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;loglevel&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;warning&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 6 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7 &lt;/span&gt;    &lt;span class=&quot;s2&quot;&gt;&amp;quot;inbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 8 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10801&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;127.0.0.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;10 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;socks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;11 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;12 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;auth&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;noauth&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;13 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;udp&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;14 &lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;15 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;16 &lt;/span&gt;    &lt;span class=&quot;s2&quot;&gt;&amp;quot;outbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;17 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;vmess&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;18 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;19 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;vnext&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;20 &lt;/span&gt;                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;21 &lt;/span&gt;                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${domain}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;22 &lt;/span&gt;                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;443&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;23 &lt;/span&gt;                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;users&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;24 &lt;/span&gt;                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;25 &lt;/span&gt;                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${UUID}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;26 &lt;/span&gt;                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;27 &lt;/span&gt;                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;alterId&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;28 &lt;/span&gt;                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;aes-128-cfb&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;29 &lt;/span&gt;                        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;30 &lt;/span&gt;                    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;31 &lt;/span&gt;                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;32 &lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;33 &lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;34 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;streamSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;35 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;network&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;ws&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;36 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;tls&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;37 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;wsSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;38 &lt;/span&gt;                &lt;span class=&quot;s2&quot;&gt;&amp;quot;connectionReuse&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;39 &lt;/span&gt;                &lt;span class=&quot;s2&quot;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/serv/&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;40 &lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;41 &lt;/span&gt;            &lt;span class=&quot;s2&quot;&gt;&amp;quot;tlsSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;42 &lt;/span&gt;                &lt;span class=&quot;s2&quot;&gt;&amp;quot;serverName&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${domain}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;43 &lt;/span&gt;                &lt;span class=&quot;s2&quot;&gt;&amp;quot;allowInsecure&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;44 &lt;/span&gt;            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;45 &lt;/span&gt;        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;46 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;47 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;启动本地的v2ray：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;v2ray -config …/config.json&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h3 id=&quot;37-制作mac启动文件&quot;&gt;3.7 制作MAC启动文件&lt;/h3&gt;
+&lt;p&gt;vim org.v2ray.macos.plist&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt; 1 &lt;/span&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2 &lt;/span&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;quot;-//Apple//DTD PLIST 1.0//EN&amp;quot; &amp;quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;quot;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 3 &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;plist&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;version=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4 &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 5 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;GroupName&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 6 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;wheel&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;KeepAlive&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 8 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9 &lt;/span&gt;		&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;SuccessfulExit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;10 &lt;/span&gt;		&lt;span class=&quot;nt&quot;&gt;&amp;lt;false/&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;11 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;12 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Label&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;13 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;org.v2ray.macos&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;14 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;WorkingDirectory&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;15 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;16 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;ProgramArguments&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;17 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;18 &lt;/span&gt;		&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/v2ray/v2ray&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;19 &lt;/span&gt;		&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;-config&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;20 &lt;/span&gt;		&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;config/config.json&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;21 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;22 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;RunAtLoad&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;23 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;24 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;StandardErrorPath&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;25 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/log/error.log&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;26 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;StandardOutPath&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;27 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/log/access.log&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;28 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;UserName&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;29 &lt;/span&gt;	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;root&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;30 &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;31 &lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;MAC启动&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;vim /Library/LaunchDaemons/org.v2ray.macos.plist
+&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;sudo launchctl load ./org.v2ray.macos.plist&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+</description>
+				<pubDate>Mon, 23 Oct 2017 12:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/10/v2ray/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/10/v2ray/</guid>
+			</item>
+		
+			<item>
 				<title>关于移动设备唯一标识生成</title>
 				<description>&lt;h1 id=&quot;关于移动设备唯一标识生成&quot;&gt;关于移动设备唯一标识生成&lt;/h1&gt;
 
@@ -1291,44 +1631,6 @@ Android：&lt;code&gt;assets/bin/Data/&lt;/code&gt;
 				<pubDate>Tue, 22 Nov 2016 14:37:39 +0800</pubDate>
 				<link>https://xenojoshua.com/2016/11/mobile-reverse-code-engineering/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2016/11/mobile-reverse-code-engineering/</guid>
-			</item>
-		
-			<item>
-				<title>手环比较 - 小米 &amp; Jawbone Up</title>
-				<description>&lt;p&gt;好久没写和技术无关的文章了。手环我算是比较早的吃螃蟹的人，2013年的时候我就水货购买了一支Jawbone UP2手环，佩戴了大概3个多月的时间，然后它就故障了，囧。Jawbone的3个月算是比较有名的故事了，我不知道是品控还是什么问题，总是会有各种各样的故障。比如说无法充电，无法连接数据，等等。我当时是无法充电，插上之后直接没反应。之后这支UP2手环就被我弃置一旁了。&lt;/p&gt;
-&lt;p&gt;最近几天正好网上随便看看看到了小米手环，就买了一支随便玩玩，然后有了不少比较的经验，于是想要留点关于这两者之间的对比。&lt;/p&gt;
-&lt;p&gt;比较主要分为下面几部分：&lt;/p&gt;
-&lt;h2&gt;0. 易用性&lt;/h2&gt;
-&lt;p&gt;这点上先要申明一点，我买的Jawbone太老了，是UP2。这个版本的UP手环不支持蓝牙，易用性烂到了家，每次同步都需要脱手环，拔盖子，插入手机，烦躁。然后充电也要脱手环。而且UP手环为了监测的准确性，需要手动开启夜间模式，这点到了UP24手环还是没变。晚上睡觉的时候在睡着前记得要长按按钮，启动夜间模式。&lt;/p&gt;
-&lt;p&gt;所以易用性上来看小米手环完爆Jawbone UP手环，即便是型号24。小米的手环支持蓝牙，同步数据无需卸下手环。晚上睡觉不需要切换开关，直接就OK。&lt;/p&gt;
-&lt;h2&gt;1. 睡眠监测&lt;/h2&gt;
-&lt;p&gt;上面说到了UP手环需要开启夜间模式，启动其特色的MotionX监测，对你夜间的睡眠进行监测，并给与精确的反馈。小米在这点上差远了，虽然其易用性相当棒，不用手动启动track，但是精确性上不能和Jawbone UP比。观察就可以发现，小米记录的入睡时长很短，而我体感上是很久才睡着的。而且中间醒了几次，小米完全没监测到。我估计小米手环的睡眠监测就是手环（手）的移动频率进行简单的换算，其中应该没有进行脏数据的过滤。&lt;/p&gt;
-&lt;p&gt;见图：&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;/uploads/2015/03/IMG_0150.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8129&quot; alt=&quot;IMG_0150&quot; src=&quot;/assets/IMG_0150-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;/uploads/2015/03/IMG_0132.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8130&quot; alt=&quot;IMG_0132&quot; src=&quot;/assets/IMG_0132-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;2. 运动记步&lt;/h2&gt;
-&lt;p&gt;和上面的睡眠监测同理，小米手环的精确性上有很大问题，简单测试可以发现单纯的甩手臂就能有记步数据。完全没有对数据进行脏数据过滤。Jawbone UP这方面做得好多了。其实从手环的体型上就能看出来，小米的才那么点体积，Jawbone比它大得多了。Jawbone那么大一根基本上里面都是电池和传感器，小米的才那么一丁点大小。&lt;/p&gt;
-&lt;p&gt;见图：&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;/uploads/2015/03/IMG_0151.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8132&quot; alt=&quot;IMG_0151&quot; src=&quot;/assets/IMG_0151-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;/uploads/2015/03/IMG_0133.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8131&quot; alt=&quot;IMG_0133&quot; src=&quot;/assets/IMG_0133-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;3. 智能闹钟&lt;/h2&gt;
-&lt;p&gt;两者都有智能闹钟这个功能，监测闹钟设定时间点之前的X分钟内，使用者是否进入浅眠，如果进入浅眠，则发送几次轻度手环震动，尝试唤醒使用者。这样使用者就可以在浅眠中自然醒过来，无痛唤醒。&lt;/p&gt;
-&lt;p&gt;两者的这个功能我都尝试了，基本上还是准确的，也确实能做到无痛唤醒。体感上来说Jawbone的做得好些，手环的震动能力比较强，毕竟人家手环是一体的，不像小米只有一个核心。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;/uploads/2015/03/IMG_0152.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8135&quot; alt=&quot;IMG_0152&quot; src=&quot;/assets/IMG_0152-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;/uploads/2015/03/IMG_0135.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8136&quot; alt=&quot;IMG_0135&quot; src=&quot;/assets/IMG_0135-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;/uploads/2015/03/IMG_0136.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8137&quot; alt=&quot;IMG_0136&quot; src=&quot;/assets/IMG_0136-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;4. APP使用&lt;/h2&gt;
-&lt;p&gt;这方面大家看图就可以了，不用细说了。从界面美观，数据可读性，健身健康建议，等等，Jawbone都比小米做得好太多太多。&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;/uploads/2015/03/IMG_0131.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8133&quot; alt=&quot;IMG_0131&quot; src=&quot;/assets/IMG_0131-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;/uploads/2015/03/IMG_0134.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8134&quot; alt=&quot;IMG_0134&quot; src=&quot;/assets/IMG_0134-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt; &lt;a href=&quot;/uploads/2015/03/IMG_0137.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8138&quot; alt=&quot;IMG_0137&quot; src=&quot;/assets/IMG_0137-168x300.jpg&quot; width=&quot;168&quot; height=&quot;300&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;h2&gt;4. 佩戴&lt;/h2&gt;
-&lt;p&gt;Jawbone UP手环只要稍微一掰就能打开，很方便穿脱，而小米手环使用的是表带式的卡扣，用起来相当不方便。美观上来说，Jawbone也比小米的好太多太多。&lt;/p&gt;
-&lt;h2&gt;5. 总结&lt;/h2&gt;
-&lt;p&gt;先放个图：&lt;/p&gt;
-&lt;p&gt;蓝的是Jawbone UP2手环，黑的是小米手环：&lt;/p&gt;
-&lt;p&gt;&lt;a href=&quot;/uploads/2015/03/IMG_0140.jpg&quot;&gt;&lt;img class=&quot;alignnone size-medium wp-image-8139&quot; alt=&quot;IMG_0140&quot; src=&quot;/assets/IMG_0140-225x300.jpg&quot; width=&quot;225&quot; height=&quot;300&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;&amp;nbsp;&lt;/p&gt;
-&lt;p&gt;行文中大家不难看出我对Jawbone手环的推崇。易用性上差了一点点，毕竟晚上睡觉的时候还要记得切换状态。从UP24手环开始，蓝牙功能已经有了，手环的易用性基本上已经和主流的手环一致了。最主要的记录功能，外形，应用的易用性和美观性，Jawbone都完爆小米。有钱的土豪完全不需要纠结，直接用Jawbone的就好了。&lt;/p&gt;
-&lt;p&gt;小米的手环优势只有一个，不过这个足矣，就是价格。Jawbone的手环走美亚也至少800+的RMB，小米才80，整整不是一个数量级上的。相信很多用户其实也并不是非常关心到底记录的精确度有多少，能记录就好了。所以，不得不说，小米干得漂亮。。。&lt;/p&gt;
-</description>
-				<pubDate>Wed, 18 Mar 2015 13:24:39 +0800</pubDate>
-				<link>https://xenojoshua.com/2015/03/xiaomi-jawbone-up/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2015/03/xiaomi-jawbone-up/</guid>
 			</item>
 		
 	</channel>
