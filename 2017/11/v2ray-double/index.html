@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>为什么不用require而用include | Xenojoshua</title>
+  <title>V2Ray双服务器桥接 | Xenojoshua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://xenojoshua.com/js/jquery.min.js"></script>
   <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
   <script src="https://xenojoshua.com/js/header.js"></script>
   <script src="https://xenojoshua.com/js/toc.js"></script>
-  <link href="https://xenojoshua.com//2011/05/php-why-include-not-require/" rel="canonical" />
+  <link href="https://xenojoshua.com//2017/11/v2ray-double/" rel="canonical" />
   <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
@@ -89,21 +89,51 @@
         <div class="col-md-8">
           <div class="article">
             <div class="well">
-              <h1><a href="https://xenojoshua.com/2011/05/php-why-include-not-require/">为什么不用require而用include</a></h1>
+              <h1><a href="https://xenojoshua.com/2017/11/v2ray-double/">V2Ray双服务器桥接</a></h1>
               <div class="post-meta">
                 <div class="post-time">
                   <i class="fa fa-calendar"></i>
-                  <time>25 May 2011</time>
+                  <time>09 Nov 2017</time>
                 </div>
                 <ul>
                   
-                    <li><a href="https://xenojoshua.com/tag/PHP">PHP</a></li>
+                    <li><a href="https://xenojoshua.com/tag/VPS">VPS</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/V2Ray">V2Ray</a></li>
                   
                 </ul>
               </div>
               <div class="post-content">
                 <div id="toc" class="toc"></div>
-                <p>为什么不用require而用include呢？PHPer都应该知道，include是动态执行的，也就是说执行到include这个语句时才把文件包含进来，而require是预先执行的，也就是说，在php文件在执行前就已经把相关的文件包含进来，组成一个大文件，如果include改成require，当然也可以执行，但是这样并不会达到好的性能。</p>
+                <h2 id="0-前言">0. 前言</h2>
+<p>今年年中做的Vultr VPS上面一开始搭载了SSR，形势不好总得做个备份。结果装了没多久SSR作者就不维护了，再过了一阵就能被嗅探了（？）。之后没办法，只能找其他的方案，之前刚搞了一个SSL连接方案的V2Ray，但是结果被证实仍旧会被间断性IP封锁（干扰）。现在看来可能不是SSR和V2Ray的问题，毕竟现在客户端的V2Ray和服务器的Nginx是以SSL连接起来的，绝对不可能被探知访问内容。我现在猜测应该是Vultr服务器的IP地址的关系。</p>
+
+<p>所以到了这几个月就一直在想在墙内比较薄弱的地方找个跳板机。双11入手了一个腾讯香港的小水管VPS，于是想在上面也搞一套。</p>
+
+<h2 id="1-直连">1. 直连</h2>
+<p>第一套解决方案就是直连香港的服务器，然后从香港的服务器直接出墙访问外网。配置方案和之前那篇V2Ray的一致。</p>
+
+<h2 id="2-桥接">2. 桥接</h2>
+<p>为了将来可能到来的访问限制，我们需要做好准备，一旦有万一，需要阻止香港这边的服务器感知到访问的目标地址。也就是说香港那边的跳板机出去不能直接出墙访问外网，而是要到外部的某个代理节点。</p>
+
+<p>于是解决方案就很简单：</p>
+
+<ul>
+  <li>备好服务器两台</li>
+  <li>1台香港VPS</li>
+  <li>1台美西的VPS</li>
+  <li>香港的VPS上的V2Ray入口做Nginx SSL，出口连接美西VPS的Nginx SSL</li>
+  <li>美西的VPS上的V2Ray入口做Nginx SSL，出口直连外网网站</li>
+  <li>本地客户端直连香港的Nginx</li>
+</ul>
+
+<p>顺道香港机器上放两套V2Ray配置，桥接的一套，直连的一套。做了个shell脚本，方便在两种模式里切换。</p>
+
+<p>现在的情况无比恶劣，能想到的一定要做好预案，防止监控升级到时候闭耳塞听，啥都不能访问了。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
 
               </div>
               
@@ -201,7 +231,7 @@
 <script type="text/javascript">
   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
   var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
-  var disqus_identifier = "/2011/05/php-why-include-not-require/";
+  var disqus_identifier = "/2017/11/v2ray-double/";
 
   /* * * DON'T EDIT BELOW THIS LINE * * */
   (function() {

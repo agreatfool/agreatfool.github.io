@@ -7,6 +7,43 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>V2Ray双服务器桥接</title>
+				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;今年年中做的Vultr VPS上面一开始搭载了SSR，形势不好总得做个备份。结果装了没多久SSR作者就不维护了，再过了一阵就能被嗅探了（？）。之后没办法，只能找其他的方案，之前刚搞了一个SSL连接方案的V2Ray，但是结果被证实仍旧会被间断性IP封锁（干扰）。现在看来可能不是SSR和V2Ray的问题，毕竟现在客户端的V2Ray和服务器的Nginx是以SSL连接起来的，绝对不可能被探知访问内容。我现在猜测应该是Vultr服务器的IP地址的关系。&lt;/p&gt;
+
+&lt;p&gt;所以到了这几个月就一直在想在墙内比较薄弱的地方找个跳板机。双11入手了一个腾讯香港的小水管VPS，于是想在上面也搞一套。&lt;/p&gt;
+
+&lt;h2 id=&quot;1-直连&quot;&gt;1. 直连&lt;/h2&gt;
+&lt;p&gt;第一套解决方案就是直连香港的服务器，然后从香港的服务器直接出墙访问外网。配置方案和之前那篇V2Ray的一致。&lt;/p&gt;
+
+&lt;h2 id=&quot;2-桥接&quot;&gt;2. 桥接&lt;/h2&gt;
+&lt;p&gt;为了将来可能到来的访问限制，我们需要做好准备，一旦有万一，需要阻止香港这边的服务器感知到访问的目标地址。也就是说香港那边的跳板机出去不能直接出墙访问外网，而是要到外部的某个代理节点。&lt;/p&gt;
+
+&lt;p&gt;于是解决方案就很简单：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;备好服务器两台&lt;/li&gt;
+  &lt;li&gt;1台香港VPS&lt;/li&gt;
+  &lt;li&gt;1台美西的VPS&lt;/li&gt;
+  &lt;li&gt;香港的VPS上的V2Ray入口做Nginx SSL，出口连接美西VPS的Nginx SSL&lt;/li&gt;
+  &lt;li&gt;美西的VPS上的V2Ray入口做Nginx SSL，出口直连外网网站&lt;/li&gt;
+  &lt;li&gt;本地客户端直连香港的Nginx&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;顺道香港机器上放两套V2Ray配置，桥接的一套，直连的一套。做了个shell脚本，方便在两种模式里切换。&lt;/p&gt;
+
+&lt;p&gt;现在的情况无比恶劣，能想到的一定要做好预案，防止监控升级到时候闭耳塞听，啥都不能访问了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Thu, 09 Nov 2017 08:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/11/v2ray-double/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/11/v2ray-double/</guid>
+			</item>
+		
+			<item>
 				<title>ReactNative图片加载JS组件封装</title>
 				<description>&lt;h2 id=&quot;0-前言--问题&quot;&gt;0. 前言 &amp;amp; 问题&lt;/h2&gt;
 &lt;p&gt;图片加载在一款移动应用里应该算是很正常的需求，而带缓存的图片其实也是必须的。而RN自身是不带这样的工具库的，RN的Image标签实现是必须给一张做在移动应用代码库里的静态图片，或者直接使用一个URL进行网络下载。前者的这种做法就没办法进行网络资源热更新的解决方案，后者Image标签的实际表现非常糟糕，同一个页面的多次进入可能会进行巨量的图片下载，导致大量图片框什么东西都显示不出来。当然你可以说你可以对页面的显示堆栈做调整，多次重入不进行重新绘制，当然这也是一个解决方案，但你也不能否认多次重绘也是一个正当需求。&lt;/p&gt;
@@ -1270,258 +1307,6 @@ Store =&amp;gt; store.dispatch =&amp;gt; Action created from &lt;code&gt;ActionC
 				<pubDate>Tue, 14 Feb 2017 10:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/02/reactjs/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/02/reactjs/</guid>
-			</item>
-		
-			<item>
-				<title>TypeScript及VsCode学习笔记</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;TypeScript现在基本上是JS强类型超集语言的事实标准了，作为一个JS工作者，学习也是必须的事情。虽然之前因为使用上的便利性以及语言性能的问题，我一直都没有真的把TS放在心上，这次算是为了自己的职业突破，开始着手进行学习和准备。&lt;/p&gt;
-
-&lt;p&gt;而VsCode是微软开始拥抱开源以来的一个非常不错的实践范例，作为TS同一家公司的产品，支持当然非常好。所以这次也是一并尝试。&lt;/p&gt;
-
-&lt;h2 id=&quot;1-资源&quot;&gt;1. 资源&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;VsCode官方网站：&lt;a href=&quot;https://code.visualstudio.com/&quot;&gt;https://code.visualstudio.com/&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;TypeScript官方网站：&lt;a href=&quot;https://www.typescriptlang.org/index.html&quot;&gt;https://www.typescriptlang.org/index.html&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;TypeScript中文汉化手册：&lt;a href=&quot;https://www.gitbook.com/book/zhongsp/typescript-handbook/details&quot;&gt;https://www.gitbook.com/book/zhongsp/typescript-handbook/details&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;2-typescript上手使用&quot;&gt;2. TypeScript上手使用&lt;/h2&gt;
-&lt;p&gt;TS是JS的超集，兼容JS，所以使用上问题不会太大。但有一个问题需要预先解决，就是TS是无法在Node和浏览器内直接运行的，需要转译成JS才能运行。&lt;/p&gt;
-
-&lt;h3 id=&quot;21-转译node代码&quot;&gt;2.1 转译Node代码&lt;/h3&gt;
-&lt;p&gt;转译成Node需要：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;全局安装typescript（附带了tsc命令行工具）&lt;/li&gt;
-  &lt;li&gt;命令行下使用tsc转译JS代码&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;安装TypeScript：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;npm install -g typescript&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;编写tsc配置文件&lt;code&gt;jsconfig.json&lt;/code&gt;：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt; 1 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 2 &lt;/span&gt;    &lt;span class=&quot;nt&quot;&gt;&amp;quot;compilerOptions&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 3 &lt;/span&gt;        &lt;span class=&quot;nt&quot;&gt;&amp;quot;target&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;ES6&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 4 &lt;/span&gt;        &lt;span class=&quot;nt&quot;&gt;&amp;quot;module&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;commonjs&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 5 &lt;/span&gt;        &lt;span class=&quot;nt&quot;&gt;&amp;quot;sourceMap&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 6 &lt;/span&gt;        &lt;span class=&quot;nt&quot;&gt;&amp;quot;rootDir&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;src&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 7 &lt;/span&gt;        &lt;span class=&quot;nt&quot;&gt;&amp;quot;outDir&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;dist&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 8 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 9 &lt;/span&gt;    &lt;span class=&quot;nt&quot;&gt;&amp;quot;include&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;10 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;src/**/*&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;11 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;12 &lt;/span&gt;    &lt;span class=&quot;nt&quot;&gt;&amp;quot;exclude&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;13 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;dist&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;14 &lt;/span&gt;        &lt;span class=&quot;s2&quot;&gt;&amp;quot;node_modules&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;15 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;16 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;这里有个坑：&lt;code&gt;outDir&lt;/code&gt;还有&lt;code&gt;rootDir&lt;/code&gt;都是放在&lt;code&gt;compilerOptions&lt;/code&gt;这个节点下面的，而不是放在根目录下的。这个范例居然很少，我一直都没找到，试了好久才试出来，不得不说文档实在是太差。&lt;/p&gt;
-
-&lt;p&gt;命令行下运行tsc进行转译：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;tsc -p jsconfig.json --watch&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;这样，代码就能在node里简单运行了。&lt;/p&gt;
-
-&lt;h3 id=&quot;22-转译web代码&quot;&gt;2.2 转译WEB代码&lt;/h3&gt;
-
-&lt;h2 id=&quot;3-typescript语法&quot;&gt;3. TypeScript语法&lt;/h2&gt;
-&lt;h3 id=&quot;31-类型&quot;&gt;3.1 类型&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;任意类型为&lt;code&gt;any&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;空类型为&lt;code&gt;void&lt;/code&gt;，&lt;code&gt;--strictNullChecks&lt;/code&gt;开关可以在转译的时候进行空检查&lt;/li&gt;
-  &lt;li&gt;多种类型的可能性的混合，&lt;code&gt;联合类型&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;never&lt;/code&gt;：
-    &lt;ul&gt;
-      &lt;li&gt;是任何类型的子类型，也可以赋值给任何类型&lt;/li&gt;
-      &lt;li&gt;但不可接受任何非never的类型&lt;/li&gt;
-      &lt;li&gt;返回never的函数必须存在无法达到的终点&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;类型推断：
-    &lt;ul&gt;
-      &lt;li&gt;
-        &lt;string&gt;someValue
-&lt;/string&gt;
-      &lt;/li&gt;
-      &lt;li&gt;someValue as string&lt;/li&gt;
-      &lt;li&gt;两者等价，推荐使用as&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;就这几个需要注意下。&lt;/p&gt;
-
-&lt;h2 id=&quot;32-变量申明&quot;&gt;3.2 变量申明&lt;/h2&gt;
-&lt;p&gt;const的使用需要注意，一旦申明之后，后续不可将整个变量替换：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;x&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// defined&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;则不可再&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;x&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// failed&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;但可以单独对对象内部进行改动：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;a&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ok&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;33-接口&quot;&gt;3.3 接口&lt;/h2&gt;
-&lt;p&gt;接口在TS里就是类型申明，可以理解为Golang中的struct或者C语言中的struct。仅仅只是对一种类型的数据结构进行命名，方便后续的使用。&lt;/p&gt;
-
-&lt;p&gt;此外，类型的申明中可以包含&lt;code&gt;可选属性&lt;/code&gt;，该属性可以存在，也可以不存在。申明时，使用名字后面加问号的方式：&lt;code&gt;color?&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;只读类型：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;属性名之前添加&lt;code&gt;readonly&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;ReadonlyArray&lt;T&gt;&lt;/T&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;最简单判断该用readonly还是const的方法是看要把它做为变量使用还是做为一个属性。 做为变量使用的话用const，若做为属性则使用readonly&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;索引签名：
-&lt;code&gt;[propName: string]: any;&lt;/code&gt;：带有任意数量的其它属性&lt;/p&gt;
-
-&lt;p&gt;函数接口：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;SearchFunc&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;  &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;subString&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;boolean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// (参数): 返回值&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;接口也可以由class使用&lt;code&gt;implements&lt;/code&gt;关键字来实现，这和其他语言基本没区别。
-接口可以使用&lt;code&gt;extends&lt;/code&gt;关键字相互扩展。&lt;/p&gt;
-
-&lt;h2 id=&quot;35-函数&quot;&gt;3.5 函数&lt;/h2&gt;
-&lt;p&gt;tsc的&lt;code&gt;--noImplicitThis&lt;/code&gt;可以协助你找出有问题的&lt;code&gt;this&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;但在启用该选项的同时，tsc会对&lt;code&gt;this&lt;/code&gt;的类型进行检查，所以在编写代码的时候需要小心处理。可以使用显式申明的方式来告知tsc，这里的this是什么类型的，或者应不应该进行检查。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;修改的方法是，提供一个显式的this参数。 this参数是个假的参数，它出现在参数列表的最前面：&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;f&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// make sure `this` is unusable in this standalone function&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;4 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// e.g:&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;5 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;UIElement&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;6 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;addClickListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onclick&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;7 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;当然this申明也是可以带参数的：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Handler&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;onClickBad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;4 &lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;// oops, used this here. using this callback would crash at runtime&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;5 &lt;/span&gt;        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;6 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;7 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;8 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;9 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;uiElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addClickListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onClickBad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// error!&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;但这个范例会报错，因为之前我们要求UIElement的回调是void类型的this，而这个下面的范例给的是一个Handler类型的this，类型检测就报错了。&lt;/p&gt;
-
-&lt;p&gt;这里可以将申明改为void的this，但同时也无法在函数内使用this。或者使用箭头函数，但每个Handler对象都会创建自己的箭头函数闭包。e.g：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt; 1 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Handler&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 2 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 3 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;onClickGood&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;void&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 4 &lt;/span&gt;        &lt;span class=&quot;c1&quot;&gt;// can&amp;#39;t use this here because it&amp;#39;s of type void!&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 5 &lt;/span&gt;        &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;clicked!&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 6 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 7 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 8 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Handler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 9 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;uiElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addClickListener&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;onClickGood&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;10 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// OR&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;11 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Handler&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;12 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;13 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;onClickGood&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Event&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;14 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;310-高级类型&quot;&gt;3.10 高级类型&lt;/h2&gt;
-&lt;p&gt;联合类型:&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;cm&quot;&gt;/**&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;&lt;span class=&quot;cm&quot;&gt; * Takes a string and adds &amp;quot;padding&amp;quot; to the left.&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3 &lt;/span&gt;&lt;span class=&quot;cm&quot;&gt; * If &amp;#39;padding&amp;#39; is a string, then &amp;#39;padding&amp;#39; is appended to the left side.&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;4 &lt;/span&gt;&lt;span class=&quot;cm&quot;&gt; * If &amp;#39;padding&amp;#39; is a number, then that number of spaces is added to the left side.&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;5 &lt;/span&gt;&lt;span class=&quot;cm&quot;&gt; */&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;6 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;padLeft&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;padding&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;7 &lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;8 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;遇到联合类型时候的类型断言：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt; 1 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Bird&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 2 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;fly&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 3 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;layEggs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 4 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 5 &lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 6 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Fish&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 7 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;swim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 8 &lt;/span&gt;    &lt;span class=&quot;nx&quot;&gt;layEggs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 9 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;10 &lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;11 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;getSmallPet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Fish&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Bird&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;12 &lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;13 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;14 &lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;15 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;getSmallPet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;16 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;layEggs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// okay&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;17 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;swim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;// errors&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;18 &lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;19 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 断言 e.g:&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;20 &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Fish&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;swim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;21 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Fish&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;swim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;22 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;23 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Bird&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;fly&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;24 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;25 &lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;26 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isFish&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Fish&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Bird&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;is&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Fish&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;27 &lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Fish&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;swim&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;undefined&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;28 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;类型别名，以type关键字创建一个新的类型名：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt; 1 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 2 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;NameResolver&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 3 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;NameOrResolver&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;NameResolver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 4 &lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;getName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;NameOrResolver&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 5 &lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;typeof&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;string&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 6 &lt;/span&gt;        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 7 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 8 &lt;/span&gt;    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt; 9 &lt;/span&gt;        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;10 &lt;/span&gt;    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;11 &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;12 &lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;13 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 类型别名不能出现在声明右侧的任何地方。&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;14 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Yikes&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Yikes&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// error&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;另一个重要区别是类型别名不能被extends和implements。&lt;/p&gt;
-
-&lt;h2 id=&quot;313-模块&quot;&gt;3.13 模块&lt;/h2&gt;
-&lt;p&gt;在TypeScript中，假如你不想在使用一个新模块之前花时间去编写声明，你可以采用声明的简写形式以便能够快速使用它。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;lineno&quot;&gt;1 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// declarations.d.ts&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;2 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;declare&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;hot-new-module&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;3 &lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;4 &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 简写模块里所有导出的类型将是 any&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;5 &lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;hot-new-module&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;lineno&quot;&gt;6 &lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-</description>
-				<pubDate>Tue, 27 Dec 2016 16:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2016/12/typescript-vscode/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2016/12/typescript-vscode/</guid>
 			</item>
 		
 	</channel>
