@@ -1,0 +1,315 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Apple mov转mp4 ffmpeg使用 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2017/11/ffmpeg/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2017/11/ffmpeg/">Apple mov转mp4 ffmpeg使用</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>16 Nov 2017</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/FFMPEG">FFMPEG</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Video">Video</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2 id="0-前言">0. 前言</h2>
+<p>最近在MAC上使用QuickTime Player录了几个苹果手机应用的运行视频，苹果官方的解决方案算是最轻量级也最容易使用的了。到这里都还算靠谱，但接下来就有点麻烦了，录制下来的视频是MOV格式，这玩意儿实在是大的可怕，即便是自己存起来看也实在是太占空间了，更不用说上传视频网站了。于是就有了视频文件转码的需求，这里就想起了FFMPEG这个软件，众所周知的视频处理第一。撰此文仅用来记录一些经验。</p>
+
+<h2 id="1-经验文章">1. 经验文章</h2>
+<p>这部分实在是有太多的经验文章，我这里主要参考了：</p>
+
+<ul>
+  <li><a href="https://segmentfault.com/a/1190000002502526">用ffmpeg命令行转压视频</a></li>
+  <li><a href="https://einverne.github.io/post/2015/12/ffmpeg-first.html">ffmpeg 入门</a></li>
+</ul>
+
+<h2 id="2-安装">2. 安装</h2>
+<p>MAC下安装：</p>
+
+<blockquote>
+  <p>brew install ffmpeg –with-faac –with-fdk-aac –with-ffplay –with-fontconfig –with-freetype –with-libass –with-libbluray –with-libcaca –with-libsoxr –with-libquvi –with-frei0r –with-libvidstab –with-libvorbis –with-libvpx –with-opencore-amr –with-openjpeg –with-openssl –with-opus –with-rtmpdump –with-schroedinger –with-speex –with-theroa –with-tools –with-x265</p>
+</blockquote>
+
+<h2 id="3-概念">3. 概念</h2>
+<p>只提几个最关键的，更详细的可以看上面的文章。</p>
+
+<ul>
+  <li>比特率：比特率，英文为 bit rate，描述每秒钟输出多少 KB 的参数，单位是 Kbps，也就是 kbit/s，8Kbit/s = 1KB/s。也就是说800Kbps意思就是每秒视频就要占用100KB磁盘空间。核心质量概念，一般这个数值越高质量越好，而且是立竿见影的质量变化，压缩主要调整的参数也是这个。</li>
+  <li>帧数：每秒钟播放的图片数，单位 fps（英文：Frames Per Second），每秒的帧数或者帧率表示视频文件或者图形处理器场景时每秒钟能够更新的次数。一般30即可，不用追求过高。</li>
+  <li>分辨率：1080P：1920 * 1080，720P：1280 * 720，反正就这二选一。</li>
+  <li>采样率：每秒钟对音频信号的采样次数，采样频率越高声音还原度越高，声音更加自然。单位是赫兹 Hz。音频文件一般使用的采样率是 44100 Hz ，也就是一秒钟采样 44100 次。</li>
+</ul>
+
+<h2 id="4-使用">4. 使用</h2>
+<p>一个命令简单使用：</p>
+
+<blockquote>
+  <p>ffmpeg -i $1 -vcodec libx264 -b:v 5000k -minrate 5000k -maxrate 5000k -bufsize 4200k -preset fast -crf 20 -y -vf “scale=-1:720” -acodec libmp3lame -ab 128k ~/Downloads/a1.mp4</p>
+</blockquote>
+
+<p>简单解释下：</p>
+
+<ul>
+  <li>-i：输入文件指定</li>
+  <li>-vcodec：视频解码，x264，基本上没别的选择</li>
+  <li>-b:v：指定导出视频的码率，不会100%和指定的数值一样，但肯定会尽量靠近。这个指标是视频<code>质量/体积</code>的核心指标，一般质量不符合预期就调高，文件过大就调低。e.g 5000k</li>
+  <li>-maxrate：最高码率，和<code>-b:v</code>一致就好了</li>
+  <li>-minrate：最低码率，和<code>-b:v</code>一致就好了</li>
+  <li>-bufsize：缓冲区大小，看情况设定，不关键</li>
+  <li>-preset：指定编码的配置。x264编码算法有很多可供配置的参数，不同的参数值会导致编码的速度大相径庭，甚至可能影响质量。为了免去用户了解算法，然后手工配置参数的麻烦。x264提供了一些预设值，而这些预设值可以通过preset指定。fast即可。</li>
+  <li>-crf：这是最重要的一个选项，用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。这个选项会直接影响到输出视频的码率。一般20减一点点就很好了。</li>
+  <li>-y：强制覆盖输出文件，即便该文件已存在</li>
+  <li>-vf：<code>scale=-1:720</code>，意思就是把原视频的横向限死到720P，然后纵向自适应</li>
+  <li>-acodec：libmp3lame，音频解码使用MP3</li>
+  <li>-ab：音频码率：128 kb/s</li>
+</ul>
+
+<p>基本上上面的命令就够用了，我自己选的码率是5000k，视频文件体积是有点大，但质量还是上乘的，自己收藏用算是可以了。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2017/11/ffmpeg/">Apple mov转mp4 ffmpeg使用</a></li>
+    
+    <li><a href="/2017/11/v2ray-double/">V2Ray双服务器桥接</a></li>
+    
+    <li><a href="/2017/11/react-native-js-thread/">ReactNative图片加载JS组件封装</a></li>
+    
+    <li><a href="/2017/11/bbr/">Ubuntu 16.04 LTS BBR 安装</a></li>
+    
+    <li><a href="/2017/10/v2ray/">V2Ray安装教程</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2017/11/ffmpeg/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
