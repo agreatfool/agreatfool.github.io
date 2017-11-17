@@ -7,6 +7,57 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>好用的YouTube下载工具</title>
+				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;油管视频的质量和内容都真的太好了，不是国内的视频网站能比的，有的时候当然也会有下载的需求。网上有不少下载工具，但不是有广告、不好用，就是收费。有次在github上找到一个开源的命令行工具，相当好用，这里做个笔记。&lt;/p&gt;
+
+&lt;p&gt;链接：&lt;a href=&quot;https://github.com/rg3/youtube-dl&quot;&gt;https://github.com/rg3/youtube-dl&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;1-安装&quot;&gt;1. 安装&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;brew install youtube-dl&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;2-使用&quot;&gt;2. 使用&lt;/h2&gt;
+&lt;p&gt;基本命令使用：&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;youtube-dl [OPTIONS] URL [URL…]&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;关键选项有：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;–proxy URL：socks5://127.0.0.1:1080&lt;/li&gt;
+  &lt;li&gt;–playlist-start NUMBER：下载播放列表可用，默认 1&lt;/li&gt;
+  &lt;li&gt;–playlist-end NUMBER：下载播放列表可用，默认 last&lt;/li&gt;
+  &lt;li&gt;–playlist-items ITEM_SPEC：下载范围：Specify indices of the videos in the playlist separated by commas like: “–playlist-items 1,2,5,8” if you want to download videos indexed 1, 2, 5, 8 in the playlist. You can specify range: “–playlist-items 1-3,7,10-13”, it will download the videos at index 1, 2, 3, 7, 10, 11, 12 and 13.&lt;/li&gt;
+  &lt;li&gt;–batch-file FILE：下载列表文件，文件URL按行分隔&lt;/li&gt;
+  &lt;li&gt;-o：输出文件名模板及输出位置（&lt;a href=&quot;https://github.com/rg3/youtube-dl#output-template&quot;&gt;详细&lt;/a&gt;）：
+    &lt;ul&gt;
+      &lt;li&gt;-o “~/Downloads/%(title)s.%(ext)s”&lt;/li&gt;
+      &lt;li&gt;-o “%(playlist)s/%(playlist_index)s - %(title)s.%(ext)s”&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;-f：视频格式（&lt;a href=&quot;https://github.com/rg3/youtube-dl#format-selection&quot;&gt;详细&lt;/a&gt;）：
+    &lt;ul&gt;
+      &lt;li&gt;默认：-f bestvideo+bestaudio/best&lt;/li&gt;
+      &lt;li&gt;最简单：best&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;细节是相当的多，不得不佩服作者的细致处理的功力。因功能相当强大，很多细节的配置可以参考github上的手册，这里就不一一展开了。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Fri, 17 Nov 2017 14:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/11/youtube-dl/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/11/youtube-dl/</guid>
+			</item>
+		
+			<item>
 				<title>Apple mov转mp4 ffmpeg使用</title>
 				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
 &lt;p&gt;最近在MAC上使用QuickTime Player录了几个苹果手机应用的运行视频，苹果官方的解决方案算是最轻量级也最容易使用的了。到这里都还算靠谱，但接下来就有点麻烦了，录制下来的视频是MOV格式，这玩意儿实在是大的可怕，即便是自己存起来看也实在是太占空间了，更不用说上传视频网站了。于是就有了视频文件转码的需求，这里就想起了FFMPEG这个软件，众所周知的视频处理第一。撰此文仅用来记录一些经验。&lt;/p&gt;
@@ -933,30 +984,6 @@ vim org.shadowsocks.macos.plist&lt;/p&gt;
 				<pubDate>Sun, 25 Jun 2017 12:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/06/vps/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/06/vps/</guid>
-			</item>
-		
-			<item>
-				<title>域名迁移</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;最近人民币贬值厉害，贬值预期完全没有消散，估计后面还得大贬。这也就意味着以美元、港元等外币计价的付费业务后续都会涨价，因此我最近在更新大量的注册服务，提前付费，把时间拉得很长，避免后续的贬值损失。当然，这么做的首要条件必须是服务供应商值得信任，后续不会出问题。看了下自己的域名服务，上次注册续费之后是到21年，虽然时间上来看还早，还是得操作下。&lt;/p&gt;
-
-&lt;p&gt;最近实在是觉得HostDomainZone的网页和服务太糟糕。这两天页面打开，直接加载报错，登录显示404，忍无可忍；客服永远都是显示给你看电话联系，找个客服邮箱都找半天，对比下Godaddy有中文网页，有大陆电话、客服系统，明显可用性要好上很多。再考虑到服务迁移还有额外的费用减免，于是决定迁移到Godaddy同时进行注册续费。&lt;/p&gt;
-
-&lt;h2 id=&quot;1-迁移流程&quot;&gt;1. 迁移流程&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;在原服务商的站点解锁域名&lt;/li&gt;
-  &lt;li&gt;在原服务商的站点申请域名迁移&lt;code&gt;授权码&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;申请人在邮件中确认并保存授权码&lt;/li&gt;
-  &lt;li&gt;在新服务商的站点申请域名迁移、付费：迁移流程开始&lt;/li&gt;
-  &lt;li&gt;申请人在邮件中确认并保存新服务商这边提供的&lt;code&gt;确认码&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;申请人到新服务商站点中的迁移管理页中，提交邮件中收到的确认码和授权码，表明该迁移操作是受到双方认可的&lt;/li&gt;
-  &lt;li&gt;申请人到原服务商站点中的迁移管理页中，确认迁移操作&lt;/li&gt;
-  &lt;li&gt;最后等待迁移完成即可&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				<pubDate>Tue, 28 Mar 2017 15:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/03/domain-transfer/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/03/domain-transfer/</guid>
 			</item>
 		
 	</channel>
