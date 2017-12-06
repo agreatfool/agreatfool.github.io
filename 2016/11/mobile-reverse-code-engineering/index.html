@@ -127,7 +127,7 @@
 
 <p>游戏代码位置：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>assets/bin/Data/Managed</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>assets/bin/Data/Managed</code></pre></figure>
 
 <h3 id="12-ios文件夹">1.2 iOS文件夹</h3>
 <p>根目录 <code>Payload</code> 文件夹下只有一个文件夹 <code>fatego.app</code>，有用的东西都在 Data 下面，<code>Managed</code> 下面是代码，其他基本上都是资源。</p>
@@ -136,14 +136,14 @@
 <p>反编译dex文件到jar文件，使用命令行工具：<code>dex2jar</code>
 安装：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>brew install dex2jar --verbose</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>brew install dex2jar --verbose</code></pre></figure>
 
 <p>安装完之后你找不到这个命令。。。
 该软件命令都是以 <code>d2j-*</code> 开头的，这里我们要用的是：<code>d2j-dex2jar</code></p>
 
 <p>执行命令：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>d2j-dex2jar classes.dex</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>d2j-dex2jar classes.dex</code></pre></figure>
 
 <p>会在同目录创建一个新文件：<code>classes-dex2jar.jar</code></p>
 
@@ -160,13 +160,13 @@
 
 <p>接下来：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>git clone git@github.com:aerror2/ILSpy-For-MacOSX.git</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>git clone git@github.com:aerror2/ILSpy-For-MacOSX.git</code></pre></figure>
 
 <p>使用<code>Xamarin Studio</code>打开克隆下来的sln项目，构建Build完成，生成：<code>ILSpyMac/bin/Debug</code>
 该文件夹下都是构建出来的可执行文件，我们需要使用的是：<code>ILSpyMac.exe</code>
 接下来执行命令：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>mono ILSpyMac.exe -n 随便输入点名字 DLL文件所在的文件夹</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>mono ILSpyMac.exe -n 随便输入点名字 DLL文件所在的文件夹</code></pre></figure>
 
 <p>这个命令会扫描刚才输入的<code>DLL文件所在的文件夹</code>，为每个DLL文件创建同名的文件夹，文件夹内都是DLL内解析出来的C#代码文件</p>
 
@@ -231,17 +231,17 @@ Android：<code>assets/bin/Data/</code>
 
 <p>Python的命令行工具，也可以作为python的代码包来使用在代码中。该工具使用python3编写，使用需要先安装python3：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>brew install python3 --verbose</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>brew install python3 --verbose</code></pre></figure>
 
 <p>然后安装工具：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>git clone git@github.com:HearthSim/UnityPack.git
-<span class="lineno">2 </span><span class="nb">cd</span> UnityPack
-<span class="lineno">3 </span>./setup.py install</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>git clone git@github.com:HearthSim/UnityPack.git
+<span class="nb">cd</span> UnityPack
+./setup.py install</code></pre></figure>
 
 <p>接下来就可以使用命令进行解包了：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>unityextract --all -o 资源导出路径 ASSETS文件路径</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>unityextract --all -o 资源导出路径 ASSETS文件路径</code></pre></figure>
 
 <p>使用后发现贴图Texture的解包需要额外安装东西：</p>
 
@@ -255,10 +255,10 @@ Android：<code>assets/bin/Data/</code>
 
 <p>后续又发现了新问题，Android和iOS的贴图压缩算法在解包工具的当前版本中没有被处理，解包会报错：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>Android:
-<span class="lineno">2 </span>NotImplementedError: Unimplemented format &lt;TextureFormat.ETC_RGB4: <span class="m">34</span>&gt;
-<span class="lineno">3 </span>iOS:
-<span class="lineno">4 </span>NotImplementedError: Unimplemented format &lt;TextureFormat.PVRTC_RGB4: <span class="m">32</span>&gt;</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>Android:
+NotImplementedError: Unimplemented format &lt;TextureFormat.ETC_RGB4: <span class="m">34</span>&gt;
+iOS:
+NotImplementedError: Unimplemented format &lt;TextureFormat.PVRTC_RGB4: <span class="m">32</span>&gt;</code></pre></figure>
 
 <p>待解决</p>
 
@@ -350,8 +350,6 @@ Android：<code>assets/bin/Data/</code>
       <li><a href="/category/Dart">Dart</a></li>
     
       <li><a href="/category/Mobile">Mobile</a></li>
-    
-      <li><a href="/category/Career">Career</a></li>
     
       <li><a href="/category/Video">Video</a></li>
     

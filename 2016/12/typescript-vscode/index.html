@@ -132,32 +132,32 @@
 
 <p>安装TypeScript：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>npm install -g typescript</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>npm install -g typescript</code></pre></figure>
 
 <p>编写tsc配置文件<code>jsconfig.json</code>：</p>
 
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="lineno"> 1 </span><span class="p">{</span>
-<span class="lineno"> 2 </span>    <span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
-<span class="lineno"> 3 </span>        <span class="nt">&quot;target&quot;</span><span class="p">:</span> <span class="s2">&quot;ES6&quot;</span><span class="p">,</span>
-<span class="lineno"> 4 </span>        <span class="nt">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;commonjs&quot;</span><span class="p">,</span>
-<span class="lineno"> 5 </span>        <span class="nt">&quot;sourceMap&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-<span class="lineno"> 6 </span>        <span class="nt">&quot;rootDir&quot;</span><span class="p">:</span> <span class="s2">&quot;src&quot;</span><span class="p">,</span>
-<span class="lineno"> 7 </span>        <span class="nt">&quot;outDir&quot;</span><span class="p">:</span> <span class="s2">&quot;dist&quot;</span>
-<span class="lineno"> 8 </span>    <span class="p">},</span>
-<span class="lineno"> 9 </span>    <span class="nt">&quot;include&quot;</span><span class="p">:</span> <span class="p">[</span>
-<span class="lineno">10 </span>        <span class="s2">&quot;src/**/*&quot;</span>
-<span class="lineno">11 </span>    <span class="p">],</span>
-<span class="lineno">12 </span>    <span class="nt">&quot;exclude&quot;</span><span class="p">:</span> <span class="p">[</span>
-<span class="lineno">13 </span>        <span class="s2">&quot;dist&quot;</span><span class="p">,</span>
-<span class="lineno">14 </span>        <span class="s2">&quot;node_modules&quot;</span>
-<span class="lineno">15 </span>    <span class="p">]</span>
-<span class="lineno">16 </span><span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;compilerOptions&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;target&quot;</span><span class="p">:</span> <span class="s2">&quot;ES6&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;module&quot;</span><span class="p">:</span> <span class="s2">&quot;commonjs&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;sourceMap&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">&quot;rootDir&quot;</span><span class="p">:</span> <span class="s2">&quot;src&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;outDir&quot;</span><span class="p">:</span> <span class="s2">&quot;dist&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;include&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;src/**/*&quot;</span>
+    <span class="p">],</span>
+    <span class="nt">&quot;exclude&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;dist&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;node_modules&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>这里有个坑：<code>outDir</code>还有<code>rootDir</code>都是放在<code>compilerOptions</code>这个节点下面的，而不是放在根目录下的。这个范例居然很少，我一直都没找到，试了好久才试出来，不得不说文档实在是太差。</p>
 
 <p>命令行下运行tsc进行转译：</p>
 
-<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="lineno">1 </span>tsc -p jsconfig.json --watch</code></pre></figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>tsc -p jsconfig.json --watch</code></pre></figure>
 
 <p>这样，代码就能在node里简单运行了。</p>
 
@@ -193,15 +193,15 @@
 <h2 id="32-变量申明">3.2 变量申明</h2>
 <p>const的使用需要注意，一旦申明之后，后续不可将整个变量替换：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">};</span> <span class="c1">// defined</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">1</span><span class="p">};</span> <span class="c1">// defined</span></code></pre></figure>
 
 <p>则不可再</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">};</span> <span class="c1">// failed</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="nx">a</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="o">:</span> <span class="mi">2</span><span class="p">};</span> <span class="c1">// failed</span></code></pre></figure>
 
 <p>但可以单独对对象内部进行改动：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="nx">a</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// ok</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="nx">a</span><span class="p">.</span><span class="nx">x</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// ok</span></code></pre></figure>
 
 <h2 id="33-接口">3.3 接口</h2>
 <p>接口在TS里就是类型申明，可以理解为Golang中的struct或者C语言中的struct。仅仅只是对一种类型的数据结构进行命名，方便后续的使用。</p>
@@ -224,9 +224,9 @@
 
 <p>函数接口：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">interface</span> <span class="nx">SearchFunc</span> <span class="p">{</span>
-<span class="lineno">2 </span>  <span class="p">(</span><span class="nx">source</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">subString</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span><span class="o">:</span> <span class="kr">boolean</span><span class="p">;</span> <span class="c1">// (参数): 返回值</span>
-<span class="lineno">3 </span><span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">interface</span> <span class="nx">SearchFunc</span> <span class="p">{</span>
+  <span class="p">(</span><span class="nx">source</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">subString</span><span class="o">:</span> <span class="nx">string</span><span class="p">)</span><span class="o">:</span> <span class="kr">boolean</span><span class="p">;</span> <span class="c1">// (参数): 返回值</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>接口也可以由class使用<code>implements</code>关键字来实现，这和其他语言基本没区别。
 接口可以使用<code>extends</code>关键字相互扩展。</p>
@@ -240,116 +240,116 @@
   <p>修改的方法是，提供一个显式的this参数。 this参数是个假的参数，它出现在参数列表的最前面：</p>
 </blockquote>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kd">function</span> <span class="nx">f</span><span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="k">void</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">2 </span>    <span class="c1">// make sure `this` is unusable in this standalone function</span>
-<span class="lineno">3 </span><span class="p">}</span>
-<span class="lineno">4 </span><span class="c1">// e.g:</span>
-<span class="lineno">5 </span><span class="kr">interface</span> <span class="nx">UIElement</span> <span class="p">{</span>
-<span class="lineno">6 </span>    <span class="nx">addClickListener</span><span class="p">(</span><span class="nx">onclick</span><span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="k">void</span><span class="p">,</span> <span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span><span class="o">:</span> <span class="k">void</span><span class="p">;</span>
-<span class="lineno">7 </span><span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kd">function</span> <span class="nx">f</span><span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="k">void</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// make sure `this` is unusable in this standalone function</span>
+<span class="p">}</span>
+<span class="c1">// e.g:</span>
+<span class="kr">interface</span> <span class="nx">UIElement</span> <span class="p">{</span>
+    <span class="nx">addClickListener</span><span class="p">(</span><span class="nx">onclick</span><span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="k">void</span><span class="p">,</span> <span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="k">void</span><span class="p">)</span><span class="o">:</span> <span class="k">void</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>当然this申明也是可以带参数的：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="kr">class</span> <span class="nx">Handler</span> <span class="p">{</span>
-<span class="lineno">2 </span>    <span class="nx">info</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno">3 </span>    <span class="nx">onClickBad</span><span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="nx">Handler</span><span class="p">,</span> <span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">4 </span>        <span class="c1">// oops, used this here. using this callback would crash at runtime</span>
-<span class="lineno">5 </span>        <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">;</span>
-<span class="lineno">6 </span>    <span class="p">};</span>
-<span class="lineno">7 </span><span class="p">}</span>
-<span class="lineno">8 </span><span class="kd">let</span> <span class="nx">h</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Handler</span><span class="p">();</span>
-<span class="lineno">9 </span><span class="nx">uiElement</span><span class="p">.</span><span class="nx">addClickListener</span><span class="p">(</span><span class="nx">h</span><span class="p">.</span><span class="nx">onClickBad</span><span class="p">);</span> <span class="c1">// error!</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">class</span> <span class="nx">Handler</span> <span class="p">{</span>
+    <span class="nx">info</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+    <span class="nx">onClickBad</span><span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="nx">Handler</span><span class="p">,</span> <span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// oops, used this here. using this callback would crash at runtime</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span><span class="p">;</span>
+    <span class="p">};</span>
+<span class="p">}</span>
+<span class="kd">let</span> <span class="nx">h</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Handler</span><span class="p">();</span>
+<span class="nx">uiElement</span><span class="p">.</span><span class="nx">addClickListener</span><span class="p">(</span><span class="nx">h</span><span class="p">.</span><span class="nx">onClickBad</span><span class="p">);</span> <span class="c1">// error!</span></code></pre></figure>
 
 <p>但这个范例会报错，因为之前我们要求UIElement的回调是void类型的this，而这个下面的范例给的是一个Handler类型的this，类型检测就报错了。</p>
 
 <p>这里可以将申明改为void的this，但同时也无法在函数内使用this。或者使用箭头函数，但每个Handler对象都会创建自己的箭头函数闭包。e.g：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">class</span> <span class="nx">Handler</span> <span class="p">{</span>
-<span class="lineno"> 2 </span>    <span class="nx">info</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno"> 3 </span>    <span class="nx">onClickGood</span><span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="k">void</span><span class="p">,</span> <span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno"> 4 </span>        <span class="c1">// can&#39;t use this here because it&#39;s of type void!</span>
-<span class="lineno"> 5 </span>        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;clicked!&#39;</span><span class="p">);</span>
-<span class="lineno"> 6 </span>    <span class="p">}</span>
-<span class="lineno"> 7 </span><span class="p">}</span>
-<span class="lineno"> 8 </span><span class="kd">let</span> <span class="nx">h</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Handler</span><span class="p">();</span>
-<span class="lineno"> 9 </span><span class="nx">uiElement</span><span class="p">.</span><span class="nx">addClickListener</span><span class="p">(</span><span class="nx">h</span><span class="p">.</span><span class="nx">onClickGood</span><span class="p">);</span>
-<span class="lineno">10 </span><span class="c1">// OR</span>
-<span class="lineno">11 </span><span class="kr">class</span> <span class="nx">Handler</span> <span class="p">{</span>
-<span class="lineno">12 </span>    <span class="nx">info</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno">13 </span>    <span class="nx">onClickGood</span> <span class="o">=</span> <span class="p">(</span><span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span> <span class="p">}</span>
-<span class="lineno">14 </span><span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">class</span> <span class="nx">Handler</span> <span class="p">{</span>
+    <span class="nx">info</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+    <span class="nx">onClickGood</span><span class="p">(</span><span class="k">this</span><span class="o">:</span> <span class="k">void</span><span class="p">,</span> <span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// can&#39;t use this here because it&#39;s of type void!</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;clicked!&#39;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">let</span> <span class="nx">h</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Handler</span><span class="p">();</span>
+<span class="nx">uiElement</span><span class="p">.</span><span class="nx">addClickListener</span><span class="p">(</span><span class="nx">h</span><span class="p">.</span><span class="nx">onClickGood</span><span class="p">);</span>
+<span class="c1">// OR</span>
+<span class="kr">class</span> <span class="nx">Handler</span> <span class="p">{</span>
+    <span class="nx">info</span><span class="o">:</span> <span class="nx">string</span><span class="p">;</span>
+    <span class="nx">onClickGood</span> <span class="o">=</span> <span class="p">(</span><span class="nx">e</span><span class="o">:</span> <span class="nx">Event</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">message</span> <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
 
 <h2 id="310-高级类型">3.10 高级类型</h2>
 <p>联合类型:</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="cm">/**</span>
-<span class="lineno">2 </span><span class="cm"> * Takes a string and adds &quot;padding&quot; to the left.</span>
-<span class="lineno">3 </span><span class="cm"> * If &#39;padding&#39; is a string, then &#39;padding&#39; is appended to the left side.</span>
-<span class="lineno">4 </span><span class="cm"> * If &#39;padding&#39; is a number, then that number of spaces is added to the left side.</span>
-<span class="lineno">5 </span><span class="cm"> */</span>
-<span class="lineno">6 </span><span class="kd">function</span> <span class="nx">padLeft</span><span class="p">(</span><span class="nx">value</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">padding</span><span class="o">:</span> <span class="nx">string</span> <span class="o">|</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">7 </span>    <span class="c1">// ...</span>
-<span class="lineno">8 </span><span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="cm">/**</span>
+<span class="cm"> * Takes a string and adds &quot;padding&quot; to the left.</span>
+<span class="cm"> * If &#39;padding&#39; is a string, then &#39;padding&#39; is appended to the left side.</span>
+<span class="cm"> * If &#39;padding&#39; is a number, then that number of spaces is added to the left side.</span>
+<span class="cm"> */</span>
+<span class="kd">function</span> <span class="nx">padLeft</span><span class="p">(</span><span class="nx">value</span><span class="o">:</span> <span class="nx">string</span><span class="p">,</span> <span class="nx">padding</span><span class="o">:</span> <span class="nx">string</span> <span class="o">|</span> <span class="nx">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>遇到联合类型时候的类型断言：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="kr">interface</span> <span class="nx">Bird</span> <span class="p">{</span>
-<span class="lineno"> 2 </span>    <span class="nx">fly</span><span class="p">();</span>
-<span class="lineno"> 3 </span>    <span class="nx">layEggs</span><span class="p">();</span>
-<span class="lineno"> 4 </span><span class="p">}</span>
-<span class="lineno"> 5 </span>
-<span class="lineno"> 6 </span><span class="kr">interface</span> <span class="nx">Fish</span> <span class="p">{</span>
-<span class="lineno"> 7 </span>    <span class="nx">swim</span><span class="p">();</span>
-<span class="lineno"> 8 </span>    <span class="nx">layEggs</span><span class="p">();</span>
-<span class="lineno"> 9 </span><span class="p">}</span>
-<span class="lineno">10 </span>
-<span class="lineno">11 </span><span class="kd">function</span> <span class="nx">getSmallPet</span><span class="p">()</span><span class="o">:</span> <span class="nx">Fish</span> <span class="o">|</span> <span class="nx">Bird</span> <span class="p">{</span>
-<span class="lineno">12 </span>    <span class="c1">// ...</span>
-<span class="lineno">13 </span><span class="p">}</span>
-<span class="lineno">14 </span>
-<span class="lineno">15 </span><span class="kd">let</span> <span class="nx">pet</span> <span class="o">=</span> <span class="nx">getSmallPet</span><span class="p">();</span>
-<span class="lineno">16 </span><span class="nx">pet</span><span class="p">.</span><span class="nx">layEggs</span><span class="p">();</span> <span class="c1">// okay</span>
-<span class="lineno">17 </span><span class="nx">pet</span><span class="p">.</span><span class="nx">swim</span><span class="p">();</span>    <span class="c1">// errors</span>
-<span class="lineno">18 </span>
-<span class="lineno">19 </span><span class="c1">// 断言 e.g:</span>
-<span class="lineno">20 </span><span class="k">if</span> <span class="p">((</span><span class="o">&lt;</span><span class="nx">Fish</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">swim</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno">21 </span>    <span class="p">(</span><span class="o">&lt;</span><span class="nx">Fish</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">swim</span><span class="p">();</span>
-<span class="lineno">22 </span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-<span class="lineno">23 </span>    <span class="p">(</span><span class="o">&lt;</span><span class="nx">Bird</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">fly</span><span class="p">();</span>
-<span class="lineno">24 </span><span class="p">}</span>
-<span class="lineno">25 </span>
-<span class="lineno">26 </span><span class="kd">function</span> <span class="nx">isFish</span><span class="p">(</span><span class="nx">pet</span><span class="o">:</span> <span class="nx">Fish</span> <span class="o">|</span> <span class="nx">Bird</span><span class="p">)</span><span class="o">:</span> <span class="nx">pet</span> <span class="nx">is</span> <span class="nx">Fish</span> <span class="p">{</span>
-<span class="lineno">27 </span>    <span class="k">return</span> <span class="p">(</span><span class="o">&lt;</span><span class="nx">Fish</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">swim</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">;</span>
-<span class="lineno">28 </span><span class="p">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">interface</span> <span class="nx">Bird</span> <span class="p">{</span>
+    <span class="nx">fly</span><span class="p">();</span>
+    <span class="nx">layEggs</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kr">interface</span> <span class="nx">Fish</span> <span class="p">{</span>
+    <span class="nx">swim</span><span class="p">();</span>
+    <span class="nx">layEggs</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getSmallPet</span><span class="p">()</span><span class="o">:</span> <span class="nx">Fish</span> <span class="o">|</span> <span class="nx">Bird</span> <span class="p">{</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kd">let</span> <span class="nx">pet</span> <span class="o">=</span> <span class="nx">getSmallPet</span><span class="p">();</span>
+<span class="nx">pet</span><span class="p">.</span><span class="nx">layEggs</span><span class="p">();</span> <span class="c1">// okay</span>
+<span class="nx">pet</span><span class="p">.</span><span class="nx">swim</span><span class="p">();</span>    <span class="c1">// errors</span>
+
+<span class="c1">// 断言 e.g:</span>
+<span class="k">if</span> <span class="p">((</span><span class="o">&lt;</span><span class="nx">Fish</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">swim</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">(</span><span class="o">&lt;</span><span class="nx">Fish</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">swim</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="p">(</span><span class="o">&lt;</span><span class="nx">Bird</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">fly</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">isFish</span><span class="p">(</span><span class="nx">pet</span><span class="o">:</span> <span class="nx">Fish</span> <span class="o">|</span> <span class="nx">Bird</span><span class="p">)</span><span class="o">:</span> <span class="nx">pet</span> <span class="nx">is</span> <span class="nx">Fish</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">(</span><span class="o">&lt;</span><span class="nx">Fish</span><span class="o">&gt;</span><span class="nx">pet</span><span class="p">).</span><span class="nx">swim</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
 
 <p>类型别名，以type关键字创建一个新的类型名：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno"> 1 </span><span class="nx">type</span> <span class="nx">Name</span> <span class="o">=</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno"> 2 </span><span class="nx">type</span> <span class="nx">NameResolver</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">string</span><span class="p">;</span>
-<span class="lineno"> 3 </span><span class="nx">type</span> <span class="nx">NameOrResolver</span> <span class="o">=</span> <span class="nx">Name</span> <span class="o">|</span> <span class="nx">NameResolver</span><span class="p">;</span>
-<span class="lineno"> 4 </span><span class="kd">function</span> <span class="nx">getName</span><span class="p">(</span><span class="nx">n</span><span class="o">:</span> <span class="nx">NameOrResolver</span><span class="p">)</span><span class="o">:</span> <span class="nx">Name</span> <span class="p">{</span>
-<span class="lineno"> 5 </span>    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">n</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
-<span class="lineno"> 6 </span>        <span class="k">return</span> <span class="nx">n</span><span class="p">;</span>
-<span class="lineno"> 7 </span>    <span class="p">}</span>
-<span class="lineno"> 8 </span>    <span class="k">else</span> <span class="p">{</span>
-<span class="lineno"> 9 </span>        <span class="k">return</span> <span class="nx">n</span><span class="p">();</span>
-<span class="lineno">10 </span>    <span class="p">}</span>
-<span class="lineno">11 </span><span class="p">}</span>
-<span class="lineno">12 </span>
-<span class="lineno">13 </span><span class="c1">// 类型别名不能出现在声明右侧的任何地方。</span>
-<span class="lineno">14 </span><span class="nx">type</span> <span class="nx">Yikes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">Yikes</span><span class="o">&gt;</span><span class="p">;</span> <span class="c1">// error</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="nx">type</span> <span class="nx">Name</span> <span class="o">=</span> <span class="nx">string</span><span class="p">;</span>
+<span class="nx">type</span> <span class="nx">NameResolver</span> <span class="o">=</span> <span class="p">()</span> <span class="o">=&gt;</span> <span class="nx">string</span><span class="p">;</span>
+<span class="nx">type</span> <span class="nx">NameOrResolver</span> <span class="o">=</span> <span class="nx">Name</span> <span class="o">|</span> <span class="nx">NameResolver</span><span class="p">;</span>
+<span class="kd">function</span> <span class="nx">getName</span><span class="p">(</span><span class="nx">n</span><span class="o">:</span> <span class="nx">NameOrResolver</span><span class="p">)</span><span class="o">:</span> <span class="nx">Name</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">n</span> <span class="o">===</span> <span class="s1">&#39;string&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">n</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">n</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 类型别名不能出现在声明右侧的任何地方。</span>
+<span class="nx">type</span> <span class="nx">Yikes</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">&lt;</span><span class="nx">Yikes</span><span class="o">&gt;</span><span class="p">;</span> <span class="c1">// error</span></code></pre></figure>
 
 <p>另一个重要区别是类型别名不能被extends和implements。</p>
 
 <h2 id="313-模块">3.13 模块</h2>
 <p>在TypeScript中，假如你不想在使用一个新模块之前花时间去编写声明，你可以采用声明的简写形式以便能够快速使用它。</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="lineno">1 </span><span class="c1">// declarations.d.ts</span>
-<span class="lineno">2 </span><span class="nx">declare</span> <span class="nx">module</span> <span class="s2">&quot;hot-new-module&quot;</span><span class="p">;</span>
-<span class="lineno">3 </span>
-<span class="lineno">4 </span><span class="c1">// 简写模块里所有导出的类型将是 any</span>
-<span class="lineno">5 </span><span class="kr">import</span> <span class="nx">x</span><span class="p">,</span> <span class="p">{</span><span class="nx">y</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;hot-new-module&quot;</span><span class="p">;</span>
-<span class="lineno">6 </span><span class="nx">x</span><span class="p">(</span><span class="nx">y</span><span class="p">);</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="c1">// declarations.d.ts</span>
+<span class="nx">declare</span> <span class="nx">module</span> <span class="s2">&quot;hot-new-module&quot;</span><span class="p">;</span>
+
+<span class="c1">// 简写模块里所有导出的类型将是 any</span>
+<span class="kr">import</span> <span class="nx">x</span><span class="p">,</span> <span class="p">{</span><span class="nx">y</span><span class="p">}</span> <span class="nx">from</span> <span class="s2">&quot;hot-new-module&quot;</span><span class="p">;</span>
+<span class="nx">x</span><span class="p">(</span><span class="nx">y</span><span class="p">);</span></code></pre></figure>
 
 
               </div>
@@ -433,8 +433,6 @@
       <li><a href="/category/Dart">Dart</a></li>
     
       <li><a href="/category/Mobile">Mobile</a></li>
-    
-      <li><a href="/category/Career">Career</a></li>
     
       <li><a href="/category/Video">Video</a></li>
     
