@@ -157,7 +157,7 @@
 <p>错误会得到捕获，并打印出来：</p>
 
 <blockquote>
-  <p>Error: Error in PromiseRejected  <br />
+  <p>Error: Error in PromiseRejected | PromiseError  <br />
     at PromiseRejected (/Prog/Codes/NodeJs/SASDN/async/index.js:2:25)  <br />
     at PromiseLv1 (/Prog/Codes/NodeJs/SASDN/async/index.js:10:16)  <br />
     at PromiseLv2 (/Prog/Codes/NodeJs/SASDN/async/index.js:15:16)  <br />
@@ -169,6 +169,15 @@
     at tryModuleLoad (module.js:470:12)  <br />
     at Function.Module._load (module.js:462:3)</p>
 </blockquote>
+
+<p>在无捕获的情况下可以下面的方法进行全局处理：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;unhandledRejection&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">reason</span><span class="p">,</span> <span class="nx">p</span><span class="p">){</span>
+  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Possibly Unhandled Rejection at: Promise &quot;</span><span class="p">,</span> <span class="nx">p</span><span class="p">,</span> <span class="s2">&quot; reason: &quot;</span><span class="p">,</span> <span class="nx">reason</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;uncaughtException&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+  <span class="nx">fs</span><span class="p">.</span><span class="nx">writeSync</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sb">`Caught exception: </span><span class="si">${</span><span class="nx">err</span><span class="si">}</span><span class="err">\</span><span class="sb">n`</span><span class="p">);</span>
+<span class="p">});</span></code></pre></figure>
 
 <blockquote>
   <p>EOF</p>
