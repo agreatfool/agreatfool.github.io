@@ -46,7 +46,7 @@
 
 &lt;blockquote&gt;
   &lt;p&gt;(node:25564) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2): Error: Error in PromiseRejected  &lt;br /&gt;
-  (node:25564) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.&lt;/p&gt;
+(node:25564) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;对上面的例子main部分进行修改：&lt;/p&gt;
@@ -63,16 +63,16 @@
 
 &lt;blockquote&gt;
   &lt;p&gt;Error: Error in PromiseRejected  &lt;br /&gt;
-      at PromiseRejected (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:2:25)  &lt;br /&gt;
-      at PromiseLv1 (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:10:16)  &lt;br /&gt;
-      at PromiseLv2 (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:15:16)  &lt;br /&gt;
-      at main (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:20:11)  &lt;br /&gt;
-      at Object.&lt;anonymous&gt; (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:26:1)    
-      at Module._compile (module.js:573:30)    
-      at Object.Module._extensions..js (module.js:584:10)    
-      at Module.load (module.js:507:32)    
-      at tryModuleLoad (module.js:470:12)    
-      at Function.Module._load (module.js:462:3)&lt;/anonymous&gt;&lt;/p&gt;
+     at PromiseRejected (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:2:25)  &lt;br /&gt;
+     at PromiseLv1 (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:10:16)  &lt;br /&gt;
+     at PromiseLv2 (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:15:16)  &lt;br /&gt;
+     at main (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:20:11)  &lt;br /&gt;
+     at Object.&lt;anonymous&gt; (/Users/Jonathan/Prog/Codes/NodeJs/SASDN/async/index.js:26:1)    
+     at Module._compile (module.js:573:30)    
+     at Object.Module._extensions..js (module.js:584:10)    
+     at Module.load (module.js:507:32)    
+     at tryModuleLoad (module.js:470:12)    
+     at Function.Module._load (module.js:462:3)&lt;/anonymous&gt;&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;blockquote&gt;
