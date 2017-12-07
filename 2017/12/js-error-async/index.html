@@ -111,15 +111,16 @@
   8.4.0</p>
 </blockquote>
 
-<h2 id="1-无捕获的错误">1. 无捕获的错误</h2>
-<h3 id="11-async--await">1.1 async / await</h3>
+<h2 id="1-async--await">1. async / await</h2>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kd">function</span> <span class="nx">PromiseRejected</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Error in PromiseRejected&quot;</span><span class="p">));</span>
 <span class="p">}</span>
 
 <span class="kd">function</span> <span class="nx">PromiseError</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Error in PromiseError&quot;</span><span class="p">);</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Error in PromiseError&quot;</span><span class="p">);</span>
+  <span class="p">});</span>
 <span class="p">}</span>
 
 <span class="nx">async</span> <span class="kd">function</span> <span class="nx">PromiseLv1</span><span class="p">()</span> <span class="p">{</span>
@@ -178,6 +179,59 @@
 <span class="nx">process</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s1">&#39;uncaughtException&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
   <span class="nx">fs</span><span class="p">.</span><span class="nx">writeSync</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="sb">`Caught exception: </span><span class="si">${</span><span class="nx">err</span><span class="si">}</span><span class="err">\</span><span class="sb">n`</span><span class="p">);</span>
 <span class="p">});</span></code></pre></figure>
+
+<h3 id="12-promise">1.2 Promise</h3>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kd">function</span> <span class="nx">PromiseRejected</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">reject</span><span class="p">(</span><span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Error in PromiseRejected&quot;</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">PromiseError</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s2">&quot;Error in PromiseError&quot;</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">PromiseLv1</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">let</span> <span class="nx">exec</span> <span class="o">=</span> <span class="nx">PromiseRejected</span><span class="p">;</span>
+  <span class="c1">// let exec = PromiseError;</span>
+
+  <span class="k">return</span> <span class="nx">exec</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">PromiseLv2</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">PromiseLv1</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">PromiseLv2</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">_</span> <span class="o">=&gt;</span> <span class="nx">_</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">main</span><span class="p">();</span></code></pre></figure>
+
+<p>Promise版本也是一样的，未捕获的错误就会直接出错：</p>
+
+<blockquote>
+  <p>(node:45779) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2): Error: Error in PromiseRejected
+(node:45779) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.</p>
+</blockquote>
+
+<p>最后可以使用catch的方法捕获错误：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kd">function</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">PromiseLv2</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="nx">_</span> <span class="o">=&gt;</span> <span class="nx">_</span><span class="p">).</span><span class="k">catch</span><span class="p">((</span><span class="nx">e</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="sb">`Caught in main: </span><span class="si">${</span><span class="nx">e</span><span class="p">.</span><span class="nx">stack</span><span class="si">}</span><span class="sb">`</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="13-结论">1.3 结论</h3>
+
+<ul>
+  <li>无论是Promise还是Async/Await，实际操作上在错误捕获及处理这点上没有差别</li>
+  <li>错误抛出 =&gt; 中间经过 =&gt; 最终捕获，只要是被抛出来的错误，最后都会在堆栈中层层上传，最后得到捕获，这点不需要再担心了，这部分的行为现在和一般的同步语言没差别</li>
+  <li>所有的异步逻辑都需要放在try catch或最后进行Promise.catch，进行处理，否则无处理的错误会进到process层面</li>
+  <li>process给的2个事件可以最终捕获到未处理的reject和错误</li>
+</ul>
 
 <blockquote>
   <p>EOF</p>
