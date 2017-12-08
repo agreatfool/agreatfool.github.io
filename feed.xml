@@ -7,6 +7,54 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>如何在Github Page站点上启用HTTPS</title>
+				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;这篇文章其实来的有点晚了，毕竟我这个博客从之前的wordpress转到github page也已经是很长时间了，当时转的时候就遇到了不是https连接导致打开页面老是弹chrome警告的情况。后来就找了方法开启了https。解决是很早就解决了，这篇文章算是补个记录。&lt;/p&gt;
+
+&lt;h2 id=&quot;1-需求&quot;&gt;1. 需求&lt;/h2&gt;
+&lt;p&gt;一般来说，我们总是希望自己的博客能有一个单独的域名，而不是 xxx.github.io 这样的域名。github page默认给的域名就是这种 github.io 后缀模式的。那么一般接下来的想法就是使用DNS解析的形式来进行对应的站点转向，保证所有到你的博客域名的访问能得到github page博客的显示，且到 xxx.github.io 的访问也能顺利重定向到你的博客域名上。&lt;/p&gt;
+
+&lt;p&gt;这很容易达成，但是，一旦你这么做，之后你用chrome或其他严谨的浏览器进行访问的时候，浏览器肯定会提醒你，当前你访问的这个域名并不安全。因为实际上你自己的域名下的这个站点并不属于你，对于你的域名并没有对应的证书支持，也就没有加密了。所以今天这篇博客主要就是教你如何在使用自己的域名之后仍旧能正常使用https进行访问。&lt;/p&gt;
+
+&lt;h2 id=&quot;2-建站&quot;&gt;2. 建站&lt;/h2&gt;
+&lt;p&gt;首先是建站：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;选择静态博客生成工具，无论是node的还是ruby的，反正市面上主流的有好几套，强烈建议使用你熟悉的编程语言的那套解决方案，后面无论是找问题还是修改功能或是做插件都很方便。我当时就是因为jekyll名气太响用了这个，结果后面懒得转第二次，就不得不被基于ruby的jekyll绑架了&lt;/li&gt;
+  &lt;li&gt;github page库。建议这个库只放你的博客生成工具转出来的静态内容，把内容编辑和展示分两个库。因为有的时候一旦你写的某些博客内容被别人投诉成DMCA内容，你的库会被github锁定，后面无论删除或重建都需要github员工的人工介入，非常麻烦。所以尽量把鸡蛋分篮子放&lt;/li&gt;
+  &lt;li&gt;博客markdown内容库。建议放在bitbucket这样的私有代码库服务商，理由同上&lt;/li&gt;
+  &lt;li&gt;生成的静态博客内容放到github page库发布上线&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;准备工作到此结束，这样一轮操作下来你就有了 xxx.github.io 这样一个站点。上面这段基本上属于废话，很多github page建站教程上都会说，我这里仅只是想补充下内容和发布分离的建议。&lt;/p&gt;
+
+&lt;p&gt;github官方就有教程，可以查看&lt;a href=&quot;https://guides.github.com/features/pages/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;3-域名绑定--启用https&quot;&gt;3. 域名绑定 &amp;amp; 启用HTTPS&lt;/h2&gt;
+&lt;p&gt;所谓的对你的域名启用HTTPS其实很简单，就是使用cloudflare这家公司的DNS解析，将你博客上的所有内容经过这家公司的CDN缓存，自然所有的访问内容就都经过HTTPS加密了。&lt;/p&gt;
+
+&lt;p&gt;具体的做法可以参见cloudflare的官方博客：&lt;a href=&quot;https://blog.cloudflare.com/secure-and-fast-github-pages-with-cloudflare/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;简单来说就是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;将你的域名解析设置到cloudflare的DNS解析（A记录）&lt;/li&gt;
+  &lt;li&gt;做一个CNAME解析，将你的域名alias到 xxx.github.io 这个域名&lt;/li&gt;
+  &lt;li&gt;无论是A记录还是CNAME记录，都需要打开cloudflare的CDN proxy（就是域名解析记录旁边的箭头和云朵，云朵点亮即可）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这就结束了，简单吧。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Fri, 08 Dec 2017 15:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/12/github-page-https/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/12/github-page-https/</guid>
+			</item>
+		
+			<item>
 				<title>Js错误处理异步Promise版</title>
 				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
 &lt;p&gt;一篇纯粹的异步错误处理整理文，以例子为基本进行解释。&lt;/p&gt;
@@ -953,65 +1001,6 @@ sudo launchctl load ./org.v2ray.macos.plist&lt;/code&gt;&lt;/pre&gt;&lt;/figure&
 				<pubDate>Fri, 13 Oct 2017 12:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/10/mobile-uuid/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/10/mobile-uuid/</guid>
-			</item>
-		
-			<item>
-				<title>Jekyll的安装</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;今天写了一篇文章，发布的时候居然告诉我jekyll没有安装，估计是之前系统更新的问题，只能重新装一遍。结果问题还真不少，这里简单记录下。&lt;/p&gt;
-
-&lt;h2 id=&quot;1-安装&quot;&gt;1. 安装&lt;/h2&gt;
-
-&lt;h3 id=&quot;11-安装rvm--更新ruby&quot;&gt;1.1 安装rvm | 更新ruby&lt;/h3&gt;
-&lt;p&gt;系统默认带的ruby版本是2.0.0，太老了，需要更新。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;curl -sSL https://get.rvm.io &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; bash -s stable
-rvm list known
-rvm install ruby-2.4.0 --verbose
-rvm use ruby-2.4.0 --default&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;12-更新gem源&quot;&gt;1.2 更新gem源&lt;/h3&gt;
-&lt;p&gt;删掉所有莫名其妙的源&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;gem sources -r &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;添加官方唯一的源&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;gem sources -a https://rubygems.org/&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;13-安装jekyll&quot;&gt;1.3 安装Jekyll&lt;/h3&gt;
-&lt;p&gt;别问我为什么需要sudo，这货就是需要权限&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;sudo gem install jekyll --verbose&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;14-安装语法高亮&quot;&gt;1.4 安装语法高亮&lt;/h3&gt;
-&lt;p&gt;我使用的时候报了个错：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Dependency Error: Yikes! It looks like you don’t have pygments or one of its dependencies installed. In order to use Jekyll as currently configured, you’ll need to install this gem. The full error message from Ruby is: ‘cannot load such file – pygments’&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;安装pygments的时候报错：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;sudo gem install pygments --verbose
-&lt;span class=&quot;c1&quot;&gt;# Password:&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# HEAD https://api.rubygems.org/api/v1/dependencies&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# 200 OK&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# GET https://api.rubygems.org/api/v1/dependencies?gems=pygments&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# 200 OK&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# ERROR:  Could not find a valid gem &amp;#39;pygments&amp;#39; (&amp;gt;= 0) in any repository&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# GET https://api.rubygems.org/latest_specs.4.8.gz&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# 200 OK&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# ERROR:  Possible alternatives: pigments, rygments, pigment, rb-pygments, segments&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;结果找了半天，正确的gem名字应该是：&lt;code&gt;pygments.rb&lt;/code&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;sudo gem install pygments.rb --verbose&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-</description>
-				<pubDate>Fri, 01 Sep 2017 15:13:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/09/jekyll-installation/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/09/jekyll-installation/</guid>
 			</item>
 		
 	</channel>
