@@ -477,6 +477,22 @@
   3300k码率可以蒙混一下了&lt;/p&gt;
 &lt;/blockquote&gt;
 
+&lt;p&gt;视频的合并使用以下方法：&lt;/p&gt;
+
+&lt;p&gt;创建一个文本文件，内容如下：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;h1 id=&quot;this-is-a-comment&quot;&gt;this is a comment&lt;/h1&gt;
+  &lt;p&gt;file ‘/path/to/file1’  &lt;br /&gt;
+file ‘/path/to/file2’  &lt;br /&gt;
+file ‘/path/to/file3’&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;然后使用命令进行合并：&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;ffmpeg -f concat -i ~/Downloads/mylist.txt -c copy ~/Downloads/noname.mov&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
 &lt;/blockquote&gt;

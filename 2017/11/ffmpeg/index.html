@@ -170,6 +170,22 @@
   3300k码率可以蒙混一下了</p>
 </blockquote>
 
+<p>视频的合并使用以下方法：</p>
+
+<p>创建一个文本文件，内容如下：</p>
+
+<blockquote>
+  <h1 id="this-is-a-comment">this is a comment</h1>
+  <p>file ‘/path/to/file1’  <br />
+file ‘/path/to/file2’  <br />
+file ‘/path/to/file3’</p>
+</blockquote>
+
+<p>然后使用命令进行合并：</p>
+<blockquote>
+  <p>ffmpeg -f concat -i ~/Downloads/mylist.txt -c copy ~/Downloads/noname.mov</p>
+</blockquote>
+
 <blockquote>
   <p>EOF</p>
 </blockquote>
