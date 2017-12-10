@@ -482,8 +482,8 @@
 &lt;p&gt;创建一个文本文件，内容如下：&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;h1 id=&quot;this-is-a-comment&quot;&gt;this is a comment&lt;/h1&gt;
-  &lt;p&gt;file ‘/path/to/file1’  &lt;br /&gt;
+  &lt;p&gt;# this is a comment  &lt;br /&gt;
+file ‘/path/to/file1’  &lt;br /&gt;
 file ‘/path/to/file2’  &lt;br /&gt;
 file ‘/path/to/file3’&lt;/p&gt;
 &lt;/blockquote&gt;
