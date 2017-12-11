@@ -7,6 +7,20 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>到底在焦虑什么</title>
+				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
+&lt;p&gt;总觉得最近整个人都特别焦虑。我其实是一个很”胆小”的人，为什么我能在技术方面做到现在这个水平，不为什么只是因为我明白这行水有多深，大牛究竟有多么的牛逼，而我又是多么的弱鸡，我怕被淘汰，所以才会一直追在后面，虽然不敢说自己做的有多好，但至少跟上节奏还是没什么问题的。一样的道理，最近的焦虑究其原因只是因为看到了太多的真相，所谓”比别人了解更多”大概就是这个意思。但知道并不意味着什么，现在技术发展信息流通这么简便，只要你想，真的去了解信息其实并没有想象中那么难。这里为什么焦虑，更多的是因为你没法改变什么。举个简单的例子：普通人是被热到不行蛋白质变质的时候开始找出路（然而并不存在），我这种就是锅刚有点热就开始找出路（一样不存在），大家都是被锁死在锅子里，死是仅有的可能性。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Mon, 11 Dec 2017 10:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/12/why-anxiety/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/12/why-anxiety/</guid>
+			</item>
+		
+			<item>
 				<title>如何在Github Page站点上启用HTTPS</title>
 				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
 &lt;p&gt;这篇文章其实来的有点晚了，毕竟我这个博客从之前的wordpress转到github page也已经是很长时间了，当时转的时候就遇到了不是https连接导致打开页面老是弹chrome警告的情况。后来就找了方法开启了https。解决是很早就解决了，这篇文章算是补个记录。&lt;/p&gt;
@@ -942,81 +956,6 @@ sudo launchctl load ./org.v2ray.macos.plist&lt;/code&gt;&lt;/pre&gt;&lt;/figure&
 				<pubDate>Mon, 23 Oct 2017 12:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/10/v2ray/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/10/v2ray/</guid>
-			</item>
-		
-			<item>
-				<title>关于移动设备唯一标识生成</title>
-				<description>&lt;h1 id=&quot;关于移动设备唯一标识生成&quot;&gt;关于移动设备唯一标识生成&lt;/h1&gt;
-
-&lt;h2 id=&quot;1-ios&quot;&gt;1. iOS&lt;/h2&gt;
-&lt;p&gt;iOS的设备唯一标志由iOS系统直接给予，根据应用类型不同分两类：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;IDFV：Vindor标示符，适用于对内：例如分析用户在应用内的行为等。来源是应用的bundle id，e.g com.shinezone。每个发行商的发行的应用的IDFV是一致的。任何应用可以使用。&lt;/li&gt;
-  &lt;li&gt;IDFA：广告标示符，适用于对外：例如广告推广，换量等跨应用的用户追踪等。来源是系统API，设备唯一。仅广告应用可用。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;IDFA非广告应用不得使用（&lt;a href=&quot;https://developer.apple.com/app-store/review/rejections/cn/&quot;&gt;来源&lt;/a&gt;）：&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;广告&lt;/p&gt;
-
-  &lt;p&gt;在你提交 app 以供审核时，将向你询问你的 app 是否使用“广告标识符”(IDFA) 来投放广告。如果你指出 app 使用 IDFA，但是没有广告功能或无法正常显示广告，则你的 app 可能被拒绝。请务必在 iOS 设备上对你的 app 进行测试，以确定广告是否可以正常工作。同样，如果你指出你的 app 未使用 IDFA，但可以显示广告，则会将你的 app 置于“无效的二进制文件”状态。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;2-android&quot;&gt;2. Android&lt;/h2&gt;
-&lt;p&gt;Android的设备唯一标志由系统内的几个信息组合按程序算法生成。其算法不受应用、发行商等要素的影响，只要同设备，生成的ID即一致。&lt;/p&gt;
-
-&lt;h2 id=&quot;3-问题&quot;&gt;3. 问题&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;A、B两个同公司的应用，是否能在同一玩家游玩的时候对他们进行识别&lt;/li&gt;
-  &lt;li&gt;A、B两个不同公司的应用，是否有什么办法能在同一玩家游玩的时候对他们进行识别&lt;/li&gt;
-  &lt;li&gt;A、B两个不同公司的应用，在植入了同一款广告应用之后，该广告应用是否能对使用这两个应用的玩家进行识别&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;4-结论&quot;&gt;4. 结论&lt;/h2&gt;
-&lt;h3 id=&quot;41-ios&quot;&gt;4.1 iOS&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;非广告应用：
-    &lt;ul&gt;
-      &lt;li&gt;问题1：可识别&lt;/li&gt;
-      &lt;li&gt;问题2：不可识别&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;广告应用：都可以识别&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;42-android&quot;&gt;4.2 Android&lt;/h3&gt;
-&lt;p&gt;无关是否广告应用，也无关公司所属。都可以识别。&lt;/p&gt;
-
-&lt;h2 id=&quot;5-验证&quot;&gt;5. 验证&lt;/h2&gt;
-&lt;p&gt;上述结论需要实际实验来进行验证，这里的验证主要是iOS操作系统，无Android部分。测试环境：iPhone7 Plus | iOS 10.3.3&lt;/p&gt;
-
-&lt;p&gt;经实际应用测试，上述的结论没有问题。&lt;/p&gt;
-
-&lt;h2 id=&quot;6-风险点&quot;&gt;6. 风险点&lt;/h2&gt;
-&lt;h3 id=&quot;61-ios&quot;&gt;6.1 iOS&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;在本机所有相同BundleID的应用都被删除的情况下，IDFV会被重置&lt;/li&gt;
-  &lt;li&gt;在开启限制广告跟踪开关的情况下，IDFA无法生成（为0）&lt;/li&gt;
-  &lt;li&gt;开关过一次广告跟踪开关之后，本机的IDFA会重置&lt;/li&gt;
-  &lt;li&gt;刷机和还原系统会重置一切&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;62-android&quot;&gt;6.2 Android&lt;/h3&gt;
-&lt;p&gt;以下行为会改变Android的唯一标识：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;刷机&lt;/li&gt;
-  &lt;li&gt;还原系统&lt;/li&gt;
-  &lt;li&gt;用户更换手机Sim卡&lt;/li&gt;
-  &lt;li&gt;厂商的Bug，定制后的系统，可能多个设备具有一样的Android ID&lt;/li&gt;
-  &lt;li&gt;用户对应用的授权变动&lt;/li&gt;
-&lt;/ul&gt;
-</description>
-				<pubDate>Fri, 13 Oct 2017 12:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/10/mobile-uuid/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/10/mobile-uuid/</guid>
 			</item>
 		
 	</channel>
