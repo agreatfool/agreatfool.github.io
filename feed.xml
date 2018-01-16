@@ -7,6 +7,129 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>GraphQL笔记</title>
+				<description>&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
+&lt;h3 id=&quot;11-为什么graphql&quot;&gt;1.1 为什么GraphQL&lt;/h3&gt;
+&lt;p&gt;REST作为前后端数据交互的业界标杆有其存在的合理性和必要性，但同时用过的人自然也很明白REST接口有其固有的问题存在，而且是很难通过设计和实现上的优化来进行规避。业界一直有各种声音想找到REST的替代者，直到这两年，终于在FB的引导下做出了GraphQL这个设计。GraphQL确实解决了不少REST接口中存在的问题。&lt;/p&gt;
+
+&lt;p&gt;本文的主要目的就是初探GraphQL的实现，制作简单的例子，寻找GraphQL和REST的异同，并尽可能找到GraphQL中存在的问题。&lt;/p&gt;
+
+&lt;h3 id=&quot;12-资料列表&quot;&gt;1.2 资料列表&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://graphql.org/&quot;&gt;网站&lt;/a&gt;：学习第一站，必然先去这里取经
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;http://graphql.cn/&quot;&gt;中文网站&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://facebook.github.io/graphql/&quot;&gt;specification&lt;/a&gt;：类似RFC的东西，详细的文字specification&lt;/li&gt;
+  &lt;li&gt;Github上FB的GraphQL&lt;a href=&quot;https://github.com/graphql&quot;&gt;项目组&lt;/a&gt;：一些好用的工具和类库&lt;/li&gt;
+  &lt;li&gt;Github官方的GraphQL API手册&lt;a href=&quot;https://developer.github.com/v4/&quot;&gt;V4版本&lt;/a&gt;：有相当多值得借鉴的地方&lt;/li&gt;
+  &lt;li&gt;Github上的Apollo GraphQL&lt;a href=&quot;https://github.com/apollographql&quot;&gt;项目组&lt;/a&gt;：算是看到现在做的最好的GraphQL解决方案集合之一了&lt;/li&gt;
+  &lt;li&gt;Github上的Graphcool&lt;a href=&quot;https://github.com/graphcool&quot;&gt;项目组&lt;/a&gt;：相当完美的一个GraphQL解决方案&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hackernoon.com/building-url-shortener-using-react-apollo-and-graphql-part-i-467aef8c64ce&quot;&gt;Building URL shortener using React, Apollo and GraphQL — Part I&lt;/a&gt;：一篇蛮贴近使用者的教程，用的技术是apollo作为前端，graphcool作为后端&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;13-选择&quot;&gt;1.3 选择&lt;/h3&gt;
+&lt;p&gt;任何一个技术，在我观察下来值得进场进行学习的时间点上，肯定已经有至少一到两款成熟（半成熟）的解决方案可以选择使用了。即便只是一个很简单的学习案例，技术的选择仍旧需要小心谨慎。&lt;/p&gt;
+
+&lt;p&gt;就目前看来apollo和graphcool是比较重量级的两个选择，或者可以说是主流的选择。&lt;/p&gt;
+
+&lt;p&gt;就这两者的选择，我最后的切入点很简单：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;apollo是纯JS的实现，对纯JS技术堆栈的团队来说相对友好，出了问题可以自行解决，甚至可以反向贡献&lt;/li&gt;
+  &lt;li&gt;graphcool的后端是Scala实现的，所有的其他语言的工具类库都只是桥接，一旦出了问题，就需要理解Scala语言的实现，甚至需要去找JVM中的问题，很不可靠&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;后续的行文都会以Apollo解决方案为核心。（其实Apollo也就是一些插件，说到底真正使用的其实还是FB官方的graphql）&lt;/p&gt;
+
+&lt;h2 id=&quot;2-技术点学习&quot;&gt;2. 技术点学习&lt;/h2&gt;
+&lt;p&gt;其实这里的技术点最关键的还是本质的GraphQL的技术点，后面其他类似Apollo和Graphcool，无非也是在这个基础上再做封装和拓展。&lt;/p&gt;
+
+&lt;h3 id=&quot;21-graphql&quot;&gt;2.1 GraphQL&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/queries/&quot;&gt;查询和变更&lt;/a&gt;：GraphQL（客户端）如何进行查询，查询语句的格式&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/schema/&quot;&gt;Schema 和类型&lt;/a&gt;：GraphQL的类型系统，如何定义类型&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/validation/&quot;&gt;验证&lt;/a&gt;：GraphQL（服务器）如何对查询进行验证&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/execution/&quot;&gt;执行&lt;/a&gt;：GraphQL（服务器）如何处理查询请求，如何组织返回结构&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/introspection/&quot;&gt;内省&lt;/a&gt;：如何在不明白服务器具体提供哪些查询功能的情况下使用GraphQL接口&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;3-apollo---简单范例&quot;&gt;3. Apollo - 简单范例&lt;/h2&gt;
+
+&lt;h2 id=&quot;4-更复杂的例子&quot;&gt;4. 更复杂的例子&lt;/h2&gt;
+
+&lt;h2 id=&quot;5-结论&quot;&gt;5. 结论&lt;/h2&gt;
+</description>
+				<pubDate>Mon, 15 Jan 2018 10:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/01/graphql/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/01/graphql/</guid>
+			</item>
+		
+			<item>
+				<title>Message Pack 解析问题</title>
+				<description>&lt;h2 id=&quot;问题&quot;&gt;问题&lt;/h2&gt;
+&lt;p&gt;在实际应用过程中，发现message pack压缩产生的二进制内容，通过HTTP请求发送到服务器之后，无法正确解析。经过简单调研后发现，原来是对服务器端程序koa的理解不充分，使用的请求对象错误导致的。这里简单放一个能跑通的例子，以作笔记。&lt;/p&gt;
+
+&lt;h2 id=&quot;sample&quot;&gt;Sample&lt;/h2&gt;
+&lt;h3 id=&quot;client&quot;&gt;Client&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;request&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;msgpack-lite&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqObj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;s2&quot;&gt;&amp;quot;req&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;msgpack&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqBuffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;reqObj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://127.0.0.1:3000/req&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;POST&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqBuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;application/octet-stream&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;Content-Length&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqBuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Print the error if one occurred&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;statusCode:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;statusCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Print the response status code if a response was received&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;body:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;server&quot;&gt;Server&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Koa&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;koa&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Koa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;koaRouter&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;koa-router&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;msgpack-lite&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;router&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;koaRouter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;router&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;/req&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// console.log(ctx.request);&lt;/span&gt;
+
+  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;data&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// console.log(&amp;#39;ctx request data emit...&amp;#39;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;concat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;end&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// console.log(&amp;#39;ctx request data end&amp;#39;);&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;decoded:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Hello World&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;router&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;routes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+</description>
+				<pubDate>Thu, 28 Dec 2017 10:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2017/12/msgpack-http/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2017/12/msgpack-http/</guid>
+			</item>
+		
+			<item>
 				<title>到底在焦虑什么</title>
 				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
 &lt;p&gt;总觉得最近整个人都特别焦虑。&lt;/p&gt;
@@ -644,382 +767,6 @@ file ‘/path/to/file3’&lt;/p&gt;
 				<pubDate>Wed, 08 Nov 2017 14:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/11/react-native-js-thread/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/11/react-native-js-thread/</guid>
-			</item>
-		
-			<item>
-				<title>Ubuntu 16.04 LTS BBR 安装</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;最近找的一些Linux操作系统的VPS选择的时候一般都只支持到16.04的Ubuntu版本，内核一般都是4.4，不支持BBR。所以如何安装这玩意儿也是很麻烦的一件事情。这里做下笔记。&lt;/p&gt;
-
-&lt;h2 id=&quot;1-更新内核&quot;&gt;1. 更新内核&lt;/h2&gt;
-&lt;p&gt;首先需要更新内核到 &amp;gt;= 4.9，到&lt;a href=&quot;http://kernel.ubuntu.com/~kernel-ppa/mainline/&quot;&gt;官网&lt;/a&gt;看了下，一列的内核版本，有点搞不清楚装哪个，于是就找了最新的4.13.11。&lt;/p&gt;
-
-&lt;p&gt;下载内核包并安装：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;mkdir kernel &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; kernel
-wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.11/linux-headers-4.13.11-041311_4.13.11-041311.201711020532_all.deb
-wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.11/linux-headers-4.13.11-041311-generic_4.13.11-041311.201711020532_amd64.deb
-wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.11/linux-image-4.13.11-041311-generic_4.13.11-041311.201711020532_amd64.deb
-sudo dpkg -i *.deb
-reboot&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;重启后查看下：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;uname -r
-&lt;span class=&quot;m&quot;&gt;4&lt;/span&gt;.13.11-041311-generic&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Fri, 03 Nov 2017 09:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/11/bbr/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/11/bbr/</guid>
-			</item>
-		
-			<item>
-				<title>V2Ray安装教程</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;今年的形势非常严峻，年中的时候未雨绸缪准备了下55R，结果没多久就不行了，现在明显是被墙嗅探到，使用几分钟之后就IP无法ping通，停止使用后IP恢复。鉴于55的作者及55R的作者相继仙隐，放弃这个软件是比较正确的选择。找了一圈，看来只有v2ray还能看一看。&lt;/p&gt;
-
-&lt;h2 id=&quot;1-v2ray&quot;&gt;1. V2Ray&lt;/h2&gt;
-&lt;p&gt;几个信息来源这里简单列下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.v2ray.com/&quot;&gt;V2Ray 用户手册&lt;/a&gt;：官方手册，基本上什么都有了&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://toutyrater.github.io/&quot;&gt;V2Ray 配置指南&lt;/a&gt;：一篇第三方的配置指南，可以一看，不过更新一般有点滞后，可以作为参考&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://htfy96.github.io/v2ray-config-gen&quot;&gt;V2Ray配置生成器&lt;/a&gt;：第三方的配置生成辅助工具，新手可以用一下&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;文章：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://vinga.fun/v2ray/&quot;&gt;V2Ray安全混淆教程&lt;/a&gt;：用的工具有点小众，作为程序员可以不需要这个工具，拓扑结构可以看下&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.sairai.bid/v2-memo/&quot;&gt;V2Ray安装使用手记&lt;/a&gt;：比较通俗易懂的一篇文章，推荐&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://toutyrater.github.io/advanced/websocket.html&quot;&gt;WebSocket&lt;/a&gt;：其实就是列表第一篇教程的官方推荐三方教程，所以看这篇就够&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;2-拓扑结构&quot;&gt;2. 拓扑结构&lt;/h2&gt;
-&lt;p&gt;主要可以看这幅图：
-&lt;img src=&quot;https://vinga.fun/images/v2ray-0.jpg&quot; alt=&quot;拓扑结构&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;文字描述简单来说就是：  &lt;br /&gt;
-别的代理都是直接客户端穿墙使用TCP、HTTP或自定义协议和墙外的服务器连接。  &lt;br /&gt;
-V2Ray的这套方案则是在墙外做一个启用HTTPS的Nginx服务，使用本地的客户端和墙外的Nginx以WS协议进行连接（这就和一个真正的网站行为一模一样了）。然后在Nginx背后用代理进行内容的访问。  &lt;br /&gt;
-这样的解决方案墙是无法分辨到底是一个代理服务器还是一个正常用户在用HTTPS访问网站，HTTPS也保证了墙无法探知流量的内容。&lt;/p&gt;
-
-&lt;h2 id=&quot;3-安装&quot;&gt;3. 安装&lt;/h2&gt;
-&lt;h3 id=&quot;31-v2ray本体&quot;&gt;3.1 V2Ray本体&lt;/h3&gt;
-&lt;p&gt;官方有提供安装脚本，直接使用即可：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;bash &amp;lt;&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;curl -L -s https://install.direct/go.sh&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;几个位置信息：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;bin命令：/usr/bin/v2ray/v2ray  &lt;br /&gt;
-配置文件：/etc/v2ray/config.json  &lt;br /&gt;
-service：/lib/systemd/system/v2ray.service  &lt;br /&gt;
-日志指定是放在配置文件里的：log.access 和 log.error，一般放在：/var/log/v2ray/access.log 和 /var/log/v2ray/error.log&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;32-安装nginx&quot;&gt;3.2 安装nginx&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;apt-get install nginx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;nginx的几个信息：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;配置路径：/etc/nginx  &lt;br /&gt;
-www路径：/var/www/html  &lt;br /&gt;
-日志：/var/log/nginx&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;33-安装证书&quot;&gt;3.3 安装证书&lt;/h3&gt;
-&lt;p&gt;参考这篇文章：&lt;a href=&quot;https://ruby-china.org/topics/31983&quot;&gt;使用 acme.sh 给 Nginx 安装 Let’ s Encrypt 提供的免费 SSL 证书&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;安装 acme.sh 命令：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;curl https://get.acme.sh &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; sh
-&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bashrc&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;申请证书：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;acme.sh --issue -d &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; -w /var/www/html&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;root@vultr:~/opt# acme.sh –issue -d ${domain} -w /var/www/html  &lt;br /&gt;
-[Tue Oct 24 09:00:39 UTC 2017] Registering account  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] Registered  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] Update account tos info success.  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] ACCOUNT_THUMBPRINT=’…’  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] Creating domain key  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] The domain key is here: /root/.acme.sh/${domain}/${domain}.key  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] Single domain=’${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] Getting domain auth token for each domain  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] Getting webroot for domain=’${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:00:40 UTC 2017] Getting new-authz for domain=’${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:00:41 UTC 2017] The new-authz request is ok.  &lt;br /&gt;
-[Tue Oct 24 09:00:41 UTC 2017] Verifying:${domain}  &lt;br /&gt;
-[Tue Oct 24 09:00:44 UTC 2017] Success  &lt;br /&gt;
-[Tue Oct 24 09:00:44 UTC 2017] Verify finished, start to sign.  &lt;br /&gt;
-/root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input  &lt;br /&gt;
-[Tue Oct 24 09:00:45 UTC 2017] Cert success.  &lt;br /&gt;
-—–BEGIN CERTIFICATE—–  &lt;br /&gt;
-…  &lt;br /&gt;
-—–END CERTIFICATE—–  &lt;br /&gt;
-[Tue Oct 24 09:00:45 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer  &lt;br /&gt;
-[Tue Oct 24 09:00:45 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key  &lt;br /&gt;
-[Tue Oct 24 09:00:45 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer  &lt;br /&gt;
-[Tue Oct 24 09:00:45 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;安装证书：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;acme.sh --installcert -d &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-        --keypath       /var/www/ssl/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;.key  &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-        --fullchainpath /var/www/ssl/&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;.key.pem &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-        --reloadcmd     &lt;span class=&quot;s2&quot;&gt;&amp;quot;sudo service nginx force-reload&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;[Tue Oct 24 09:23:54 UTC 2017] Installing key to:/var/www/ssl/${domain}.key  &lt;br /&gt;
-[Tue Oct 24 09:23:54 UTC 2017] Installing full chain to:/var/www/ssl/${domain}.key.pem  &lt;br /&gt;
-[Tue Oct 24 09:23:54 UTC 2017] Run reload cmd: sudo service nginx force-reload  &lt;br /&gt;
-[Tue Oct 24 09:23:54 UTC 2017] Reload success&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;生成 dhparam.pem 文件：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;openssl dhparam -out /var/www/ssl/dhparam.pem &lt;span class=&quot;m&quot;&gt;2048&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;修改 Nginx 配置：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-apache&quot; data-lang=&quot;apache&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;http&lt;/span&gt; {
-    &lt;span class=&quot;c&quot;&gt;# 新增&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;ssl_protocols&lt;/span&gt; TLSv1 TLSv1.1 TLSv1.2;
-    &lt;span class=&quot;nb&quot;&gt;ssl_prefer_server_ciphers&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;on&lt;/span&gt;;
-    &lt;span class=&quot;c&quot;&gt;# 兼容其他老浏览器的 ssl_ciphers 设置请访问 https://wiki.mozilla.org/Security/Server_Side_TLS&lt;/span&gt;
-
-    &lt;span class=&quot;nb&quot;&gt;server&lt;/span&gt; {
-        &lt;span class=&quot;nb&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt; default_server;
-        &lt;span class=&quot;c&quot;&gt;# 新增&lt;/span&gt;
-        &lt;span class=&quot;nb&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;443&lt;/span&gt; ssl;
-        &lt;span class=&quot;nb&quot;&gt;ssl_certificate&lt;/span&gt;         &lt;span class=&quot;sx&quot;&gt;/var/www/ssl/&lt;/span&gt;${domain}.key.pem;
-        &lt;span class=&quot;nb&quot;&gt;ssl_certificate_key&lt;/span&gt;     &lt;span class=&quot;sx&quot;&gt;/var/www/ssl/&lt;/span&gt;${domain}.key;
-        &lt;span class=&quot;c&quot;&gt;# ssl_dhparam &lt;/span&gt;
-        &lt;span class=&quot;nb&quot;&gt;ssl_dhparam&lt;/span&gt;             &lt;span class=&quot;sx&quot;&gt;/var/www/ssl/dhparam.pem&lt;/span&gt;;
-
-        &lt;span class=&quot;c&quot;&gt;# 其他省略&lt;/span&gt;
-    &lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;使用检测工具查看安全评级：&lt;code&gt;https://www.ssllabs.com/ssltest/analyze.html?d=${domain}&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;使用 crontab 命令查看 acme.sh 添加的证书刷新脚本：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;crontab -l&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;并手动尝试执行，看下结果：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;[Tue Oct 24 09:47:37 UTC 2017] ===Starting cron===  &lt;br /&gt;
-[Tue Oct 24 09:47:37 UTC 2017] Renew: ‘${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:47:37 UTC 2017] Skip, Next renewal time is: Sat Dec 23 09:00:45 UTC 2017  &lt;br /&gt;
-[Tue Oct 24 09:47:37 UTC 2017] Add ‘–force’ to force to renew.  &lt;br /&gt;
-[Tue Oct 24 09:47:37 UTC 2017] Skipped ${domain}  &lt;br /&gt;
-[Tue Oct 24 09:47:37 UTC 2017] ===End cron===&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;时间没到命令并不会直接刷新证书，要尝试的话，可以添加 –force 来强制执行：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;[Tue Oct 24 09:48:45 UTC 2017] ===Starting cron===  &lt;br /&gt;
-[Tue Oct 24 09:48:45 UTC 2017] Renew: ‘${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:48:45 UTC 2017] Single domain=’${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:48:45 UTC 2017] Getting domain auth token for each domain  &lt;br /&gt;
-[Tue Oct 24 09:48:45 UTC 2017] Getting webroot for domain=’${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:48:45 UTC 2017] Getting new-authz for domain=’${domain}’  &lt;br /&gt;
-[Tue Oct 24 09:48:46 UTC 2017] The new-authz request is ok.  &lt;br /&gt;
-[Tue Oct 24 09:48:46 UTC 2017] ${domain} is already verified, skip http-01.  &lt;br /&gt;
-[Tue Oct 24 09:48:46 UTC 2017] Verify finished, start to sign.  &lt;br /&gt;
-/root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] Cert success.  &lt;br /&gt;
-—–BEGIN CERTIFICATE—–  &lt;br /&gt;
-…  &lt;br /&gt;
-—–END CERTIFICATE—–  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] And the full chain certs is there:  /root/.acme.sh/${domain}/fullchain.cer  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] Installing key to:/var/www/ssl/${domain}.key  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] Installing full chain to:/var/www/ssl/${domain}.key.pem  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] Run reload cmd: sudo service nginx force-reload  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] Reload success  &lt;br /&gt;
-[Tue Oct 24 09:48:47 UTC 2017] ===End cron===&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;34-配置v2ray服务器&quot;&gt;3.4 配置V2Ray服务器&lt;/h3&gt;
-&lt;p&gt;编辑配置文件&lt;code&gt;/etc/v2ray/config.json&lt;/code&gt;：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;access&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/var/log/v2ray/access.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;error&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/var/log/v2ray/error.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;loglevel&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;warning&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;inbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;127.0.0.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;vmess&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;clients&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${UUID}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;alterId&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;aes-128-cfb&amp;quot;&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;streamSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;network&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;ws&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;auto&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;wsSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;s2&quot;&gt;&amp;quot;connectionReuse&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;s2&quot;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/serv/&amp;quot;&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;outbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;freedom&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;使用命令启动v2ray：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;service v2ray start&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;35-配置nginx&quot;&gt;3.5 配置Nginx&lt;/h3&gt;
-&lt;p&gt;在之前安装HTTPS更改过的nginx配置中再添加一个location：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-apache&quot; data-lang=&quot;apache&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;sx&quot;&gt;/serv/&lt;/span&gt; {
-    &lt;span class=&quot;nb&quot;&gt;proxy_redirect&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;off&lt;/span&gt;;
-    &lt;span class=&quot;nb&quot;&gt;proxy_pass&lt;/span&gt; http://127.0.0.1:10000;
-    &lt;span class=&quot;nb&quot;&gt;proxy_http_version&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;.1;
-    &lt;span class=&quot;nb&quot;&gt;proxy_set_header&lt;/span&gt; Upgrade $http_upgrade;
-    &lt;span class=&quot;nb&quot;&gt;proxy_set_header&lt;/span&gt; Connection &lt;span class=&quot;s2&quot;&gt;&amp;quot;upgrade&amp;quot;&lt;/span&gt;;
-    &lt;span class=&quot;nb&quot;&gt;proxy_set_header&lt;/span&gt; Host $http_host;
-&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;重启nginx：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;service nginx restart&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;36-配置本地v2ray&quot;&gt;3.6 配置本地V2Ray&lt;/h3&gt;
-&lt;p&gt;仍旧编辑config.json文件：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;log&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;access&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;.../log/access.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;error&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;.../log/error.log&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;loglevel&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;warning&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;inbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10801&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;listen&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;127.0.0.1&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;socks&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;auth&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;noauth&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;udp&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;outbound&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;protocol&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;vmess&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;vnext&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;address&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${domain}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;port&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;443&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                    &lt;span class=&quot;s2&quot;&gt;&amp;quot;users&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-                        &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;id&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${UUID}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;level&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;alterId&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                            &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;aes-128-cfb&amp;quot;&lt;/span&gt;
-                        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                    &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-        &lt;span class=&quot;s2&quot;&gt;&amp;quot;streamSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;network&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;ws&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;security&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;tls&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;wsSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;s2&quot;&gt;&amp;quot;connectionReuse&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;s2&quot;&gt;&amp;quot;path&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/serv/&amp;quot;&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
-            &lt;span class=&quot;s2&quot;&gt;&amp;quot;tlsSettings&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;s2&quot;&gt;&amp;quot;serverName&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;${domain}&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                &lt;span class=&quot;s2&quot;&gt;&amp;quot;allowInsecure&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;启动本地的v2ray：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;v2ray -config …/config.json&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h3 id=&quot;37-制作mac启动文件&quot;&gt;3.7 制作MAC启动文件&lt;/h3&gt;
-&lt;p&gt;vim org.v2ray.macos.plist&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-xml&quot; data-lang=&quot;xml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;&amp;lt;!DOCTYPE plist PUBLIC &amp;quot;-//Apple//DTD PLIST 1.0//EN&amp;quot; &amp;quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&amp;quot;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;plist&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;version=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;GroupName&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;wheel&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;KeepAlive&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;dict&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;SuccessfulExit&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;false/&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;Label&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;org.v2ray.macos&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;WorkingDirectory&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;ProgramArguments&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;array&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/v2ray/v2ray&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;-config&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-		&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;config/config.json&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;/array&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;RunAtLoad&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;true/&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;StandardErrorPath&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/log/error.log&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;StandardOutPath&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;.../V2Ray/log/access.log&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;key&amp;gt;&lt;/span&gt;UserName&lt;span class=&quot;nt&quot;&gt;&amp;lt;/key&amp;gt;&lt;/span&gt;
-	&lt;span class=&quot;nt&quot;&gt;&amp;lt;string&amp;gt;&lt;/span&gt;root&lt;span class=&quot;nt&quot;&gt;&amp;lt;/string&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/dict&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nt&quot;&gt;&amp;lt;/plist&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;MAC启动&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;vim /Library/LaunchDaemons/org.v2ray.macos.plist
-sudo launchctl load ./org.v2ray.macos.plist&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-</description>
-				<pubDate>Mon, 23 Oct 2017 12:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/10/v2ray/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/10/v2ray/</guid>
 			</item>
 		
 	</channel>
