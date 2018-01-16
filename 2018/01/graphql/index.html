@@ -131,13 +131,13 @@
 
 <p>就目前看来apollo和graphcool是比较重量级的两个选择，或者可以说是主流的选择。</p>
 
-<p>就这两者的选择，我最后的切入点很简单：</p>
+<p>就这两者的选择，我最后的理由很简单：</p>
 <ul>
   <li>apollo是纯JS的实现，对纯JS技术堆栈的团队来说相对友好，出了问题可以自行解决，甚至可以反向贡献</li>
   <li>graphcool的后端是Scala实现的，所有的其他语言的工具类库都只是桥接，一旦出了问题，就需要理解Scala语言的实现，甚至需要去找JVM中的问题，很不可靠</li>
 </ul>
 
-<p>后续的行文都会以Apollo解决方案为核心。（其实Apollo也就是一些插件，说到底真正使用的其实还是FB官方的graphql）</p>
+<p>后续的行文都会以Apollo解决方案为核心。（其实Apollo也就是一些插件，说到底真正使用的核心其实还是FB官方的graphql）</p>
 
 <h2 id="2-技术点学习">2. 技术点学习</h2>
 <p>其实这里的技术点最关键的还是本质的GraphQL的技术点，后面其他类似Apollo和Graphcool，无非也是在这个基础上再做封装和拓展。</p>
@@ -149,6 +149,22 @@
   <li><a href="http://graphql.cn/learn/validation/">验证</a>：GraphQL（服务器）如何对查询进行验证</li>
   <li><a href="http://graphql.cn/learn/execution/">执行</a>：GraphQL（服务器）如何处理查询请求，如何组织返回结构</li>
   <li><a href="http://graphql.cn/learn/introspection/">内省</a>：如何在不明白服务器具体提供哪些查询功能的情况下使用GraphQL接口</li>
+</ul>
+
+<p>基本上官方的GraphQL教程只提供了最基本的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：</p>
+
+<ul>
+  <li>如何批量化自动化地进行客户端请求：GraphQL的客户端请求不单单仅仅只是一个URL或者一个Post请求带几个参数，作为只有一个入口的API系统，所有的客户端请求都是需要自主构建的，对于客户端来说也是很大的工作量</li>
+  <li>如何做好数据到接口的映射：最好能有数据模型到API接口的转换映射工具，如果按FB官方GraphQL简介中那样每一段代码都自己写，这个工作量还不如去写REST</li>
+  <li>如何做好缓存工作：GraphQL的请求非常自由，在对外的API这一层到中间的业务层之间，如何添加缓存就成了设计上的一个大问题</li>
+  <li>等等</li>
+</ul>
+
+<h3 id="22-apollo">2.2 Apollo</h3>
+<ul>
+  <li><a href="https://www.apollographql.com/client/">Apollo客户端</a></li>
+  <li><a href="https://www.apollographql.com/docs/apollo-server/">Apollo服务器</a></li>
+  <li><a href="https://www.apollographql.com/docs/graphql-tools/">Apollo工具集</a></li>
 </ul>
 
 <h2 id="3-apollo---简单范例">3. Apollo - 简单范例</h2>
