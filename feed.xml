@@ -34,19 +34,19 @@
   &lt;li&gt;&lt;a href=&quot;https://github.com/graphql/graphql-js&quot;&gt;GraphQL.js&lt;/a&gt;：FB官方的JS实现&lt;/li&gt;
   &lt;li&gt;Github官方的GraphQL API手册&lt;a href=&quot;https://developer.github.com/v4/&quot;&gt;V4版本&lt;/a&gt;：有相当多值得借鉴的地方&lt;/li&gt;
   &lt;li&gt;Github上的Apollo GraphQL&lt;a href=&quot;https://github.com/apollographql&quot;&gt;项目组&lt;/a&gt;：算是看到现在做的最好的GraphQL解决方案集合之一了&lt;/li&gt;
-  &lt;li&gt;Github上的Graphcool&lt;a href=&quot;https://github.com/graphcool&quot;&gt;项目组&lt;/a&gt;：相当完美的一个GraphQL解决方案&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hackernoon.com/building-url-shortener-using-react-apollo-and-graphql-part-i-467aef8c64ce&quot;&gt;Building URL shortener using React, Apollo and GraphQL — Part I&lt;/a&gt;：一篇蛮贴近使用者的教程，用的技术是apollo作为前端，graphcool作为后端&lt;/li&gt;
+  &lt;li&gt;Github上的Graphcool&lt;a href=&quot;https://github.com/graphcool&quot;&gt;项目组&lt;/a&gt;：设计思路很优秀的一个GraphQL解决方案，目前的进度较初步&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hackernoon.com/building-url-shortener-using-react-apollo-and-graphql-part-i-467aef8c64ce&quot;&gt;Building URL shortener using React, Apollo and GraphQL — Part I&lt;/a&gt;：一篇蛮贴近使用者的教程，用的技术是apollo作为前端，graphcool作为后端，可以阅读理解下&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;13-选择&quot;&gt;1.3 选择&lt;/h3&gt;
-&lt;p&gt;任何一个技术，在我观察下来值得进场进行学习的时间点上，肯定已经有至少一到两款成熟（半成熟）的解决方案可以选择使用了。即便只是一个很简单的学习案例，技术的选择仍旧需要小心谨慎。&lt;/p&gt;
+&lt;p&gt;任何一个技术，在我观察下来值得进场进行学习的时间点上，肯定已经有至少一到两款成熟（半成熟）的解决方案可以选择使用了。即便只是一个很简单的学习案例，技术的选择仍旧需要谨慎。&lt;/p&gt;
 
 &lt;p&gt;就目前看来apollo和graphcool是比较重量级的两个选择，或者可以说是主流的选择。&lt;/p&gt;
 
 &lt;p&gt;就这两者的选择，我最后的理由很简单：&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;apollo是纯JS的实现，对纯JS技术堆栈的团队来说相对友好，出了问题可以自行解决，甚至可以反向贡献&lt;/li&gt;
-  &lt;li&gt;graphcool的后端是Scala实现的，所有的其他语言的工具类库都只是桥接，一旦出了问题，就需要理解Scala语言的实现，甚至需要去找JVM中的问题，很不可靠&lt;/li&gt;
+  &lt;li&gt;graphcool的后端是Scala实现的，所有的其他语言的工具类库都只是桥接，一旦出了问题，就需要理解Scala语言的实现，甚至需要去找JVM中的问题，很不友好&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;后续的行文都会以Apollo解决方案为核心。（其实Apollo也就是一些插件，说到底真正使用的核心其实还是FB官方的graphql）&lt;/p&gt;
@@ -118,9 +118,9 @@
 
 &lt;h2 id=&quot;4-总结&quot;&gt;4. 总结&lt;/h2&gt;
 &lt;h3 id=&quot;41-结论&quot;&gt;4.1 结论&lt;/h3&gt;
-&lt;p&gt;先说结论，就目前GraphQL的情况来看，仍旧不适合选为业务的主力技术选型投入生产。经过那么多年的发展，GraphQL的表现只能说不温不火。仔细看下FB的GraphQL的specification的话，其实内容也没多少，而FB的教程网站上，内容也就那么点。可以说GraphQL本身并不是一个很复杂的技术，就类似FB的另一个开源项目React，其中的理念”虚拟DOM”也是类似量级的设计，作为比较可以很清楚看到React的社区和现状应该说是非常繁荣的，爆炸式的发展。而相较之下GraphQL就很一般了。&lt;/p&gt;
+&lt;p&gt;先说结论，就目前GraphQL的情况来看，仍旧不适合选为业务的主力技术选型投入生产。经过那么多年的发展，GraphQL的表现只能说不温不火。仔细看下FB的GraphQL的specification的话，其实内容也没多少，而FB的教程网站上，内容也就那么点。可以说GraphQL本身并不是一个很复杂的技术，就类似FB的另一个开源项目React，其中的理念”虚拟DOM”也是类似的量级设计，作为比较可以很清楚看到React的社区和现状应该说是非常繁荣的，爆炸式的发展。而相较之下GraphQL就很一般了。&lt;/p&gt;
 
-&lt;p&gt;关键的杀手级的产品到现在仍旧还看不见。我知道的两款比较重要的产品：Apollo仅仅只能说是能用，它只是在GraphQL官方的基础上做了一些简化API的封装，仅此而已；而Graphcool，我只能说现在还处在一个早期阶段，无论是文档，还是范例，还是社区，都很初级，远没到能投入生产的地步。&lt;/p&gt;
+&lt;p&gt;关键的杀手级的产品到现在仍旧还看不见。我所知道的两款比较重要的产品：Apollo仅仅只能说是能用，它只是在GraphQL官方的基础上做了一些简化API的封装，仅此而已；而Graphcool，我只能说现在还处在一个早期阶段，无论是文档，还是范例，还是社区，都很初级，远没到能投入生产的地步。&lt;/p&gt;
 
 &lt;p&gt;所以目前来看，GraphQL仍旧只适合观望，而不是投入。&lt;/p&gt;
 
@@ -131,19 +131,19 @@
 
 &lt;p&gt;简单解释下一下，其实这很容易理解。&lt;/p&gt;
 
-&lt;p&gt;RESTful作为一项成熟的技术，在JS界就有诸如Swagger这样的神技工具，社区对它的支持非常完美。项目投产，基本上不需要考虑技术上的问题，直接做就是了。业务需要数据A，那我就做一个endpoint A，业务需要数据B，那我就做一个endpoint B。如果客户端需要混合数据A+B，且觉得两次HTTP请求Cost太大，那我就做个新的endpoint AB，把A+B的数据直接吐出去就好了。这样，研发的效率会非常高。当然，RESTful的问题也是出在这里，当你的业务量级急速发展的时候，项目的后续维护管理会非常困难，那么多的endpoint哪些有用哪些没用没有任何人清楚，到后来数据模型一改可能需要改动的API不计其数。项目的维护成本呈指数级上升。&lt;/p&gt;
+&lt;p&gt;RESTful作为一项成熟的技术，在JS界就有诸如Swagger这样的神器工具，社区对它的支持非常完美。项目投产，基本上不需要考虑技术上的问题，直接做就是了。业务需要数据A，那我就做一个endpoint A，业务需要数据B，那我就做一个endpoint B。如果客户端需要混合数据A+B，且觉得两次HTTP请求Cost太大，那我就做个新的endpoint AB，把A+B的数据直接吐出去就好了。这样，根据需求来，要什么给什么，研发的效率会非常高。当然，RESTful的问题也是出在这里，当你的业务量级急速发展的时候，项目的后续维护管理会非常困难，那么多的endpoint哪些有用哪些没用没有任何人清楚，到后来数据模型一改可能需要改动的API不计其数。项目的维护成本呈指数级上升。&lt;/p&gt;
 
 &lt;p&gt;GraphQL则完全相反，其理念在于客户端endpoint只有一个，而这个终端可以根据查询条件来获取后端数据模型中的任何数据。在项目投产初期，及后续业务拓展的时候，研发的代码量会比较高，因为无论客户端需要不需要服务端都必须将模型解析出去（resolver），而且是解析到字段级别，层层下行直到目标成为标量。当然有人可能会说，没有人强制要求把所有的服务端模型都解析出去，但一旦在研发的过程中某些解析某些不解析，到后面会遇到和RESTful一样的问题：管理复杂度上升，所以最好的做法就是一开始都解析，访问权限则另说。所以在项目复杂度上，GraphQL是非常平稳的，只要有模型，我就要做映射要做解析，做完了，那么客户端想要什么和我就没关系了，反正都能拿得到，不存在API后期泛滥的问题。但解析和映射的代码量将非常可观，研发的成本可以想见是不会低的，而且初期的构建难度会高于RESTful，架构师必须把很多东西都想清楚才能开始。毕竟GraphQL是对于后端数据的图映射，在resolver里基本上是一一对应的关系，不方便做类似RESTful接口那样在逻辑层进行返回数据和模型之间的转换。&lt;/p&gt;
 
-&lt;p&gt;所以GraphQL的项目，难度在前面，好处在后面，对小型项目来说根本没有意义。小型项目当然会选技术和社区更成熟的RESTful技术解决方案。&lt;/p&gt;
+&lt;p&gt;所以GraphQL的项目，难度在前面，好处在后面，对小型项目来说根本没有意义。小型项目当然会选技术和社区更成熟的RESTful解决方案。&lt;/p&gt;
 
 &lt;h3 id=&quot;43-设计理念&quot;&gt;4.3 设计理念&lt;/h3&gt;
-&lt;p&gt;在我看来，GraphQL要真的爆发开来，还是必须要有一款杀手级应用做好工具和生态。由我设计的框架，比如最近用的很重的&lt;a href=&quot;https://github.com/agreatfool/SASDN&quot;&gt;SASDN&lt;/a&gt;，设计理念很简单：为使用者减负，使用者只需要编写数据模型的定义，然后框架会自动将大量代码生成出来，然后使用者只需要专注在需要他们编写的业务代码上即可。&lt;/p&gt;
+&lt;p&gt;在我看来，GraphQL要真的爆发开来，还是必须要有一款杀手级应用做好工具和生态。由我设计的框架，比如最近用的很重的&lt;a href=&quot;https://github.com/agreatfool/SASDN&quot;&gt;SASDN&lt;/a&gt;，设计理念很简单：为使用者减负，使用者只需要编写数据模型的定义，然后框架会自动将大量代码生成出来，使用者只需要专注在需要他们编写的业务代码上即可。&lt;/p&gt;
 
-&lt;p&gt;Graphcool目前是在这个道路上走，但离重点仍旧非常遥远。Scala的服务器、初级的项目进度、文档匮乏、范例匮乏，等等。&lt;/p&gt;
+&lt;p&gt;Graphcool目前是在这个道路上走，但离终点仍旧非常遥远。需要解决的问题有很多：Scala的服务器、初级的项目进度、文档匮乏、范例匮乏，等等。&lt;/p&gt;
 
 &lt;h3 id=&quot;44-展望&quot;&gt;4.4 展望&lt;/h3&gt;
-&lt;p&gt;GraphQL是业界的将来，这点毋庸置疑。目前不推荐使用，仅仅只是不成熟，工作量大，投入产出不成正比（特别是小型项目）。但对于大公司（比如目前已经到v4的Github API），GraphQL无疑是解决RESTful带来的一系列顽疾的良药。&lt;/p&gt;
+&lt;p&gt;GraphQL是业界的将来，这点毋庸置疑。目前不推荐使用，仅仅只是因为当前来看仍旧不成熟，工作量大，投入产出不成正比（特别是小型项目）。但对于大公司（比如目前已经到v4的Github API），GraphQL无疑是解决RESTful带来的一系列顽疾的良药。&lt;/p&gt;
 
 &lt;p&gt;期待后续的发展。&lt;/p&gt;
 
