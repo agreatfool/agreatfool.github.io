@@ -151,7 +151,7 @@
   <li><a href="http://graphql.cn/learn/introspection/">内省</a>：如何在不明白服务器具体提供哪些查询功能的情况下使用GraphQL接口</li>
 </ul>
 
-<p>基本上官方的GraphQL教程只提供了最基本的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：</p>
+<p>基本上，官方的GraphQL教程只提供了最基础的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：</p>
 
 <ul>
   <li>如何批量化自动化地进行客户端请求：GraphQL的客户端请求不单单仅仅只是一个URL或者一个Post请求带几个参数，作为只有一个入口的API系统，所有的客户端请求都是需要自主构建的，对于客户端来说也是很大的工作量</li>
@@ -161,17 +161,42 @@
 </ul>
 
 <h3 id="22-apollo">2.2 Apollo</h3>
+<h4 id="221-主要文档入口">2.2.1 主要文档入口</h4>
 <ul>
-  <li><a href="https://www.apollographql.com/client/">Apollo客户端</a></li>
+  <li><a href="https://www.apollographql.com/docs/react/">Apollo客户端</a></li>
   <li><a href="https://www.apollographql.com/docs/apollo-server/">Apollo服务器</a></li>
   <li><a href="https://www.apollographql.com/docs/graphql-tools/">Apollo工具集</a></li>
 </ul>
 
-<h2 id="3-apollo---简单范例">3. Apollo - 简单范例</h2>
+<h4 id="222-客户端">2.2.2 客户端</h4>
+<ul>
+  <li><a href="https://www.npmjs.com/package/apollo-client-preset">apollo-client-preset</a>：整合完成的客户端包
+    <ul>
+      <li><a href="https://www.apollographql.com/docs/react/basics/setup.html#ApolloClient">ApolloClient</a>：客户端实例</li>
+      <li><a href="https://www.apollographql.com/docs/link/">ApolloLink</a>：这部分有点不太能理解
+        <ul>
+          <li>Apollo Link is a simple yet powerful way to describe how you want to get the result of a GraphQL operation, and what you want to do with the results.</li>
+          <li><a href="https://www.apollographql.com/docs/link/stateful.html">StatefulLink</a>：有状态的Link可以看下，在实例内部保存了一些状态数据</li>
+        </ul>
+      </li>
+      <li>剩下的内容和React等实现联系得太过紧密，可以不用在高层抽象理解的时候即刻就去看，放后面也没问题</li>
+      <li>从现在简单了解来看，Apollo的客户端其实并没有解决什么实际的问题，API仍旧需要自己组装一堆字符串去进行调用</li>
+      <li>对GraphQL来说，相对服务器的复杂度，客户端的复杂度其实要低得多，问题仅在于如何高效地研发，减少编码量</li>
+    </ul>
+  </li>
+</ul>
 
-<h2 id="4-更复杂的例子">4. 更复杂的例子</h2>
+<h4 id="223-服务器">2.2.3 服务器</h4>
+
+<h2 id="3-范例---apollo-简单">3. 范例 - Apollo 简单</h2>
+
+<h2 id="4-范例---apollo-复杂">4. 范例 - Apollo 复杂</h2>
 
 <h2 id="5-结论">5. 结论</h2>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
 
               </div>
               

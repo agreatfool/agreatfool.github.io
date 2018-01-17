@@ -54,7 +54,7 @@
   &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/introspection/&quot;&gt;内省&lt;/a&gt;：如何在不明白服务器具体提供哪些查询功能的情况下使用GraphQL接口&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;基本上官方的GraphQL教程只提供了最基本的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：&lt;/p&gt;
+&lt;p&gt;基本上，官方的GraphQL教程只提供了最基础的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;如何批量化自动化地进行客户端请求：GraphQL的客户端请求不单单仅仅只是一个URL或者一个Post请求带几个参数，作为只有一个入口的API系统，所有的客户端请求都是需要自主构建的，对于客户端来说也是很大的工作量&lt;/li&gt;
@@ -64,17 +64,42 @@
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;22-apollo&quot;&gt;2.2 Apollo&lt;/h3&gt;
+&lt;h4 id=&quot;221-主要文档入口&quot;&gt;2.2.1 主要文档入口&lt;/h4&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/client/&quot;&gt;Apollo客户端&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/&quot;&gt;Apollo客户端&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/&quot;&gt;Apollo服务器&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/&quot;&gt;Apollo工具集&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;3-apollo---简单范例&quot;&gt;3. Apollo - 简单范例&lt;/h2&gt;
+&lt;h4 id=&quot;222-客户端&quot;&gt;2.2.2 客户端&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/apollo-client-preset&quot;&gt;apollo-client-preset&lt;/a&gt;：整合完成的客户端包
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/basics/setup.html#ApolloClient&quot;&gt;ApolloClient&lt;/a&gt;：客户端实例&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/&quot;&gt;ApolloLink&lt;/a&gt;：这部分有点不太能理解
+        &lt;ul&gt;
+          &lt;li&gt;Apollo Link is a simple yet powerful way to describe how you want to get the result of a GraphQL operation, and what you want to do with the results.&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/stateful.html&quot;&gt;StatefulLink&lt;/a&gt;：有状态的Link可以看下，在实例内部保存了一些状态数据&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;剩下的内容和React等实现联系得太过紧密，可以不用在高层抽象理解的时候即刻就去看，放后面也没问题&lt;/li&gt;
+      &lt;li&gt;从现在简单了解来看，Apollo的客户端其实并没有解决什么实际的问题，API仍旧需要自己组装一堆字符串去进行调用&lt;/li&gt;
+      &lt;li&gt;对GraphQL来说，相对服务器的复杂度，客户端的复杂度其实要低得多，问题仅在于如何高效地研发，减少编码量&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h2 id=&quot;4-更复杂的例子&quot;&gt;4. 更复杂的例子&lt;/h2&gt;
+&lt;h4 id=&quot;223-服务器&quot;&gt;2.2.3 服务器&lt;/h4&gt;
+
+&lt;h2 id=&quot;3-范例---apollo-简单&quot;&gt;3. 范例 - Apollo 简单&lt;/h2&gt;
+
+&lt;h2 id=&quot;4-范例---apollo-复杂&quot;&gt;4. 范例 - Apollo 复杂&lt;/h2&gt;
 
 &lt;h2 id=&quot;5-结论&quot;&gt;5. 结论&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
 </description>
 				<pubDate>Mon, 15 Jan 2018 10:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/01/graphql/</link>
