@@ -111,6 +111,14 @@
 
 <p>本文的主要目的就是初探GraphQL的实现，制作简单的例子，寻找GraphQL和REST的异同，并尽可能找到GraphQL中存在的问题。</p>
 
+<p>详细阅读：</p>
+
+<ul>
+  <li><a href="https://sofish.github.io/restcookbook/">RESTful 手册</a></li>
+  <li><a href="http://www.infoq.com/cn/news/2013/06/rest-drawbacks">REST的缺点是什么？</a></li>
+  <li><a href="https://dev-blog.apollodata.com/graphql-vs-rest-5d425123e34b">GraphQL vs. REST</a></li>
+</ul>
+
 <h3 id="12-资料列表">1.2 资料列表</h3>
 <ul>
   <li>FB官方的GraphQL<a href="http://graphql.org/">网站</a>：学习第一站，必然先去这里取经
@@ -185,14 +193,28 @@
 </ul>
 
 <h4 id="223-服务器">2.2.3 服务器</h4>
+<ul>
+  <li><a href="https://www.apollographql.com/docs/apollo-server/example.html">End-to-End Example</a>：Apollo官方的Example，基本上简单到极致了，和直接裸用GraphQL.js没有本质区别</li>
+  <li><a href="https://www.apollographql.com/docs/apollo-server/requests.html">POST and GET format</a>：请求格式，就是GraphQL的基本格式，没有黑科技</li>
+  <li>其他没什么有营养的东西了，服务器实在是简单，当然也意味着没有解决我之前提到的问题</li>
+</ul>
 
-<h2 id="3-范例---apollo-简单">3. 范例 - Apollo 简单</h2>
+<h4 id="224-工具集">2.2.4 工具集</h4>
+<blockquote>
+  <p>GraphQL Tools is an npm package and an opinionated structure for how to build a GraphQL schema and resolvers in JavaScript, following the GraphQL-first development workflow.</p>
+</blockquote>
 
-<h2 id="4-范例---apollo-复杂">4. 范例 - Apollo 复杂</h2>
+<p>简单来说就是一堆API，方便你制作Schema和Resolvers。但实际上并没有解决映射和代码量（研发工作量）的问题。</p>
 
-<h2 id="5-结论">5. 结论</h2>
+<ul>
+  <li><a href="https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema">makeExecutableSchema</a>：这个连接用工具函数貌似是唯一需要仔细看下的</li>
+</ul>
 
-<h2 id="6-设计理念">6. 设计理念</h2>
+<h2 id="3-范例---apollo">3. 范例 - Apollo</h2>
+<p>看下官方的<a href="https://www.apollographql.com/docs/apollo-server/example.html">End-to-End Example</a>基本上就足够了。当然这里仅只有服务器端的代码，但鉴于GraphQL的复杂度基本上都集中在服务器端，这个例子也OK了。</p>
+
+<h2 id="4-总结">4. 总结</h2>
+<h3 id="41">4.1</h3>
 
 <blockquote>
   <p>EOF</p>

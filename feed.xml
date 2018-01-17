@@ -14,6 +14,14 @@
 
 &lt;p&gt;本文的主要目的就是初探GraphQL的实现，制作简单的例子，寻找GraphQL和REST的异同，并尽可能找到GraphQL中存在的问题。&lt;/p&gt;
 
+&lt;p&gt;详细阅读：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://sofish.github.io/restcookbook/&quot;&gt;RESTful 手册&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.infoq.com/cn/news/2013/06/rest-drawbacks&quot;&gt;REST的缺点是什么？&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev-blog.apollodata.com/graphql-vs-rest-5d425123e34b&quot;&gt;GraphQL vs. REST&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h3 id=&quot;12-资料列表&quot;&gt;1.2 资料列表&lt;/h3&gt;
 &lt;ul&gt;
   &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://graphql.org/&quot;&gt;网站&lt;/a&gt;：学习第一站，必然先去这里取经
@@ -88,14 +96,28 @@
 &lt;/ul&gt;
 
 &lt;h4 id=&quot;223-服务器&quot;&gt;2.2.3 服务器&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot;&gt;End-to-End Example&lt;/a&gt;：Apollo官方的Example，基本上简单到极致了，和直接裸用GraphQL.js没有本质区别&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/requests.html&quot;&gt;POST and GET format&lt;/a&gt;：请求格式，就是GraphQL的基本格式，没有黑科技&lt;/li&gt;
+  &lt;li&gt;其他没什么有营养的东西了，服务器实在是简单，当然也意味着没有解决我之前提到的问题&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h2 id=&quot;3-范例---apollo-简单&quot;&gt;3. 范例 - Apollo 简单&lt;/h2&gt;
+&lt;h4 id=&quot;224-工具集&quot;&gt;2.2.4 工具集&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;GraphQL Tools is an npm package and an opinionated structure for how to build a GraphQL schema and resolvers in JavaScript, following the GraphQL-first development workflow.&lt;/p&gt;
+&lt;/blockquote&gt;
 
-&lt;h2 id=&quot;4-范例---apollo-复杂&quot;&gt;4. 范例 - Apollo 复杂&lt;/h2&gt;
+&lt;p&gt;简单来说就是一堆API，方便你制作Schema和Resolvers。但实际上并没有解决映射和代码量（研发工作量）的问题。&lt;/p&gt;
 
-&lt;h2 id=&quot;5-结论&quot;&gt;5. 结论&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema&quot;&gt;makeExecutableSchema&lt;/a&gt;：这个连接用工具函数貌似是唯一需要仔细看下的&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h2 id=&quot;6-设计理念&quot;&gt;6. 设计理念&lt;/h2&gt;
+&lt;h2 id=&quot;3-范例---apollo&quot;&gt;3. 范例 - Apollo&lt;/h2&gt;
+&lt;p&gt;看下官方的&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot;&gt;End-to-End Example&lt;/a&gt;基本上就足够了。当然这里仅只有服务器端的代码，但鉴于GraphQL的复杂度基本上都集中在服务器端，这个例子也OK了。&lt;/p&gt;
+
+&lt;h2 id=&quot;4-总结&quot;&gt;4. 总结&lt;/h2&gt;
+&lt;h3 id=&quot;41&quot;&gt;4.1&lt;/h3&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
