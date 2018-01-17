@@ -120,6 +120,7 @@
   </li>
   <li>FB官方的GraphQL<a href="http://facebook.github.io/graphql/">specification</a>：类似RFC的东西，详细的文字specification</li>
   <li>Github上FB的GraphQL<a href="https://github.com/graphql">项目组</a>：一些好用的工具和类库</li>
+  <li><a href="https://github.com/graphql/graphql-js">GraphQL.js</a>：FB官方的JS实现</li>
   <li>Github官方的GraphQL API手册<a href="https://developer.github.com/v4/">V4版本</a>：有相当多值得借鉴的地方</li>
   <li>Github上的Apollo GraphQL<a href="https://github.com/apollographql">项目组</a>：算是看到现在做的最好的GraphQL解决方案集合之一了</li>
   <li>Github上的Graphcool<a href="https://github.com/graphcool">项目组</a>：相当完美的一个GraphQL解决方案</li>
@@ -154,7 +155,7 @@
 <p>基本上，官方的GraphQL教程只提供了最基础的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：</p>
 
 <ul>
-  <li>如何批量化自动化地进行客户端请求：GraphQL的客户端请求不单单仅仅只是一个URL或者一个Post请求带几个参数，作为只有一个入口的API系统，所有的客户端请求都是需要自主构建的，对于客户端来说也是很大的工作量</li>
+  <li>如何批量化自动化地进行客户端请求：GraphQL的客户端请求不单单仅仅只是一个URL或者一个Post请求带几个参数，作为只有一个入口的API系统，所有的客户端请求都要以字符串的形式构建，对于客户端来说也是很大的工作量</li>
   <li>如何做好数据到接口的映射：最好能有数据模型到API接口的转换映射工具，如果按FB官方GraphQL简介中那样每一段代码都自己写，这个工作量还不如去写REST</li>
   <li>如何做好缓存工作：GraphQL的请求非常自由，在对外的API这一层到中间的业务层之间，如何添加缓存就成了设计上的一个大问题</li>
   <li>等等</li>
@@ -170,20 +171,17 @@
 
 <h4 id="222-客户端">2.2.2 客户端</h4>
 <ul>
-  <li><a href="https://www.npmjs.com/package/apollo-client-preset">apollo-client-preset</a>：整合完成的客户端包
+  <li><a href="https://www.npmjs.com/package/apollo-client-preset">apollo-client-preset</a>：整合完成的客户端包</li>
+  <li><a href="https://www.apollographql.com/docs/react/basics/setup.html#ApolloClient">ApolloClient</a>：客户端实例</li>
+  <li><a href="https://www.apollographql.com/docs/link/">ApolloLink</a>：这部分有点不太能理解
     <ul>
-      <li><a href="https://www.apollographql.com/docs/react/basics/setup.html#ApolloClient">ApolloClient</a>：客户端实例</li>
-      <li><a href="https://www.apollographql.com/docs/link/">ApolloLink</a>：这部分有点不太能理解
-        <ul>
-          <li>Apollo Link is a simple yet powerful way to describe how you want to get the result of a GraphQL operation, and what you want to do with the results.</li>
-          <li><a href="https://www.apollographql.com/docs/link/stateful.html">StatefulLink</a>：有状态的Link可以看下，在实例内部保存了一些状态数据</li>
-        </ul>
-      </li>
-      <li>剩下的内容和React等实现联系得太过紧密，可以不用在高层抽象理解的时候即刻就去看，放后面也没问题</li>
-      <li>从现在简单了解来看，Apollo的客户端其实并没有解决什么实际的问题，API仍旧需要自己组装一堆字符串去进行调用</li>
-      <li>对GraphQL来说，相对服务器的复杂度，客户端的复杂度其实要低得多，问题仅在于如何高效地研发，减少编码量</li>
+      <li>Apollo Link is a simple yet powerful way to describe how you want to get the result of a GraphQL operation, and what you want to do with the results.</li>
+      <li><a href="https://www.apollographql.com/docs/link/stateful.html">StatefulLink</a>：有状态的Link可以看下，在实例内部保存了一些状态数据</li>
     </ul>
   </li>
+  <li>剩下的内容和React等实现联系得太过紧密，可以不用在高层抽象理解的时候即刻就去看，放后面也没问题</li>
+  <li>从现在简单了解来看，Apollo的客户端其实并没有解决什么实际的问题，API仍旧需要自己组装一堆字符串去进行调用；Apollo提供的无非就是一些封装好的接口，本质仍旧是那套</li>
+  <li>对GraphQL来说，相对服务器的复杂度，客户端的复杂度其实要低得多，问题仅在于如何高效地研发，减少编码量</li>
 </ul>
 
 <h4 id="223-服务器">2.2.3 服务器</h4>
@@ -193,6 +191,8 @@
 <h2 id="4-范例---apollo-复杂">4. 范例 - Apollo 复杂</h2>
 
 <h2 id="5-结论">5. 结论</h2>
+
+<h2 id="6-设计理念">6. 设计理念</h2>
 
 <blockquote>
   <p>EOF</p>
