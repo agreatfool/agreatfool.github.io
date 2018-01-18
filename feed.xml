@@ -46,10 +46,8 @@
 &lt;p&gt;在博客中插入代码：&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+  &lt;p&gt;{\% gist 9894fc4159d2a1dd2c893250dc4ae0d3 \%}&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;&amp;lt;/pre&amp;gt;&amp;lt;/noscript&amp;gt;&lt;script src=&quot;https://gist.github.com/9894fc4159d2a1dd2c893250dc4ae0d3.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 
 &lt;p&gt;就OK了，剩下的，自动生成站点的时候会自然生成。&lt;/p&gt;
 
