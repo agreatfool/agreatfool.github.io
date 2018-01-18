@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Redis数据类型介绍接口定义及简单范例 | Xenojoshua</title>
+  <title>Github 代码片段嵌入 | Xenojoshua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://xenojoshua.com/js/jquery.min.js"></script>
   <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
   <script src="https://xenojoshua.com/js/header.js"></script>
   <script src="https://xenojoshua.com/js/toc.js"></script>
-  <link href="https://xenojoshua.com//2012/07/redis-data-type-api-examples/" rel="canonical" />
+  <link href="https://xenojoshua.com//2018/01/embedded-github-code/" rel="canonical" />
   <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
@@ -89,254 +89,23 @@
         <div class="col-md-8">
           <div class="article">
             <div class="well">
-              <h1><a href="https://xenojoshua.com/2012/07/redis-data-type-api-examples/">Redis数据类型介绍接口定义及简单范例</a></h1>
+              <h1><a href="https://xenojoshua.com/2018/01/embedded-github-code/">Github 代码片段嵌入</a></h1>
               <div class="post-meta">
                 <div class="post-time">
                   <i class="fa fa-calendar"></i>
-                  <time>05 Jul 2012</time>
+                  <time>18 Jan 2018</time>
                 </div>
                 <ul>
                   
-                    <li><a href="https://xenojoshua.com/tag/Redis">Redis</a></li>
+                    <li><a href="https://xenojoshua.com/tag/Github">Github</a></li>
                   
                 </ul>
               </div>
               <div class="post-content">
                 <div id="toc" class="toc"></div>
-                <h1>数据类型介绍</h1>
-<p>目录</p>
-<ol>
-<li><a href="#type1">String类型</a></li>
-<li><a href="#type2">List类型</a></li>
-<li><a href="#type3">集合（Sets）类型</a></li>
-<li><a href="#type4">有序集合（Sorted Sets）类型</a></li>
-<li><a href="#type5">Hash类型</a></li>
-</ol>
-<h2><a name="type1"></a>1. String类型</h2>
-<p>Redis能存储二进制安全的字符串，最大长度为1GB</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; SET name "John Doe"
-OK
-redis 127.0.0.1:6379&gt; GET name
-"John Doe"</pre>
-</blockquote>
-<p>String类型还支持批量的读写操作</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; MSET age 30 sex "male"
-OK
-redis 127.0.0.1:6379&gt; MGET age sex
-1) "30"
-2) "male"</pre>
-</blockquote>
-<p>String类型其实也可以用来存储数字，并支持对数字的加减操作。</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; INCR age
-(integer) 31
-redis 127.0.0.1:6379&gt; INCRBY age 4
-(integer) 35
-redis 127.0.0.1:6379&gt; GET age
-"35"
-redis 127.0.0.1:6379&gt; DECR age
-(integer) 34
-redis 127.0.0.1:6379&gt; DECRBY age 4
-(integer) 30
-redis 127.0.0.1:6379&gt; GET age
-"30"</pre>
-</blockquote>
-<p>String类型还支持对其部分的修改和获取操作</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; APPEND name " Mr."
-(integer) 12
-redis 127.0.0.1:6379&gt; GET name
-"John Doe Mr."
-redis 127.0.0.1:6379&gt; STRLEN name
-(integer) 12
-redis 127.0.0.1:6379&gt; SUBSTR name 0 3
-"John"</pre>
-</blockquote>
-<h2><a name="type2"></a>2. List类型</h2>
-<p>Redis能够将数据存储成一个链表，并能对这个链表进行丰富的操作</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; LPUSH students "John Doe"
-(integer) 1
-redis 127.0.0.1:6379&gt; LPUSH students "Captain Kirk"
-(integer) 2
-redis 127.0.0.1:6379&gt; LPUSH students "Sheldon Cooper"
-(integer) 3
-redis 127.0.0.1:6379&gt; LLEN students
-(integer) 3
-redis 127.0.0.1:6379&gt; LRANGE students 0 2
-1) "Sheldon Cooper"
-2) "Captain Kirk"
-3) "John Doe"
-redis 127.0.0.1:6379&gt; LPOP students
-"Sheldon Cooper"
-redis 127.0.0.1:6379&gt; LLEN students
-(integer) 2
-redis 127.0.0.1:6379&gt; LRANGE students 0 1
-1) "Captain Kirk"
-2) "John Doe"
-redis 127.0.0.1:6379&gt; LREM students 1 "John Doe"
-(integer) 1
-redis 127.0.0.1:6379&gt; LLEN students
-(integer) 1
-redis 127.0.0.1:6379&gt; LRANGE students 0 0
-1) "Captain Kirk"</pre>
-</blockquote>
-<p>Redis也支持很多修改操作</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; LINSERT students BEFORE "Captain Kirk" "Dexter Morgan"
-(integer) 3
-redis 127.0.0.1:6379&gt; LRANGE students 0 2
-1) "Dexter Morgan"
-2) "Captain Kirk"
-3) "John Doe"
-redis 127.0.0.1:6379&gt; LPUSH students "Peter Parker"
-(integer) 4
-redis 127.0.0.1:6379&gt; LRANGE students 0 3
-1) "Peter Parker"
-2) "Dexter Morgan"
-3) "Captain Kirk"
-4) "John Doe"
-redis 127.0.0.1:6379&gt; LTRIM students 1 3
-OK
-redis 127.0.0.1:6379&gt; LLEN students
-(integer) 3
-redis 127.0.0.1:6379&gt; LRANGE students 0 2
-1) "Dexter Morgan"
-2) "Captain Kirk"
-3) "John Doe"
-redis 127.0.0.1:6379&gt; LREM students 1 "John Doe"
-(integer) 1
-redis 127.0.0.1:6379&gt; LLEN students
-(integer) 1
-redis 127.0.0.1:6379&gt; LRANGE students 0 1
-1) "Captain Kirk"</pre>
-</blockquote>
-<h2><a name="type3"></a>3. 集合（Sets）类型</h2>
-<p>Redis能够将一系列不重复的值存储成一个集合</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; SADD birds crow
-(integer) 1
-redis 127.0.0.1:6379&gt; SADD birds pigeon
-(integer) 1
-redis 127.0.0.1:6379&gt; SADD birds bat
-(integer) 1
-redis 127.0.0.1:6379&gt; SADD mammals dog
-(integer) 1
-redis 127.0.0.1:6379&gt; SADD mammals cat
-(integer) 1
-redis 127.0.0.1:6379&gt; SADD mammals bat
-(integer) 1
-redis 127.0.0.1:6379&gt; SMEMBERS birds
-1) "bat"
-2) "crow"
-3) "pigeon"
-redis 127.0.0.1:6379&gt; SMEMBERS mammals
-1) "bat"
-2) "cat"
-3) "dog"</pre>
-</blockquote>
-<p>Sets结构也支持相应的修改操作</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; SREM mammals cat
-(integer) 1
-redis 127.0.0.1:6379&gt; SMEMBERS mammals
-1) "bat"
-2) "dog"
-redis 127.0.0.1:6379&gt; SADD mammals human
-(integer) 1
-redis 127.0.0.1:6379&gt; SMEMBERS mammals
-1) "bat"
-2) "human"
-3) "dog"</pre>
-</blockquote>
-<p>Redis还支持对集合的子交并补等操作</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; SINTER birds mammals
-1) "bat"
-redis 127.0.0.1:6379&gt; SUNION birds mammals
-1) "crow"
-2) "bat"
-3) "human"
-4) "pigeon"
-5) "dog"
-redis 127.0.0.1:6379&gt; SDIFF birds mammals
-1) "crow"
-2) "pigeon"</pre>
-</blockquote>
-<h2><a name="type4"></a>4. 有序集合（Sorted Sets）类型</h2>
-<p>Sorted Sets和Sets结构相似，不同的是存在Sorted Sets中的数据会有一个score属性，并会在写入时就按这个score排好序。</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; ZADD days 0 mon
-(integer) 1
-redis 127.0.0.1:6379&gt; ZADD days 1 tue
-(integer) 1
-redis 127.0.0.1:6379&gt; ZADD days 2 wed
-(integer) 1
-redis 127.0.0.1:6379&gt; ZADD days 3 thu
-(integer) 1
-redis 127.0.0.1:6379&gt; ZADD days 4 fri
-(integer) 1
-redis 127.0.0.1:6379&gt; ZADD days 5 sat
-(integer) 1
-redis 127.0.0.1:6379&gt; ZADD days 6 sun
-(integer) 1
-redis 127.0.0.1:6379&gt; ZCARD days
-(integer) 7
-redis 127.0.0.1:6379&gt; ZRANGE days 0 6
-1) "mon"
-2) "tue"
-3) "wed"
-4) "thu"
-5) "fri"
-6) "sat"
-7) "sun"
-redis 127.0.0.1:6379&gt; ZSCORE days sat
-"5"
-redis 127.0.0.1:6379&gt; ZCOUNT days 3 6
-(integer) 4
-redis 127.0.0.1:6379&gt; ZRANGEBYSCORE days 3 6
-1) "thu"
-2) "fri"
-3) "sat"
-4) "sun"</pre>
-</blockquote>
-<h2><a name="type5"></a>5. Hash类型</h2>
-<p>Redis能够存储key对多个属性的数据（比如user1.uname user1.passwd）</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; HKEYS student
-1) "name"
-2) "age"
-3) "sex"
-redis 127.0.0.1:6379&gt; HVALS student
-1) "Ganesh"
-2) "30"
-3) "Male"
-redis 127.0.0.1:6379&gt; HGETALL student
-1) "name"
-2) "Ganesh"
-3) "age"
-4) "30"
-5) "sex"
-6) "Male"
-redis 127.0.0.1:6379&gt; HDEL student sex
-(integer) 1
-redis 127.0.0.1:6379&gt; HGETALL student
-1) "name"
-2) "Ganesh"
-3) "age"
-4) "30"</pre>
-</blockquote>
-<p>Hash数据结构能够批量修改和获取</p>
-<blockquote>
-<pre>redis 127.0.0.1:6379&gt; HMSET kid name Akshi age 2 sex Female
-OK
-redis 127.0.0.1:6379&gt; HMGET kid name age sex
-1) "Akshi"
-2) "2"
-3) "Female"</pre>
-</blockquote>
+                <h2 id="sample">sample</h2>
+
+<p>https://github.com/agreatfool/grpc_tools_node_protoc_ts/blob/d6b0b584d2d4a04fa15fefc204c2dd4822d20339/src/index.ts#L15-L57</p>
 
               </div>
               
@@ -438,7 +207,7 @@ redis 127.0.0.1:6379&gt; HMGET kid name age sex
 <script type="text/javascript">
   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
   var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
-  var disqus_identifier = "/2012/07/redis-data-type-api-examples/";
+  var disqus_identifier = "/2018/01/embedded-github-code/";
 
   /* * * DON'T EDIT BELOW THIS LINE * * */
   (function() {
