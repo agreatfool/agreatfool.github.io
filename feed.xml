@@ -10,7 +10,10 @@
 				<title>Github 代码片段嵌入</title>
 				<description>&lt;h2 id=&quot;sample&quot;&gt;sample&lt;/h2&gt;
 
-&lt;p&gt;https://github.com/agreatfool/grpc_tools_node_protoc_ts/blob/d6b0b584d2d4a04fa15fefc204c2dd4822d20339/src/index.ts#L15-L57&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/9894fc4159d2a1dd2c893250dc4ae0d3.js&quot;&gt; &lt;/script&gt;
+
 </description>
 				<pubDate>Thu, 18 Jan 2018 10:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/01/embedded-github-code/</link>
