@@ -46,7 +46,7 @@
 &lt;p&gt;在博客中插入代码：&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;{\% gist 9894fc4159d2a1dd2c893250dc4ae0d3 \%}&lt;/p&gt;
+  &lt;p&gt;{\% gist 9894fc4159d2a1dd2c893250dc4ae0d3 \%} 记得去掉文本内的back slash转译符&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;就OK了，剩下的，自动生成站点的时候会自然生成。&lt;/p&gt;
