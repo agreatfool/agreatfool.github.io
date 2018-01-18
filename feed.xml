@@ -8,7 +8,52 @@
 		
 			<item>
 				<title>Github 代码片段嵌入</title>
-				<description>&lt;h2 id=&quot;sample&quot;&gt;sample&lt;/h2&gt;
+				<description>&lt;h2 id=&quot;1-github-gist&quot;&gt;1. Github Gist&lt;/h2&gt;
+&lt;p&gt;Github上有一个功能，可以让用户存放很短小的一个个代码片段，这就是gist。现在写技术博客很流行的一个做法就是把代码存在gist上，然后在自己的博客里嵌入对应的github gist。&lt;/p&gt;
+
+&lt;p&gt;奇妙的是这东西我没有招到官方的介绍，只是看到别人的博客上有这么做的，然后搜了下做法，搜到的都是三方的解决方案。当然这东西github肯定是支持的，否则三方也没什么方法能拿到对应的gist内容。&lt;/p&gt;
+
+&lt;p&gt;搜索靠前的几个：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/blog/122-embedded-gists&quot;&gt;Embedded Gists · GitHub&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/blairvanderhoof/gist-embed&quot;&gt;How to use gist-embed to spice up code snippets on your blog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/hanxue/8488835&quot;&gt;Embed Gists in Blogger · GitHub&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;2-jekyll插件&quot;&gt;2. Jekyll插件&lt;/h2&gt;
+&lt;p&gt;使用Jekyll博客系统就不需要自己操心这个事情了，已经有人把这个功能的插件做出来了。见&lt;a href=&quot;https://github.com/jekyll/jekyll-gist&quot;&gt;jekyll/jekyll-gist&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;安装：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;gem install jekyll-gist
+&lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Done installing documentation for multipart-post, faraday, sawyer, octokit, jekyll-gist after 2 seconds&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# 5 gems installed&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;然后编辑&lt;code&gt;_config.yml&lt;/code&gt;，添加：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;jekyll-gist&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;嵌入代码：
+找到你的目标gist的编码，在URL上就有：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;https://gist.github.com/agreatfool/&lt;code&gt;9894fc4159d2a1dd2c893250dc4ae0d3&lt;/code&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在博客中插入代码：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&amp;lt;/pre&amp;gt;&amp;lt;/noscript&amp;gt;&lt;script src=&quot;https://gist.github.com/9894fc4159d2a1dd2c893250dc4ae0d3.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+
+&lt;p&gt;就OK了，剩下的，自动生成站点的时候会自然生成。&lt;/p&gt;
+
+&lt;h2 id=&quot;3-例子&quot;&gt;3. 例子&lt;/h2&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;

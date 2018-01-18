@@ -103,7 +103,52 @@
               </div>
               <div class="post-content">
                 <div id="toc" class="toc"></div>
-                <h2 id="sample">sample</h2>
+                <h2 id="1-github-gist">1. Github Gist</h2>
+<p>Github上有一个功能，可以让用户存放很短小的一个个代码片段，这就是gist。现在写技术博客很流行的一个做法就是把代码存在gist上，然后在自己的博客里嵌入对应的github gist。</p>
+
+<p>奇妙的是这东西我没有招到官方的介绍，只是看到别人的博客上有这么做的，然后搜了下做法，搜到的都是三方的解决方案。当然这东西github肯定是支持的，否则三方也没什么方法能拿到对应的gist内容。</p>
+
+<p>搜索靠前的几个：</p>
+
+<ul>
+  <li><a href="https://github.com/blog/122-embedded-gists">Embedded Gists · GitHub</a></li>
+  <li><a href="https://github.com/blairvanderhoof/gist-embed">How to use gist-embed to spice up code snippets on your blog</a></li>
+  <li><a href="https://gist.github.com/hanxue/8488835">Embed Gists in Blogger · GitHub</a></li>
+</ul>
+
+<h2 id="2-jekyll插件">2. Jekyll插件</h2>
+<p>使用Jekyll博客系统就不需要自己操心这个事情了，已经有人把这个功能的插件做出来了。见<a href="https://github.com/jekyll/jekyll-gist">jekyll/jekyll-gist</a>。</p>
+
+<p>安装：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>gem install jekyll-gist
+<span class="c1"># ...</span>
+<span class="c1"># Done installing documentation for multipart-post, faraday, sawyer, octokit, jekyll-gist after 2 seconds</span>
+<span class="c1"># 5 gems installed</span></code></pre></figure>
+
+<p>然后编辑<code>_config.yml</code>，添加：</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">plugins</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">jekyll-gist</span></code></pre></figure>
+
+<p>嵌入代码：
+找到你的目标gist的编码，在URL上就有：</p>
+
+<blockquote>
+  <p>https://gist.github.com/agreatfool/<code>9894fc4159d2a1dd2c893250dc4ae0d3</code></p>
+</blockquote>
+
+<p>在博客中插入代码：</p>
+
+<blockquote>
+  <noscript><pre>400: Invalid request
+</pre></noscript>
+</blockquote>
+<p>&lt;/pre&gt;&lt;/noscript&gt;<script src="https://gist.github.com/9894fc4159d2a1dd2c893250dc4ae0d3.js"> </script></p>
+
+<p>就OK了，剩下的，自动生成站点的时候会自然生成。</p>
+
+<h2 id="3-例子">3. 例子</h2>
 
 <noscript><pre>400: Invalid request
 </pre></noscript>
