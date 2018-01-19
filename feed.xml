@@ -7,7 +7,7 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>Node.JS Profile</title>
+				<title>Node.JS Profile 施工中</title>
 				<description>&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
 &lt;p&gt;知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。Node的进程profile相关的调研其实很早就想做了，但懒癌发作，一直都没有推进，最近找时间开始做了。&lt;/p&gt;
 
