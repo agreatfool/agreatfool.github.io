@@ -7,6 +7,96 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Node.JS Profile</title>
+				<description>&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
+&lt;p&gt;知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。Node的进程profile相关的调研其实很早就想做了，但懒癌发作，一直都没有推进，最近找时间开始做了。&lt;/p&gt;
+
+&lt;p&gt;本文主要在于以下几个方面，不局限于狭义的&lt;code&gt;profile&lt;/code&gt;或&lt;code&gt;profiler&lt;/code&gt;：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Node 的性能Metrics：到底哪些进程指标是我们需要关心需要监控的&lt;/li&gt;
+  &lt;li&gt;Node 的Profiler：如何对进程进行profile，获取核心metrics&lt;/li&gt;
+  &lt;li&gt;Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;2-资料&quot;&gt;2. 资料&lt;/h2&gt;
+&lt;p&gt;资料我都放在前面，方便直接打开深度阅读。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;table&gt;
+      &lt;tbody&gt;
+        &lt;tr&gt;
+          &lt;td&gt;[V8&lt;/td&gt;
+          &lt;td&gt;Node.js v9.4.0 Documentation](https://nodejs.org/api/v8.html)：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot;&gt;解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识&lt;/a&gt;：阿里团队的几篇Node的内存文章，很不错&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot;&gt;解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法&lt;/a&gt;：同上&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;3-性能知识点---内存&quot;&gt;3. 性能知识点 - 内存&lt;/h2&gt;
+
+&lt;h3 id=&quot;31-基础概念&quot;&gt;3.1 基础概念&lt;/h3&gt;
+&lt;p&gt;Node进程的内存分为三大部分：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Code: the actual code being executed&lt;/li&gt;
+  &lt;li&gt;Stack: contains all value types (primitives like integer or Boolean) with pointers referencing objects on the heap and pointers defining the control flow of the program&lt;/li&gt;
+  &lt;li&gt;Heap: a memory segment dedicated to storing reference types like objects, strings and closures.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;311-rss&quot;&gt;3.1.1 RSS&lt;/h4&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;A running program is always represented through some space allocated in memory. This space is called Resident Set.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Node进程整体占用内存大小，也就是你在系统面板之类的地方看到的node进程的内存占用大小。&lt;/p&gt;
+
+&lt;h4 id=&quot;312-heap&quot;&gt;3.1.2 Heap&lt;/h4&gt;
+&lt;p&gt;用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。&lt;/p&gt;
+
+&lt;h4 id=&quot;313-heap-limit&quot;&gt;3.1.3 Heap Limit&lt;/h4&gt;
+&lt;p&gt;node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.5G（其实还不到）。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;以下是一个简单的范例，如何查看堆内存，注意查看&lt;code&gt;heap_size_limit&lt;/code&gt;字段的值。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/e3ab8817d882bc74b3cee58974f11096.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;这个堆大小可以用过v8参数flag&lt;code&gt;--max-old-space-size&lt;/code&gt;来修改，单位是&lt;code&gt;MB&lt;/code&gt;。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/c7ad7c782c6a293b15f54e12c8793970.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。&lt;/p&gt;
+
+&lt;h3 id=&quot;32-gc&quot;&gt;3.2 GC&lt;/h3&gt;
+&lt;p&gt;这部分的概念和技术要点主要阅读资料中阿里团队的几篇GC文章即可，即&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot;&gt;这篇1&lt;/a&gt;和&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot;&gt;这篇2&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分改动的。改动内容可以看&lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;这篇&lt;/a&gt;官方的v8博客文章，撰于2017-11-29。&lt;/p&gt;
+
+&lt;p&gt;本文会梳理下大致的技术要点。&lt;/p&gt;
+
+&lt;h3 id=&quot;33-内存metrics-api&quot;&gt;3.3 内存Metrics API&lt;/h3&gt;
+
+&lt;h2 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h2&gt;
+</description>
+				<pubDate>Fri, 19 Jan 2018 10:33:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/01/node-profile/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/01/node-profile/</guid>
+			</item>
+		
+			<item>
 				<title>Github 代码片段嵌入</title>
 				<description>&lt;h2 id=&quot;1-github-gist&quot;&gt;1. Github Gist&lt;/h2&gt;
 &lt;p&gt;Github上有一个功能，可以让用户存放很短小的一个个代码片段，这就是gist。现在写技术博客很流行的一个做法就是把代码存在gist上，然后在自己的博客里嵌入对应的github gist。&lt;/p&gt;
@@ -852,43 +942,6 @@ file ‘/path/to/file3’&lt;/p&gt;
 				<pubDate>Thu, 16 Nov 2017 14:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/11/ffmpeg/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/11/ffmpeg/</guid>
-			</item>
-		
-			<item>
-				<title>V2Ray双服务器桥接</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;今年年中做的Vultr VPS上面一开始搭载了SSR，形势不好总得做个备份。结果装了没多久SSR作者就不维护了，再过了一阵就能被嗅探了（？）。之后没办法，只能找其他的方案，之前刚搞了一个SSL连接方案的V2Ray，但是结果被证实仍旧会被间断性IP封锁（干扰）。现在看来可能不是SSR和V2Ray的问题，毕竟现在客户端的V2Ray和服务器的Nginx是以SSL连接起来的，绝对不可能被探知访问内容。我现在猜测应该是Vultr服务器的IP地址的关系。&lt;/p&gt;
-
-&lt;p&gt;所以到了这几个月就一直在想在墙内比较薄弱的地方找个跳板机。双11入手了一个腾讯香港的小水管VPS，于是想在上面也搞一套。&lt;/p&gt;
-
-&lt;h2 id=&quot;1-直连&quot;&gt;1. 直连&lt;/h2&gt;
-&lt;p&gt;第一套解决方案就是直连香港的服务器，然后从香港的服务器直接出墙访问外网。配置方案和之前那篇V2Ray的一致。&lt;/p&gt;
-
-&lt;h2 id=&quot;2-桥接&quot;&gt;2. 桥接&lt;/h2&gt;
-&lt;p&gt;为了将来可能到来的访问限制，我们需要做好准备，一旦有万一，需要阻止香港这边的服务器感知到访问的目标地址。也就是说香港那边的跳板机出去不能直接出墙访问外网，而是要到外部的某个代理节点。&lt;/p&gt;
-
-&lt;p&gt;于是解决方案就很简单：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;备好服务器两台&lt;/li&gt;
-  &lt;li&gt;1台香港VPS&lt;/li&gt;
-  &lt;li&gt;1台美西的VPS&lt;/li&gt;
-  &lt;li&gt;香港的VPS上的V2Ray入口做Nginx SSL，出口连接美西VPS的Nginx SSL&lt;/li&gt;
-  &lt;li&gt;美西的VPS上的V2Ray入口做Nginx SSL，出口直连外网网站&lt;/li&gt;
-  &lt;li&gt;本地客户端直连香港的Nginx&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;顺道香港机器上放两套V2Ray配置，桥接的一套，直连的一套。做了个shell脚本，方便在两种模式里切换。&lt;/p&gt;
-
-&lt;p&gt;现在的情况无比恶劣，能想到的一定要做好预案，防止监控升级到时候闭耳塞听，啥都不能访问了。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Thu, 09 Nov 2017 08:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/11/v2ray-double/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/11/v2ray-double/</guid>
 			</item>
 		
 	</channel>

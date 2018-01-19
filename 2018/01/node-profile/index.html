@@ -1,0 +1,346 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Node.JS Profile | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2018/01/node-profile/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2018/01/node-profile/">Node.JS Profile</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>19 Jan 2018</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Performance">Performance</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Profile">Profile</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Memory">Memory</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <div id="toc" class="toc"></div>
+                <h2 id="1-前言">1. 前言</h2>
+<p>知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。Node的进程profile相关的调研其实很早就想做了，但懒癌发作，一直都没有推进，最近找时间开始做了。</p>
+
+<p>本文主要在于以下几个方面，不局限于狭义的<code>profile</code>或<code>profiler</code>：</p>
+
+<ul>
+  <li>Node 的性能Metrics：到底哪些进程指标是我们需要关心需要监控的</li>
+  <li>Node 的Profiler：如何对进程进行profile，获取核心metrics</li>
+  <li>Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题</li>
+</ul>
+
+<h2 id="2-资料">2. 资料</h2>
+<p>资料我都放在前面，方便直接打开深度阅读。</p>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>[V8</td>
+          <td>Node.js v9.4.0 Documentation](https://nodejs.org/api/v8.html)：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><a href="http://alinode.aliyun.com/blog/37">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
+  <li><a href="http://alinode.aliyun.com/blog/38">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
+  <li><a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a></li>
+</ul>
+
+<h2 id="3-性能知识点---内存">3. 性能知识点 - 内存</h2>
+
+<h3 id="31-基础概念">3.1 基础概念</h3>
+<p>Node进程的内存分为三大部分：</p>
+
+<ul>
+  <li>Code: the actual code being executed</li>
+  <li>Stack: contains all value types (primitives like integer or Boolean) with pointers referencing objects on the heap and pointers defining the control flow of the program</li>
+  <li>Heap: a memory segment dedicated to storing reference types like objects, strings and closures.</li>
+</ul>
+
+<h4 id="311-rss">3.1.1 RSS</h4>
+<blockquote>
+  <p>A running program is always represented through some space allocated in memory. This space is called Resident Set.</p>
+</blockquote>
+
+<p>Node进程整体占用内存大小，也就是你在系统面板之类的地方看到的node进程的内存占用大小。</p>
+
+<h4 id="312-heap">3.1.2 Heap</h4>
+<p>用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。</p>
+
+<h4 id="313-heap-limit">3.1.3 Heap Limit</h4>
+<p>node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.5G（其实还不到）。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：</p>
+
+<blockquote>
+  <p>FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory</p>
+</blockquote>
+
+<p>以下是一个简单的范例，如何查看堆内存，注意查看<code>heap_size_limit</code>字段的值。</p>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/e3ab8817d882bc74b3cee58974f11096.js"> </script>
+
+<p>这个堆大小可以用过v8参数flag<code>--max-old-space-size</code>来修改，单位是<code>MB</code>。</p>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/c7ad7c782c6a293b15f54e12c8793970.js"> </script>
+
+<p>遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。</p>
+
+<h3 id="32-gc">3.2 GC</h3>
+<p>这部分的概念和技术要点主要阅读资料中阿里团队的几篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38">这篇2</a>。</p>
+
+<p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分改动的。改动内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
+
+<p>本文会梳理下大致的技术要点。</p>
+
+<h3 id="33-内存metrics-api">3.3 内存Metrics API</h3>
+
+<h2 id="4-性能知识点---eventloop">4. 性能知识点 - EventLoop</h2>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
+    
+    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
+    
+    <li><a href="/2018/01/graphql/">GraphQL笔记</a></li>
+    
+    <li><a href="/2017/12/msgpack-http/">Message Pack 解析问题</a></li>
+    
+    <li><a href="/2017/12/why-anxiety/">到底在焦虑什么</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2018/01/node-profile/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2016</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
