@@ -173,9 +173,9 @@
 <p>遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。</p>
 
 <h3 id="32-gc">3.2 GC</h3>
-<p>这部分的概念和技术要点主要阅读资料中阿里团队的几篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38">这篇2</a>。</p>
+<p>这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38">这篇2</a>。</p>
 
-<p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分改动的。最新内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
+<p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
 
 <p>本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。</p>
 
@@ -270,6 +270,37 @@
 </ul>
 
 <h4 id="323-gc算法">3.2.3 GC算法</h4>
+<p>新生代：Scavenge</p>
+
+<ul>
+  <li>空间换时间</li>
+  <li>将新生代内存空间内存一切为二，任一时刻只有一半（semispace）被使用</li>
+  <li>每次触发新生代GC，则把存活的对象拷贝（<code>memcpy</code>）到另一半中，然后将需要清理的对象清理掉</li>
+  <li>Scavenge会Stop-the-world</li>
+  <li>Scavenge一般在0~3ms内，对应用不产生影响</li>
+</ul>
+
+<p>写屏障（write barrier）</p>
+
+<ul>
+  <li>用来解决从老生代到新生代的引用检索问题</li>
+  <li>每次往一个对象写入一个指针（添加引用）的时候，都执行一段代码，这段代码会检查这个被写入的指针是否是由老生代对象指向新生代对象的</li>
+  <li>如果是，则往store buffer中添加一条记录</li>
+  <li>通过检索store buffer就能很快找到所有老生代到新生代的引用</li>
+</ul>
+
+<p>老生代：Mark-Sweep／Mark-Compact</p>
+
+<p>三色 marking</p>
+
+<ul>
+  <li>三色：白、灰、黑</li>
+  <li>堆内非根节点对象全部标白</li>
+  <li>沿着根对象，将所有带引用的对象标黑，检索过程中先标黑</li>
+  <li>扫描完毕后，堆内非根节点对象就只剩黑和白，黑色不可回收，白色可以回收</li>
+  <li>因标记过程中对象会push进栈，而大对象则无法这么做，会走一个比较特殊的标记过程，因此大对象过多会显著影响GC效率</li>
+  <li>Marking后的回收分：<code>Sweeping</code>和<code>Compacting</code></li>
+</ul>
 
 <h3 id="33-内存metrics-api">3.3 内存Metrics API</h3>
 
