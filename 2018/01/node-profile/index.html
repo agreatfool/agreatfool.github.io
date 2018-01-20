@@ -124,19 +124,10 @@
 <p>资料我都放在前面，方便直接打开深度阅读。</p>
 
 <ul>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>[V8</td>
-          <td>Node.js v9.4.0 Documentation](https://nodejs.org/api/v8.html)：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
+  <li><a href="https://nodejs.org/api/v8.html">V8 Node.js v9.4.0 Documentation</a>：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</li>
   <li><a href="http://alinode.aliyun.com/blog/37">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
   <li><a href="http://alinode.aliyun.com/blog/38">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
-  <li><a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a></li>
+  <li><a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
 </ul>
 
 <h2 id="3-性能知识点---内存">3. 性能知识点 - 内存</h2>
@@ -184,9 +175,38 @@
 <h3 id="32-gc">3.2 GC</h3>
 <p>这部分的概念和技术要点主要阅读资料中阿里团队的几篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38">这篇2</a>。</p>
 
-<p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分改动的。改动内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
+<p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分改动的。最新内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
 
-<p>本文会梳理下大致的技术要点。</p>
+<p>本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。</p>
+
+<h4 id="321-gc基础知识">3.2.1 GC基础知识</h4>
+<ul>
+  <li>GC回收的目标是从根节点开始，不可达（unreachable）的对象</li>
+  <li>GC触发：
+    <ul>
+      <li>内存分配遇到内存不足</li>
+      <li>内存使用量的阈值触发</li>
+    </ul>
+  </li>
+  <li>allocation failure：内存分配失败，而启动的GC</li>
+  <li>last resort gc：allocation failure失败之后的最终GC，再失败则OOM</li>
+  <li>Stop-the-world：应用程序停顿，执行GC
+    <ul>
+      <li>增量式 GC（incremental）：程序不需要等到垃圾回收完全结束才能重新开始运行，在垃圾回收的过程中控制权可以临时交还给运行时进行一定的操作
+        <ul>
+          <li>2011年即存在，主要发生在 Mark-Sweep/Mark-Compact 的 marking 阶段（incremental_marking_throughput）</li>
+        </ul>
+      </li>
+      <li>并发式 GC（concurrent）：在垃圾回收的同时不需要停止程序的运行，两者可以同时进行，只有在个别时候需要短暂停下来让垃圾回收器做一些特殊的操作</li>
+      <li>并行式 GC（parallel）：即在 GC 的时候使用多个线程一起来完成 GC 工作，提高单位时间的 GC 吞吐量</li>
+    </ul>
+  </li>
+  <li>准确式 GC (Accurate GC)：通过底层设计的方法，能在GC的时候无需访问内容就判断出内存是指针还是整数，精确回收需要回收的内存</li>
+</ul>
+
+<h4 id="323-内存划分">3.2.3 内存划分</h4>
+
+<h4 id="322-gc算法">3.2.2 GC算法</h4>
 
 <h3 id="33-内存metrics-api">3.3 内存Metrics API</h3>
 
