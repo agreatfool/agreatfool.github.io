@@ -152,7 +152,7 @@
 <p>用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。</p>
 
 <h4 id="313-heap-limit">3.1.3 Heap Limit</h4>
-<p>node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.5G（其实还不到）。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：</p>
+<p>node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.4G。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：</p>
 
 <blockquote>
   <p>FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory</p>
@@ -189,7 +189,7 @@
     </ul>
   </li>
   <li>allocation failure：内存分配失败，而启动的GC</li>
-  <li>last resort gc：allocation failure失败之后的最终GC，再失败则OOM</li>
+  <li>last resort gc：两次allocation failure失败之后的最终GC，再失败则OOM</li>
   <li>Stop-the-world：应用程序停顿，执行GC
     <ul>
       <li>增量式 GC（incremental）：程序不需要等到垃圾回收完全结束才能重新开始运行，在垃圾回收的过程中控制权可以临时交还给运行时进行一定的操作
@@ -204,9 +204,72 @@
   <li>准确式 GC (Accurate GC)：通过底层设计的方法，能在GC的时候无需访问内容就判断出内存是指针还是整数，精确回收需要回收的内存</li>
 </ul>
 
-<h4 id="323-内存划分">3.2.3 内存划分</h4>
+<h4 id="322-内存划分">3.2.2 内存划分</h4>
+<p>内存页基础概念</p>
 
-<h4 id="322-gc算法">3.2.2 GC算法</h4>
+<ul>
+  <li>内存按照 1MB 分页，并且都按照 1MB 对齐</li>
+  <li>新生代的内存页是连续的</li>
+  <li>老生代的内存页是分散的，以链表的形式串联起来</li>
+  <li>Large Object Space 也分页，但页的大小会比 1MB 大一些</li>
+</ul>
+
+<p>New Space（新生代）</p>
+
+<ul>
+  <li>大部分的对象都属于新生代，诞生在这里</li>
+  <li>使用 Scavenge 回收内存，新生代内存空间被平分成两半（两个 semispace），任一时刻只有一半被使用（空间换时间）</li>
+  <li>GC日志中看到的 new 和 semispace 相关的字段就与 New Space 有关</li>
+</ul>
+
+<p>Old Space（老生代）</p>
+
+<ul>
+  <li>对象大部分是从新生代（即 New Space）晋升而来</li>
+  <li><code>pretenuring</code>机制：某些函数创建的对象有很高的存活率率（survival rate），经常晋升到老生代（存活超过2次）的时候，下次这些函数再创建的对象将会直接在 Old Space 分配</li>
+  <li>GC日志中看到的 old 相关的字段就与 Old Space 有关</li>
+  <li>survival 和 promoted 相关的字段则与对象在新老生代之间的迁移有关</li>
+  <li>使用 Mark-Sweep-Compact 回收内存</li>
+</ul>
+
+<p>Large Object Space（老生代）</p>
+
+<ul>
+  <li>需要分配一个 1MB 的页（减去 header）无法直接容纳的对象时，就会直接在 Large Object Space 而不是 New Space 分配</li>
+  <li>GC时 Large Object Space 里的对象不会被移动或者复制（因为成本太高）</li>
+  <li>Large Object Space 属于老生代，使用 Mark-Sweep-Compact 回收内存</li>
+</ul>
+
+<p>Map Space（老生代）</p>
+
+<ul>
+  <li>存储<code>对象布局结构</code></li>
+  <li>使用 Mark-Sweep-Compact 回收内存</li>
+</ul>
+
+<p>Code Space（老生代）</p>
+
+<ul>
+  <li>编译器针对运行平台架构编译出的机器码（存储在可执行内存中）本身也是数据，连同一些其它的元数据（比如由哪个编译器编译，源代码的位置等），放置在 Code Space 中</li>
+  <li>JavaScript 代码中的函数一开始只会被解析成抽象语法树，只有在它第一次执行的时候才会被真正编译成机器码，并且在程序的执行过程中会根据统计数据不断进行优化和修改</li>
+  <li>使用 Mark-Sweep-Compact 回收内存</li>
+</ul>
+
+<p>堆空间页管理抽象：Memory Allocator</p>
+
+<ul>
+  <li>与操作系统交互，当空间需要新的页的时候，它从操作系统手上分配（使用<code>mmap</code>）内存再交给空间</li>
+  <li>当有内存页不再使用的时侯，它从空间手上接过这些内存，还给操作系统（使用<code>munmap</code>）</li>
+</ul>
+
+<p>堆外内存：External memory</p>
+
+<ul>
+  <li>一般是C++插件，会自行管理内存，这部分内存就是非Node堆内部的内存，即堆外内存</li>
+  <li>但Node语法中的Buffer，是自己管理内存的，即堆外内存</li>
+</ul>
+
+<h4 id="323-gc算法">3.2.3 GC算法</h4>
 
 <h3 id="33-内存metrics-api">3.3 内存Metrics API</h3>
 
