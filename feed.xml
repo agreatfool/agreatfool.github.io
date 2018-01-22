@@ -42,6 +42,11 @@
   &lt;li&gt;&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;amp;rep=rep1&amp;amp;type=pdf&quot;&gt;Garbage-First Garbage Collection&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h3 id=&quot;23-chrome-dev-tool&quot;&gt;2.3 Chrome Dev Tool&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/memory-problems/&quot;&gt;解决内存问题&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h2 id=&quot;3-性能知识点---内存&quot;&gt;3. 性能知识点 - 内存&lt;/h2&gt;
 
 &lt;h3 id=&quot;31-基础概念&quot;&gt;3.1 基础概念&lt;/h3&gt;
