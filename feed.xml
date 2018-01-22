@@ -266,6 +266,26 @@
   &lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h4 id=&quot;324-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.2.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/h4&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;新生代内存空间封顶16M（up to 16MiB）&lt;/li&gt;
+  &lt;li&gt;从M62号版本开始，v8开始使用&lt;code&gt;parallel Scavenger&lt;/code&gt;算法回收新生代垃圾（Starting with M62, V8 switched the default algorithm for collecting the young generation to a parallel Scavenger）&lt;/li&gt;
+  &lt;li&gt;Parallel Mark-Evacuate
+    &lt;ul&gt;
+      &lt;li&gt;工作人员在新生代垃圾回收中试验了&lt;code&gt;Parallel Mark-Evacuate&lt;/code&gt;算法（We experimented with a parallel Mark-Evacuate algorithm based on the V8’s full Mark-Sweep-Compact collector.）&lt;/li&gt;
+      &lt;li&gt;该算法借鉴了老生代的标记清除回收机制&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Parallel Scavenge
+    &lt;ul&gt;
+      &lt;li&gt;Parallel Mark-Evacuate算法分离了扫描标记存活对象、拷贝存活对象、更新指针这几个步骤&lt;/li&gt;
+      &lt;li&gt;&lt;code&gt;Parallel Scavenge&lt;/code&gt;则是将上述几个步骤合而为一，进一步提升效率，也是M62版本开始v8使用的新生代垃圾回收算法&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;该新算法减少了20%-50%的新生代垃圾回收时间（V8 now ships with the parallel Scavenger which reduces the main thread young generation garbage collection total time by about 20%–50%）&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h3 id=&quot;33-内存metrics-api&quot;&gt;3.3 内存Metrics API&lt;/h3&gt;
 
 &lt;h2 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h2&gt;
