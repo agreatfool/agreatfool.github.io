@@ -111,7 +111,12 @@
                 <div id="toc" class="toc"></div>
                 <ul class="section-nav">
 <li class="toc-entry toc-h2"><a href="#1-前言">1. 前言</a></li>
-<li class="toc-entry toc-h2"><a href="#2-资料">2. 资料</a></li>
+<li class="toc-entry toc-h2"><a href="#2-资料">2. 资料</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#21-node相关">2.1 Node相关</a></li>
+<li class="toc-entry toc-h3"><a href="#22-v8引擎相关">2.2 V8引擎相关</a></li>
+</ul>
+</li>
 <li class="toc-entry toc-h2"><a href="#3-性能知识点---内存">3. 性能知识点 - 内存</a>
 <ul>
 <li class="toc-entry toc-h3"><a href="#31-基础概念">3.1 基础概念</a>
@@ -124,8 +129,24 @@
 <li class="toc-entry toc-h3"><a href="#32-gc">3.2 GC</a>
 <ul>
 <li class="toc-entry toc-h4"><a href="#321-gc基础知识">3.2.1 GC基础知识</a></li>
-<li class="toc-entry toc-h4"><a href="#322-内存划分">3.2.2 内存划分</a></li>
-<li class="toc-entry toc-h4"><a href="#323-gc算法">3.2.3 GC算法</a></li>
+<li class="toc-entry toc-h4"><a href="#322-内存划分">3.2.2 内存划分</a>
+<ul>
+<li class="toc-entry toc-h5"><a href="#3221-内存页基础概念">3.2.2.1 内存页基础概念</a></li>
+<li class="toc-entry toc-h5"><a href="#3222-new-space新生代">3.2.2.2 New Space（新生代）</a></li>
+<li class="toc-entry toc-h5"><a href="#3223-old-space老生代">3.2.2.3 Old Space（老生代）</a></li>
+<li class="toc-entry toc-h5"><a href="#3224-large-object-space老生代">3.2.2.4 Large Object Space（老生代）</a></li>
+<li class="toc-entry toc-h5"><a href="#3225-map-space老生代">3.2.2.5 Map Space（老生代）</a></li>
+<li class="toc-entry toc-h5"><a href="#3226-code-space老生代">3.2.2.6 Code Space（老生代）</a></li>
+<li class="toc-entry toc-h5"><a href="#3227-堆空间页管理抽象memory-allocator">3.2.2.7 堆空间页管理抽象：Memory Allocator</a></li>
+<li class="toc-entry toc-h5"><a href="#3228-堆外内存external-memory">3.2.2.8 堆外内存：External memory</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h4"><a href="#323-gc算法">3.2.3 GC算法</a>
+<ul>
+<li class="toc-entry toc-h5"><a href="#3231-新生代scavenge">3.2.3.1 新生代：Scavenge</a></li>
+<li class="toc-entry toc-h5"><a href="#3232-老生代mark-sweepmark-compact">3.2.3.2 老生代：Mark-Sweep／Mark-Compact</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-entry toc-h3"><a href="#33-内存metrics-api">3.3 内存Metrics API</a></li>
@@ -148,15 +169,30 @@
 <a id="2-资料" class="anchor" href="#2-%E8%B5%84%E6%96%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. 资料</h2>
 <p>资料我都放在前面，方便直接打开深度阅读。</p>
 
+<h3 id="21-node相关">
+<a id="21-node相关" class="anchor" href="#21-node%E7%9B%B8%E5%85%B3" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Node相关</h3>
 <ul>
   <li>
 <a href="https://nodejs.org/api/v8.html">V8 Node.js v9.4.0 Documentation</a>：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</li>
+</ul>
+
+<h3 id="22-v8引擎相关">
+<a id="22-v8引擎相关" class="anchor" href="#22-v8%E5%BC%95%E6%93%8E%E7%9B%B8%E5%85%B3" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 V8引擎相关</h3>
+<ul>
   <li>
 <a href="http://alinode.aliyun.com/blog/37">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
   <li>
 <a href="http://alinode.aliyun.com/blog/38">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
   <li>
 <a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
+  <li><a href="http://newhtml.net/v8-garbage-collection/">V8 之旅： 垃圾回收器</a></li>
+  <li><a href="https://v8project.blogspot.com/2016/04/jank-busters-part-two-orinoco.html">Jank Busters Part Two: Orinoco</a></li>
+  <li><a href="https://www.infoq.com/presentations/chrome-v8-optimization">New Optimizations of Google Chrome’s V8</a></li>
+  <li><a href="https://www.youtube.com/watch?v=VhpdsjBUS3g">Google I/O 2013 - Accelerating Oz with V8: Follow the Yellow Brick Road to JavaScript Performance</a></li>
+  <li><a href="https://research.google.com/pubs/pub45361.html">Idle Time Garbage Collection Scheduling</a></li>
+  <li><a href="https://research.google.com/pubs/pub43823.html">Memento Mori: Dynamic Allocation-site-based Optimizations</a></li>
+  <li><a href="https://research.google.com/pubs/pub42478.html">Allocation Folding Based on Dominance</a></li>
+  <li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;rep=rep1&amp;type=pdf">Garbage-First Garbage Collection</a></li>
 </ul>
 
 <h2 id="3-性能知识点---内存">
@@ -242,7 +278,8 @@
 
 <h4 id="322-内存划分">
 <a id="322-内存划分" class="anchor" href="#322-%E5%86%85%E5%AD%98%E5%88%92%E5%88%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2 内存划分</h4>
-<p>内存页基础概念</p>
+<h5 id="3221-内存页基础概念">
+<a id="3221-内存页基础概念" class="anchor" href="#3221-%E5%86%85%E5%AD%98%E9%A1%B5%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.1 内存页基础概念</h5>
 
 <ul>
   <li>内存按照 1MB 分页，并且都按照 1MB 对齐</li>
@@ -251,7 +288,8 @@
   <li>Large Object Space 也分页，但页的大小会比 1MB 大一些</li>
 </ul>
 
-<p>New Space（新生代）</p>
+<h5 id="3222-new-space新生代">
+<a id="3222-new-space新生代" class="anchor" href="#3222-new-space%E6%96%B0%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.2 New Space（新生代）</h5>
 
 <ul>
   <li>大部分的对象都属于新生代，诞生在这里</li>
@@ -259,7 +297,8 @@
   <li>GC日志中看到的 new 和 semispace 相关的字段就与 New Space 有关</li>
 </ul>
 
-<p>Old Space（老生代）</p>
+<h5 id="3223-old-space老生代">
+<a id="3223-old-space老生代" class="anchor" href="#3223-old-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.3 Old Space（老生代）</h5>
 
 <ul>
   <li>对象大部分是从新生代（即 New Space）晋升而来</li>
@@ -270,7 +309,8 @@
   <li>使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<p>Large Object Space（老生代）</p>
+<h5 id="3224-large-object-space老生代">
+<a id="3224-large-object-space老生代" class="anchor" href="#3224-large-object-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.4 Large Object Space（老生代）</h5>
 
 <ul>
   <li>需要分配一个 1MB 的页（减去 header）无法直接容纳的对象时，就会直接在 Large Object Space 而不是 New Space 分配</li>
@@ -278,7 +318,8 @@
   <li>Large Object Space 属于老生代，使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<p>Map Space（老生代）</p>
+<h5 id="3225-map-space老生代">
+<a id="3225-map-space老生代" class="anchor" href="#3225-map-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.5 Map Space（老生代）</h5>
 
 <ul>
   <li>存储<code>对象布局结构</code>
@@ -286,7 +327,8 @@
   <li>使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<p>Code Space（老生代）</p>
+<h5 id="3226-code-space老生代">
+<a id="3226-code-space老生代" class="anchor" href="#3226-code-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.6 Code Space（老生代）</h5>
 
 <ul>
   <li>编译器针对运行平台架构编译出的机器码（存储在可执行内存中）本身也是数据，连同一些其它的元数据（比如由哪个编译器编译，源代码的位置等），放置在 Code Space 中</li>
@@ -294,14 +336,16 @@
   <li>使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<p>堆空间页管理抽象：Memory Allocator</p>
+<h5 id="3227-堆空间页管理抽象memory-allocator">
+<a id="3227-堆空间页管理抽象memory-allocator" class="anchor" href="#3227-%E5%A0%86%E7%A9%BA%E9%97%B4%E9%A1%B5%E7%AE%A1%E7%90%86%E6%8A%BD%E8%B1%A1memory-allocator" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.7 堆空间页管理抽象：Memory Allocator</h5>
 
 <ul>
   <li>与操作系统交互，当空间需要新的页的时候，它从操作系统手上分配（使用<code>mmap</code>）内存再交给空间</li>
   <li>当有内存页不再使用的时侯，它从空间手上接过这些内存，还给操作系统（使用<code>munmap</code>）</li>
 </ul>
 
-<p>堆外内存：External memory</p>
+<h5 id="3228-堆外内存external-memory">
+<a id="3228-堆外内存external-memory" class="anchor" href="#3228-%E5%A0%86%E5%A4%96%E5%86%85%E5%AD%98external-memory" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2.8 堆外内存：External memory</h5>
 
 <ul>
   <li>一般是C++插件，会自行管理内存，这部分内存就是非Node堆内部的内存，即堆外内存</li>
@@ -310,7 +354,9 @@
 
 <h4 id="323-gc算法">
 <a id="323-gc算法" class="anchor" href="#323-gc%E7%AE%97%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.3 GC算法</h4>
-<p>新生代：Scavenge</p>
+<h5 id="3231-新生代scavenge">
+<a id="3231-新生代scavenge" class="anchor" href="#3231-%E6%96%B0%E7%94%9F%E4%BB%A3scavenge" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.3.1 新生代：Scavenge</h5>
+<p>Scavenge</p>
 
 <ul>
   <li>空间换时间</li>
@@ -329,8 +375,8 @@
   <li>通过检索store buffer就能很快找到所有老生代到新生代的引用</li>
 </ul>
 
-<p>老生代：Mark-Sweep／Mark-Compact</p>
-
+<h5 id="3232-老生代mark-sweepmark-compact">
+<a id="3232-老生代mark-sweepmark-compact" class="anchor" href="#3232-%E8%80%81%E7%94%9F%E4%BB%A3mark-sweepmark-compact" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.3.2 老生代：Mark-Sweep／Mark-Compact</h5>
 <p>三色 marking</p>
 
 <ul>
@@ -341,6 +387,58 @@
   <li>因标记过程中对象会push进栈，而大对象则无法这么做，会走一个比较特殊的标记过程，因此大对象过多会显著影响GC效率</li>
   <li>Marking后的回收分：<code>Sweeping</code>和<code>Compacting</code>
 </li>
+</ul>
+
+<p>Sweeping</p>
+
+<ul>
+  <li>找到死亡对象占用的连续区块，将这些块添加到随该页维护的一个 freelist 里</li>
+  <li>这个数据结构保存了页上可用于下次分配的内存位置</li>
+  <li>V8 中按照可用内存块大小的区间分出了多个 freelist，这样能更快找到合适的可用内存</li>
+</ul>
+
+<p>Compacting</p>
+
+<ul>
+  <li>将页中的所有存活的对象都转移到另一页里（evacuation）</li>
+  <li>存活对象都被移走了的那一页就可以直接还给操作系统</li>
+  <li>主要发生在某一页中死亡对象留下来的空洞（hole）比较多的时候</li>
+</ul>
+
+<p>优化：增量式 marking（incremental marking）</p>
+
+<ul>
+  <li>将 marking 拆分开来，当堆大小涨到一定程度的时候，开始增量式 GC</li>
+  <li>在每次分配了一定量的内存后／触发了足够多次写屏障后，就暂停一下程序，做几毫秒到几十毫秒的 marking，然后恢复程序的运行</li>
+</ul>
+
+<p>优化：black allocation</p>
+
+<ul>
+  <li>v8 5.x 引入</li>
+  <li>将所有新出现在 Old Space 的对象（包括pretentured 的分配或者晋升）直接标记为黑色，放在特殊的内存页（black page）中</li>
+  <li>直接活过下一次GC</li>
+</ul>
+
+<p>优化：lazy sweeping, concurrent sweeping, parallel sweeping</p>
+
+<ul>
+  <li>lazy sweeping
+    <ul>
+      <li>已经标记完哪些对象的内存可以被回收之后，并没有必要马上回收完这些内存</li>
+      <li>只有当所有页的内存都被回收完之后，才会重新开始 marking</li>
+    </ul>
+  </li>
+  <li>concurrent sweeping
+    <ul>
+      <li>让非程序线程的其他线程进行sweeping工作</li>
+    </ul>
+  </li>
+  <li>parallel sweeping
+    <ul>
+      <li>让多个sweeping线程同时工作</li>
+    </ul>
+  </li>
 </ul>
 
 <h3 id="33-内存metrics-api">
