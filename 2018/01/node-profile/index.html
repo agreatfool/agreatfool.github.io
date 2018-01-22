@@ -109,7 +109,31 @@
               </div>
               <div class="post-content">
                 <div id="toc" class="toc"></div>
-                <h2 id="1-前言">1. 前言</h2>
+                <ul class="section-nav">
+<li class="toc-entry toc-h2"><a href="#1-前言">1. 前言</a></li>
+<li class="toc-entry toc-h2"><a href="#2-资料">2. 资料</a></li>
+<li class="toc-entry toc-h2"><a href="#3-性能知识点---内存">3. 性能知识点 - 内存</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#31-基础概念">3.1 基础概念</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#311-rss">3.1.1 RSS</a></li>
+<li class="toc-entry toc-h4"><a href="#312-heap">3.1.2 Heap</a></li>
+<li class="toc-entry toc-h4"><a href="#313-heap-limit">3.1.3 Heap Limit</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#32-gc">3.2 GC</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#321-gc基础知识">3.2.1 GC基础知识</a></li>
+<li class="toc-entry toc-h4"><a href="#322-内存划分">3.2.2 内存划分</a></li>
+<li class="toc-entry toc-h4"><a href="#323-gc算法">3.2.3 GC算法</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h3"><a href="#33-内存metrics-api">3.3 内存Metrics API</a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h2"><a href="#4-性能知识点---eventloop">4. 性能知识点 - EventLoop</a></li>
+</ul><h2 id="1-前言">
+<a id="1-前言" class="anchor" href="#1-%E5%89%8D%E8%A8%80" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 前言</h2>
 <p>知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。Node的进程profile相关的调研其实很早就想做了，但懒癌发作，一直都没有推进，最近找时间开始做了。</p>
 
 <p>本文主要在于以下几个方面，不局限于狭义的<code>profile</code>或<code>profiler</code>：</p>
@@ -120,19 +144,26 @@
   <li>Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题</li>
 </ul>
 
-<h2 id="2-资料">2. 资料</h2>
+<h2 id="2-资料">
+<a id="2-资料" class="anchor" href="#2-%E8%B5%84%E6%96%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. 资料</h2>
 <p>资料我都放在前面，方便直接打开深度阅读。</p>
 
 <ul>
-  <li><a href="https://nodejs.org/api/v8.html">V8 Node.js v9.4.0 Documentation</a>：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</li>
-  <li><a href="http://alinode.aliyun.com/blog/37">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
-  <li><a href="http://alinode.aliyun.com/blog/38">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
-  <li><a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
+  <li>
+<a href="https://nodejs.org/api/v8.html">V8 Node.js v9.4.0 Documentation</a>：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</li>
+  <li>
+<a href="http://alinode.aliyun.com/blog/37">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
+  <li>
+<a href="http://alinode.aliyun.com/blog/38">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
+  <li>
+<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
 </ul>
 
-<h2 id="3-性能知识点---内存">3. 性能知识点 - 内存</h2>
+<h2 id="3-性能知识点---内存">
+<a id="3-性能知识点---内存" class="anchor" href="#3-%E6%80%A7%E8%83%BD%E7%9F%A5%E8%AF%86%E7%82%B9---%E5%86%85%E5%AD%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. 性能知识点 - 内存</h2>
 
-<h3 id="31-基础概念">3.1 基础概念</h3>
+<h3 id="31-基础概念">
+<a id="31-基础概念" class="anchor" href="#31-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 基础概念</h3>
 <p>Node进程的内存分为三大部分：</p>
 
 <ul>
@@ -141,17 +172,20 @@
   <li>Heap: a memory segment dedicated to storing reference types like objects, strings and closures.</li>
 </ul>
 
-<h4 id="311-rss">3.1.1 RSS</h4>
+<h4 id="311-rss">
+<a id="311-rss" class="anchor" href="#311-rss" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1.1 RSS</h4>
 <blockquote>
   <p>A running program is always represented through some space allocated in memory. This space is called Resident Set.</p>
 </blockquote>
 
 <p>Node进程整体占用内存大小，也就是你在系统面板之类的地方看到的node进程的内存占用大小。</p>
 
-<h4 id="312-heap">3.1.2 Heap</h4>
+<h4 id="312-heap">
+<a id="312-heap" class="anchor" href="#312-heap" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1.2 Heap</h4>
 <p>用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。</p>
 
-<h4 id="313-heap-limit">3.1.3 Heap Limit</h4>
+<h4 id="313-heap-limit">
+<a id="313-heap-limit" class="anchor" href="#313-heap-limit" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1.3 Heap Limit</h4>
 <p>node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.4G。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：</p>
 
 <blockquote>
@@ -172,14 +206,16 @@
 
 <p>遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。</p>
 
-<h3 id="32-gc">3.2 GC</h3>
+<h3 id="32-gc">
+<a id="32-gc" class="anchor" href="#32-gc" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 GC</h3>
 <p>这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38">这篇2</a>。</p>
 
 <p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
 
 <p>本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。</p>
 
-<h4 id="321-gc基础知识">3.2.1 GC基础知识</h4>
+<h4 id="321-gc基础知识">
+<a id="321-gc基础知识" class="anchor" href="#321-gc%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.1 GC基础知识</h4>
 <ul>
   <li>GC回收的目标是从根节点开始，不可达（unreachable）的对象</li>
   <li>GC触发：
@@ -204,7 +240,8 @@
   <li>准确式 GC (Accurate GC)：通过底层设计的方法，能在GC的时候无需访问内容就判断出内存是指针还是整数，精确回收需要回收的内存</li>
 </ul>
 
-<h4 id="322-内存划分">3.2.2 内存划分</h4>
+<h4 id="322-内存划分">
+<a id="322-内存划分" class="anchor" href="#322-%E5%86%85%E5%AD%98%E5%88%92%E5%88%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2 内存划分</h4>
 <p>内存页基础概念</p>
 
 <ul>
@@ -226,7 +263,8 @@
 
 <ul>
   <li>对象大部分是从新生代（即 New Space）晋升而来</li>
-  <li><code>pretenuring</code>机制：某些函数创建的对象有很高的存活率率（survival rate），经常晋升到老生代（存活超过2次）的时候，下次这些函数再创建的对象将会直接在 Old Space 分配</li>
+  <li>
+<code>pretenuring</code>机制：某些函数创建的对象有很高的存活率率（survival rate），经常晋升到老生代（存活超过2次）的时候，下次这些函数再创建的对象将会直接在 Old Space 分配</li>
   <li>GC日志中看到的 old 相关的字段就与 Old Space 有关</li>
   <li>survival 和 promoted 相关的字段则与对象在新老生代之间的迁移有关</li>
   <li>使用 Mark-Sweep-Compact 回收内存</li>
@@ -243,7 +281,8 @@
 <p>Map Space（老生代）</p>
 
 <ul>
-  <li>存储<code>对象布局结构</code></li>
+  <li>存储<code>对象布局结构</code>
+</li>
   <li>使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
@@ -269,7 +308,8 @@
   <li>但Node语法中的Buffer，是自己管理内存的，即堆外内存</li>
 </ul>
 
-<h4 id="323-gc算法">3.2.3 GC算法</h4>
+<h4 id="323-gc算法">
+<a id="323-gc算法" class="anchor" href="#323-gc%E7%AE%97%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.3 GC算法</h4>
 <p>新生代：Scavenge</p>
 
 <ul>
@@ -299,12 +339,15 @@
   <li>沿着根对象，将所有带引用的对象标黑，检索过程中先标黑</li>
   <li>扫描完毕后，堆内非根节点对象就只剩黑和白，黑色不可回收，白色可以回收</li>
   <li>因标记过程中对象会push进栈，而大对象则无法这么做，会走一个比较特殊的标记过程，因此大对象过多会显著影响GC效率</li>
-  <li>Marking后的回收分：<code>Sweeping</code>和<code>Compacting</code></li>
+  <li>Marking后的回收分：<code>Sweeping</code>和<code>Compacting</code>
+</li>
 </ul>
 
-<h3 id="33-内存metrics-api">3.3 内存Metrics API</h3>
+<h3 id="33-内存metrics-api">
+<a id="33-内存metrics-api" class="anchor" href="#33-%E5%86%85%E5%AD%98metrics-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 内存Metrics API</h3>
 
-<h2 id="4-性能知识点---eventloop">4. 性能知识点 - EventLoop</h2>
+<h2 id="4-性能知识点---eventloop">
+<a id="4-性能知识点---eventloop" class="anchor" href="#4-%E6%80%A7%E8%83%BD%E7%9F%A5%E8%AF%86%E7%82%B9---eventloop" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 性能知识点 - EventLoop</h2>
 
               </div>
               
