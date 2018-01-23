@@ -23,9 +23,9 @@
 &lt;p&gt;本文行文依据的Node版本，及所有范例的运行环境为：&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;Node version:
-  v8.4.0
-  Node v8 version:
+  &lt;p&gt;Node version:  &lt;br /&gt;
+  v8.4.0  &lt;br /&gt;
+  Node v8 version:  &lt;br /&gt;
   6.0.286.52&lt;/p&gt;
 &lt;/blockquote&gt;
 
@@ -344,7 +344,9 @@
 &lt;h4 id=&quot;333-requirev8getheapspacestatistics&quot;&gt;3.3.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;按内存空间分类&lt;code&gt;space&lt;/code&gt;种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。&lt;/p&gt;
 
-&lt;h3 id=&quot;34-内存泄露--chrome-dev-tool&quot;&gt;3.4 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
+&lt;h3 id=&quot;34-gc日志&quot;&gt;3.4 GC日志&lt;/h3&gt;
+
+&lt;h3 id=&quot;35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
 
 &lt;h2 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h2&gt;
 </description>
