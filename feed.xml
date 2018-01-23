@@ -64,6 +64,7 @@
 
 &lt;h3 id=&quot;23-chrome-dev-tool&quot;&gt;2.3 Chrome Dev Tool&lt;/h3&gt;
 &lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/&quot;&gt;Dev工具官方教程&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/memory-problems/&quot;&gt;解决内存问题&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -344,11 +345,21 @@
 &lt;h4 id=&quot;333-requirev8getheapspacestatistics&quot;&gt;3.3.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;按内存空间分类&lt;code&gt;space&lt;/code&gt;种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。&lt;/p&gt;
 
-&lt;h3 id=&quot;34-gc日志&quot;&gt;3.4 GC日志&lt;/h3&gt;
+&lt;h3 id=&quot;34-gc日志--解析工具&quot;&gt;3.4 GC日志 &amp;amp; 解析工具&lt;/h3&gt;
+&lt;p&gt;GC日志需要在命令行启动node的时候添加flag来启用，相关的flag我找到一个不错的gist，里面有描述，这里fork了下：&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/42456c819018a4bc1a789566c2748b0e.js&quot;&gt; &lt;/script&gt;
 
 &lt;h3 id=&quot;35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
 
 &lt;h2 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h2&gt;
+
+&lt;h2 id=&quot;5-工具&quot;&gt;5. 工具&lt;/h2&gt;
+&lt;h3 id=&quot;51-nimnodejs-调试管理工具&quot;&gt;5.1 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h3&gt;
+&lt;p&gt;可在node进程使用&lt;code&gt;--inspect&lt;/code&gt; flag时，自动打开chrome的调试tab。&lt;/p&gt;
+
 </description>
 				<pubDate>Fri, 19 Jan 2018 10:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/01/node-profile/</link>

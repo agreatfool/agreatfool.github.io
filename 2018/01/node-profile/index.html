@@ -162,11 +162,16 @@
 <li class="toc-entry toc-h4"><a href="#333-requirev8getheapspacestatistics">3.3.3 require(“v8”).getHeapSpaceStatistics</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h3"><a href="#34-gc日志">3.4 GC日志</a></li>
+<li class="toc-entry toc-h3"><a href="#34-gc日志--解析工具">3.4 GC日志 & 解析工具</a></li>
 <li class="toc-entry toc-h3"><a href="#35-内存泄露--chrome-dev-tool">3.5 内存泄露 & Chrome Dev Tool</a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h2"><a href="#4-性能知识点---eventloop">4. 性能知识点 - EventLoop</a></li>
+<li class="toc-entry toc-h2"><a href="#5-工具">5. 工具</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#51-nimnodejs-调试管理工具">5.1 NIM(Node.js 调试管理工具)</a></li>
+</ul>
+</li>
 </ul><h2 id="1-前言">
 <a id="1-前言" class="anchor" href="#1-%E5%89%8D%E8%A8%80" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 前言</h2>
 <p>知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。Node的进程profile相关的调研其实很早就想做了，但懒癌发作，一直都没有推进，最近找时间开始做了。</p>
@@ -233,6 +238,7 @@
 <h3 id="23-chrome-dev-tool">
 <a id="23-chrome-dev-tool" class="anchor" href="#23-chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 Chrome Dev Tool</h3>
 <ul>
+  <li><a href="https://developers.google.com/web/tools/chrome-devtools/">Dev工具官方教程</a></li>
   <li><a href="https://developers.google.com/web/tools/chrome-devtools/memory-problems/">解决内存问题</a></li>
 </ul>
 
@@ -547,14 +553,27 @@
 </h4>
 <p>按内存空间分类<code>space</code>种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。</p>
 
-<h3 id="34-gc日志">
-<a id="34-gc日志" class="anchor" href="#34-gc%E6%97%A5%E5%BF%97" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 GC日志</h3>
+<h3 id="34-gc日志--解析工具">
+<a id="34-gc日志--解析工具" class="anchor" href="#34-gc%E6%97%A5%E5%BF%97--%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 GC日志 &amp; 解析工具</h3>
+<p>GC日志需要在命令行启动node的时候添加flag来启用，相关的flag我找到一个不错的gist，里面有描述，这里fork了下：</p>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/42456c819018a4bc1a789566c2748b0e.js"> </script>
 
 <h3 id="35-内存泄露--chrome-dev-tool">
 <a id="35-内存泄露--chrome-dev-tool" class="anchor" href="#35-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5 内存泄露 &amp; Chrome Dev Tool</h3>
 
 <h2 id="4-性能知识点---eventloop">
 <a id="4-性能知识点---eventloop" class="anchor" href="#4-%E6%80%A7%E8%83%BD%E7%9F%A5%E8%AF%86%E7%82%B9---eventloop" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 性能知识点 - EventLoop</h2>
+
+<h2 id="5-工具">
+<a id="5-工具" class="anchor" href="#5-%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. 工具</h2>
+<h3 id="51-nimnodejs-调试管理工具">
+<a id="51-nimnodejs-调试管理工具" class="anchor" href="#51-nimnodejs-%E8%B0%83%E8%AF%95%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.1 <a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">NIM(Node.js 调试管理工具)</a>
+</h3>
+<p>可在node进程使用<code>--inspect</code> flag时，自动打开chrome的调试tab。</p>
+
 
               </div>
               
