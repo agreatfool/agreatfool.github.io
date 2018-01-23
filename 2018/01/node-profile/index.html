@@ -159,6 +159,7 @@
 <ul>
 <li class="toc-entry toc-h4"><a href="#331-processmemoryusage">3.3.1 process.memoryUsage</a></li>
 <li class="toc-entry toc-h4"><a href="#332-requirev8getheapstatistics">3.3.2 require(“v8”).getHeapStatistics</a></li>
+<li class="toc-entry toc-h4"><a href="#333-requirev8getheapspacestatistics">3.3.3 require(“v8”).getHeapSpaceStatistics</a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h3"><a href="#34-内存泄露--chrome-dev-tool">3.4 内存泄露 & Chrome Dev Tool</a></li>
@@ -535,8 +536,15 @@
   <li>heap_size_limit：最大可用堆内存（上限）</li>
   <li>malloced_memory：实际测试是一个很小的值，有解释说是：current amount of memory, obtained via malloc</li>
   <li>peak_malloced_memory：没搜到任何说明，有必要可以读下node源码</li>
-  <li>does_zap_garbage</li>
+  <li>does_zap_garbage：覆盖堆垃圾的模式的开关</li>
 </ul>
+
+<p>常用来查看堆上限大小。</p>
+
+<h4 id="333-requirev8getheapspacestatistics">
+<a id="333-requirev8getheapspacestatistics" class="anchor" href="#333-requirev8getheapspacestatistics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.3 <a href="https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics">require(“v8”).getHeapSpaceStatistics</a>
+</h4>
+<p>按内存空间分类<code>space</code>种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。</p>
 
 <h3 id="34-内存泄露--chrome-dev-tool">
 <a id="34-内存泄露--chrome-dev-tool" class="anchor" href="#34-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 内存泄露 &amp; Chrome Dev Tool</h3>

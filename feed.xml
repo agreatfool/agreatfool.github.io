@@ -336,8 +336,13 @@
   &lt;li&gt;heap_size_limit：最大可用堆内存（上限）&lt;/li&gt;
   &lt;li&gt;malloced_memory：实际测试是一个很小的值，有解释说是：current amount of memory, obtained via malloc&lt;/li&gt;
   &lt;li&gt;peak_malloced_memory：没搜到任何说明，有必要可以读下node源码&lt;/li&gt;
-  &lt;li&gt;does_zap_garbage&lt;/li&gt;
+  &lt;li&gt;does_zap_garbage：覆盖堆垃圾的模式的开关&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;常用来查看堆上限大小。&lt;/p&gt;
+
+&lt;h4 id=&quot;333-requirev8getheapspacestatistics&quot;&gt;3.3.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;按内存空间分类&lt;code&gt;space&lt;/code&gt;种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。&lt;/p&gt;
 
 &lt;h3 id=&quot;34-内存泄露--chrome-dev-tool&quot;&gt;3.4 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
 
