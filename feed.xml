@@ -328,7 +328,7 @@
   &lt;li&gt;total_heap_size_executable：字节码、优化后的代码等可执行的内容占用的内存量&lt;/li&gt;
   &lt;li&gt;total_physical_size：找到部分解释说是&lt;code&gt;Commited size&lt;/code&gt;，测试下来该值
     &lt;ul&gt;
-      &lt;li&gt;require(“v8”).getHeapStatistics().used_heap_size &amp;lt; require(“v8”).getHeapStatistics().total_physical_size &amp;lt; require(“v8”).getHeapStatistics().total_heap_size&lt;/li&gt;
+      &lt;li&gt;used_heap_size &amp;lt; total_physical_size &amp;lt; total_heap_size&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;total_available_size：剩余可用的堆内存量，包括尚未向操作系统申请的部分，其实就是&lt;code&gt;heap_size_limit - used_heap_size&lt;/code&gt;&lt;/li&gt;
