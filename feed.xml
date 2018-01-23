@@ -19,12 +19,32 @@
   &lt;li&gt;Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h3 id=&quot;11-版本信息&quot;&gt;1.1 版本信息&lt;/h3&gt;
+&lt;p&gt;本文行文依据的Node版本，及所有范例的运行环境为：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Node version:
+  v8.4.0
+  Node v8 version:
+  6.0.286.52&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;本文撰写时候最新的LTS版本为：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;v8.9.4&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Node的Changelog可以在&lt;a href=&quot;https://github.com/nodejs/node/blob/master/doc/changelogs/CHANGELOG_V8.md&quot;&gt;这里&lt;/a&gt;找到&lt;/p&gt;
+
+&lt;p&gt;一般只要版本差异不要太大，信息的可靠性都应该没有问题。但如果版本差异过大，请自行进行信息修正，毕竟Node的发展实在是太快。&lt;/p&gt;
+
 &lt;h2 id=&quot;2-资料&quot;&gt;2. 资料&lt;/h2&gt;
 &lt;p&gt;资料我都放在前面，方便直接打开深度阅读。&lt;/p&gt;
 
 &lt;h3 id=&quot;21-node相关&quot;&gt;2.1 Node相关&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/api/v8.html&quot;&gt;V8 Node.js v9.4.0 Documentation&lt;/a&gt;：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html&quot;&gt;V8 Node.js v8.4.0 Documentation&lt;/a&gt;：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;22-v8引擎相关&quot;&gt;2.2 V8引擎相关&lt;/h3&gt;
@@ -292,6 +312,34 @@
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;33-内存metrics-api&quot;&gt;3.3 内存Metrics API&lt;/h3&gt;
+&lt;h4 id=&quot;331-processmemoryusage&quot;&gt;3.3.1 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage&quot;&gt;process.memoryUsage&lt;/a&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;rss：node进程总内存占用量&lt;/li&gt;
+  &lt;li&gt;heapTotal：总堆内存占用量（已申请下来的）&lt;/li&gt;
+  &lt;li&gt;heapUsed：实际堆内存使用量&lt;/li&gt;
+  &lt;li&gt;external：扩展等外部程序的内存占用量&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;常用来查看基础的内存信息，特别是rss很有用。&lt;/p&gt;
+
+&lt;h4 id=&quot;332-requirev8getheapstatistics&quot;&gt;3.3.2 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics&quot;&gt;require(“v8”).getHeapStatistics&lt;/a&gt;&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;total_heap_size：总堆内存占用量（已申请下来的），同&lt;code&gt;process.memoryUsage().heapTotal&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;total_heap_size_executable：字节码、优化后的代码等可执行的内容占用的内存量&lt;/li&gt;
+  &lt;li&gt;total_physical_size：找到部分解释说是&lt;code&gt;Commited size&lt;/code&gt;，测试下来该值
+    &lt;ul&gt;
+      &lt;li&gt;require(“v8”).getHeapStatistics().used_heap_size &amp;lt; require(“v8”).getHeapStatistics().total_physical_size &amp;lt; require(“v8”).getHeapStatistics().total_heap_size&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;total_available_size：剩余可用的堆内存量，包括尚未向操作系统申请的部分，其实就是&lt;code&gt;heap_size_limit - used_heap_size&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;used_heap_size：实际堆内存使用量，同&lt;code&gt;process.memoryUsage().heapUsed&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;heap_size_limit：最大可用堆内存（上限）&lt;/li&gt;
+  &lt;li&gt;malloced_memory：实际测试是一个很小的值，有解释说是：current amount of memory, obtained via malloc&lt;/li&gt;
+  &lt;li&gt;peak_malloced_memory：没搜到任何说明，有必要可以读下node源码&lt;/li&gt;
+  &lt;li&gt;does_zap_garbage&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;34-内存泄露--chrome-dev-tool&quot;&gt;3.4 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
 
 &lt;h2 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h2&gt;
 </description>
