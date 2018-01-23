@@ -330,6 +330,7 @@
   &lt;li&gt;total_physical_size：找到部分解释说是&lt;code&gt;Commited size&lt;/code&gt;，测试下来该值
     &lt;ul&gt;
       &lt;li&gt;used_heap_size &amp;lt; total_physical_size &amp;lt; total_heap_size&lt;/li&gt;
+      &lt;li&gt;Committed memory is, essentially, all the memory which has been allocated by applications, whether it’s used or not.&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;total_available_size：剩余可用的堆内存量，包括尚未向操作系统申请的部分，其实就是&lt;code&gt;heap_size_limit - used_heap_size&lt;/code&gt;&lt;/li&gt;
@@ -346,11 +347,25 @@
 &lt;p&gt;按内存空间分类&lt;code&gt;space&lt;/code&gt;种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。&lt;/p&gt;
 
 &lt;h3 id=&quot;34-gc日志--解析工具&quot;&gt;3.4 GC日志 &amp;amp; 解析工具&lt;/h3&gt;
+&lt;h4 id=&quot;341-日志启用&quot;&gt;3.4.1 日志启用&lt;/h4&gt;
 &lt;p&gt;GC日志需要在命令行启动node的时候添加flag来启用，相关的flag我找到一个不错的gist，里面有描述，这里fork了下：&lt;/p&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/42456c819018a4bc1a789566c2748b0e.js&quot;&gt; &lt;/script&gt;
+
+&lt;h4 id=&quot;342-如何runtime触发gc&quot;&gt;3.4.2 如何Runtime触发GC&lt;/h4&gt;
+&lt;p&gt;如果想要在runtime使用代码主动触发GC，则需要在node启动的时候添加flag&lt;code&gt;--expose-gc&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;然后在代码里：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h4 id=&quot;343-gc-flag及输出效果范例&quot;&gt;3.4.3 GC flag及输出效果范例&lt;/h4&gt;
+
+&lt;h4 id=&quot;344-gc日志解析工具&quot;&gt;3.4.4 GC日志解析工具&lt;/h4&gt;
 
 &lt;h3 id=&quot;35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
 
