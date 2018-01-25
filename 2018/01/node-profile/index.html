@@ -171,18 +171,25 @@
 <ul>
 <li class="toc-entry toc-h5"><a href="#3441-aliyun-nodev8-gc-log-parser">3.4.4.1 aliyun-node/v8-gc-log-parser</a></li>
 <li class="toc-entry toc-h5"><a href="#3442-dainisnode-gcstats">3.4.4.2 dainis/node-gcstats</a></li>
+<li class="toc-entry toc-h5"><a href="#3443-解析工具脚本">3.4.4.3 解析工具脚本</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li class="toc-entry toc-h3"><a href="#35-内存泄露--chrome-dev-tool">3.5 内存泄露 & Chrome Dev Tool</a></li>
+<li class="toc-entry toc-h3"><a href="#35-内存泄露--chrome-dev-tool">3.5 内存泄露 & Chrome Dev Tool</a>
+<ul>
+<li class="toc-entry toc-h4"><a href="#351-范例">3.5.1 范例</a></li>
+<li class="toc-entry toc-h4"><a href="#352-查找问题">3.5.2 查找问题</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-entry toc-h2"><a href="#4-性能知识点---eventloop">4. 性能知识点 - EventLoop</a></li>
 <li class="toc-entry toc-h2"><a href="#5-工具">5. 工具</a>
 <ul>
-<li class="toc-entry toc-h3"><a href="#51-内存泄露及正常使用范例脚本">5.1 内存泄露及正常使用范例脚本</a></li>
-<li class="toc-entry toc-h3"><a href="#52-nimnodejs-调试管理工具">5.2 NIM(Node.js 调试管理工具)</a></li>
+<li class="toc-entry toc-h3"><a href="#51-内存泄露--内存正常-范例脚本">5.1 内存泄露 || 内存正常 范例脚本</a></li>
+<li class="toc-entry toc-h3"><a href="#52-gc解析管道脚本">5.2 GC解析管道脚本</a></li>
+<li class="toc-entry toc-h3"><a href="#53-nimnodejs-调试管理工具">5.3 NIM(Node.js 调试管理工具)</a></li>
 </ul>
 </li>
 </ul><h2 id="1-前言">
@@ -615,24 +622,47 @@
 
 <p>缺点是输出信息不如官方的gc flag那么详细和多样性。</p>
 
+<h5 id="3443-解析工具脚本">
+<a id="3443-解析工具脚本" class="anchor" href="#3443-%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7%E8%84%9A%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4.4.3 解析工具脚本</h5>
+<p>这里我也做了一个简单脚本，见5.2。</p>
+
+<p>这个脚本暂时不能分析<code>--trace-gc --trace-gc-verbose</code>的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。</p>
+
 <h3 id="35-内存泄露--chrome-dev-tool">
 <a id="35-内存泄露--chrome-dev-tool" class="anchor" href="#35-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5 内存泄露 &amp; Chrome Dev Tool</h3>
+<h4 id="351-范例">
+<a id="351-范例" class="anchor" href="#351-%E8%8C%83%E4%BE%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5.1 范例</h4>
+<p>内存泄露可以使用下面5.1里的脚本进行试验。</p>
+
+<h4 id="352-查找问题">
+<a id="352-查找问题" class="anchor" href="#352-%E6%9F%A5%E6%89%BE%E9%97%AE%E9%A2%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5.2 查找问题</h4>
+<p>–inspect
+snapshot
+allocation timeline
+…</p>
 
 <h2 id="4-性能知识点---eventloop">
 <a id="4-性能知识点---eventloop" class="anchor" href="#4-%E6%80%A7%E8%83%BD%E7%9F%A5%E8%AF%86%E7%82%B9---eventloop" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 性能知识点 - EventLoop</h2>
 
 <h2 id="5-工具">
 <a id="5-工具" class="anchor" href="#5-%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. 工具</h2>
-<h3 id="51-内存泄露及正常使用范例脚本">
-<a id="51-内存泄露及正常使用范例脚本" class="anchor" href="#51-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2%E5%8F%8A%E6%AD%A3%E5%B8%B8%E4%BD%BF%E7%94%A8%E8%8C%83%E4%BE%8B%E8%84%9A%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.1 内存泄露及正常使用范例脚本</h3>
+<h3 id="51-内存泄露--内存正常-范例脚本">
+<a id="51-内存泄露--内存正常-范例脚本" class="anchor" href="#51-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--%E5%86%85%E5%AD%98%E6%AD%A3%E5%B8%B8-%E8%8C%83%E4%BE%8B%E8%84%9A%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.1 内存泄露 || 内存正常 范例脚本</h3>
 <p>为了观察内存泄露和GC日志，需要一个范例运行的脚本，我这里制作了一个：</p>
 
 <noscript><pre>400: Invalid request
 </pre></noscript>
 <script src="https://gist.github.com/024d11c54c1a8e474ded5269d54f5c99.js"> </script>
 
-<h3 id="52-nimnodejs-调试管理工具">
-<a id="52-nimnodejs-调试管理工具" class="anchor" href="#52-nimnodejs-%E8%B0%83%E8%AF%95%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.2 <a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">NIM(Node.js 调试管理工具)</a>
+<h3 id="52-gc解析管道脚本">
+<a id="52-gc解析管道脚本" class="anchor" href="#52-gc%E8%A7%A3%E6%9E%90%E7%AE%A1%E9%81%93%E8%84%9A%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.2 GC解析管道脚本</h3>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js"> </script>
+
+<h3 id="53-nimnodejs-调试管理工具">
+<a id="53-nimnodejs-调试管理工具" class="anchor" href="#53-nimnodejs-%E8%B0%83%E8%AF%95%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.3 <a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">NIM(Node.js 调试管理工具)</a>
 </h3>
 <p>可在node进程使用<code>--inspect</code> flag时，自动打开chrome的调试tab。</p>
 

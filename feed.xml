@@ -385,19 +385,38 @@
 
 &lt;p&gt;缺点是输出信息不如官方的gc flag那么详细和多样性。&lt;/p&gt;
 
+&lt;h5 id=&quot;3443-解析工具脚本&quot;&gt;3.4.4.3 解析工具脚本&lt;/h5&gt;
+&lt;p&gt;这里我也做了一个简单脚本，见5.2。&lt;/p&gt;
+
+&lt;p&gt;这个脚本暂时不能分析&lt;code&gt;--trace-gc --trace-gc-verbose&lt;/code&gt;的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。&lt;/p&gt;
+
 &lt;h3 id=&quot;35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
+&lt;h4 id=&quot;351-范例&quot;&gt;3.5.1 范例&lt;/h4&gt;
+&lt;p&gt;内存泄露可以使用下面5.1里的脚本进行试验。&lt;/p&gt;
+
+&lt;h4 id=&quot;352-查找问题&quot;&gt;3.5.2 查找问题&lt;/h4&gt;
+&lt;p&gt;–inspect
+snapshot
+allocation timeline
+…&lt;/p&gt;
 
 &lt;h2 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h2&gt;
 
 &lt;h2 id=&quot;5-工具&quot;&gt;5. 工具&lt;/h2&gt;
-&lt;h3 id=&quot;51-内存泄露及正常使用范例脚本&quot;&gt;5.1 内存泄露及正常使用范例脚本&lt;/h3&gt;
+&lt;h3 id=&quot;51-内存泄露--内存正常-范例脚本&quot;&gt;5.1 内存泄露 || 内存正常 范例脚本&lt;/h3&gt;
 &lt;p&gt;为了观察内存泄露和GC日志，需要一个范例运行的脚本，我这里制作了一个：&lt;/p&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/024d11c54c1a8e474ded5269d54f5c99.js&quot;&gt; &lt;/script&gt;
 
-&lt;h3 id=&quot;52-nimnodejs-调试管理工具&quot;&gt;5.2 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;52-gc解析管道脚本&quot;&gt;5.2 GC解析管道脚本&lt;/h3&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js&quot;&gt; &lt;/script&gt;
+
+&lt;h3 id=&quot;53-nimnodejs-调试管理工具&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;可在node进程使用&lt;code&gt;--inspect&lt;/code&gt; flag时，自动打开chrome的调试tab。&lt;/p&gt;
 
 </description>
