@@ -8,7 +8,7 @@
 		
 			<item>
 				<title>Node.JS Profile 施工中</title>
-				<description>&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
+				<description>&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
 &lt;p&gt;知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。Node的进程profile相关的调研其实很早就想做了，但懒癌发作，一直都没有推进，最近找时间开始做了。&lt;/p&gt;
 
 &lt;p&gt;本文主要在于以下几个方面，不局限于狭义的&lt;code&gt;profile&lt;/code&gt;或&lt;code&gt;profiler&lt;/code&gt;：&lt;/p&gt;
@@ -19,7 +19,7 @@
   &lt;li&gt;Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;11-版本信息&quot;&gt;1.1 版本信息&lt;/h3&gt;
+&lt;h2 id=&quot;11-版本信息&quot;&gt;1.1 版本信息&lt;/h2&gt;
 &lt;p&gt;本文行文依据的Node版本，及所有范例的运行环境为：&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -39,15 +39,15 @@
 
 &lt;p&gt;一般只要版本差异不要太大，信息的可靠性都应该没有问题。但如果版本差异过大，请自行进行信息修正，毕竟Node的发展实在是太快。&lt;/p&gt;
 
-&lt;h2 id=&quot;2-资料&quot;&gt;2. 资料&lt;/h2&gt;
+&lt;h1 id=&quot;2-资料&quot;&gt;2. 资料&lt;/h1&gt;
 &lt;p&gt;资料我都放在前面，方便直接打开深度阅读。&lt;/p&gt;
 
-&lt;h3 id=&quot;21-node相关&quot;&gt;2.1 Node相关&lt;/h3&gt;
+&lt;h2 id=&quot;21-node相关&quot;&gt;2.1 Node相关&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html&quot;&gt;V8 Node.js v8.4.0 Documentation&lt;/a&gt;：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;22-v8引擎相关&quot;&gt;2.2 V8引擎相关&lt;/h3&gt;
+&lt;h2 id=&quot;22-v8引擎相关&quot;&gt;2.2 V8引擎相关&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot;&gt;解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识&lt;/a&gt;：阿里团队的几篇Node的内存文章，很不错&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot;&gt;解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法&lt;/a&gt;：同上&lt;/li&gt;
@@ -62,15 +62,15 @@
   &lt;li&gt;&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;amp;rep=rep1&amp;amp;type=pdf&quot;&gt;Garbage-First Garbage Collection&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;23-chrome-dev-tool&quot;&gt;2.3 Chrome Dev Tool&lt;/h3&gt;
+&lt;h2 id=&quot;23-chrome-dev-tool&quot;&gt;2.3 Chrome Dev Tool&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/&quot;&gt;Dev工具官方教程&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/memory-problems/&quot;&gt;解决内存问题&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;3-性能知识点---内存&quot;&gt;3. 性能知识点 - 内存&lt;/h2&gt;
+&lt;h1 id=&quot;3-性能知识点---内存&quot;&gt;3. 性能知识点 - 内存&lt;/h1&gt;
 
-&lt;h3 id=&quot;31-基础概念&quot;&gt;3.1 基础概念&lt;/h3&gt;
+&lt;h2 id=&quot;31-基础概念&quot;&gt;3.1 基础概念&lt;/h2&gt;
 &lt;p&gt;Node进程的内存分为三大部分：&lt;/p&gt;
 
 &lt;ul&gt;
@@ -79,17 +79,17 @@
   &lt;li&gt;Heap: a memory segment dedicated to storing reference types like objects, strings and closures.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&quot;311-rss&quot;&gt;3.1.1 RSS&lt;/h4&gt;
+&lt;h3 id=&quot;311-rss&quot;&gt;3.1.1 RSS&lt;/h3&gt;
 &lt;blockquote&gt;
   &lt;p&gt;A running program is always represented through some space allocated in memory. This space is called Resident Set.&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;Node进程整体占用内存大小，也就是你在系统面板之类的地方看到的node进程的内存占用大小。&lt;/p&gt;
 
-&lt;h4 id=&quot;312-heap&quot;&gt;3.1.2 Heap&lt;/h4&gt;
+&lt;h3 id=&quot;312-heap&quot;&gt;3.1.2 Heap&lt;/h3&gt;
 &lt;p&gt;用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。&lt;/p&gt;
 
-&lt;h4 id=&quot;313-heap-limit&quot;&gt;3.1.3 Heap Limit&lt;/h4&gt;
+&lt;h3 id=&quot;313-heap-limit&quot;&gt;3.1.3 Heap Limit&lt;/h3&gt;
 &lt;p&gt;node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.4G。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -110,14 +110,14 @@
 
 &lt;p&gt;遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。&lt;/p&gt;
 
-&lt;h3 id=&quot;32-gc&quot;&gt;3.2 GC&lt;/h3&gt;
+&lt;h2 id=&quot;32-gc&quot;&gt;3.2 GC&lt;/h2&gt;
 &lt;p&gt;这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot;&gt;这篇1&lt;/a&gt;和&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot;&gt;这篇2&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看&lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;这篇&lt;/a&gt;官方的v8博客文章，撰于2017-11-29。&lt;/p&gt;
 
 &lt;p&gt;本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。&lt;/p&gt;
 
-&lt;h4 id=&quot;321-gc基础知识&quot;&gt;3.2.1 GC基础知识&lt;/h4&gt;
+&lt;h3 id=&quot;321-gc基础知识&quot;&gt;3.2.1 GC基础知识&lt;/h3&gt;
 &lt;ul&gt;
   &lt;li&gt;GC回收的目标是从根节点开始，不可达（unreachable）的对象&lt;/li&gt;
   &lt;li&gt;GC触发：
@@ -142,8 +142,8 @@
   &lt;li&gt;准确式 GC (Accurate GC)：通过底层设计的方法，能在GC的时候无需访问内容就判断出内存是指针还是整数，精确回收需要回收的内存&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&quot;322-内存划分&quot;&gt;3.2.2 内存划分&lt;/h4&gt;
-&lt;h5 id=&quot;3221-内存页基础概念&quot;&gt;3.2.2.1 内存页基础概念&lt;/h5&gt;
+&lt;h3 id=&quot;322-内存划分&quot;&gt;3.2.2 内存划分&lt;/h3&gt;
+&lt;h4 id=&quot;3221-内存页基础概念&quot;&gt;3.2.2.1 内存页基础概念&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;内存按照 1MB 分页，并且都按照 1MB 对齐&lt;/li&gt;
@@ -152,7 +152,7 @@
   &lt;li&gt;Large Object Space 也分页，但页的大小会比 1MB 大一些&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3222-new-space新生代&quot;&gt;3.2.2.2 New Space（新生代）&lt;/h5&gt;
+&lt;h4 id=&quot;3222-new-space新生代&quot;&gt;3.2.2.2 New Space（新生代）&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;大部分的对象都属于新生代，诞生在这里&lt;/li&gt;
@@ -160,7 +160,7 @@
   &lt;li&gt;GC日志中看到的 new 和 semispace 相关的字段就与 New Space 有关&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3223-old-space老生代&quot;&gt;3.2.2.3 Old Space（老生代）&lt;/h5&gt;
+&lt;h4 id=&quot;3223-old-space老生代&quot;&gt;3.2.2.3 Old Space（老生代）&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;对象大部分是从新生代（即 New Space）晋升而来&lt;/li&gt;
@@ -170,7 +170,7 @@
   &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3224-large-object-space老生代&quot;&gt;3.2.2.4 Large Object Space（老生代）&lt;/h5&gt;
+&lt;h4 id=&quot;3224-large-object-space老生代&quot;&gt;3.2.2.4 Large Object Space（老生代）&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;需要分配一个 1MB 的页（减去 header）无法直接容纳的对象时，就会直接在 Large Object Space 而不是 New Space 分配&lt;/li&gt;
@@ -178,14 +178,14 @@
   &lt;li&gt;Large Object Space 属于老生代，使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3225-map-space老生代&quot;&gt;3.2.2.5 Map Space（老生代）&lt;/h5&gt;
+&lt;h4 id=&quot;3225-map-space老生代&quot;&gt;3.2.2.5 Map Space（老生代）&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;存储&lt;code&gt;对象布局结构&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3226-code-space老生代&quot;&gt;3.2.2.6 Code Space（老生代）&lt;/h5&gt;
+&lt;h4 id=&quot;3226-code-space老生代&quot;&gt;3.2.2.6 Code Space（老生代）&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;编译器针对运行平台架构编译出的机器码（存储在可执行内存中）本身也是数据，连同一些其它的元数据（比如由哪个编译器编译，源代码的位置等），放置在 Code Space 中&lt;/li&gt;
@@ -193,22 +193,22 @@
   &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3227-堆空间页管理抽象memory-allocator&quot;&gt;3.2.2.7 堆空间页管理抽象：Memory Allocator&lt;/h5&gt;
+&lt;h4 id=&quot;3227-堆空间页管理抽象memory-allocator&quot;&gt;3.2.2.7 堆空间页管理抽象：Memory Allocator&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;与操作系统交互，当空间需要新的页的时候，它从操作系统手上分配（使用&lt;code&gt;mmap&lt;/code&gt;）内存再交给空间&lt;/li&gt;
   &lt;li&gt;当有内存页不再使用的时侯，它从空间手上接过这些内存，还给操作系统（使用&lt;code&gt;munmap&lt;/code&gt;）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3228-堆外内存external-memory&quot;&gt;3.2.2.8 堆外内存：External memory&lt;/h5&gt;
+&lt;h4 id=&quot;3228-堆外内存external-memory&quot;&gt;3.2.2.8 堆外内存：External memory&lt;/h4&gt;
 
 &lt;ul&gt;
   &lt;li&gt;一般是C++插件，会自行管理内存，这部分内存就是非Node堆内部的内存，即堆外内存&lt;/li&gt;
   &lt;li&gt;但Node语法中的Buffer，是自己管理内存的，即堆外内存&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&quot;323-gc算法&quot;&gt;3.2.3 GC算法&lt;/h4&gt;
-&lt;h5 id=&quot;3231-新生代scavenge&quot;&gt;3.2.3.1 新生代：Scavenge&lt;/h5&gt;
+&lt;h3 id=&quot;323-gc算法&quot;&gt;3.2.3 GC算法&lt;/h3&gt;
+&lt;h4 id=&quot;3231-新生代scavenge&quot;&gt;3.2.3.1 新生代：Scavenge&lt;/h4&gt;
 &lt;p&gt;Scavenge&lt;/p&gt;
 
 &lt;ul&gt;
@@ -228,7 +228,7 @@
   &lt;li&gt;通过检索store buffer就能很快找到所有老生代到新生代的引用&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h5 id=&quot;3232-老生代mark-sweepmark-compact&quot;&gt;3.2.3.2 老生代：Mark-Sweep／Mark-Compact&lt;/h5&gt;
+&lt;h4 id=&quot;3232-老生代mark-sweepmark-compact&quot;&gt;3.2.3.2 老生代：Mark-Sweep／Mark-Compact&lt;/h4&gt;
 &lt;p&gt;三色 marking&lt;/p&gt;
 
 &lt;ul&gt;
@@ -292,7 +292,7 @@
   &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h4 id=&quot;324-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.2.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/h4&gt;
+&lt;h3 id=&quot;324-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.2.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/h3&gt;
 
 &lt;ul&gt;
   &lt;li&gt;新生代内存空间封顶16M（up to 16MiB）&lt;/li&gt;
@@ -312,8 +312,8 @@
   &lt;li&gt;该新算法减少了20%-50%的新生代垃圾回收时间（V8 now ships with the parallel Scavenger which reduces the main thread young generation garbage collection total time by about 20%–50%）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;33-内存metrics-api&quot;&gt;3.3 内存Metrics API&lt;/h3&gt;
-&lt;h4 id=&quot;331-processmemoryusage&quot;&gt;3.3.1 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage&quot;&gt;process.memoryUsage&lt;/a&gt;&lt;/h4&gt;
+&lt;h2 id=&quot;33-内存metrics-api&quot;&gt;3.3 内存Metrics API&lt;/h2&gt;
+&lt;h3 id=&quot;331-processmemoryusage&quot;&gt;3.3.1 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage&quot;&gt;process.memoryUsage&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
   &lt;li&gt;rss：node进程总内存占用量&lt;/li&gt;
   &lt;li&gt;heapTotal：总堆内存占用量（已申请下来的）&lt;/li&gt;
@@ -323,7 +323,7 @@
 
 &lt;p&gt;常用来查看基础的内存信息，特别是rss很有用。&lt;/p&gt;
 
-&lt;h4 id=&quot;332-requirev8getheapstatistics&quot;&gt;3.3.2 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics&quot;&gt;require(“v8”).getHeapStatistics&lt;/a&gt;&lt;/h4&gt;
+&lt;h3 id=&quot;332-requirev8getheapstatistics&quot;&gt;3.3.2 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics&quot;&gt;require(“v8”).getHeapStatistics&lt;/a&gt;&lt;/h3&gt;
 &lt;ul&gt;
   &lt;li&gt;total_heap_size：总堆内存占用量（已申请下来的），同&lt;code&gt;process.memoryUsage().heapTotal&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;total_heap_size_executable：字节码、优化后的代码等可执行的内容占用的内存量&lt;/li&gt;
@@ -343,18 +343,18 @@
 
 &lt;p&gt;常用来查看堆上限大小。&lt;/p&gt;
 
-&lt;h4 id=&quot;333-requirev8getheapspacestatistics&quot;&gt;3.3.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/h4&gt;
+&lt;h3 id=&quot;333-requirev8getheapspacestatistics&quot;&gt;3.3.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;按内存空间分类&lt;code&gt;space&lt;/code&gt;种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。&lt;/p&gt;
 
-&lt;h3 id=&quot;34-gc日志--解析工具&quot;&gt;3.4 GC日志 &amp;amp; 解析工具&lt;/h3&gt;
-&lt;h4 id=&quot;341-日志启用&quot;&gt;3.4.1 日志启用&lt;/h4&gt;
+&lt;h2 id=&quot;34-gc日志--解析工具&quot;&gt;3.4 GC日志 &amp;amp; 解析工具&lt;/h2&gt;
+&lt;h3 id=&quot;341-日志启用&quot;&gt;3.4.1 日志启用&lt;/h3&gt;
 &lt;p&gt;GC日志需要在命令行启动node的时候添加flag来启用，相关的flag我找到一个不错的gist，里面有描述，这里fork了下：&lt;/p&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/42456c819018a4bc1a789566c2748b0e.js&quot;&gt; &lt;/script&gt;
 
-&lt;h4 id=&quot;342-如何runtime触发gc&quot;&gt;3.4.2 如何Runtime触发GC&lt;/h4&gt;
+&lt;h3 id=&quot;342-如何runtime触发gc&quot;&gt;3.4.2 如何Runtime触发GC&lt;/h3&gt;
 &lt;p&gt;如果想要在runtime使用代码主动触发GC，则需要在node启动的时候添加flag&lt;code&gt;--expose-gc&lt;/code&gt;。&lt;/p&gt;
 
 &lt;p&gt;然后在代码里：&lt;/p&gt;
@@ -363,60 +363,62 @@
     &lt;span class=&quot;nx&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h4 id=&quot;343-gc-flag及输出效果范例&quot;&gt;3.4.3 GC flag及输出效果范例&lt;/h4&gt;
+&lt;h3 id=&quot;343-gc-flag及输出效果范例&quot;&gt;3.4.3 GC flag及输出效果范例&lt;/h3&gt;
 &lt;p&gt;范例效果：&lt;/p&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/d50ac9f4f33e386cfc82f4a8e4a60bb6.js&quot;&gt; &lt;/script&gt;
 
-&lt;h4 id=&quot;344-gc日志解析工具&quot;&gt;3.4.4 GC日志解析工具&lt;/h4&gt;
-&lt;h5 id=&quot;3441-aliyun-nodev8-gc-log-parser&quot;&gt;3.4.4.1 &lt;a href=&quot;https://github.com/aliyun-node/v8-gc-log-parser&quot;&gt;aliyun-node/v8-gc-log-parser&lt;/a&gt;&lt;/h5&gt;
+&lt;h3 id=&quot;344-gc日志解析工具&quot;&gt;3.4.4 GC日志解析工具&lt;/h3&gt;
+&lt;h4 id=&quot;3441-aliyun-nodev8-gc-log-parser&quot;&gt;3.4.4.1 &lt;a href=&quot;https://github.com/aliyun-node/v8-gc-log-parser&quot;&gt;aliyun-node/v8-gc-log-parser&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;阿里的一个GC日志解析工具，可以在命令行下运行，也可以在代码runtime里运行。该工具的主要作用是将&lt;code&gt;node --trace-gc&lt;/code&gt;输出的内容进行可读化解析，输出成JSON格式，方便后续存储或分析。&lt;/p&gt;
 
 &lt;p&gt;该工具的最大优势就是内容完全按v8官方输出的来，没有作者主观性的内容增删，仅只是辅助阅读。&lt;/p&gt;
 
 &lt;p&gt;缺点是gc的日志输出就在stdout里，如果stdout还有点别的什么正常业务输出，分析起来就麻烦了，先要过滤一次，否则该工具用不了。&lt;/p&gt;
 
-&lt;h5 id=&quot;3442-dainisnode-gcstats&quot;&gt;3.4.4.2 &lt;a href=&quot;https://github.com/dainis/node-gcstats&quot;&gt;dainis/node-gcstats&lt;/a&gt;&lt;/h5&gt;
+&lt;h4 id=&quot;3442-dainisnode-gcstats&quot;&gt;3.4.4.2 &lt;a href=&quot;https://github.com/dainis/node-gcstats&quot;&gt;dainis/node-gcstats&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;第三方的GC信息工具，使用C++编写，作为node的addone运行，只能在代码runtime里运行。输出的内容和官方gc flag的内容不尽相同，相对来说更简洁，适合需要简单功能的用户使用。&lt;/p&gt;
 
 &lt;p&gt;优势在于可以在运行时直接获取gc信息，方便在代码里直接存储到其他地方，事后进行分析。&lt;/p&gt;
 
 &lt;p&gt;缺点是输出信息不如官方的gc flag那么详细和多样性。&lt;/p&gt;
 
-&lt;h5 id=&quot;3443-解析工具脚本&quot;&gt;3.4.4.3 解析工具脚本&lt;/h5&gt;
+&lt;h4 id=&quot;3443-解析工具脚本&quot;&gt;3.4.4.3 解析工具脚本&lt;/h4&gt;
 &lt;p&gt;这里我也做了一个简单脚本，见5.2。&lt;/p&gt;
 
 &lt;p&gt;这个脚本暂时不能分析&lt;code&gt;--trace-gc --trace-gc-verbose&lt;/code&gt;的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。&lt;/p&gt;
 
-&lt;h3 id=&quot;35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h3&gt;
-&lt;h4 id=&quot;351-范例&quot;&gt;3.5.1 范例&lt;/h4&gt;
+&lt;h2 id=&quot;35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h2&gt;
+&lt;h3 id=&quot;351-范例&quot;&gt;3.5.1 范例&lt;/h3&gt;
 &lt;p&gt;内存泄露可以使用下面5.1里的脚本进行试验。&lt;/p&gt;
 
-&lt;h4 id=&quot;352-查找问题&quot;&gt;3.5.2 查找问题&lt;/h4&gt;
+&lt;h3 id=&quot;352-查找问题&quot;&gt;3.5.2 查找问题&lt;/h3&gt;
 &lt;p&gt;–inspect
 snapshot
 allocation timeline
 …&lt;/p&gt;
 
-&lt;h2 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h2&gt;
+&lt;h2 id=&quot;36-内存metrics&quot;&gt;3.6 内存Metrics&lt;/h2&gt;
 
-&lt;h2 id=&quot;5-工具&quot;&gt;5. 工具&lt;/h2&gt;
-&lt;h3 id=&quot;51-内存泄露--内存正常-范例脚本&quot;&gt;5.1 内存泄露 || 内存正常 范例脚本&lt;/h3&gt;
+&lt;h1 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h1&gt;
+
+&lt;h1 id=&quot;5-工具&quot;&gt;5. 工具&lt;/h1&gt;
+&lt;h2 id=&quot;51-内存泄露--内存正常-范例脚本&quot;&gt;5.1 内存泄露 || 内存正常 范例脚本&lt;/h2&gt;
 &lt;p&gt;为了观察内存泄露和GC日志，需要一个范例运行的脚本，我这里制作了一个：&lt;/p&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/024d11c54c1a8e474ded5269d54f5c99.js&quot;&gt; &lt;/script&gt;
 
-&lt;h3 id=&quot;52-gc解析管道脚本&quot;&gt;5.2 GC解析管道脚本&lt;/h3&gt;
+&lt;h2 id=&quot;52-gc解析管道脚本&quot;&gt;5.2 GC解析管道脚本&lt;/h2&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js&quot;&gt; &lt;/script&gt;
 
-&lt;h3 id=&quot;53-nimnodejs-调试管理工具&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h3&gt;
+&lt;h2 id=&quot;53-nimnodejs-调试管理工具&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h2&gt;
 &lt;p&gt;可在node进程使用&lt;code&gt;--inspect&lt;/code&gt; flag时，自动打开chrome的调试tab。&lt;/p&gt;
 
 </description>
