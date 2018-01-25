@@ -379,7 +379,7 @@
 &lt;/pre&gt;&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/024d11c54c1a8e474ded5269d54f5c99.js&quot;&gt; &lt;/script&gt;
 
-&lt;h3 id=&quot;51-nimnodejs-调试管理工具&quot;&gt;5.1 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;52-nimnodejs-调试管理工具&quot;&gt;5.2 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;可在node进程使用&lt;code&gt;--inspect&lt;/code&gt; flag时，自动打开chrome的调试tab。&lt;/p&gt;
 
 </description>
