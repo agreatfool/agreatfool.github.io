@@ -364,6 +364,31 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h4 id=&quot;343-gc-flag及输出效果范例&quot;&gt;3.4.3 GC flag及输出效果范例&lt;/h4&gt;
+&lt;h5 id=&quot;3431-trace-gc&quot;&gt;3.4.3.1 –trace-gc&lt;/h5&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;$ node –trace-gc ./cases/leak-and-gc.js –normal  &lt;br /&gt;
+  [44694:0x103800000]       64 ms: Scavenge 3.0 (5.5) -&amp;gt; 2.7 (6.5) MB, 1.1 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]       77 ms: Scavenge 3.3 (7.0) -&amp;gt; 3.3 (7.5) MB, 1.0 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]      100 ms: Scavenge 4.4 (7.5) -&amp;gt; 4.1 (10.0) MB, 0.9 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]     1139 ms: Scavenge 5.9 (10.5) -&amp;gt; 5.8 (10.5) MB, 1.4 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]     1141 ms: Scavenge 6.2 (10.5) -&amp;gt; 6.1 (16.0) MB, 1.7 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]     3203 ms: Scavenge 52.8 (59.5) -&amp;gt; 52.8 (60.0) MB, 3.4 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]     3207 ms: Scavenge 53.2 (60.0) -&amp;gt; 52.8 (71.5) MB, 3.9 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]     7314 ms: Scavenge 129.0 (140.7) -&amp;gt; 129.0 (141.7) MB, 6.1 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]     7323 ms: Scavenge 129.4 (141.7) -&amp;gt; 128.6 (175.2) MB, 7.2 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]     8424 ms: Mark-sweep 179.7 (221.8) -&amp;gt; 179.3 (221.8) MB, 5.5 / 0.0 ms  (+ 46.2 ms in 142 steps since start of marking, biggest step 2.3 ms, walltime since start of marking 3155 ms) finalize incremental marking via stack guard GC in old space requested  &lt;br /&gt;
+  [44694:0x103800000]    13506 ms: Scavenge 236.7 (268.5) -&amp;gt; 236.2 (268.5) MB, 12.4 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]    15575 ms: Scavenge 264.9 (292.6) -&amp;gt; 263.7 (318.6) MB, 10.3 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]    19813 ms: Mark-sweep 360.6 (405.5) -&amp;gt; 360.1 (410.0) MB, 3.1 / 0.0 ms  (+ 138.8 ms in 231 steps since start of marking, biggest step 4.4 ms, walltime since start of marking 5276 ms) finalize incremental marking via stack guard GC in old space requested  &lt;br /&gt;
+  [44694:0x103800000]    22889 ms: Scavenge 422.9 (468.0) -&amp;gt; 421.7 (471.5) MB, 14.4 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]    27189 ms: Scavenge 526.6 (566.4) -&amp;gt; 526.1 (578.9) MB, 10.3 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]    28247 ms: Mark-sweep 545.4 (595.0) -&amp;gt; 506.4 (554.0) MB, 4.5 / 0.0 ms  (+ 192.6 ms in 231 steps since start of marking, biggest step 2.8 ms, walltime since start of marking 5350 ms) finalize incremental marking via stack guard GC in old space requested  &lt;br /&gt;
+  [44694:0x103800000]    32350 ms: Scavenge 590.8 (626.5) -&amp;gt; 590.5 (626.5) MB, 13.5 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]    33383 ms: Scavenge 608.2 (640.9) -&amp;gt; 606.8 (649.4) MB, 13.1 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]    35480 ms: Mark-sweep 636.2 (675.2) -&amp;gt; 152.5 (192.7) MB, 2.3 / 0.0 ms  (+ 61.2 ms in 53 steps since start of marking, biggest step 2.9 ms, walltime since start of marking 2086 ms) finalize incremental marking via stack guard GC in old space requested  &lt;br /&gt;
+  [44694:0x103800000]    41754 ms: Scavenge 279.7 (308.5) -&amp;gt; 279.3 (317.0) MB, 11.4 / 0.0 ms  allocation failure   &lt;br /&gt;
+  [44694:0x103800000]    43830 ms: Mark-sweep 314.9 (349.2) -&amp;gt; 313.6 (361.2) MB, 3.7 / 0.0 ms  (+ 119.1 ms in 272 steps since start of marking, biggest step 2.5 ms, walltime since start of marking 8315 ms) finalize incremental marking via stack guard GC in old space requested&lt;/p&gt;
+&lt;/blockquote&gt;
 
 &lt;h4 id=&quot;344-gc日志解析工具&quot;&gt;3.4.4 GC日志解析工具&lt;/h4&gt;
 
