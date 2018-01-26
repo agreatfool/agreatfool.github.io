@@ -416,7 +416,7 @@
 &lt;h4 id=&quot;3442-dainisnode-gcstats&quot;&gt;3.4.4.2 &lt;a href=&quot;https://github.com/dainis/node-gcstats&quot;&gt;dainis/node-gcstats&lt;/a&gt;&lt;/h4&gt;
 &lt;p&gt;第三方的GC信息工具，使用C++编写，作为node的addone运行，只能在代码runtime里运行。输出的内容和官方gc flag的内容不尽相同，相对来说更简洁，适合需要简单功能的用户使用。&lt;/p&gt;
 
-&lt;p&gt;优势在于可以在运行时直接获取gc信息，方便在代码里直接存储到其他地方，事后进行分析。&lt;/p&gt;
+&lt;p&gt;优势在于可以在运行时直接获取gc信息（GC时触发监听事件），方便在代码里直接存储到其他地方，事后进行分析。&lt;/p&gt;
 
 &lt;p&gt;缺点是输出信息不如官方的gc flag那么详细和多样性。&lt;/p&gt;
 
@@ -424,6 +424,21 @@
 &lt;p&gt;这里我也做了一个简单脚本，见5.2。&lt;/p&gt;
 
 &lt;p&gt;这个脚本暂时不能分析&lt;code&gt;--trace-gc --trace-gc-verbose&lt;/code&gt;的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。有兴趣的可以自己改造下。&lt;/p&gt;
+
+&lt;h4 id=&quot;3444-marcominettinode-memwatch&quot;&gt;3.4.4.4 &lt;a href=&quot;https://github.com/marcominetti/node-memwatch&quot;&gt;marcominetti/node-memwatch&lt;/a&gt;&lt;/h4&gt;
+&lt;p&gt;第三方的GC信息工具，使用C++编写，作为node的addone运行，只能在代码runtime里运行。这个工具关注的不仅仅只是GC，有几个功能有点意思：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;监听GC事件，并给出简单报告，功能比较类似&lt;a href=&quot;https://github.com/dainis/node-gcstats&quot;&gt;dainis/node-gcstats&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;监听最近5次GC，持续内存上涨则触发一个内存泄露的监听事件；可以和heapdump配合，监听到leak则导出heapdump&lt;/li&gt;
+  &lt;li&gt;HeapDiff，用来对比并计算出两次堆快照的差异，意义不大&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;更详细的介绍可以看这篇：&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27509546&quot;&gt;Node.js 性能调优之内存篇(三)——memwatch-next&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;优点基本同上面的那个工具，且可以判断leak（其实自己也可以实现）。&lt;/p&gt;
+
+&lt;p&gt;缺点是功能相对来说意义不是很大，输出的内容信息不足。&lt;/p&gt;
 
 &lt;h2 id=&quot;35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h2&gt;
 &lt;h3 id=&quot;351-范例&quot;&gt;3.5.1 范例&lt;/h3&gt;

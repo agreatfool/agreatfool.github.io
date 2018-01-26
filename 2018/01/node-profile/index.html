@@ -174,6 +174,7 @@
 <li class="toc-entry toc-h4"><a href="#3441-aliyun-nodev8-gc-log-parser">3.4.4.1 aliyun-node/v8-gc-log-parser</a></li>
 <li class="toc-entry toc-h4"><a href="#3442-dainisnode-gcstats">3.4.4.2 dainis/node-gcstats</a></li>
 <li class="toc-entry toc-h4"><a href="#3443-解析工具脚本">3.4.4.3 解析工具脚本</a></li>
+<li class="toc-entry toc-h4"><a href="#3444-marcominettinode-memwatch">3.4.4.4 marcominetti/node-memwatch</a></li>
 </ul>
 </li>
 </ul>
@@ -658,7 +659,7 @@
 </h4>
 <p>第三方的GC信息工具，使用C++编写，作为node的addone运行，只能在代码runtime里运行。输出的内容和官方gc flag的内容不尽相同，相对来说更简洁，适合需要简单功能的用户使用。</p>
 
-<p>优势在于可以在运行时直接获取gc信息，方便在代码里直接存储到其他地方，事后进行分析。</p>
+<p>优势在于可以在运行时直接获取gc信息（GC时触发监听事件），方便在代码里直接存储到其他地方，事后进行分析。</p>
 
 <p>缺点是输出信息不如官方的gc flag那么详细和多样性。</p>
 
@@ -667,6 +668,24 @@
 <p>这里我也做了一个简单脚本，见5.2。</p>
 
 <p>这个脚本暂时不能分析<code>--trace-gc --trace-gc-verbose</code>的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。有兴趣的可以自己改造下。</p>
+
+<h4 id="3444-marcominettinode-memwatch">
+<a id="3444-marcominettinode-memwatch" class="anchor" href="#3444-marcominettinode-memwatch" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4.4.4 <a href="https://github.com/marcominetti/node-memwatch">marcominetti/node-memwatch</a>
+</h4>
+<p>第三方的GC信息工具，使用C++编写，作为node的addone运行，只能在代码runtime里运行。这个工具关注的不仅仅只是GC，有几个功能有点意思：</p>
+
+<ul>
+  <li>监听GC事件，并给出简单报告，功能比较类似<a href="https://github.com/dainis/node-gcstats">dainis/node-gcstats</a>
+</li>
+  <li>监听最近5次GC，持续内存上涨则触发一个内存泄露的监听事件；可以和heapdump配合，监听到leak则导出heapdump</li>
+  <li>HeapDiff，用来对比并计算出两次堆快照的差异，意义不大</li>
+</ul>
+
+<p>更详细的介绍可以看这篇：<a href="https://zhuanlan.zhihu.com/p/27509546">Node.js 性能调优之内存篇(三)——memwatch-next</a></p>
+
+<p>优点基本同上面的那个工具，且可以判断leak（其实自己也可以实现）。</p>
+
+<p>缺点是功能相对来说意义不是很大，输出的内容信息不足。</p>
 
 <h2 id="35-内存泄露--chrome-dev-tool">
 <a id="35-内存泄露--chrome-dev-tool" class="anchor" href="#35-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5 内存泄露 &amp; Chrome Dev Tool</h2>
