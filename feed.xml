@@ -47,7 +47,7 @@
   &lt;li&gt;&lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html&quot;&gt;V8 Node.js v8.4.0 Documentation&lt;/a&gt;：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;22-v8引擎相关&quot;&gt;2.2 V8引擎相关&lt;/h2&gt;
+&lt;h2 id=&quot;22-v8--内存&quot;&gt;2.2 V8 &amp;amp; 内存&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot;&gt;解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识&lt;/a&gt;：阿里团队的几篇Node的内存文章，很不错&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot;&gt;解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法&lt;/a&gt;：同上&lt;/li&gt;
@@ -60,6 +60,7 @@
   &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub43823.html&quot;&gt;Memento Mori: Dynamic Allocation-site-based Optimizations&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub42478.html&quot;&gt;Allocation Folding Based on Dominance&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;amp;rep=rep1&amp;amp;type=pdf&quot;&gt;Garbage-First Garbage Collection&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough&quot;&gt;DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;23-chrome-dev-tool&quot;&gt;2.3 Chrome Dev Tool&lt;/h2&gt;
@@ -68,10 +69,8 @@
   &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/memory-problems/&quot;&gt;解决内存问题&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;24-内存泄露&quot;&gt;2.4 内存泄露&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough&quot;&gt;DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h2 id=&quot;24-专栏--博客&quot;&gt;2.4 专栏 &amp;amp; 博客&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/shimo&quot;&gt;石墨文档技术酒馆&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;3-性能知识点---内存&quot;&gt;3. 性能知识点 - 内存&lt;/h1&gt;
 
