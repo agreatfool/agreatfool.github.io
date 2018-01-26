@@ -182,7 +182,7 @@
 <li class="toc-entry toc-h3"><a href="#352-查找问题">3.5.2 查找问题</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h2"><a href="#36-内存metrics">3.6 内存Metrics</a></li>
+<li class="toc-entry toc-h2"><a href="#36-核心内存metrics">3.6 核心内存Metrics</a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h1"><a href="#4-性能知识点---eventloop">4. 性能知识点 - EventLoop</a></li>
@@ -627,7 +627,7 @@
 <a id="3443-解析工具脚本" class="anchor" href="#3443-%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7%E8%84%9A%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4.4.3 解析工具脚本</h4>
 <p>这里我也做了一个简单脚本，见5.2。</p>
 
-<p>这个脚本暂时不能分析<code>--trace-gc --trace-gc-verbose</code>的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。</p>
+<p>这个脚本暂时不能分析<code>--trace-gc --trace-gc-verbose</code>的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。有兴趣的可以自己改造下。</p>
 
 <h2 id="35-内存泄露--chrome-dev-tool">
 <a id="35-内存泄露--chrome-dev-tool" class="anchor" href="#35-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5 内存泄露 &amp; Chrome Dev Tool</h2>
@@ -637,13 +637,42 @@
 
 <h3 id="352-查找问题">
 <a id="352-查找问题" class="anchor" href="#352-%E6%9F%A5%E6%89%BE%E9%97%AE%E9%A2%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5.2 查找问题</h3>
-<p>–inspect
-snapshot
-allocation timeline
-…</p>
+<p>使用node的<a href="https://nodejs.org/en/docs/inspector/">inspector</a>来进行运行状态分析（当然，这工具可以做更多的事情）。关于Chrome Dev Tool，可以看<a href="https://developers.google.com/web/tools/chrome-devtools/">官方教程</a>。</p>
 
-<h2 id="36-内存metrics">
-<a id="36-内存metrics" class="anchor" href="#36-%E5%86%85%E5%AD%98metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6 内存Metrics</h2>
+<blockquote>
+  <p>DEBUG=* node –inspect xxx.js</p>
+</blockquote>
+
+<p>然后打开浏览器<code>chrome://inspect/</code>，找到你的脚本进行调试。</p>
+
+<p>在打开的分析面板里，选中<code>Memory</code>tab，一共有3个选项可以操作：</p>
+
+<ul>
+  <li>Take heap snapshot
+    <ul>
+      <li>获取node进程的堆快照</li>
+      <li>点击之后需要等一段时间采集数据，然后就可以看到在点击到汇报那段时间内的heap状态了</li>
+      <li>这个选项信息最全，一般是最常用的内存观察选项</li>
+      <li>一般来说按最右边的<code>Retained Size</code>从大到小排序，就能看到很有用的信息了</li>
+    </ul>
+  </li>
+  <li>Record allocation profile
+    <ul>
+      <li>以内存使用者的角度查看内存的分配情况</li>
+      <li>在需要知道内存使用大户是哪个部分的业务的情况下很有用</li>
+      <li>一样需要点击之后等一段时间进行采集</li>
+    </ul>
+  </li>
+  <li>Record allocation timeline
+    <ul>
+      <li>以时间轴为单位查看单位时间内的内存分配量</li>
+      <li>在需要知道node的内存与时间关系的情况下很有用</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="36-核心内存metrics">
+<a id="36-核心内存metrics" class="anchor" href="#36-%E6%A0%B8%E5%BF%83%E5%86%85%E5%AD%98metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6 核心内存Metrics</h2>
 
 <h1 id="4-性能知识点---eventloop">
 <a id="4-性能知识点---eventloop" class="anchor" href="#4-%E6%80%A7%E8%83%BD%E7%9F%A5%E8%AF%86%E7%82%B9---eventloop" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 性能知识点 - EventLoop</h1>
