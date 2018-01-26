@@ -120,6 +120,7 @@
 <li class="toc-entry toc-h2"><a href="#21-node相关">2.1 Node相关</a></li>
 <li class="toc-entry toc-h2"><a href="#22-v8引擎相关">2.2 V8引擎相关</a></li>
 <li class="toc-entry toc-h2"><a href="#23-chrome-dev-tool">2.3 Chrome Dev Tool</a></li>
+<li class="toc-entry toc-h2"><a href="#24-内存泄露">2.4 内存泄露</a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h1"><a href="#3-性能知识点---内存">3. 性能知识点 - 内存</a>
@@ -160,6 +161,7 @@
 <li class="toc-entry toc-h3"><a href="#331-processmemoryusage">3.3.1 process.memoryUsage</a></li>
 <li class="toc-entry toc-h3"><a href="#332-requirev8getheapstatistics">3.3.2 require(“v8”).getHeapStatistics</a></li>
 <li class="toc-entry toc-h3"><a href="#333-requirev8getheapspacestatistics">3.3.3 require(“v8”).getHeapSpaceStatistics</a></li>
+<li class="toc-entry toc-h3"><a href="#334-top--ps">3.3.4 top & ps</a></li>
 </ul>
 </li>
 <li class="toc-entry toc-h2"><a href="#34-gc日志--解析工具">3.4 GC日志 & 解析工具</a>
@@ -261,6 +263,12 @@
 <ul>
   <li><a href="https://developers.google.com/web/tools/chrome-devtools/">Dev工具官方教程</a></li>
   <li><a href="https://developers.google.com/web/tools/chrome-devtools/memory-problems/">解决内存问题</a></li>
+</ul>
+
+<h2 id="24-内存泄露">
+<a id="24-内存泄露" class="anchor" href="#24-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4 内存泄露</h2>
+<ul>
+  <li><a href="https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough">DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH</a></li>
 </ul>
 
 <h1 id="3-性能知识点---内存">
@@ -575,6 +583,36 @@
 </h3>
 <p>按内存空间分类<code>space</code>种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。</p>
 
+<h3 id="334-top--ps">
+<a id="334-top--ps" class="anchor" href="#334-top--ps" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.4 top &amp; ps</h3>
+<p>使用系统ps命令更快获取进程的内存占用情况：</p>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>ps -p $(pgrep -lfa node</td>
+        <td>grep leak-and-gc.js</td>
+        <td>awk ‘{print $1}’) -o rss,vsz</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<p>以及：</p>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>top -pid $(pgrep -lfa node</td>
+        <td>grep leak-and-gc.js</td>
+        <td>awk ‘{print $1}’)</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
 <h2 id="34-gc日志--解析工具">
 <a id="34-gc日志--解析工具" class="anchor" href="#34-gc%E6%97%A5%E5%BF%97--%E8%A7%A3%E6%9E%90%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 GC日志 &amp; 解析工具</h2>
 <h3 id="341-日志启用">
@@ -651,9 +689,9 @@
   <li>Take heap snapshot
     <ul>
       <li>获取node进程的堆快照</li>
-      <li>点击之后需要等一段时间采集数据，然后就可以看到在点击到汇报那段时间内的heap状态了</li>
+      <li>点击之后需要等一段时间采集数据，然后就可以看到heap数据</li>
       <li>这个选项信息最全，一般是最常用的内存观察选项</li>
-      <li>一般来说按最右边的<code>Retained Size</code>从大到小排序，就能看到很有用的信息了</li>
+      <li>一般来说按最右边的<code>Retained Size</code>从大到小排序，就找到很有用的信息了</li>
     </ul>
   </li>
   <li>Record allocation profile
@@ -671,8 +709,18 @@
   </li>
 </ul>
 
+<p>在线上运行时有的时候如果需要看堆快照的话，可以使用第三方库<a href="https://github.com/bnoordhuis/node-heapdump">bnoordhuis/node-heapdump</a>在runtime使用代码导出快照。然后使用Chrome Dev Tool打开这个快照文件来查看内容。</p>
+
+<p>Chrome Dev Tool可以加载多个堆快照，并对他们进行比对分析，这对内存量增长变化的分析非常有用。可以在程序里隔一定时间获取一次堆快照，然后线下慢慢分析。</p>
+
+<p>更详细的可以看博客：<a href="https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough">DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH</a>，这篇文章里的node和chrome版本有点老，但大致的观点和步骤都是没有问题的。</p>
+
 <h2 id="36-核心内存metrics">
 <a id="36-核心内存metrics" class="anchor" href="#36-%E6%A0%B8%E5%BF%83%E5%86%85%E5%AD%98metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6 核心内存Metrics</h2>
+
+<ul>
+  <li>
+</ul>
 
 <h1 id="4-性能知识点---eventloop">
 <a id="4-性能知识点---eventloop" class="anchor" href="#4-%E6%80%A7%E8%83%BD%E7%9F%A5%E8%AF%86%E7%82%B9---eventloop" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 性能知识点 - EventLoop</h1>
