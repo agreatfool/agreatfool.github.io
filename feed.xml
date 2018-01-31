@@ -7,9 +7,263 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>Node.JS Profile 施工中</title>
+				<title>Node.JS Profile 1.1 V8内存机制</title>
 				<description>&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。Node的进程profile相关的调研其实很早就想做了，但懒癌发作，一直都没有推进，最近找时间开始做了。&lt;/p&gt;
+&lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
+
+&lt;p&gt;本文是Node内存相关文章的其中一篇，主要负责介绍内存相关的基础知识，及Node V8内存相关的一些理论知识，为读者打好基础方便后续内存实践相关知识点的理解。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-基础概念&quot;&gt;2. 基础概念&lt;/h1&gt;
+&lt;p&gt;Node进程的内存分为三大部分：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Code: the actual code being executed&lt;/li&gt;
+  &lt;li&gt;Stack: contains all value types (primitives like integer or Boolean) with pointers referencing objects on the heap and pointers defining the control flow of the program&lt;/li&gt;
+  &lt;li&gt;Heap: a memory segment dedicated to storing reference types like objects, strings and closures.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;21-rss&quot;&gt;2.1 RSS&lt;/h2&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;A running program is always represented through some space allocated in memory. This space is called Resident Set.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Node进程整体占用内存大小，也就是你在系统面板之类的地方看到的node进程的内存占用大小。&lt;/p&gt;
+
+&lt;h2 id=&quot;22-heap&quot;&gt;2.2 Heap&lt;/h2&gt;
+&lt;p&gt;用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。&lt;/p&gt;
+
+&lt;h2 id=&quot;23-heap-limit&quot;&gt;2.3 Heap Limit&lt;/h2&gt;
+&lt;p&gt;node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.4G。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;以下是一个简单的范例，如何查看堆内存，注意查看&lt;code&gt;heap_size_limit&lt;/code&gt;字段的值。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/e3ab8817d882bc74b3cee58974f11096.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;这个堆大小可以用过v8参数flag&lt;code&gt;--max-old-space-size&lt;/code&gt;来修改，单位是&lt;code&gt;MB&lt;/code&gt;。&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/c7ad7c782c6a293b15f54e12c8793970.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-gc&quot;&gt;3. GC&lt;/h1&gt;
+&lt;p&gt;这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot;&gt;这篇1&lt;/a&gt;和&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot;&gt;这篇2&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看&lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;这篇&lt;/a&gt;官方的v8博客文章，撰于2017-11-29。&lt;/p&gt;
+
+&lt;p&gt;本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。&lt;/p&gt;
+
+&lt;h2 id=&quot;31-gc基础知识&quot;&gt;3.1 GC基础知识&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;GC回收的目标是从根节点开始，不可达（unreachable）的对象&lt;/li&gt;
+  &lt;li&gt;GC触发：
+    &lt;ul&gt;
+      &lt;li&gt;内存分配遇到内存不足&lt;/li&gt;
+      &lt;li&gt;内存使用量的阈值触发&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;allocation failure：内存分配失败，而启动的GC&lt;/li&gt;
+  &lt;li&gt;last resort gc：两次allocation failure失败之后的最终GC，再失败则OOM&lt;/li&gt;
+  &lt;li&gt;Stop-the-world：应用程序停顿，执行GC
+    &lt;ul&gt;
+      &lt;li&gt;增量式 GC（incremental）：程序不需要等到垃圾回收完全结束才能重新开始运行，在垃圾回收的过程中控制权可以临时交还给运行时进行一定的操作
+        &lt;ul&gt;
+          &lt;li&gt;2011年即存在，主要发生在 Mark-Sweep/Mark-Compact 的 marking 阶段（incremental_marking_throughput）&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;并发式 GC（concurrent）：在垃圾回收的同时不需要停止程序的运行，两者可以同时进行，只有在个别时候需要短暂停下来让垃圾回收器做一些特殊的操作&lt;/li&gt;
+      &lt;li&gt;并行式 GC（parallel）：即在 GC 的时候使用多个线程一起来完成 GC 工作，提高单位时间的 GC 吞吐量&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;准确式 GC (Accurate GC)：通过底层设计的方法，能在GC的时候无需访问内容就判断出内存是指针还是整数，精确回收需要回收的内存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;32-堆内存划分&quot;&gt;3.2 堆内存划分&lt;/h2&gt;
+&lt;h3 id=&quot;321-内存页基础概念&quot;&gt;3.2.1 内存页基础概念&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;内存按照 1MB 分页，并且都按照 1MB 对齐&lt;/li&gt;
+  &lt;li&gt;新生代的内存页是连续的&lt;/li&gt;
+  &lt;li&gt;老生代的内存页是分散的，以链表的形式串联起来&lt;/li&gt;
+  &lt;li&gt;Large Object Space 也分页，但页的大小会比 1MB 大一些&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;322-new-space新生代&quot;&gt;3.2.2 New Space（新生代）&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;大部分的对象都属于新生代，诞生在这里&lt;/li&gt;
+  &lt;li&gt;使用 Scavenge 回收内存，新生代内存空间被平分成两半（两个 semispace），任一时刻只有一半被使用（空间换时间）&lt;/li&gt;
+  &lt;li&gt;GC日志中看到的 new 和 semispace 相关的字段就与 New Space 有关&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;323-old-space老生代&quot;&gt;3.2.3 Old Space（老生代）&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;对象大部分是从新生代（即 New Space）晋升而来&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;pretenuring&lt;/code&gt;机制：某些函数创建的对象有很高的存活率率（survival rate），经常晋升到老生代（存活超过2次）的时候，下次这些函数再创建的对象将会直接在 Old Space 分配&lt;/li&gt;
+  &lt;li&gt;GC日志中看到的 old 相关的字段就与 Old Space 有关&lt;/li&gt;
+  &lt;li&gt;survival 和 promoted 相关的字段则与对象在新老生代之间的迁移有关&lt;/li&gt;
+  &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;324-large-object-space老生代&quot;&gt;3.2.4 Large Object Space（老生代）&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;需要分配一个 1MB 的页（减去 header）无法直接容纳的对象时，就会直接在 Large Object Space 而不是 New Space 分配&lt;/li&gt;
+  &lt;li&gt;GC时 Large Object Space 里的对象不会被移动或者复制（因为成本太高）&lt;/li&gt;
+  &lt;li&gt;Large Object Space 属于老生代，使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;325-map-space老生代&quot;&gt;3.2.5 Map Space（老生代）&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;存储&lt;code&gt;对象布局结构&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;326-code-space老生代&quot;&gt;3.2.6 Code Space（老生代）&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;编译器针对运行平台架构编译出的机器码（存储在可执行内存中）本身也是数据，连同一些其它的元数据（比如由哪个编译器编译，源代码的位置等），放置在 Code Space 中&lt;/li&gt;
+  &lt;li&gt;JavaScript 代码中的函数一开始只会被解析成抽象语法树，只有在它第一次执行的时候才会被真正编译成机器码，并且在程序的执行过程中会根据统计数据不断进行优化和修改&lt;/li&gt;
+  &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;327-堆空间页管理抽象memory-allocator&quot;&gt;3.2.7 堆空间页管理抽象：Memory Allocator&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;与操作系统交互，当空间需要新的页的时候，它从操作系统手上分配（使用&lt;code&gt;mmap&lt;/code&gt;）内存再交给空间&lt;/li&gt;
+  &lt;li&gt;当有内存页不再使用的时侯，它从空间手上接过这些内存，还给操作系统（使用&lt;code&gt;munmap&lt;/code&gt;）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;328-堆外内存external-memory&quot;&gt;3.2.8 堆外内存：External memory&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一般是C++插件，会自行管理内存，这部分内存就是非Node堆内部的内存，即堆外内存&lt;/li&gt;
+  &lt;li&gt;但Node语法中的Buffer，是自己管理内存的，即堆外内存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;33-gc算法&quot;&gt;3.3 GC算法&lt;/h2&gt;
+&lt;h3 id=&quot;331-新生代scavenge&quot;&gt;3.3.1 新生代：Scavenge&lt;/h3&gt;
+&lt;p&gt;Scavenge&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;空间换时间&lt;/li&gt;
+  &lt;li&gt;将新生代内存空间内存一切为二，任一时刻只有一半（semispace）被使用&lt;/li&gt;
+  &lt;li&gt;每次触发新生代GC，则把存活的对象拷贝（&lt;code&gt;memcpy&lt;/code&gt;）到另一半中，然后将需要清理的对象清理掉&lt;/li&gt;
+  &lt;li&gt;Scavenge会Stop-the-world&lt;/li&gt;
+  &lt;li&gt;Scavenge一般在0~3ms内，对应用不产生影响&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;写屏障（write barrier）&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;用来解决从老生代到新生代的引用检索问题&lt;/li&gt;
+  &lt;li&gt;每次往一个对象写入一个指针（添加引用）的时候，都执行一段代码，这段代码会检查这个被写入的指针是否是由老生代对象指向新生代对象的&lt;/li&gt;
+  &lt;li&gt;如果是，则往store buffer中添加一条记录&lt;/li&gt;
+  &lt;li&gt;通过检索store buffer就能很快找到所有老生代到新生代的引用&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;332-老生代mark-sweepmark-compact&quot;&gt;3.3.2 老生代：Mark-Sweep／Mark-Compact&lt;/h3&gt;
+&lt;p&gt;三色 marking&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;三色：白、灰、黑&lt;/li&gt;
+  &lt;li&gt;堆内非根节点对象全部标白&lt;/li&gt;
+  &lt;li&gt;沿着根对象，将所有带引用的对象标黑，检索过程中先标黑&lt;/li&gt;
+  &lt;li&gt;扫描完毕后，堆内非根节点对象就只剩黑和白，黑色不可回收，白色可以回收&lt;/li&gt;
+  &lt;li&gt;因标记过程中对象会push进栈，而大对象则无法这么做，会走一个比较特殊的标记过程，因此大对象过多会显著影响GC效率&lt;/li&gt;
+  &lt;li&gt;Marking后的回收分：&lt;code&gt;Sweeping&lt;/code&gt;和&lt;code&gt;Compacting&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Sweeping&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;找到死亡对象占用的连续区块，将这些块添加到随该页维护的一个 freelist 里&lt;/li&gt;
+  &lt;li&gt;这个数据结构保存了页上可用于下次分配的内存位置&lt;/li&gt;
+  &lt;li&gt;V8 中按照可用内存块大小的区间分出了多个 freelist，这样能更快找到合适的可用内存&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Compacting&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;将页中的所有存活的对象都转移到另一页里（evacuation）&lt;/li&gt;
+  &lt;li&gt;存活对象都被移走了的那一页就可以直接还给操作系统&lt;/li&gt;
+  &lt;li&gt;主要发生在某一页中死亡对象留下来的空洞（hole）比较多的时候&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;优化：增量式 marking（incremental marking）&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;将 marking 拆分开来，当堆大小涨到一定程度的时候，开始增量式 GC&lt;/li&gt;
+  &lt;li&gt;在每次分配了一定量的内存后／触发了足够多次写屏障后，就暂停一下程序，做几毫秒到几十毫秒的 marking，然后恢复程序的运行&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;优化：black allocation&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;v8 5.x 引入&lt;/li&gt;
+  &lt;li&gt;将所有新出现在 Old Space 的对象（包括pretentured 的分配或者晋升）直接标记为黑色，放在特殊的内存页（black page）中&lt;/li&gt;
+  &lt;li&gt;直接活过下一次GC&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;优化：lazy sweeping, concurrent sweeping, parallel sweeping&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;lazy sweeping
+    &lt;ul&gt;
+      &lt;li&gt;已经标记完哪些对象的内存可以被回收之后，并没有必要马上回收完这些内存&lt;/li&gt;
+      &lt;li&gt;只有当所有页的内存都被回收完之后，才会重新开始 marking&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;concurrent sweeping
+    &lt;ul&gt;
+      &lt;li&gt;让非程序线程的其他线程进行sweeping工作&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;parallel sweeping
+    &lt;ul&gt;
+      &lt;li&gt;让多个sweeping线程同时工作&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;34-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;新生代内存空间封顶16M（up to 16MiB）&lt;/li&gt;
+  &lt;li&gt;从M62号版本开始，v8开始使用&lt;code&gt;parallel Scavenger&lt;/code&gt;算法回收新生代垃圾（Starting with M62, V8 switched the default algorithm for collecting the young generation to a parallel Scavenger）&lt;/li&gt;
+  &lt;li&gt;Parallel Mark-Evacuate
+    &lt;ul&gt;
+      &lt;li&gt;工作人员在新生代垃圾回收中试验了&lt;code&gt;Parallel Mark-Evacuate&lt;/code&gt;算法（We experimented with a parallel Mark-Evacuate algorithm based on the V8’s full Mark-Sweep-Compact collector.）&lt;/li&gt;
+      &lt;li&gt;该算法借鉴了老生代的标记清除回收机制&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Parallel Scavenge
+    &lt;ul&gt;
+      &lt;li&gt;Parallel Mark-Evacuate算法分离了扫描标记存活对象、拷贝存活对象、更新指针这几个步骤&lt;/li&gt;
+      &lt;li&gt;&lt;code&gt;Parallel Scavenge&lt;/code&gt;则是将上述几个步骤合而为一，进一步提升效率，也是M62版本开始v8使用的新生代垃圾回收算法&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;该新算法减少了20%-50%的新生代垃圾回收时间（V8 now ships with the parallel Scavenger which reduces the main thread young generation garbage collection total time by about 20%–50%）&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+				<pubDate>Wed, 31 Jan 2018 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/01/node-memory/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/01/node-memory/</guid>
+			</item>
+		
+			<item>
+				<title>Node.JS Profile</title>
+				<description>&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。&lt;/p&gt;
 
 &lt;p&gt;本文主要在于以下几个方面，不局限于狭义的&lt;code&gt;profile&lt;/code&gt;或&lt;code&gt;profiler&lt;/code&gt;：&lt;/p&gt;
 
@@ -18,6 +272,8 @@
   &lt;li&gt;Node 的Profiler：如何对进程进行profile，获取核心metrics&lt;/li&gt;
   &lt;li&gt;Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;p&gt;&lt;a href=&quot;&quot;&gt;Node.JS Profile 1.1 V8内存机制&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;11-版本信息&quot;&gt;1.1 版本信息&lt;/h2&gt;
 &lt;p&gt;本文行文依据的Node版本，及所有范例的运行环境为：&lt;/p&gt;
@@ -1290,98 +1546,6 @@
 				<pubDate>Fri, 17 Nov 2017 14:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/11/youtube-dl/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/11/youtube-dl/</guid>
-			</item>
-		
-			<item>
-				<title>Apple mov转mp4 ffmpeg使用</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;最近在MAC上使用QuickTime Player录了几个苹果手机应用的运行视频，苹果官方的解决方案算是最轻量级也最容易使用的了。到这里都还算靠谱，但接下来就有点麻烦了，录制下来的视频是MOV格式，这玩意儿实在是大的可怕，即便是自己存起来看也实在是太占空间了，更不用说上传视频网站了。于是就有了视频文件转码的需求，这里就想起了FFMPEG这个软件，众所周知的视频处理第一。撰此文仅用来记录一些经验。&lt;/p&gt;
-
-&lt;h2 id=&quot;1-经验文章&quot;&gt;1. 经验文章&lt;/h2&gt;
-&lt;p&gt;这部分实在是有太多的经验文章，我这里主要参考了：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://segmentfault.com/a/1190000002502526&quot;&gt;用ffmpeg命令行转压视频&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://einverne.github.io/post/2015/12/ffmpeg-first.html&quot;&gt;ffmpeg 入门&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;2-安装&quot;&gt;2. 安装&lt;/h2&gt;
-&lt;p&gt;MAC下安装：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;brew install ffmpeg –with-faac –with-fdk-aac –with-ffplay –with-fontconfig –with-freetype –with-libass –with-libbluray –with-libcaca –with-libsoxr –with-libquvi –with-frei0r –with-libvidstab –with-libvorbis –with-libvpx –with-opencore-amr –with-openjpeg –with-openssl –with-opus –with-rtmpdump –with-schroedinger –with-speex –with-theroa –with-tools –with-x265&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;3-概念&quot;&gt;3. 概念&lt;/h2&gt;
-&lt;p&gt;只提几个最关键的，更详细的可以看上面的文章。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;比特率：比特率，英文为 bit rate，描述每秒钟输出多少 KB 的参数，单位是 Kbps，也就是 kbit/s，8Kbit/s = 1KB/s。也就是说800Kbps意思就是每秒视频就要占用100KB磁盘空间。核心质量概念，一般这个数值越高质量越好，而且是立竿见影的质量变化，压缩主要调整的参数也是这个。&lt;/li&gt;
-  &lt;li&gt;帧数：每秒钟播放的图片数，单位 fps（英文：Frames Per Second），每秒的帧数或者帧率表示视频文件或者图形处理器场景时每秒钟能够更新的次数。一般30即可，不用追求过高。&lt;/li&gt;
-  &lt;li&gt;分辨率：1080P：1920 * 1080，720P：1280 * 720，反正就这二选一。&lt;/li&gt;
-  &lt;li&gt;采样率：每秒钟对音频信号的采样次数，采样频率越高声音还原度越高，声音更加自然。单位是赫兹 Hz。音频文件一般使用的采样率是 44100 Hz ，也就是一秒钟采样 44100 次。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;4-使用&quot;&gt;4. 使用&lt;/h2&gt;
-&lt;p&gt;一个命令简单使用：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;ffmpeg -i $1 -vcodec libx264 -b:v 5000k -minrate 5000k -maxrate 5000k -bufsize 4200k -preset fast -crf 20 -y -vf “scale=-1:720” -acodec libmp3lame -ab 128k ~/Downloads/a1.mp4&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;简单解释下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;-i：输入文件指定&lt;/li&gt;
-  &lt;li&gt;-vcodec：视频解码，x264，基本上没别的选择&lt;/li&gt;
-  &lt;li&gt;-b:v：指定导出视频的码率，不会100%和指定的数值一样，但肯定会尽量靠近。这个指标是视频&lt;code&gt;质量/体积&lt;/code&gt;的核心指标，一般质量不符合预期就调高，文件过大就调低。e.g 5000k&lt;/li&gt;
-  &lt;li&gt;-maxrate：最高码率，和&lt;code&gt;-b:v&lt;/code&gt;一致就好了&lt;/li&gt;
-  &lt;li&gt;-minrate：最低码率，和&lt;code&gt;-b:v&lt;/code&gt;一致就好了&lt;/li&gt;
-  &lt;li&gt;-bufsize：缓冲区大小，看情况设定，不关键&lt;/li&gt;
-  &lt;li&gt;-preset：指定编码的配置。x264编码算法有很多可供配置的参数，不同的参数值会导致编码的速度大相径庭，甚至可能影响质量。为了免去用户了解算法，然后手工配置参数的麻烦。x264提供了一些预设值，而这些预设值可以通过preset指定。fast即可。&lt;/li&gt;
-  &lt;li&gt;-crf：这是最重要的一个选项，用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。这个选项会直接影响到输出视频的码率。一般20减一点点就很好了。&lt;/li&gt;
-  &lt;li&gt;-y：强制覆盖输出文件，即便该文件已存在&lt;/li&gt;
-  &lt;li&gt;-vf：&lt;code&gt;scale=-1:720&lt;/code&gt;，意思就是把原视频的横向限死到720P，然后纵向自适应&lt;/li&gt;
-  &lt;li&gt;-acodec：libmp3lame，音频解码使用MP3&lt;/li&gt;
-  &lt;li&gt;-ab：音频码率：128 kb/s&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;基本上上面的命令就够用了，我自己选的码率是5000k，视频文件体积是有点大，但质量还是上乘的，自己收藏用算是可以了。&lt;/p&gt;
-
-&lt;p&gt;一些简单的历史数据：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;6分钟左右的视频quicktime从ios录屏下来是1.3g  &lt;br /&gt;
-  720p视频5000k码率压缩是240m  &lt;br /&gt;
-  60fps和30fps体积没差别  &lt;br /&gt;
-  2400k码率体积是90m，质量比较差  &lt;br /&gt;
-  2900k码率基本能看  &lt;br /&gt;
-  3300k码率可以蒙混一下了&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;视频的合并使用以下方法：&lt;/p&gt;
-
-&lt;p&gt;创建一个文本文件，内容如下：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;# this is a comment  &lt;br /&gt;
-file ‘/path/to/file1’  &lt;br /&gt;
-file ‘/path/to/file2’  &lt;br /&gt;
-file ‘/path/to/file3’&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;然后使用命令进行合并：&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;ffmpeg -f concat -i ~/Downloads/mylist.txt -c copy ~/Downloads/noname.mov&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Thu, 16 Nov 2017 14:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/11/ffmpeg/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/11/ffmpeg/</guid>
 			</item>
 		
 	</channel>
