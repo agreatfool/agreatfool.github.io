@@ -491,8 +491,24 @@
 
 &lt;h2 id=&quot;36-核心内存metrics&quot;&gt;3.6 核心内存Metrics&lt;/h2&gt;
 
+&lt;h3 id=&quot;361-node内存&quot;&gt;3.6.1 Node内存&lt;/h3&gt;
 &lt;ul&gt;
+  &lt;li&gt;rss：node进程总内存占用量&lt;/li&gt;
+  &lt;li&gt;heapTotal：总堆内存占用量（已申请下来的）&lt;/li&gt;
+  &lt;li&gt;heapUsed：实际堆内存使用量&lt;/li&gt;
+  &lt;li&gt;external：扩展等外部程序的内存占用量&lt;/li&gt;
+  &lt;li&gt;heapSizeLimit：堆内存上限&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;按空间分类的堆内存信息可以酌情收集，如果有需要分析单独的&lt;code&gt;新生代&lt;/code&gt;或&lt;code&gt;老生代&lt;/code&gt;内存情况的话。&lt;/p&gt;
+
+&lt;h3 id=&quot;362-node-gc&quot;&gt;3.6.2 Node GC&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低&lt;/li&gt;
+  &lt;li&gt;gcPause：GC中断，需要按不同GC类型进行分类收集，老生代的&lt;code&gt;markSweepCompact&lt;/code&gt;数据最为关键&lt;/li&gt;
   &lt;li&gt;&lt;/li&gt;
+  &lt;li&gt;allocationRate：新内存分配下来的速率，bytes/second&lt;/li&gt;
+  &lt;li&gt;promotionRate：内存从新生代到老生代的晋升速度，bytes/second&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/h1&gt;

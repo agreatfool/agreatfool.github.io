@@ -185,7 +185,12 @@
 <li class="toc-entry toc-h3"><a href="#352-查找问题">3.5.2 查找问题</a></li>
 </ul>
 </li>
-<li class="toc-entry toc-h2"><a href="#36-核心内存metrics">3.6 核心内存Metrics</a></li>
+<li class="toc-entry toc-h2"><a href="#36-核心内存metrics">3.6 核心内存Metrics</a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#361-node内存">3.6.1 Node内存</a></li>
+<li class="toc-entry toc-h3"><a href="#362-node-gc">3.6.2 Node GC</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-entry toc-h1"><a href="#4-性能知识点---eventloop">4. 性能知识点 - EventLoop</a></li>
@@ -744,8 +749,26 @@
 <h2 id="36-核心内存metrics">
 <a id="36-核心内存metrics" class="anchor" href="#36-%E6%A0%B8%E5%BF%83%E5%86%85%E5%AD%98metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6 核心内存Metrics</h2>
 
+<h3 id="361-node内存">
+<a id="361-node内存" class="anchor" href="#361-node%E5%86%85%E5%AD%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6.1 Node内存</h3>
 <ul>
+  <li>rss：node进程总内存占用量</li>
+  <li>heapTotal：总堆内存占用量（已申请下来的）</li>
+  <li>heapUsed：实际堆内存使用量</li>
+  <li>external：扩展等外部程序的内存占用量</li>
+  <li>heapSizeLimit：堆内存上限</li>
+</ul>
+
+<p>按空间分类的堆内存信息可以酌情收集，如果有需要分析单独的<code>新生代</code>或<code>老生代</code>内存情况的话。</p>
+
+<h3 id="362-node-gc">
+<a id="362-node-gc" class="anchor" href="#362-node-gc" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6.2 Node GC</h3>
+<ul>
+  <li>gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低</li>
+  <li>gcPause：GC中断，需要按不同GC类型进行分类收集，老生代的<code>markSweepCompact</code>数据最为关键</li>
   <li>
+  <li>allocationRate：新内存分配下来的速率，bytes/second</li>
+  <li>promotionRate：内存从新生代到老生代的晋升速度，bytes/second</li>
 </ul>
 
 <h1 id="4-性能知识点---eventloop">
