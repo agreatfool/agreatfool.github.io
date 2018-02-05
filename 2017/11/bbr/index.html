@@ -127,6 +127,73 @@ reboot</code></pre></figure>
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>uname -r
 <span class="m">4</span>.13.11-041311-generic</code></pre></figure>
 
+<h2 id="2-启用bbr">2. 启用BBR</h2>
+<p>先检查下BBR是否开启</p>
+
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>$ lsmod</td>
+        <td>grep bbr</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<p>如果输出有<code>tcp_bbr</code>，那就是已经安装了，否则则需要做后续的操作手动安装。</p>
+
+<p>编辑文件<code>/etc/sysctl.conf</code>：</p>
+
+<blockquote>
+  <p>$ cat » /etc/sysctl.conf « EOF  <br />
+  net.core.default_qdisc=fq  <br />
+  net.ipv4.tcp_congestion_control=bbr  <br />
+  EOF</p>
+</blockquote>
+
+<p>使用<code>sysctl -p</code>命令让刚才的改动生效：</p>
+
+<blockquote>
+  <p>$ sysctl -p
+  net.ipv6.conf.all.accept_ra = 2
+  net.core.default_qdisc = fq
+  net.ipv4.tcp_congestion_control = bbr</p>
+</blockquote>
+
+<p>再检查下：</p>
+
+<blockquote>
+  <p>$ lsmod | grep bbr  <br />
+  tcp_bbr                20480  0</p>
+</blockquote>
+
+<p>安装成功。</p>
+
+<p>后续可以使用命令<code>modprobe -r tcp_bbr</code>删除BBR。</p>
+
+<p>可以使用命令查看<code>tcp_bbr</code>模块信息：</p>
+
+<blockquote>
+  <p>$ modinfo tcp_bbr  <br />
+  filename:       /lib/modules/4.13.0-25-generic/kernel/net/ipv4/tcp_bbr.ko  <br />
+  description:    TCP BBR (Bottleneck Bandwidth and RTT)  <br />
+  license:        Dual BSD/GPL  <br />
+  author:         Soheil Hassas Yeganeh <a href="mailto:soheil@google.com">soheil@google.com</a>  <br />
+  author:         Yuchung Cheng <a href="mailto:ycheng@google.com">ycheng@google.com</a>  <br />
+  author:         Neal Cardwell <a href="mailto:ncardwell@google.com">ncardwell@google.com</a>  <br />
+  author:         Van Jacobson <a href="mailto:vanj@google.com">vanj@google.com</a>  <br />
+  srcversion:     9F5EC90C4B0C83923BB4B38  <br />
+  depends:  <br />
+  intree:         Y  <br />
+  name:           tcp_bbr  <br />
+  vermagic:       4.13.0-25-generic SMP mod_unload  <br />
+  signat:         PKCS#7  <br />
+  signer:  <br />
+  sig_key:  <br />
+  sig_hashalgo:   md4</p>
+</blockquote>
+
 <blockquote>
   <p>EOF</p>
 </blockquote>
@@ -146,6 +213,8 @@ reboot</code></pre></figure>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
+    
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
@@ -153,8 +222,6 @@ reboot</code></pre></figure>
     <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
     <li><a href="/2018/01/graphql/">GraphQL笔记</a></li>
-    
-    <li><a href="/2017/12/msgpack-http/">Message Pack 解析问题</a></li>
     
   </ul>
 </div>

@@ -145,7 +145,7 @@
 <li class="toc-entry toc-h1"><a href="#4-资料">4. 资料</a></li>
 </ul><h1 id="1-前言">
 <a id="1-前言" class="anchor" href="#1-%E5%89%8D%E8%A8%80" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 前言</h1>
-<p>本文是系列文章<a href="https://xenojoshua.com/2018/01/node-profile/">Node.JS Profile</a>的一部分，完整的文章列表请去总章查看。</p>
+<p>本文是系列文章<a href="https://xenojoshua.com/2018/01/node-profile/" target="_blank">Node.JS Profile</a>的一部分，完整的文章列表请去总章查看。</p>
 
 <p>本文是Node内存相关文章的其中一篇，主要负责介绍内存相关的基础知识，及Node V8内存相关的一些理论知识，为读者打好基础方便后续内存实践相关知识点的理解。</p>
 
@@ -195,9 +195,9 @@
 
 <h1 id="3-gc">
 <a id="3-gc" class="anchor" href="#3-gc" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. GC</h1>
-<p>这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38">这篇2</a>。</p>
+<p>这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37" target="_blank">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38" target="_blank">这篇2</a>。</p>
 
-<p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
+<p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
 
 <p>本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。</p>
 
@@ -393,7 +393,7 @@
 </ul>
 
 <h2 id="34-orinoco-young-generation-garbage-collection-2017-11-29">
-<a id="34-orinoco-young-generation-garbage-collection-2017-11-29" class="anchor" href="#34-orinoco-young-generation-garbage-collection-2017-11-29" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 <a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a> 2017-11-29</h2>
+<a id="34-orinoco-young-generation-garbage-collection-2017-11-29" class="anchor" href="#34-orinoco-young-generation-garbage-collection-2017-11-29" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 <a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">Orinoco: young generation garbage collection</a> 2017-11-29</h2>
 
 <ul>
   <li>新生代内存空间封顶16M（up to 16MiB）</li>
@@ -418,20 +418,24 @@
 <a id="4-资料" class="anchor" href="#4-%E8%B5%84%E6%96%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 资料</h1>
 <ul>
   <li>
-<a href="http://alinode.aliyun.com/blog/37">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
+<a href="http://alinode.aliyun.com/blog/37" target="_blank">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
   <li>
-<a href="http://alinode.aliyun.com/blog/38">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
+<a href="http://alinode.aliyun.com/blog/38" target="_blank">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
   <li>
-<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
-  <li><a href="http://newhtml.net/v8-garbage-collection/">V8 之旅： 垃圾回收器</a></li>
-  <li><a href="https://v8project.blogspot.com/2016/04/jank-busters-part-two-orinoco.html">Jank Busters Part Two: Orinoco</a></li>
-  <li><a href="https://www.infoq.com/presentations/chrome-v8-optimization">New Optimizations of Google Chrome’s V8</a></li>
-  <li><a href="https://www.youtube.com/watch?v=VhpdsjBUS3g">Google I/O 2013 - Accelerating Oz with V8: Follow the Yellow Brick Road to JavaScript Performance</a></li>
-  <li><a href="https://research.google.com/pubs/pub45361.html">Idle Time Garbage Collection Scheduling</a></li>
-  <li><a href="https://research.google.com/pubs/pub43823.html">Memento Mori: Dynamic Allocation-site-based Optimizations</a></li>
-  <li><a href="https://research.google.com/pubs/pub42478.html">Allocation Folding Based on Dominance</a></li>
-  <li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;rep=rep1&amp;type=pdf">Garbage-First Garbage Collection</a></li>
+<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
+  <li><a href="http://newhtml.net/v8-garbage-collection/" target="_blank">V8 之旅： 垃圾回收器</a></li>
+  <li><a href="https://v8project.blogspot.com/2016/04/jank-busters-part-two-orinoco.html" target="_blank">Jank Busters Part Two: Orinoco</a></li>
+  <li><a href="https://www.infoq.com/presentations/chrome-v8-optimization" target="_blank">New Optimizations of Google Chrome’s V8</a></li>
+  <li><a href="https://www.youtube.com/watch?v=VhpdsjBUS3g" target="_blank">Google I/O 2013 - Accelerating Oz with V8: Follow the Yellow Brick Road to JavaScript Performance</a></li>
+  <li><a href="https://research.google.com/pubs/pub45361.html" target="_blank">Idle Time Garbage Collection Scheduling</a></li>
+  <li><a href="https://research.google.com/pubs/pub43823.html" target="_blank">Memento Mori: Dynamic Allocation-site-based Optimizations</a></li>
+  <li><a href="https://research.google.com/pubs/pub42478.html" target="_blank">Allocation Folding Based on Dominance</a></li>
+  <li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;rep=rep1&amp;type=pdf" target="_blank">Garbage-First Garbage Collection</a></li>
 </ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
 
               </div>
               
@@ -448,6 +452,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
+    
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
@@ -455,8 +461,6 @@
     <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
     <li><a href="/2018/01/graphql/">GraphQL笔记</a></li>
-    
-    <li><a href="/2017/12/msgpack-http/">Message Pack 解析问题</a></li>
     
   </ul>
 </div>
