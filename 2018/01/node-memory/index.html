@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -108,49 +147,45 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
-                <ul class="section-nav">
-<li class="toc-entry toc-h1"><a href="#1-前言">1. 前言</a></li>
-<li class="toc-entry toc-h1"><a href="#2-基础概念">2. 基础概念</a>
-<ul>
-<li class="toc-entry toc-h2"><a href="#21-rss">2.1 RSS</a></li>
-<li class="toc-entry toc-h2"><a href="#22-heap">2.2 Heap</a></li>
-<li class="toc-entry toc-h2"><a href="#23-heap-limit">2.3 Heap Limit</a></li>
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-基础概念" id="markdown-toc-2-基础概念">2. 基础概念</a>    <ul>
+      <li><a href="#21-rss" id="markdown-toc-21-rss">2.1 RSS</a></li>
+      <li><a href="#22-heap" id="markdown-toc-22-heap">2.2 Heap</a></li>
+      <li><a href="#23-heap-limit" id="markdown-toc-23-heap-limit">2.3 Heap Limit</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-gc" id="markdown-toc-3-gc">3. GC</a>    <ul>
+      <li><a href="#31-gc基础知识" id="markdown-toc-31-gc基础知识">3.1 GC基础知识</a></li>
+      <li><a href="#32-堆内存划分" id="markdown-toc-32-堆内存划分">3.2 堆内存划分</a>        <ul>
+          <li><a href="#321-内存页基础概念" id="markdown-toc-321-内存页基础概念">3.2.1 内存页基础概念</a></li>
+          <li><a href="#322-new-space新生代" id="markdown-toc-322-new-space新生代">3.2.2 New Space（新生代）</a></li>
+          <li><a href="#323-old-space老生代" id="markdown-toc-323-old-space老生代">3.2.3 Old Space（老生代）</a></li>
+          <li><a href="#324-large-object-space老生代" id="markdown-toc-324-large-object-space老生代">3.2.4 Large Object Space（老生代）</a></li>
+          <li><a href="#325-map-space老生代" id="markdown-toc-325-map-space老生代">3.2.5 Map Space（老生代）</a></li>
+          <li><a href="#326-code-space老生代" id="markdown-toc-326-code-space老生代">3.2.6 Code Space（老生代）</a></li>
+          <li><a href="#327-堆空间页管理抽象memory-allocator" id="markdown-toc-327-堆空间页管理抽象memory-allocator">3.2.7 堆空间页管理抽象：Memory Allocator</a></li>
+          <li><a href="#328-堆外内存external-memory" id="markdown-toc-328-堆外内存external-memory">3.2.8 堆外内存：External memory</a></li>
+        </ul>
+      </li>
+      <li><a href="#33-gc算法" id="markdown-toc-33-gc算法">3.3 GC算法</a>        <ul>
+          <li><a href="#331-新生代scavenge" id="markdown-toc-331-新生代scavenge">3.3.1 新生代：Scavenge</a></li>
+          <li><a href="#332-老生代mark-sweepmark-compact" id="markdown-toc-332-老生代mark-sweepmark-compact">3.3.2 老生代：Mark-Sweep／Mark-Compact</a></li>
+        </ul>
+      </li>
+      <li><a href="#34-orinoco-young-generation-garbage-collection-2017-11-29" id="markdown-toc-34-orinoco-young-generation-garbage-collection-2017-11-29">3.4 <a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">Orinoco: young generation garbage collection</a> 2017-11-29</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-资料" id="markdown-toc-4-资料">4. 资料</a></li>
 </ul>
-</li>
-<li class="toc-entry toc-h1"><a href="#3-gc">3. GC</a>
-<ul>
-<li class="toc-entry toc-h2"><a href="#31-gc基础知识">3.1 GC基础知识</a></li>
-<li class="toc-entry toc-h2"><a href="#32-堆内存划分">3.2 堆内存划分</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#321-内存页基础概念">3.2.1 内存页基础概念</a></li>
-<li class="toc-entry toc-h3"><a href="#322-new-space新生代">3.2.2 New Space（新生代）</a></li>
-<li class="toc-entry toc-h3"><a href="#323-old-space老生代">3.2.3 Old Space（老生代）</a></li>
-<li class="toc-entry toc-h3"><a href="#324-large-object-space老生代">3.2.4 Large Object Space（老生代）</a></li>
-<li class="toc-entry toc-h3"><a href="#325-map-space老生代">3.2.5 Map Space（老生代）</a></li>
-<li class="toc-entry toc-h3"><a href="#326-code-space老生代">3.2.6 Code Space（老生代）</a></li>
-<li class="toc-entry toc-h3"><a href="#327-堆空间页管理抽象memory-allocator">3.2.7 堆空间页管理抽象：Memory Allocator</a></li>
-<li class="toc-entry toc-h3"><a href="#328-堆外内存external-memory">3.2.8 堆外内存：External memory</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h2"><a href="#33-gc算法">3.3 GC算法</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#331-新生代scavenge">3.3.1 新生代：Scavenge</a></li>
-<li class="toc-entry toc-h3"><a href="#332-老生代mark-sweepmark-compact">3.3.2 老生代：Mark-Sweep／Mark-Compact</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h2"><a href="#34-orinoco-young-generation-garbage-collection-2017-11-29">3.4 Orinoco: young generation garbage collection 2017-11-29</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h1"><a href="#4-资料">4. 资料</a></li>
-</ul><h1 id="1-前言">
-<a id="1-前言" class="anchor" href="#1-%E5%89%8D%E8%A8%80" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 前言</h1>
+
+<h1 id="1-前言">1. 前言</h1>
 <p>本文是系列文章<a href="https://xenojoshua.com/2018/01/node-profile/" target="_blank">Node.JS Profile</a>的一部分，完整的文章列表请去总章查看。</p>
 
 <p>本文是Node内存相关文章的其中一篇，主要负责介绍内存相关的基础知识，及Node V8内存相关的一些理论知识，为读者打好基础方便后续内存实践相关知识点的理解。</p>
 
-<h1 id="2-基础概念">
-<a id="2-基础概念" class="anchor" href="#2-%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. 基础概念</h1>
+<h1 id="2-基础概念">2. 基础概念</h1>
 <p>Node进程的内存分为三大部分：</p>
 
 <ul>
@@ -159,20 +194,17 @@
   <li>Heap: a memory segment dedicated to storing reference types like objects, strings and closures.</li>
 </ul>
 
-<h2 id="21-rss">
-<a id="21-rss" class="anchor" href="#21-rss" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 RSS</h2>
+<h2 id="21-rss">2.1 RSS</h2>
 <blockquote>
   <p>A running program is always represented through some space allocated in memory. This space is called Resident Set.</p>
 </blockquote>
 
 <p>Node进程整体占用内存大小，也就是你在系统面板之类的地方看到的node进程的内存占用大小。</p>
 
-<h2 id="22-heap">
-<a id="22-heap" class="anchor" href="#22-heap" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 Heap</h2>
+<h2 id="22-heap">2.2 Heap</h2>
 <p>用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。</p>
 
-<h2 id="23-heap-limit">
-<a id="23-heap-limit" class="anchor" href="#23-heap-limit" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 Heap Limit</h2>
+<h2 id="23-heap-limit">2.3 Heap Limit</h2>
 <p>node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.4G。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：</p>
 
 <blockquote>
@@ -181,28 +213,30 @@
 
 <p>以下是一个简单的范例，如何查看堆内存，注意查看<code>heap_size_limit</code>字段的值。</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript>
+  <pre>400: Invalid request
+</pre>
+</noscript>
 <script src="https://gist.github.com/e3ab8817d882bc74b3cee58974f11096.js"> </script>
 
 <p>这个堆大小可以用过v8参数flag<code>--max-old-space-size</code>来修改，单位是<code>MB</code>。</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript>
+  <pre>400: Invalid request
+</pre>
+</noscript>
 <script src="https://gist.github.com/c7ad7c782c6a293b15f54e12c8793970.js"> </script>
 
 <p>遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。</p>
 
-<h1 id="3-gc">
-<a id="3-gc" class="anchor" href="#3-gc" aria-hidden="true"><span class="octicon octicon-link"></span></a>3. GC</h1>
+<h1 id="3-gc">3. GC</h1>
 <p>这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37" target="_blank">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38" target="_blank">这篇2</a>。</p>
 
 <p>阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">这篇</a>官方的v8博客文章，撰于2017-11-29。</p>
 
 <p>本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。</p>
 
-<h2 id="31-gc基础知识">
-<a id="31-gc基础知识" class="anchor" href="#31-gc%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.1 GC基础知识</h2>
+<h2 id="31-gc基础知识">3.1 GC基础知识</h2>
 <ul>
   <li>GC回收的目标是从根节点开始，不可达（unreachable）的对象</li>
   <li>GC触发：
@@ -227,10 +261,8 @@
   <li>准确式 GC (Accurate GC)：通过底层设计的方法，能在GC的时候无需访问内容就判断出内存是指针还是整数，精确回收需要回收的内存</li>
 </ul>
 
-<h2 id="32-堆内存划分">
-<a id="32-堆内存划分" class="anchor" href="#32-%E5%A0%86%E5%86%85%E5%AD%98%E5%88%92%E5%88%86" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2 堆内存划分</h2>
-<h3 id="321-内存页基础概念">
-<a id="321-内存页基础概念" class="anchor" href="#321-%E5%86%85%E5%AD%98%E9%A1%B5%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.1 内存页基础概念</h3>
+<h2 id="32-堆内存划分">3.2 堆内存划分</h2>
+<h3 id="321-内存页基础概念">3.2.1 内存页基础概念</h3>
 
 <ul>
   <li>内存按照 1MB 分页，并且都按照 1MB 对齐</li>
@@ -239,8 +271,7 @@
   <li>Large Object Space 也分页，但页的大小会比 1MB 大一些</li>
 </ul>
 
-<h3 id="322-new-space新生代">
-<a id="322-new-space新生代" class="anchor" href="#322-new-space%E6%96%B0%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.2 New Space（新生代）</h3>
+<h3 id="322-new-space新生代">3.2.2 New Space（新生代）</h3>
 
 <ul>
   <li>大部分的对象都属于新生代，诞生在这里</li>
@@ -248,20 +279,17 @@
   <li>GC日志中看到的 new 和 semispace 相关的字段就与 New Space 有关</li>
 </ul>
 
-<h3 id="323-old-space老生代">
-<a id="323-old-space老生代" class="anchor" href="#323-old-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.3 Old Space（老生代）</h3>
+<h3 id="323-old-space老生代">3.2.3 Old Space（老生代）</h3>
 
 <ul>
   <li>对象大部分是从新生代（即 New Space）晋升而来</li>
-  <li>
-<code>pretenuring</code>机制：某些函数创建的对象有很高的存活率率（survival rate），经常晋升到老生代（存活超过2次）的时候，下次这些函数再创建的对象将会直接在 Old Space 分配</li>
+  <li><code>pretenuring</code>机制：某些函数创建的对象有很高的存活率率（survival rate），经常晋升到老生代（存活超过2次）的时候，下次这些函数再创建的对象将会直接在 Old Space 分配</li>
   <li>GC日志中看到的 old 相关的字段就与 Old Space 有关</li>
   <li>survival 和 promoted 相关的字段则与对象在新老生代之间的迁移有关</li>
   <li>使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<h3 id="324-large-object-space老生代">
-<a id="324-large-object-space老生代" class="anchor" href="#324-large-object-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.4 Large Object Space（老生代）</h3>
+<h3 id="324-large-object-space老生代">3.2.4 Large Object Space（老生代）</h3>
 
 <ul>
   <li>需要分配一个 1MB 的页（减去 header）无法直接容纳的对象时，就会直接在 Large Object Space 而不是 New Space 分配</li>
@@ -269,17 +297,14 @@
   <li>Large Object Space 属于老生代，使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<h3 id="325-map-space老生代">
-<a id="325-map-space老生代" class="anchor" href="#325-map-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.5 Map Space（老生代）</h3>
+<h3 id="325-map-space老生代">3.2.5 Map Space（老生代）</h3>
 
 <ul>
-  <li>存储<code>对象布局结构</code>
-</li>
+  <li>存储<code>对象布局结构</code></li>
   <li>使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<h3 id="326-code-space老生代">
-<a id="326-code-space老生代" class="anchor" href="#326-code-space%E8%80%81%E7%94%9F%E4%BB%A3" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.6 Code Space（老生代）</h3>
+<h3 id="326-code-space老生代">3.2.6 Code Space（老生代）</h3>
 
 <ul>
   <li>编译器针对运行平台架构编译出的机器码（存储在可执行内存中）本身也是数据，连同一些其它的元数据（比如由哪个编译器编译，源代码的位置等），放置在 Code Space 中</li>
@@ -287,26 +312,22 @@
   <li>使用 Mark-Sweep-Compact 回收内存</li>
 </ul>
 
-<h3 id="327-堆空间页管理抽象memory-allocator">
-<a id="327-堆空间页管理抽象memory-allocator" class="anchor" href="#327-%E5%A0%86%E7%A9%BA%E9%97%B4%E9%A1%B5%E7%AE%A1%E7%90%86%E6%8A%BD%E8%B1%A1memory-allocator" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.7 堆空间页管理抽象：Memory Allocator</h3>
+<h3 id="327-堆空间页管理抽象memory-allocator">3.2.7 堆空间页管理抽象：Memory Allocator</h3>
 
 <ul>
   <li>与操作系统交互，当空间需要新的页的时候，它从操作系统手上分配（使用<code>mmap</code>）内存再交给空间</li>
   <li>当有内存页不再使用的时侯，它从空间手上接过这些内存，还给操作系统（使用<code>munmap</code>）</li>
 </ul>
 
-<h3 id="328-堆外内存external-memory">
-<a id="328-堆外内存external-memory" class="anchor" href="#328-%E5%A0%86%E5%A4%96%E5%86%85%E5%AD%98external-memory" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.2.8 堆外内存：External memory</h3>
+<h3 id="328-堆外内存external-memory">3.2.8 堆外内存：External memory</h3>
 
 <ul>
   <li>一般是C++插件，会自行管理内存，这部分内存就是非Node堆内部的内存，即堆外内存</li>
   <li>但Node语法中的Buffer，是自己管理内存的，即堆外内存</li>
 </ul>
 
-<h2 id="33-gc算法">
-<a id="33-gc算法" class="anchor" href="#33-gc%E7%AE%97%E6%B3%95" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 GC算法</h2>
-<h3 id="331-新生代scavenge">
-<a id="331-新生代scavenge" class="anchor" href="#331-%E6%96%B0%E7%94%9F%E4%BB%A3scavenge" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.1 新生代：Scavenge</h3>
+<h2 id="33-gc算法">3.3 GC算法</h2>
+<h3 id="331-新生代scavenge">3.3.1 新生代：Scavenge</h3>
 <p>Scavenge</p>
 
 <ul>
@@ -326,8 +347,7 @@
   <li>通过检索store buffer就能很快找到所有老生代到新生代的引用</li>
 </ul>
 
-<h3 id="332-老生代mark-sweepmark-compact">
-<a id="332-老生代mark-sweepmark-compact" class="anchor" href="#332-%E8%80%81%E7%94%9F%E4%BB%A3mark-sweepmark-compact" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.2 老生代：Mark-Sweep／Mark-Compact</h3>
+<h3 id="332-老生代mark-sweepmark-compact">3.3.2 老生代：Mark-Sweep／Mark-Compact</h3>
 <p>三色 marking</p>
 
 <ul>
@@ -336,8 +356,7 @@
   <li>沿着根对象，将所有带引用的对象标黑，检索过程中先标黑</li>
   <li>扫描完毕后，堆内非根节点对象就只剩黑和白，黑色不可回收，白色可以回收</li>
   <li>因标记过程中对象会push进栈，而大对象则无法这么做，会走一个比较特殊的标记过程，因此大对象过多会显著影响GC效率</li>
-  <li>Marking后的回收分：<code>Sweeping</code>和<code>Compacting</code>
-</li>
+  <li>Marking后的回收分：<code>Sweeping</code>和<code>Compacting</code></li>
 </ul>
 
 <p>Sweeping</p>
@@ -392,8 +411,7 @@
   </li>
 </ul>
 
-<h2 id="34-orinoco-young-generation-garbage-collection-2017-11-29">
-<a id="34-orinoco-young-generation-garbage-collection-2017-11-29" class="anchor" href="#34-orinoco-young-generation-garbage-collection-2017-11-29" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.4 <a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">Orinoco: young generation garbage collection</a> 2017-11-29</h2>
+<h2 id="34-orinoco-young-generation-garbage-collection-2017-11-29">3.4 <a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">Orinoco: young generation garbage collection</a> 2017-11-29</h2>
 
 <ul>
   <li>新生代内存空间封顶16M（up to 16MiB）</li>
@@ -407,22 +425,17 @@
   <li>Parallel Scavenge
     <ul>
       <li>Parallel Mark-Evacuate算法分离了扫描标记存活对象、拷贝存活对象、更新指针这几个步骤</li>
-      <li>
-<code>Parallel Scavenge</code>则是将上述几个步骤合而为一，进一步提升效率，也是M62版本开始v8使用的新生代垃圾回收算法</li>
+      <li><code>Parallel Scavenge</code>则是将上述几个步骤合而为一，进一步提升效率，也是M62版本开始v8使用的新生代垃圾回收算法</li>
     </ul>
   </li>
   <li>该新算法减少了20%-50%的新生代垃圾回收时间（V8 now ships with the parallel Scavenger which reduces the main thread young generation garbage collection total time by about 20%–50%）</li>
 </ul>
 
-<h1 id="4-资料">
-<a id="4-资料" class="anchor" href="#4-%E8%B5%84%E6%96%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 资料</h1>
+<h1 id="4-资料">4. 资料</h1>
 <ul>
-  <li>
-<a href="http://alinode.aliyun.com/blog/37" target="_blank">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
-  <li>
-<a href="http://alinode.aliyun.com/blog/38" target="_blank">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
-  <li>
-<a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
+  <li><a href="http://alinode.aliyun.com/blog/37" target="_blank">解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识</a>：阿里团队的几篇Node的内存文章，很不错</li>
+  <li><a href="http://alinode.aliyun.com/blog/38" target="_blank">解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法</a>：同上</li>
+  <li><a href="https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html" target="_blank">Orinoco: young generation garbage collection</a>：至2017年年底，v8团队官方博客最新的一篇GC相关文章</li>
   <li><a href="http://newhtml.net/v8-garbage-collection/" target="_blank">V8 之旅： 垃圾回收器</a></li>
   <li><a href="https://v8project.blogspot.com/2016/04/jank-busters-part-two-orinoco.html" target="_blank">Jank Busters Part Two: Orinoco</a></li>
   <li><a href="https://www.infoq.com/presentations/chrome-v8-optimization" target="_blank">New Optimizations of Google Chrome’s V8</a></li>
@@ -452,6 +465,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -459,8 +474,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

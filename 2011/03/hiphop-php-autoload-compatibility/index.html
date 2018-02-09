@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -106,7 +145,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p><strong>Update: 2011-03-30</strong><br />
 <strong> 经过一段时间的research，已经证明这篇文章 写的内容是错的。不删除这篇文章，仅仅只是用来做research过程中的记录。<br />
 错误的问题很简单，在编译后的二进制可执行文件里，其实已经无所谓load不load的问题了，所有的，你需要的类资源都已经被编译进去了 。我尝试过一种很极端的方式，A代码里实例化了B类，但是在A代码里没有实现autoload函数也没有include过B 类的代码文件。编译的时候启用--input-list参数，给出所有的代码文件位置。编译后的可执行文件运行起来一点问题都没有，说明了本文下述的内容都是错的。</strong></p>
@@ -213,6 +251,8 @@ Program /var/www/tryit.php exited normally.</pre>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -220,8 +260,6 @@ Program /var/www/tryit.php exited normally.</pre>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

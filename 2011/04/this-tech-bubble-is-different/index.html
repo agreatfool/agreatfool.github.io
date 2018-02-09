@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>编者按：本文来自<a href="http://www.businessweek.com/magazine/content/11_17/b4225060960537.htm">彭博商业周刊</a>，文章非常的有深度也很长。<strong>科技泡沫会发生，但是我们通常都会受益于其留下的重大创新和突破。而当前我们正在经历的这个科技泡沫，它由社交网络驱动，最后可能什么都不会给我们留下</strong>。</p>
 <p>2006年，一个名叫Jeff Hammerbacher（数学天才）且才刚刚走出校门一年的哈佛大学小子来到了Facebook，那时Facebook还仍处在自己的婴儿发展期，急需招聘数据分析人员来研究人们对Facebook的使用情况。小伙子来到公司后（当时总共也才100位员工），扎克伯格给了他一个很棒的头衔—-research scientist（研究科学家），让他研究人们大多是怎样使用社交网络的。更具体的说，他的这个职务是要帮助Facebook找出其为什么在有些学校很成功而在另外一些学校却表现糟糕的原因。此外，他还要帮助公司找出高中生和大学生行为上的不同之处。<br />
 Hammerbacher说到：“我当时的任务主要就是解决这些高级问题，要知道那时Facebook还真是没有任何工具可以解决那么复杂的问题的。”<br />
@@ -150,6 +188,8 @@ Hammerbacher说到：“我当时的任务主要就是解决这些高级问题�
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -157,8 +197,6 @@ Hammerbacher说到：“我当时的任务主要就是解决这些高级问题�
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

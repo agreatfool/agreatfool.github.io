@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,14 +143,25 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
-                <h1 id="1-前言">1. 前言</h1>
-<p>之前的工作中使用<a href="https://developers.google.com/protocol-buffers/">Protobuf</a>基本上都只用到了最简单的部分，最近做的基于<a href="https://grpc.io/docs/">gRPC</a>的框架<a href="https://github.com/agreatfool/SASDN">SASDN</a>虽然重度使用了Protobuf，但其实还只是基础功能的使用。</p>
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-释义" id="markdown-toc-2-释义">2. 释义</a>    <ul>
+      <li><a href="#21-deprecated" id="markdown-toc-21-deprecated">2.1 deprecated</a></li>
+      <li><a href="#22-jstype" id="markdown-toc-22-jstype">2.2 jstype</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-功能全集" id="markdown-toc-3-功能全集">3. 功能全集</a></li>
+  <li><a href="#4-自定义option" id="markdown-toc-4-自定义option">4. 自定义Option</a></li>
+</ul>
 
-<p>直到最近的一个<a href="https://github.com/agreatfool/grpc_tools_node_protoc_ts/issues/10">Issue</a>之前，我都没关注过Protobuf的Options功能。后面简单了解了下这个功能，这里做下笔记。本文仅粗浅介绍该功能，并不会有很深入的探讨。</p>
+<h1 id="1-前言">1. 前言</h1>
+<p>之前的工作中使用<a href="https://developers.google.com/protocol-buffers/" target="_blank">Protobuf</a>基本上都只用到了最简单的部分，最近做的基于<a href="https://grpc.io/docs/">gRPC</a>的框架<a href="https://github.com/agreatfool/SASDN" target="_blank">SASDN</a>虽然重度使用了Protobuf，但其实还只是基础功能的使用。</p>
+
+<p>直到最近的一个<a href="https://github.com/agreatfool/grpc_tools_node_protoc_ts/issues/10" target="_blank">Issue</a>之前，我都没关注过Protobuf的Options功能。后面简单了解了下这个功能，这里做下笔记。本文仅粗浅介绍该功能，并不会有很深入的探讨。</p>
 
 <h1 id="2-释义">2. 释义</h1>
-<p><a href="https://developers.google.com/protocol-buffers/docs/proto3#options">官方文档</a>上，关于Options的介绍如下：</p>
+<p><a href="https://developers.google.com/protocol-buffers/docs/proto3#options" target="_blank">官方文档</a>上，关于Options的介绍如下：</p>
 
 <blockquote>
   <p>Individual declarations in a .proto file can be annotated with a number of options. Options do not change the overall meaning of a declaration, but may affect the way it is handled in a particular context. The complete list of available options is defined in <code>google/protobuf/descriptor.proto</code>.</p>
@@ -135,7 +185,7 @@
 <p>在field定义后面添加这样一点代码就能在Java里生成一段<code>@Deprecated</code> annotation。根据语言的不同，从这个option而产生的编译反应可能各不相同，这就是option的作用。</p>
 
 <h2 id="22-jstype">2.2 jstype</h2>
-<p>官方解释说明：<a href="https://github.com/google/protobuf/blob/cefa9d73e3ce62b080fda0b306bbeb67a6fc2efa/src/google/protobuf/descriptor.proto#L494">descriptor.proto@3.4.x#L494</a></p>
+<p>官方解释说明：<a href="https://github.com/google/protobuf/blob/cefa9d73e3ce62b080fda0b306bbeb67a6fc2efa/src/google/protobuf/descriptor.proto#L494" target="_blank">descriptor.proto@3.4.x#L494</a></p>
 
 <blockquote>
   <p>The jstype option determines the JavaScript type used for values of the field.  The option is permitted only for 64 bit integral and fixed types(int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING is represented as JavaScript string, which avoids loss of precision that can happen when a large value is converted to a floating point JavaScript. Specifying JS_NUMBER for the jstype causes the generated JavaScript code to use the JavaScript “number” type.  The behavior of the default option JS_NORMAL is implementation dependent.</p>
@@ -150,7 +200,7 @@
 <p>这个option帮助proto确定在生成代码的时候当前字段应该使用JS代码中的什么类型。在int64这种超长数字类型转换成JS代码的时候很有用，如果按数字类型定义直接把int64转换成原生JS代码中的number就会发生精度丢失。很多时候我们可以选择把int64转成字符串来保留内容。</p>
 
 <h1 id="3-功能全集">3. 功能全集</h1>
-<p>Options的全集在文档里是没有完整描述的，需要查看的时候请查看对应的代码：<a href="https://github.com/google/protobuf/blob/3.4.x/src/google/protobuf/descriptor.proto">descriptor.proto</a></p>
+<p>Options的全集在文档里是没有完整描述的，需要查看的时候请查看对应的代码：<a href="https://github.com/google/protobuf/blob/3.4.x/src/google/protobuf/descriptor.proto" target="_blank">descriptor.proto</a></p>
 
 <blockquote>
   <p>The complete list of available options is defined in <code>google/protobuf/descriptor.proto</code>.</p>
@@ -182,6 +232,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -189,8 +241,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

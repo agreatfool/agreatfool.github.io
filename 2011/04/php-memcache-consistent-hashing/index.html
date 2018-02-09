@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>关于memcache客户端的一致性算法，这里就不详写了，请参看<a title="memcached全面剖析–4. memcached的分布式算法" href="http://xenojoshua.com/2011/04/memcached-anatomy-004/">这里</a>。此外，请注意一点，本文描述的客户端是比较老旧的php-memcache客户端，具体参看<a title="PHP的两个memcached客户端 – memcache和memcached" href="http://xenojoshua.com/2011/04/two-php-client-for-memcached/">这里</a>。</p>
 <p>在上文中描述的一致性哈希算法在php自带的客户端里也是可以使用的。简单来说就是php的ini配置文件里就可以指定memcache客户端在哈希的时候使用什么方法，是使用standard的老方法，还是consistent的一致性算法。在ini文件中添加memcache.hash_strategy这一项就好。</p>
 <p>参考php.net网站：<a href="http://cn.php.net/manual/en/memcache.ini.php">http://cn.php.net/manual/en/memcache.ini.php</a></p>
@@ -127,6 +165,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -134,8 +174,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

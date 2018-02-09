@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -108,7 +147,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2><a href="/uploads/2012/02/book-big.jpg"><img class="alignleft size-thumbnail wp-image-2188" title="book-big" alt="" src="/assets/book-big-150x150.jpg" width="150" height="150" data-pinit="registered" /></a>0. 写在最前</h2>
 <p>基本上所有的经验都来自一本很好的书：Pro Git。网上能直接看到内容，点<a title="Pro Git" href="http://progit.org/book/" target="_blank">这里</a>，我给出的链接是英文的，最下面的链接能直接转成中文的。</p>
 <p>此外，git官方的guide也值得一读，地址在<a title="github:help - Set Up Git(MAC)" href="http://help.github.com/mac-set-up-git/" target="_blank">这里</a>，这篇文章里不单有很详细的设定细节（主要看这个），还有几篇简单的tutorial。</p>
@@ -194,6 +232,8 @@ git config --global github.token 账户设置页面上能找到的API Token</pre
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -201,8 +241,6 @@ git config --global github.token 账户设置页面上能找到的API Token</pre
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

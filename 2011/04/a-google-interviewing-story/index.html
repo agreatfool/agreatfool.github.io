@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -106,7 +145,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>很多年前我进入硅谷人才市场，当时是想找一份高级工程师的职位。如果你有一段时间没有面试过，根据经验，有个非常有用的提醒你应该接受，就是：你往往会在前几次面试中的什么地方犯一些错误。简单而言就是，不要首先去你梦想的公司里面试。面试中有多如牛毛的应该注意的问题，你可能全部忘记了，所以，先去几个不太重要的公司里面试，它们会在这些方面对你起教育(再教育)作用。</p>
 <p>我第一家面试的公司叫做gofish.com，据我所知，gofish这家公司如今的情况跟我当时面试时完全的不同。我几乎能打保票的说，当时我在那遇到的那些人都已不再那工作了，这家公司的实际情况跟我们这个故事并不是很相关。但在其中的面试却是十分相关的。对我进行技术性面试的人是一个叫做Guy的家伙。</p>
 <p>Guy穿了一条皮裤子。众所周知，穿皮裤子的面试官通常是让人“格外”恐怖的。而Guy也没有任何让人失望的意思。他同样也是一个技术难题终结者。而且是一个穿皮裤子的技术难题终结者 —— 真的，我做不到他那样。</p>
@@ -175,6 +213,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -182,8 +222,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

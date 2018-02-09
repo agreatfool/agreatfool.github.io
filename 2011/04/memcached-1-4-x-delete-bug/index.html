@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>最近一阵在PHP开发的时候一直困扰于memcached的版本问题。之前在开发的时候一直使用的是memcached-1.2.x，然后因为一系列的原因需要将memcached的版本提升到最新的稳定版1.4.5。upgrade之后发现很多奇奇怪怪的问题发生，以前一直没时间去看，今天仔细看了下，终于找到原因了。</p>
 <p>问题发生的源头是delete操作，如果查看php.net上的memcache(PECL)手册的话，可以看到delete操作是可以给出第二个参数的，虽然客户端会在没有的时候给一个默认的0。现在问题就出在这个delete上，从1.4.x开始（我观察到的是1.4.5，虽然很多帖子说从1.4.3开始就有这个bug了），客户端在进行delete操作的时候，都需要附上第二个参数，默认的0必须自己给出，不能让客户端自己填上。当然，理由我还是不太明白，为什么会出现这样的情况。</p>
 <p>附上PECL官方的bug网页：<a href="http://pecl.php.net/bugs/bug.php?id=16927">http://pecl.php.net/bugs/bug.php?id=16927</a></p>
@@ -124,6 +162,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -131,8 +171,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

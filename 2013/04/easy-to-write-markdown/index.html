@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>实在是找不到适合放这篇文章的分类目录，也不希望因为单独第一篇文章就创建一个分类目录。因为使用的方式和IDE比较接近，反正都是输入内容，然后输出想要的格式，所以就放IDE里了，囧。</p>
 <p>第一次接触到Markdown是在使用<a title="Trello" href="http://trello.com" target="_blank">Trello</a>的时候，trello的description还有comment两个输入栏默认就是markdown输入格式。那时候第一次编辑markdown，也不知道语法，写出来的东西感觉好怪异，总是有各种特殊格式。后来在看很多开源项目的readme的时候，发现都是README.md，都是markdown格式。就兴起了尝试下的想法。</p>
 <p>尝试了才有资格说，markdown不愧于它的宣传：“易于阅读，易于书写”。写起来一点难度都没有，而且非常符合人类自然的书写方式，没有像HTML那样的过多格式，看起来也很舒服，已经能满足绝大多数的富语言表达。</p>
@@ -126,6 +164,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -133,8 +173,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

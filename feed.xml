@@ -7,14 +7,452 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>Protobuf中的Options功能</title>
-				<description>&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;之前的工作中使用&lt;a href=&quot;https://developers.google.com/protocol-buffers/&quot;&gt;Protobuf&lt;/a&gt;基本上都只用到了最简单的部分，最近做的基于&lt;a href=&quot;https://grpc.io/docs/&quot;&gt;gRPC&lt;/a&gt;的框架&lt;a href=&quot;https://github.com/agreatfool/SASDN&quot;&gt;SASDN&lt;/a&gt;虽然重度使用了Protobuf，但其实还只是基础功能的使用。&lt;/p&gt;
+				<title>探讨gRPC的Node技术生态及实现工具</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-grpc生态技术点&quot; id=&quot;markdown-toc-2-grpc生态技术点&quot;&gt;2. gRPC生态技术点&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-grpcgrpc-node&quot; id=&quot;markdown-toc-3-grpcgrpc-node&quot;&gt;3. &lt;a href=&quot;https://github.com/grpc/grpc-node&quot; target=&quot;_blank&quot;&gt;grpc/grpc-node&lt;/a&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-代码库拆分的问题&quot; id=&quot;markdown-toc-31-代码库拆分的问题&quot;&gt;3.1 代码库拆分的问题&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#32-生态功能点支持&quot; id=&quot;markdown-toc-32-生态功能点支持&quot;&gt;3.2 生态功能点支持&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-grpc&quot; id=&quot;markdown-toc-33-grpc&quot;&gt;3.3 grpc&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#34-grpc-tools&quot; id=&quot;markdown-toc-34-grpc-tools&quot;&gt;3.4 grpc-tools&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#35-技术问题&quot; id=&quot;markdown-toc-35-技术问题&quot;&gt;3.5 技术问题&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-protobufjs&quot; id=&quot;markdown-toc-4-protobufjs&quot;&gt;4. &lt;a href=&quot;https://github.com/dcodeIO/protobuf.js&quot; target=&quot;_blank&quot;&gt;protobuf.js&lt;/a&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-生态功能点支持&quot; id=&quot;markdown-toc-41-生态功能点支持&quot;&gt;4.1 生态功能点支持&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#42-技术问题&quot; id=&quot;markdown-toc-42-技术问题&quot;&gt;4.2 技术问题&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-grpc-gateway&quot; id=&quot;markdown-toc-5-grpc-gateway&quot;&gt;5. &lt;a href=&quot;https://github.com/grpc-ecosystem/grpc-gateway&quot; target=&quot;_blank&quot;&gt;grpc-gateway&lt;/a&gt;&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#51-生态功能点支持&quot; id=&quot;markdown-toc-51-生态功能点支持&quot;&gt;5.1 生态功能点支持&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#6-结论&quot; id=&quot;markdown-toc-6-结论&quot;&gt;6. 结论&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-其他&quot; id=&quot;markdown-toc-7-其他&quot;&gt;7. 其他&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#8-资料&quot; id=&quot;markdown-toc-8-资料&quot;&gt;8. 资料&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;直到最近的一个&lt;a href=&quot;https://github.com/agreatfool/grpc_tools_node_protoc_ts/issues/10&quot;&gt;Issue&lt;/a&gt;之前，我都没关注过Protobuf的Options功能。后面简单了解了下这个功能，这里做下笔记。本文仅粗浅介绍该功能，并不会有很深入的探讨。&lt;/p&gt;
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://grpc.io/docs/&quot; target=&quot;_blank&quot;&gt;gRPC&lt;/a&gt;是谷歌出品的一个RPC库，从使用上来说，大厂的技术实力和维护保障还是比较有说服力的，因此选择这个技术投入生产的技术人还不少。gRPC作为一款跨语言的技术栈，各语言都有针对性的客户端实现，也包含了JavaScript。因此各语言各自的实现及技术生态都不尽相同。&lt;/p&gt;
+
+&lt;p&gt;本文的主旨是就现在gRPC的Node技术生态进行简单的介绍及实际工具选择进行分析。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-grpc生态技术点&quot;&gt;2. gRPC生态技术点&lt;/h1&gt;
+&lt;p&gt;首先简单看一下，如果要构成一个高自动化程度的gRPC技术生态需要哪些技术点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;A. 使用proto定义文件解决所有的消息及数据结构的定义（Protobuf官方支持）&lt;/li&gt;
+  &lt;li&gt;B. 使用proto定义文件解决所有的RPC输入输出定义（Protobuf对gRPC的官方支持）&lt;/li&gt;
+  &lt;li&gt;C. 使用proto定义文件解决所有的HTTP Gateway输入输出定义（官方不支持，需第三方实现）&lt;/li&gt;
+  &lt;li&gt;D. 能根据proto定义输出对外的说明文档，含数据模型及API接口（官方不支持，需第三方实现）&lt;/li&gt;
+  &lt;li&gt;E. 能根据proto定义产生静态JS源代码文件（官方支持，且也有不错的第三方实现）&lt;/li&gt;
+  &lt;li&gt;F. 能根据proto定义产生JS源代码对应的TypeScript定义（官方不支持，需要第三方实现）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这样就做到了程序员只需要定义一份proto文件，然后所有的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;数据模型代码&lt;/li&gt;
+  &lt;li&gt;RPC接口代码&lt;/li&gt;
+  &lt;li&gt;Gateway接口代码&lt;/li&gt;
+  &lt;li&gt;代码对应的TypeScript定义&lt;/li&gt;
+  &lt;li&gt;文档&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;都能够自动生成，然后程序员只需要专注在自己的业务代码上即可。&lt;/p&gt;
+
+&lt;p&gt;RPC生态中列出的几点需求点，现在主要有几个工具可以作为解决方案（暂且先不论文档和Gateway等功能）。下面主要过一下这几个工具。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-grpcgrpc-node&quot;&gt;3. &lt;a href=&quot;https://github.com/grpc/grpc-node&quot; target=&quot;_blank&quot;&gt;grpc/grpc-node&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;grpc官方的支持库。文档极度匮乏，这个库其实是一个集合类型的东西，不算是真正意义上的很清晰的项目代码库。里面有意义的主要是两个：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;grpc：
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc&quot; target=&quot;_blank&quot;&gt;npm&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-js-core/src&quot; target=&quot;_blank&quot;&gt;JS源码&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-native-core&quot; target=&quot;_blank&quot;&gt;C语言Addone源码&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;Node的gRPC实现，其实是一个基于Node的C++ Addone，在Node下要用gRPC就一定要装这个库。但也正由于是Addone形式，导致很多需要深入查看的地方查到后面都发现是桥接代码，并没有真正的JS实现代码。在debug和深入研究的时候容易出现障碍，有时候不得不去看C++的源码。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;grpc-tools：
+    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc-tools&quot; target=&quot;_blank&quot;&gt;npm&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-tools&quot; target=&quot;_blank&quot;&gt;源码&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;gRPC官方的工具，其实就是个代码生成插件，用在protoc命令行执行的时候&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;31-代码库拆分的问题&quot;&gt;3.1 代码库拆分的问题&lt;/h2&gt;
+&lt;p&gt;Node的gRPC代码之前是放在gRPC主库里面的，但在后面的版本中分离了出来，这里可能会有部分资料的分裂和资源难以查找的问题，因此这里单独列一个段落对这块进行描述。&lt;/p&gt;
+
+&lt;p&gt;这个库作为Node的gRPC主库单独分离出来是在grpc的1.7.0版本之后，查看：&lt;a href=&quot;https://github.com/grpc/grpc/releases/tag/v1.7.0&quot; target=&quot;_blank&quot;&gt;grpc release 1.7.0&lt;/a&gt;。之前两者是放在同一个git库里的。&lt;/p&gt;
+
+&lt;p&gt;所以在&lt;a href=&quot;https://github.com/grpc/grpc-node&quot; target=&quot;_blank&quot;&gt;grpc/grpc-node&lt;/a&gt;这个库的&lt;a href=&quot;https://github.com/grpc/grpc-node/releases&quot; target=&quot;_blank&quot;&gt;release&lt;/a&gt;里你是找不到1.7.0之前的版本的。&lt;/p&gt;
+
+&lt;p&gt;但供Node使用的npm上的grpc安装包则一直是这一个库，没有改动，可以放心使用。查看历史版本可以使用命令：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;npm view grpc time&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;部分老版本的grpc在npm上存在，但实际安装可能会有编译，可以参考&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-native-core&quot; target=&quot;_blank&quot;&gt;这篇文档&lt;/a&gt;从源码开始安装。&lt;/p&gt;
+
+&lt;h2 id=&quot;32-生态功能点支持&quot;&gt;3.2 生态功能点支持&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;
+可以看到这套技术解决方案除了最核心的技术点之外，外围周边的东西都是不支持的。从现在官方对核心那块的研发支持的度上来说，就不难理解为什么很有用的外围技术点就更加没有支持了。&lt;/p&gt;
+
+&lt;h2 id=&quot;33-grpc&quot;&gt;3.3 grpc&lt;/h2&gt;
+&lt;p&gt;教程文档可以在&lt;a href=&quot;https://grpc.io/docs/tutorials/basic/node.html&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;找到。比较有价值的sample基本上都在代码文件的文件夹里。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;$ git clone -b v1.9.x https://github.com/grpc/grpc  &lt;br /&gt;
+  $ cd grpc  &lt;br /&gt;
+  $ cd examples/node&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;从这里就可以看出来拆分还是不彻底，库和文档主要部分都拆开了，但示例代码居然仍旧在grpc库里。&lt;/p&gt;
+
+&lt;h2 id=&quot;34-grpc-tools&quot;&gt;3.4 grpc-tools&lt;/h2&gt;
+&lt;p&gt;grpc-tools没有README入口文档。使用文档放在一个很幺二三的角落：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/examples/node/static_codegen/README.md&quot; target=&quot;_blank&quot;&gt;grpc/examples/node/static_codegen/README.md&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;e.g&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;cd ../../protos  &lt;br /&gt;
+  npm install -g grpc-tools  &lt;br /&gt;
+  grpc_tools_node_protoc –js_out=import_style=commonjs,binary:../node/static_codegen/ –grpc_out=../node/static_codegen –plugin=protoc-gen-grpc=&lt;code&gt;which grpc_tools_node_protoc_plugin&lt;/code&gt; helloworld.proto  &lt;br /&gt;
+  grpc_tools_node_protoc –js_out=import_style=commonjs,binary:../node/static_codegen/route_guide/ –grpc_out=../node/static_codegen/route_guide/ –plugin=protoc-gen-grpc=&lt;code&gt;which grpc_tools_node_protoc_plugin&lt;/code&gt; route_guide.proto&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;生成的代码范例如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/5e3a41052c6dd2f6d04b30901fc0269b&quot; target=&quot;_blank&quot;&gt;范例proto文件&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/97d87bfe2ea6e2d2db209fc278b17ef7&quot; target=&quot;_blank&quot;&gt;生成的代码文件&lt;/a&gt;，请忽略&lt;code&gt;d.ts&lt;/code&gt;文件，这些代码文件是别的工具生成的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;35-技术问题&quot;&gt;3.5 技术问题&lt;/h2&gt;
+&lt;p&gt;官方的这套grpc-node解决方案有几个问题还是比较麻烦的，最主要的有几点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;使用grpc-tools工具生成出来的JS代码：
+    &lt;ul&gt;
+      &lt;li&gt;语法上非常古老，还是上个世代的JS语法，实在不能说是很好的使用体验，和现在的现代化JS项目格格不入&lt;/li&gt;
+      &lt;li&gt;虽然是JS代码，但囿于grpc整体的设计，生成出来的代码语言特性上更接近Java和C++，而不是JS&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;运行时使用的&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-native-core/src&quot; target=&quot;_blank&quot;&gt;grpc的js代码&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;语法上非常古老，还是上个世代的JS语法，实在不能说是很好的使用体验，和现在的现代化JS项目格格不入&lt;/li&gt;
+      &lt;li&gt;其实就是包裹在C++Addone上的一层桥接，在需要debug的时候各种看不懂，还需要去研究C++源码&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;异步调用的处理：
+    &lt;ul&gt;
+      &lt;li&gt;囿于grpc的消息处理设计，async/await、甚至退一步说 Promise，在grpc现在的JS代码中都是无法使用的&lt;/li&gt;
+      &lt;li&gt;早的有&lt;a href=&quot;https://github.com/grpc/grpc/issues/8592&quot; target=&quot;_blank&quot;&gt;[Features] Node client support Promise&lt;/a&gt;进行过讨论，无疾而终&lt;/li&gt;
+      &lt;li&gt;近一点的也有&lt;a href=&quot;https://github.com/grpc/grpc-node/issues/54&quot; target=&quot;_blank&quot;&gt;[NodeJS] Promises and async/await&lt;/a&gt;进行过类似话题的讨论，但也没有结论。在这个帖子里，官方人员也解释了设计上的难点&lt;/li&gt;
+      &lt;li&gt;当然也有第三方的库尝试解决这个问题，&lt;a href=&quot;https://github.com/bojand/grpc-caller&quot; target=&quot;_blank&quot;&gt;bojand/grpc-caller&lt;/a&gt;就是一个，但始终也只是个玩具&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;主要的问题还是在于更新的支持力度上，代码版本过于古早，技术上需要发点力才能解决的异步处理等等，都没有推进。现在的状态就是，能用，但离理想状态还太遥远。特别是生成出来的JS代码以及grpc的JS代码还不支持TS定义（生成），在TS使用者眼里看来，简直完全等于不可用了。&lt;/p&gt;
+
+&lt;p&gt;不过好在新的纯JS实现的&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-js-core/src&quot; target=&quot;_blank&quot;&gt;JS源码&lt;/a&gt;（研发中），让人对未来抱有期待。此外，1.7.0版本之后官方也带了grpc自身的JS的TS定义，总算是可以用了。我这边也研发了一个&lt;a href=&quot;https://github.com/agreatfool/grpc_tools_node_protoc_ts&quot; target=&quot;_blank&quot;&gt;protoc的插件&lt;/a&gt;，帮助生成被生成出来的JS那份的TS定义，算是圆上了生态。&lt;/p&gt;
+
+&lt;h1 id=&quot;4-protobufjs&quot;&gt;4. &lt;a href=&quot;https://github.com/dcodeIO/protobuf.js&quot; target=&quot;_blank&quot;&gt;protobuf.js&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;这是一款第三方制作的开源Protobuf解析库，需要注意的是，这个库的偏向是&lt;code&gt;面向Protobuf&lt;/code&gt;，它主要服务的是Protobuf的解析，以及对应protobuf的JS代码生成，RPC并不是它的主要方向。&lt;/p&gt;
+
+&lt;p&gt;资源：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/protobufjs&quot; target=&quot;_blank&quot;&gt;npm&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/dcodeIO/ProtoBuf.js&quot; target=&quot;_blank&quot;&gt;源码&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;教程文档直接看官方的README文档就差不多了，写得非常好，grpc官方的文档和它完全不能比。&lt;/p&gt;
+
+&lt;p&gt;需要注意的主要是用来代码生成的命令行工具的教程，官方文档：&lt;a href=&quot;ttps://github.com/dcodeIO/protobuf.js#command-line&quot; target=&quot;_blank&quot;&gt;Command line&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;生成出来的代码和grpc-tools有很大差别，可以比对查看下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/5e3a41052c6dd2f6d04b30901fc0269b&quot; target=&quot;_blank&quot;&gt;范例proto文件&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/5c49dad4f3360d4b49895232c8a24347&quot; target=&quot;_blank&quot;&gt;生成的代码文件&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/97d87bfe2ea6e2d2db209fc278b17ef7&quot; target=&quot;_blank&quot;&gt;grpc生成的代码文件&lt;/a&gt;，请忽略&lt;code&gt;d.ts&lt;/code&gt;文件，这些代码文件是别的工具生成的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;生成出来的代码文件是一个大而全的&lt;code&gt;compiled.js&lt;/code&gt;，此外&lt;code&gt;int64&lt;/code&gt;类型转换成了它自己的一个子工具库&lt;a href=&quot;https://github.com/dcodeIO/long.js&quot; target=&quot;_blank&quot;&gt;dcodeIO/long.js&lt;/a&gt;需要注意。&lt;/p&gt;
+
+&lt;h2 id=&quot;41-生态功能点支持&quot;&gt;4.1 生态功能点支持&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;
+这套技术解决方案相比官方的grpc方案，多了一个TypeScript支持。且，其代码生成都是基于ES6最新的语言规范支持，对于最新的JS和TS开发者来说都非常友好。而且接口设计上也&lt;code&gt;更JS&lt;/code&gt;：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;所有的对象 attributes 都是使用 getter 和 setter 进行访问的，而不是类Java那种的 setXXX、getXXX&lt;/li&gt;
+  &lt;li&gt;对象的创建可以直接使用&lt;code&gt;create(object)&lt;/code&gt;的方式来进行，代码上简化不少，不会有grpc官方的 let xxx = new XXX；接着一串 xxx.setXXX&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;总而言之，无论是看还是写，都比官方的代码要好上不止一点。&lt;/p&gt;
+
+&lt;p&gt;虽然Gateway和文档的生成仍旧不支持，当然这是基于它的定位，这部分本来就不在它的涉足范围内。&lt;/p&gt;
+
+&lt;h2 id=&quot;42-技术问题&quot;&gt;4.2 技术问题&lt;/h2&gt;
+&lt;p&gt;这里说的技术问题说实在的也不能说是&lt;code&gt;问题&lt;/code&gt;，主要是基于当前Topic的&lt;code&gt;gRPC&lt;/code&gt;这个基准而产生的使用上的问题。问题来自我介绍这个库时候一开始说的，它是&lt;code&gt;面向Protobuf&lt;/code&gt;，而不是&lt;code&gt;gRPC&lt;/code&gt;。因此在设计上，这个库给予使用者选择rpc框架的自由，代码中的rpc部分只给出了接口，实现部分需要自己处理。&lt;/p&gt;
+
+&lt;p&gt;因此如果你是一个gRPC的用户，根本不考虑其他的库的话，那么使用Protobuf.js需要额外付出劳力对这块进行整合。&lt;/p&gt;
+
+&lt;p&gt;官方的rpc使用教程在：&lt;a href=&quot;https://github.com/dcodeIO/protobuf.js#using-services&quot; target=&quot;_blank&quot;&gt;Using services&lt;/a&gt;
+官方的范例代码在：&lt;a href=&quot;https://github.com/dcodeIO/protobuf.js/blob/master/examples/streaming-rpc.js&quot; target=&quot;_blank&quot;&gt;examples/streaming-rpc.js&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;可能是因为最新的版本出来时间还不久，关于如何在Protobuf.js里集成使用rpc的讨论非常非常少，简单搜了一圈，基本上没有官方的，或者三方的gRPC整合教程，如果要使用的话，可以预期会有大量的时间投入。这基本上能算是协同Protobuf.js组建gRPC生态的最大问题了。&lt;/p&gt;
+
+&lt;p&gt;这里还有一个设计相关的讨论帖：&lt;a href=&quot;https://github.com/dcodeIO/protobuf.js/issues/529&quot; target=&quot;_blank&quot;&gt;Streaming RPCs / GRPC Compatibility&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;5-grpc-gateway&quot;&gt;5. &lt;a href=&quot;https://github.com/grpc-ecosystem/grpc-gateway&quot; target=&quot;_blank&quot;&gt;grpc-gateway&lt;/a&gt;&lt;/h1&gt;
+&lt;p&gt;这个项目隶属于一个名叫&lt;a href=&quot;https://github.com/grpc-ecosystem&quot; target=&quot;_blank&quot;&gt;gRPC Ecosystem&lt;/a&gt;的官方群组。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;gRPC Ecosystem that complements gRPC&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;总的来说算是一些补足gRPC生态的边角料项目的组合。&lt;/p&gt;
+
+&lt;p&gt;这个群组里看下来最有意义的应该说就是这个项目了，核心的设计和工作目标可以看&lt;a href=&quot;https://camo.githubusercontent.com/e75a8b46b078a3c1df0ed9966a16c24add9ccb83/68747470733a2f2f646f63732e676f6f676c652e636f6d2f64726177696e67732f642f3132687034435071724e5046686174744c5f63496f4a707446766c41716d35774c513067677149356d6b43672f7075623f773d37343926683d333730&quot; target=&quot;_blank&quot;&gt;这张图&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;简单来说就是可以根据protobuf的（扩展）定义，生成对应的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;swagger.json 配合&lt;a href=&quot;https://swagger.io/&quot; target=&quot;_blank&quot;&gt;swagger&lt;/a&gt;生态使用&lt;/li&gt;
+  &lt;li&gt;生成Gateway代码，注意这个项目是Go语言的，因此生成出来的代码也是Go语言的&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;用到了非标准的&lt;code&gt;annotation&lt;/code&gt;，主要是在proto文件中引入了额外的官方proto定义：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;import “google/api/annotations.proto”;&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个引入的proto还引入了两个其他的proto，总共3个proto文件，如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto&quot; target=&quot;_blank&quot;&gt;googleapis/google/api/annotations.proto&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/googleapis/googleapis/blob/master/google/api/http.proto&quot; target=&quot;_blank&quot;&gt;googleapis/google/api/http.proto&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/google/protobuf/blob/master/src/google/protobuf/descriptor.proto&quot; target=&quot;_blank&quot;&gt;protobuf/src/google/protobuf/descriptor.proto&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;作为Node来说，主要能拿到生成出来的swagger文件，后面的gateway代码生成也就简单了。&lt;/p&gt;
+
+&lt;h2 id=&quot;51-生态功能点支持&quot;&gt;5.1 生态功能点支持&lt;/h2&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;
+简单来说这套工具主要能弥补之前提到的两套工具的Gateway方面短板，补全整个生态。&lt;/p&gt;
+
+&lt;h1 id=&quot;6-结论&quot;&gt;6. 结论&lt;/h1&gt;
+&lt;p&gt;从目前来看，用Node.js和TypeScript来构建gRPC生态架构还是非常乐观的：&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;
+除了文档的生成之外，其他的功能点基本上都有工具可以覆盖到。此外官方的TypeScript定义也已经正式上线，并在积极更新，可以期待后续的发展。&lt;/p&gt;
+
+&lt;p&gt;技术选型：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果对于自己的技术团队有自信，并有时间和精力能适配Protobuf.js的rpc实现的话，那么Protobuf.js应该说是一个更现代化、更新更高速、更好的选择&lt;/li&gt;
+  &lt;li&gt;如果对于时间和精力没有余裕，更愿意相信官方的话，那么grpc官方的工具套件可以说是一个虽然读写不是很完美，但功能完备更有稳定性保障的选择&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;总而言之，如何选择端看需求和自身的条件情况。&lt;/p&gt;
+
+&lt;h1 id=&quot;7-其他&quot;&gt;7. 其他&lt;/h1&gt;
+&lt;p&gt;其他还有一些工具也能起到补助作用这里简单列下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/ts-protoc-gen&quot; target=&quot;_blank&quot;&gt;ts-protoc-gen&lt;/a&gt;：Protoc Plugin for TypeScript Declarations&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc_tools_node_protoc_ts&quot; target=&quot;_blank&quot;&gt;grpc_tools_node_protoc_ts&lt;/a&gt;：Generate corresponding TypeScript d.ts codes according to js codes generated by grpc_tools_node_protoc&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc-tsd&quot; target=&quot;_blank&quot;&gt;grpc-tsd&lt;/a&gt;：Maintain a grpc.d.ts file for gRPC TypeScript project.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;8-资料&quot;&gt;8. 资料&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc/releases&quot; target=&quot;_blank&quot;&gt;grpc主库release&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Tue, 06 Feb 2018 16:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/02/grpc-node-ecosystem/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/02/grpc-node-ecosystem/</guid>
+			</item>
+		
+			<item>
+				<title>Protobuf中的Options功能</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-释义&quot; id=&quot;markdown-toc-2-释义&quot;&gt;2. 释义&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-deprecated&quot; id=&quot;markdown-toc-21-deprecated&quot;&gt;2.1 deprecated&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-jstype&quot; id=&quot;markdown-toc-22-jstype&quot;&gt;2.2 jstype&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-功能全集&quot; id=&quot;markdown-toc-3-功能全集&quot;&gt;3. 功能全集&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-自定义option&quot; id=&quot;markdown-toc-4-自定义option&quot;&gt;4. 自定义Option&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;之前的工作中使用&lt;a href=&quot;https://developers.google.com/protocol-buffers/&quot; target=&quot;_blank&quot;&gt;Protobuf&lt;/a&gt;基本上都只用到了最简单的部分，最近做的基于&lt;a href=&quot;https://grpc.io/docs/&quot;&gt;gRPC&lt;/a&gt;的框架&lt;a href=&quot;https://github.com/agreatfool/SASDN&quot; target=&quot;_blank&quot;&gt;SASDN&lt;/a&gt;虽然重度使用了Protobuf，但其实还只是基础功能的使用。&lt;/p&gt;
+
+&lt;p&gt;直到最近的一个&lt;a href=&quot;https://github.com/agreatfool/grpc_tools_node_protoc_ts/issues/10&quot; target=&quot;_blank&quot;&gt;Issue&lt;/a&gt;之前，我都没关注过Protobuf的Options功能。后面简单了解了下这个功能，这里做下笔记。本文仅粗浅介绍该功能，并不会有很深入的探讨。&lt;/p&gt;
 
 &lt;h1 id=&quot;2-释义&quot;&gt;2. 释义&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&quot;https://developers.google.com/protocol-buffers/docs/proto3#options&quot;&gt;官方文档&lt;/a&gt;上，关于Options的介绍如下：&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://developers.google.com/protocol-buffers/docs/proto3#options&quot; target=&quot;_blank&quot;&gt;官方文档&lt;/a&gt;上，关于Options的介绍如下：&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Individual declarations in a .proto file can be annotated with a number of options. Options do not change the overall meaning of a declaration, but may affect the way it is handled in a particular context. The complete list of available options is defined in &lt;code&gt;google/protobuf/descriptor.proto&lt;/code&gt;.&lt;/p&gt;
@@ -38,7 +476,7 @@
 &lt;p&gt;在field定义后面添加这样一点代码就能在Java里生成一段&lt;code&gt;@Deprecated&lt;/code&gt; annotation。根据语言的不同，从这个option而产生的编译反应可能各不相同，这就是option的作用。&lt;/p&gt;
 
 &lt;h2 id=&quot;22-jstype&quot;&gt;2.2 jstype&lt;/h2&gt;
-&lt;p&gt;官方解释说明：&lt;a href=&quot;https://github.com/google/protobuf/blob/cefa9d73e3ce62b080fda0b306bbeb67a6fc2efa/src/google/protobuf/descriptor.proto#L494&quot;&gt;descriptor.proto@3.4.x#L494&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;官方解释说明：&lt;a href=&quot;https://github.com/google/protobuf/blob/cefa9d73e3ce62b080fda0b306bbeb67a6fc2efa/src/google/protobuf/descriptor.proto#L494&quot; target=&quot;_blank&quot;&gt;descriptor.proto@3.4.x#L494&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;The jstype option determines the JavaScript type used for values of the field.  The option is permitted only for 64 bit integral and fixed types(int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING is represented as JavaScript string, which avoids loss of precision that can happen when a large value is converted to a floating point JavaScript. Specifying JS_NUMBER for the jstype causes the generated JavaScript code to use the JavaScript “number” type.  The behavior of the default option JS_NORMAL is implementation dependent.&lt;/p&gt;
@@ -53,7 +491,7 @@
 &lt;p&gt;这个option帮助proto确定在生成代码的时候当前字段应该使用JS代码中的什么类型。在int64这种超长数字类型转换成JS代码的时候很有用，如果按数字类型定义直接把int64转换成原生JS代码中的number就会发生精度丢失。很多时候我们可以选择把int64转成字符串来保留内容。&lt;/p&gt;
 
 &lt;h1 id=&quot;3-功能全集&quot;&gt;3. 功能全集&lt;/h1&gt;
-&lt;p&gt;Options的全集在文档里是没有完整描述的，需要查看的时候请查看对应的代码：&lt;a href=&quot;https://github.com/google/protobuf/blob/3.4.x/src/google/protobuf/descriptor.proto&quot;&gt;descriptor.proto&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Options的全集在文档里是没有完整描述的，需要查看的时候请查看对应的代码：&lt;a href=&quot;https://github.com/google/protobuf/blob/3.4.x/src/google/protobuf/descriptor.proto&quot; target=&quot;_blank&quot;&gt;descriptor.proto&lt;/a&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;The complete list of available options is defined in &lt;code&gt;google/protobuf/descriptor.proto&lt;/code&gt;.&lt;/p&gt;
@@ -77,7 +515,46 @@
 		
 			<item>
 				<title>Node.JS Profile 1.2 V8 GC详解</title>
-				<description>&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-gc日志&quot; id=&quot;markdown-toc-2-gc日志&quot;&gt;2. GC日志&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-日志启用&quot; id=&quot;markdown-toc-21-日志启用&quot;&gt;2.1 日志启用&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-如何runtime触发gc&quot; id=&quot;markdown-toc-22-如何runtime触发gc&quot;&gt;2.2 如何Runtime触发GC&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#23-常用gc-options输出效果范例&quot; id=&quot;markdown-toc-23-常用gc-options输出效果范例&quot;&gt;2.3 常用GC options输出效果范例&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#24-gc日志图解&quot; id=&quot;markdown-toc-24-gc日志图解&quot;&gt;2.4 GC日志图解&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#options&quot; id=&quot;markdown-toc-options&quot;&gt;options&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#trace_gc&quot; id=&quot;markdown-toc-trace_gc&quot;&gt;–trace_gc&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#trace_gc_nvp&quot; id=&quot;markdown-toc-trace_gc_nvp&quot;&gt;–trace_gc_nvp&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#trace_gc_verbose&quot; id=&quot;markdown-toc-trace_gc_verbose&quot;&gt;–trace_gc_verbose&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-gc日志解析工具&quot; id=&quot;markdown-toc-3-gc日志解析工具&quot;&gt;3. GC日志解析工具&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-aliyun-nodev8-gc-log-parser&quot; id=&quot;markdown-toc-31-aliyun-nodev8-gc-log-parser&quot;&gt;3.1 &lt;a href=&quot;https://github.com/aliyun-node/v8-gc-log-parser&quot; target=&quot;_blank&quot;&gt;aliyun-node/v8-gc-log-parser&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#32-dainisnode-gcstats&quot; id=&quot;markdown-toc-32-dainisnode-gcstats&quot;&gt;3.2 &lt;a href=&quot;https://github.com/dainis/node-gcstats&quot; target=&quot;_blank&quot;&gt;dainis/node-gcstats&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-marcominettinode-memwatch&quot; id=&quot;markdown-toc-33-marcominettinode-memwatch&quot;&gt;3.3 &lt;a href=&quot;https://github.com/marcominetti/node-memwatch&quot; target=&quot;_blank&quot;&gt;marcominetti/node-memwatch&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#34-阿里工具的辅助脚本&quot; id=&quot;markdown-toc-34-阿里工具的辅助脚本&quot;&gt;3.4 阿里工具的辅助脚本&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-nvp日志详解&quot; id=&quot;markdown-toc-4-nvp日志详解&quot;&gt;4. NVP日志详解&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-源码阅读指引&quot; id=&quot;markdown-toc-41-源码阅读指引&quot;&gt;4.1 源码阅读指引&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#heaph&quot; id=&quot;markdown-toc-heaph&quot;&gt;heap.h&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#gc-tracerh&quot; id=&quot;markdown-toc-gc-tracerh&quot;&gt;gc-tracer.h&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#gc-tracercc&quot; id=&quot;markdown-toc-gc-tracercc&quot;&gt;gc-tracer.cc&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#global-handlesh&quot; id=&quot;markdown-toc-global-handlesh&quot;&gt;global-handles.h&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#global-handlescc&quot; id=&quot;markdown-toc-global-handlescc&quot;&gt;global-handles.cc&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-eventscavenger&quot; id=&quot;markdown-toc-41-eventscavenger&quot;&gt;4.1 Event::SCAVENGER&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#42-eventminor_mark_compactor&quot; id=&quot;markdown-toc-42-eventminor_mark_compactor&quot;&gt;4.2 Event::MINOR_MARK_COMPACTOR&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-资料&quot; id=&quot;markdown-toc-5-资料&quot;&gt;5. 资料&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
 &lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
 
 &lt;p&gt;本文是Node内存相关文章的其中一篇，主要负责介绍V8引擎GC相关的详细技术内容。&lt;/p&gt;
@@ -88,14 +565,18 @@
 &lt;h2 id=&quot;21-日志启用&quot;&gt;2.1 日志启用&lt;/h2&gt;
 &lt;p&gt;GC日志需要在命令行启动node的时候添加option来启用，相关的option我找到一个不错的gist，里面有描述，这里fork了下：&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/42456c819018a4bc1a789566c2748b0e.js&quot;&gt; &lt;/script&gt;
 
 &lt;p&gt;而本文撰写时参照的Node版本，支持的GC相关option如下：&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/34dc4c99fe42afdd1dc6a8c43d638edf.js&quot;&gt; &lt;/script&gt;
 
 &lt;h2 id=&quot;22-如何runtime触发gc&quot;&gt;2.2 如何Runtime触发GC&lt;/h2&gt;
@@ -103,15 +584,19 @@
 
 &lt;p&gt;然后在代码里：&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;
+  &lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;nx&quot;&gt;global&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/figure&gt;
 
 &lt;h2 id=&quot;23-常用gc-options输出效果范例&quot;&gt;2.3 常用GC options输出效果范例&lt;/h2&gt;
 &lt;p&gt;范例效果：&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/d50ac9f4f33e386cfc82f4a8e4a60bb6.js&quot;&gt; &lt;/script&gt;
 
 &lt;h2 id=&quot;24-gc日志图解&quot;&gt;2.4 GC日志图解&lt;/h2&gt;
@@ -170,8 +655,10 @@
 &lt;h2 id=&quot;34-阿里工具的辅助脚本&quot;&gt;3.4 阿里工具的辅助脚本&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/aliyun-node/v8-gc-log-parser&quot; target=&quot;_blank&quot;&gt;aliyun-node/v8-gc-log-parser&lt;/a&gt;只支持事后解析静态日志文件并输出结果，但有的时候我们需要查看下实时的情况。这里有一个脚本可以使用：&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js&quot;&gt; &lt;/script&gt;
 
 &lt;p&gt;该脚本暂时不能分析&lt;code&gt;--trace-gc --trace-gc-verbose&lt;/code&gt;的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。有兴趣的可以自己改造下。&lt;/p&gt;
@@ -352,7 +839,40 @@
 		
 			<item>
 				<title>Node.JS Profile 1.1 V8内存机制</title>
-				<description>&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-基础概念&quot; id=&quot;markdown-toc-2-基础概念&quot;&gt;2. 基础概念&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-rss&quot; id=&quot;markdown-toc-21-rss&quot;&gt;2.1 RSS&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-heap&quot; id=&quot;markdown-toc-22-heap&quot;&gt;2.2 Heap&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#23-heap-limit&quot; id=&quot;markdown-toc-23-heap-limit&quot;&gt;2.3 Heap Limit&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-gc&quot; id=&quot;markdown-toc-3-gc&quot;&gt;3. GC&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-gc基础知识&quot; id=&quot;markdown-toc-31-gc基础知识&quot;&gt;3.1 GC基础知识&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#32-堆内存划分&quot; id=&quot;markdown-toc-32-堆内存划分&quot;&gt;3.2 堆内存划分&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#321-内存页基础概念&quot; id=&quot;markdown-toc-321-内存页基础概念&quot;&gt;3.2.1 内存页基础概念&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#322-new-space新生代&quot; id=&quot;markdown-toc-322-new-space新生代&quot;&gt;3.2.2 New Space（新生代）&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#323-old-space老生代&quot; id=&quot;markdown-toc-323-old-space老生代&quot;&gt;3.2.3 Old Space（老生代）&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#324-large-object-space老生代&quot; id=&quot;markdown-toc-324-large-object-space老生代&quot;&gt;3.2.4 Large Object Space（老生代）&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#325-map-space老生代&quot; id=&quot;markdown-toc-325-map-space老生代&quot;&gt;3.2.5 Map Space（老生代）&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#326-code-space老生代&quot; id=&quot;markdown-toc-326-code-space老生代&quot;&gt;3.2.6 Code Space（老生代）&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#327-堆空间页管理抽象memory-allocator&quot; id=&quot;markdown-toc-327-堆空间页管理抽象memory-allocator&quot;&gt;3.2.7 堆空间页管理抽象：Memory Allocator&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#328-堆外内存external-memory&quot; id=&quot;markdown-toc-328-堆外内存external-memory&quot;&gt;3.2.8 堆外内存：External memory&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-gc算法&quot; id=&quot;markdown-toc-33-gc算法&quot;&gt;3.3 GC算法&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#331-新生代scavenge&quot; id=&quot;markdown-toc-331-新生代scavenge&quot;&gt;3.3.1 新生代：Scavenge&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#332-老生代mark-sweepmark-compact&quot; id=&quot;markdown-toc-332-老生代mark-sweepmark-compact&quot;&gt;3.3.2 老生代：Mark-Sweep／Mark-Compact&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#34-orinoco-young-generation-garbage-collection-2017-11-29&quot; id=&quot;markdown-toc-34-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-资料&quot; id=&quot;markdown-toc-4-资料&quot;&gt;4. 资料&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
 &lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
 
 &lt;p&gt;本文是Node内存相关文章的其中一篇，主要负责介绍内存相关的基础知识，及Node V8内存相关的一些理论知识，为读者打好基础方便后续内存实践相关知识点的理解。&lt;/p&gt;
@@ -385,14 +905,18 @@
 
 &lt;p&gt;以下是一个简单的范例，如何查看堆内存，注意查看&lt;code&gt;heap_size_limit&lt;/code&gt;字段的值。&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/e3ab8817d882bc74b3cee58974f11096.js&quot;&gt; &lt;/script&gt;
 
 &lt;p&gt;这个堆大小可以用过v8参数flag&lt;code&gt;--max-old-space-size&lt;/code&gt;来修改，单位是&lt;code&gt;MB&lt;/code&gt;。&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/c7ad7c782c6a293b15f54e12c8793970.js&quot;&gt; &lt;/script&gt;
 
 &lt;p&gt;遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。&lt;/p&gt;
@@ -625,7 +1149,47 @@
 		
 			<item>
 				<title>Node.JS Profile</title>
-				<description>&lt;h1 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h1&gt;
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#0-前言&quot; id=&quot;markdown-toc-0-前言&quot;&gt;0. 前言&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#版本信息&quot; id=&quot;markdown-toc-版本信息&quot;&gt;版本信息&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-内存&quot; id=&quot;markdown-toc-1-内存&quot;&gt;1. 内存&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-资料&quot; id=&quot;markdown-toc-2-资料&quot;&gt;2. 资料&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-node相关&quot; id=&quot;markdown-toc-21-node相关&quot;&gt;2.1 Node相关&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-v8--内存&quot; id=&quot;markdown-toc-22-v8--内存&quot;&gt;2.2 V8 &amp;amp; 内存&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#23-chrome-dev-tool&quot; id=&quot;markdown-toc-23-chrome-dev-tool&quot;&gt;2.3 Chrome Dev Tool&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#24-专栏--博客&quot; id=&quot;markdown-toc-24-专栏--博客&quot;&gt;2.4 专栏 &amp;amp; 博客&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-内存metrics-api&quot; id=&quot;markdown-toc-33-内存metrics-api&quot;&gt;3.3 内存Metrics API&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#331-processmemoryusage&quot; id=&quot;markdown-toc-331-processmemoryusage&quot;&gt;3.3.1 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage&quot;&gt;process.memoryUsage&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#332-requirev8getheapstatistics&quot; id=&quot;markdown-toc-332-requirev8getheapstatistics&quot;&gt;3.3.2 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics&quot;&gt;require(“v8”).getHeapStatistics&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#333-requirev8getheapspacestatistics&quot; id=&quot;markdown-toc-333-requirev8getheapspacestatistics&quot;&gt;3.3.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#334-top--ps&quot; id=&quot;markdown-toc-334-top--ps&quot;&gt;3.3.4 top &amp;amp; ps&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#35-内存泄露--chrome-dev-tool&quot; id=&quot;markdown-toc-35-内存泄露--chrome-dev-tool&quot;&gt;3.5 内存泄露 &amp;amp; Chrome Dev Tool&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#351-范例&quot; id=&quot;markdown-toc-351-范例&quot;&gt;3.5.1 范例&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#352-查找问题&quot; id=&quot;markdown-toc-352-查找问题&quot;&gt;3.5.2 查找问题&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#36-核心内存metrics&quot; id=&quot;markdown-toc-36-核心内存metrics&quot;&gt;3.6 核心内存Metrics&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#361-node内存&quot; id=&quot;markdown-toc-361-node内存&quot;&gt;3.6.1 Node内存&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#362-node-gc&quot; id=&quot;markdown-toc-362-node-gc&quot;&gt;3.6.2 Node GC&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-性能知识点---eventloop&quot; id=&quot;markdown-toc-4-性能知识点---eventloop&quot;&gt;4. 性能知识点 - EventLoop&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-工具&quot; id=&quot;markdown-toc-5-工具&quot;&gt;5. 工具&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#51-内存泄露--内存正常-范例脚本&quot; id=&quot;markdown-toc-51-内存泄露--内存正常-范例脚本&quot;&gt;5.1 内存泄露 || 内存正常 范例脚本&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#52-gc解析管道脚本&quot; id=&quot;markdown-toc-52-gc解析管道脚本&quot;&gt;5.2 GC解析管道脚本&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#53-nimnodejs-调试管理工具&quot; id=&quot;markdown-toc-53-nimnodejs-调试管理工具&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h1&gt;
 &lt;p&gt;知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。&lt;/p&gt;
 
 &lt;p&gt;本文主要在于以下几个方面，不局限于狭义的&lt;code&gt;profile&lt;/code&gt;或&lt;code&gt;profiler&lt;/code&gt;：&lt;/p&gt;
@@ -827,14 +1391,18 @@
 &lt;h2 id=&quot;51-内存泄露--内存正常-范例脚本&quot;&gt;5.1 内存泄露 || 内存正常 范例脚本&lt;/h2&gt;
 &lt;p&gt;为了观察内存泄露和GC日志，需要一个范例运行的脚本，我这里制作了一个：&lt;/p&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/024d11c54c1a8e474ded5269d54f5c99.js&quot;&gt; &lt;/script&gt;
 
 &lt;h2 id=&quot;52-gc解析管道脚本&quot;&gt;5.2 GC解析管道脚本&lt;/h2&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js&quot;&gt; &lt;/script&gt;
 
 &lt;h2 id=&quot;53-nimnodejs-调试管理工具&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h2&gt;
@@ -851,7 +1419,14 @@
 		
 			<item>
 				<title>Github 代码片段嵌入</title>
-				<description>&lt;h2 id=&quot;1-github-gist&quot;&gt;1. Github Gist&lt;/h2&gt;
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-github-gist&quot; id=&quot;markdown-toc-1-github-gist&quot;&gt;1. Github Gist&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-jekyll插件&quot; id=&quot;markdown-toc-2-jekyll插件&quot;&gt;2. Jekyll插件&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-例子&quot; id=&quot;markdown-toc-3-例子&quot;&gt;3. 例子&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1-github-gist&quot;&gt;1. Github Gist&lt;/h2&gt;
 &lt;p&gt;Github上有一个功能，可以让用户存放很短小的一个个代码片段，这就是gist。现在写技术博客很流行的一个做法就是把代码存在gist上，然后在自己的博客里嵌入对应的github gist。&lt;/p&gt;
 
 &lt;p&gt;奇妙的是这东西我没有招到官方的介绍，只是看到别人的博客上有这么做的，然后搜了下做法，搜到的都是三方的解决方案。当然这东西github肯定是支持的，否则三方也没什么方法能拿到对应的gist内容。&lt;/p&gt;
@@ -859,25 +1434,29 @@
 &lt;p&gt;搜索靠前的几个：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/blog/122-embedded-gists&quot;&gt;Embedded Gists · GitHub&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/blairvanderhoof/gist-embed&quot;&gt;How to use gist-embed to spice up code snippets on your blog&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/hanxue/8488835&quot;&gt;Embed Gists in Blogger · GitHub&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/blog/122-embedded-gists&quot; target=&quot;_blank&quot;&gt;Embedded Gists · GitHub&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/blairvanderhoof/gist-embed&quot; target=&quot;_blank&quot;&gt;How to use gist-embed to spice up code snippets on your blog&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/hanxue/8488835&quot; target=&quot;_blank&quot;&gt;Embed Gists in Blogger · GitHub&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;2-jekyll插件&quot;&gt;2. Jekyll插件&lt;/h2&gt;
-&lt;p&gt;使用Jekyll博客系统就不需要自己操心这个事情了，已经有人把这个功能的插件做出来了。见&lt;a href=&quot;https://github.com/jekyll/jekyll-gist&quot;&gt;jekyll/jekyll-gist&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;使用Jekyll博客系统就不需要自己操心这个事情了，已经有人把这个功能的插件做出来了。见&lt;a href=&quot;https://github.com/jekyll/jekyll-gist&quot; target=&quot;_blank&quot;&gt;jekyll/jekyll-gist&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;安装：&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;gem install jekyll-gist
+&lt;figure class=&quot;highlight&quot;&gt;
+  &lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;gem install jekyll-gist
 &lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
 &lt;span class=&quot;c1&quot;&gt;# Done installing documentation for multipart-post, faraday, sawyer, octokit, jekyll-gist after 2 seconds&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# 5 gems installed&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;c1&quot;&gt;# 5 gems installed&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/figure&gt;
 
 &lt;p&gt;然后编辑&lt;code&gt;_config.yml&lt;/code&gt;，添加：&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;jekyll-gist&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;
+  &lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;jekyll-gist&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/figure&gt;
 
 &lt;p&gt;嵌入代码：
 找到你的目标gist的编码，在URL上就有：&lt;/p&gt;
@@ -896,8 +1475,10 @@
 
 &lt;h2 id=&quot;3-例子&quot;&gt;3. 例子&lt;/h2&gt;
 
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
+&lt;noscript&gt;
+  &lt;pre&gt;400: Invalid request
+&lt;/pre&gt;
+&lt;/noscript&gt;
 &lt;script src=&quot;https://gist.github.com/9894fc4159d2a1dd2c893250dc4ae0d3.js&quot;&gt; &lt;/script&gt;
 
 &lt;blockquote&gt;
@@ -911,7 +1492,36 @@
 		
 			<item>
 				<title>GraphQL笔记</title>
-				<description>&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#11-为什么graphql&quot; id=&quot;markdown-toc-11-为什么graphql&quot;&gt;1.1 为什么GraphQL&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#12-资料列表&quot; id=&quot;markdown-toc-12-资料列表&quot;&gt;1.2 资料列表&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#13-选择&quot; id=&quot;markdown-toc-13-选择&quot;&gt;1.3 选择&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-技术点学习&quot; id=&quot;markdown-toc-2-技术点学习&quot;&gt;2. 技术点学习&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-graphql&quot; id=&quot;markdown-toc-21-graphql&quot;&gt;2.1 GraphQL&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-apollo&quot; id=&quot;markdown-toc-22-apollo&quot;&gt;2.2 Apollo&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#221-主要文档入口&quot; id=&quot;markdown-toc-221-主要文档入口&quot;&gt;2.2.1 主要文档入口&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#222-客户端&quot; id=&quot;markdown-toc-222-客户端&quot;&gt;2.2.2 客户端&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#223-服务器&quot; id=&quot;markdown-toc-223-服务器&quot;&gt;2.2.3 服务器&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#224-工具集&quot; id=&quot;markdown-toc-224-工具集&quot;&gt;2.2.4 工具集&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-范例---apollo&quot; id=&quot;markdown-toc-3-范例---apollo&quot;&gt;3. 范例 - Apollo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-总结&quot; id=&quot;markdown-toc-4-总结&quot;&gt;4. 总结&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-结论&quot; id=&quot;markdown-toc-41-结论&quot;&gt;4.1 结论&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#42-问题&quot; id=&quot;markdown-toc-42-问题&quot;&gt;4.2 问题&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#43-设计理念&quot; id=&quot;markdown-toc-43-设计理念&quot;&gt;4.3 设计理念&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#44-展望&quot; id=&quot;markdown-toc-44-展望&quot;&gt;4.4 展望&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
 &lt;h3 id=&quot;11-为什么graphql&quot;&gt;1.1 为什么GraphQL&lt;/h3&gt;
 &lt;p&gt;REST作为前后端数据交互的业界标杆有其存在的合理性和必要性，但同时用过的人自然也很明白REST接口有其固有的问题存在，而且是很难通过设计和实现上的优化来进行规避。业界一直有各种声音想找到REST的替代者，直到这两年，终于在FB的引导下做出了GraphQL这个设计。GraphQL确实解决了不少REST接口中存在的问题。&lt;/p&gt;
 
@@ -920,25 +1530,25 @@
 &lt;p&gt;详细阅读：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://sofish.github.io/restcookbook/&quot;&gt;RESTful 手册&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.infoq.com/cn/news/2013/06/rest-drawbacks&quot;&gt;REST的缺点是什么？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://dev-blog.apollodata.com/graphql-vs-rest-5d425123e34b&quot;&gt;GraphQL vs. REST&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://sofish.github.io/restcookbook/&quot; target=&quot;_blank&quot;&gt;RESTful 手册&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.infoq.com/cn/news/2013/06/rest-drawbacks&quot; target=&quot;_blank&quot;&gt;REST的缺点是什么？&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://dev-blog.apollodata.com/graphql-vs-rest-5d425123e34b&quot; target=&quot;_blank&quot;&gt;GraphQL vs. REST&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;12-资料列表&quot;&gt;1.2 资料列表&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://graphql.org/&quot;&gt;网站&lt;/a&gt;：学习第一站，必然先去这里取经
+  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://graphql.org/&quot; target=&quot;_blank&quot;&gt;网站&lt;/a&gt;：学习第一站，必然先去这里取经
     &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;http://graphql.cn/&quot;&gt;中文网站&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;http://graphql.cn/&quot; target=&quot;_blank&quot;&gt;中文网站&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://facebook.github.io/graphql/&quot;&gt;specification&lt;/a&gt;：类似RFC的东西，详细的文字specification&lt;/li&gt;
-  &lt;li&gt;Github上FB的GraphQL&lt;a href=&quot;https://github.com/graphql&quot;&gt;项目组&lt;/a&gt;：一些好用的工具和类库&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/graphql/graphql-js&quot;&gt;GraphQL.js&lt;/a&gt;：FB官方的JS实现&lt;/li&gt;
-  &lt;li&gt;Github官方的GraphQL API手册&lt;a href=&quot;https://developer.github.com/v4/&quot;&gt;V4版本&lt;/a&gt;：有相当多值得借鉴的地方&lt;/li&gt;
-  &lt;li&gt;Github上的Apollo GraphQL&lt;a href=&quot;https://github.com/apollographql&quot;&gt;项目组&lt;/a&gt;：算是看到现在做的最好的GraphQL解决方案集合之一了&lt;/li&gt;
-  &lt;li&gt;Github上的Graphcool&lt;a href=&quot;https://github.com/graphcool&quot;&gt;项目组&lt;/a&gt;：设计思路很优秀的一个GraphQL解决方案，目前的进度较初步&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hackernoon.com/building-url-shortener-using-react-apollo-and-graphql-part-i-467aef8c64ce&quot;&gt;Building URL shortener using React, Apollo and GraphQL — Part I&lt;/a&gt;：一篇蛮贴近使用者的教程，用的技术是apollo作为前端，graphcool作为后端，可以阅读理解下&lt;/li&gt;
+  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://facebook.github.io/graphql/&quot; target=&quot;_blank&quot;&gt;specification&lt;/a&gt;：类似RFC的东西，详细的文字specification&lt;/li&gt;
+  &lt;li&gt;Github上FB的GraphQL&lt;a href=&quot;https://github.com/graphql&quot; target=&quot;_blank&quot;&gt;项目组&lt;/a&gt;：一些好用的工具和类库&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/graphql/graphql-js&quot; target=&quot;_blank&quot;&gt;GraphQL.js&lt;/a&gt;：FB官方的JS实现&lt;/li&gt;
+  &lt;li&gt;Github官方的GraphQL API手册&lt;a href=&quot;https://developer.github.com/v4/&quot; target=&quot;_blank&quot;&gt;V4版本&lt;/a&gt;：有相当多值得借鉴的地方&lt;/li&gt;
+  &lt;li&gt;Github上的Apollo GraphQL&lt;a href=&quot;https://github.com/apollographql&quot; target=&quot;_blank&quot;&gt;项目组&lt;/a&gt;：算是看到现在做的最好的GraphQL解决方案集合之一了&lt;/li&gt;
+  &lt;li&gt;Github上的Graphcool&lt;a href=&quot;https://github.com/graphcool&quot; target=&quot;_blank&quot;&gt;项目组&lt;/a&gt;：设计思路很优秀的一个GraphQL解决方案，目前的进度较初步&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hackernoon.com/building-url-shortener-using-react-apollo-and-graphql-part-i-467aef8c64ce&quot; target=&quot;_blank&quot;&gt;Building URL shortener using React, Apollo and GraphQL — Part I&lt;/a&gt;：一篇蛮贴近使用者的教程，用的技术是apollo作为前端，graphcool作为后端，可以阅读理解下&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;13-选择&quot;&gt;1.3 选择&lt;/h3&gt;
@@ -959,11 +1569,11 @@
 
 &lt;h3 id=&quot;21-graphql&quot;&gt;2.1 GraphQL&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/queries/&quot;&gt;查询和变更&lt;/a&gt;：GraphQL（客户端）如何进行查询，查询语句的格式&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/schema/&quot;&gt;Schema 和类型&lt;/a&gt;：GraphQL的类型系统，如何定义类型&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/validation/&quot;&gt;验证&lt;/a&gt;：GraphQL（服务器）如何对查询进行验证&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/execution/&quot;&gt;执行&lt;/a&gt;：GraphQL（服务器）如何处理查询请求，如何组织返回结构&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/introspection/&quot;&gt;内省&lt;/a&gt;：如何在不明白服务器具体提供哪些查询功能的情况下使用GraphQL接口&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/queries/&quot; target=&quot;_blank&quot;&gt;查询和变更&lt;/a&gt;：GraphQL（客户端）如何进行查询，查询语句的格式&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/schema/&quot; target=&quot;_blank&quot;&gt;Schema 和类型&lt;/a&gt;：GraphQL的类型系统，如何定义类型&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/validation/&quot; target=&quot;_blank&quot;&gt;验证&lt;/a&gt;：GraphQL（服务器）如何对查询进行验证&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/execution/&quot; target=&quot;_blank&quot;&gt;执行&lt;/a&gt;：GraphQL（服务器）如何处理查询请求，如何组织返回结构&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/introspection/&quot; target=&quot;_blank&quot;&gt;内省&lt;/a&gt;：如何在不明白服务器具体提供哪些查询功能的情况下使用GraphQL接口&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;基本上，官方的GraphQL教程只提供了最基础的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：&lt;/p&gt;
@@ -978,19 +1588,19 @@
 &lt;h3 id=&quot;22-apollo&quot;&gt;2.2 Apollo&lt;/h3&gt;
 &lt;h4 id=&quot;221-主要文档入口&quot;&gt;2.2.1 主要文档入口&lt;/h4&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/&quot;&gt;Apollo客户端&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/&quot;&gt;Apollo服务器&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/&quot;&gt;Apollo工具集&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/&quot; target=&quot;_blank&quot;&gt;Apollo客户端&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/&quot; target=&quot;_blank&quot;&gt;Apollo服务器&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/&quot; target=&quot;_blank&quot;&gt;Apollo工具集&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h4 id=&quot;222-客户端&quot;&gt;2.2.2 客户端&lt;/h4&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/apollo-client-preset&quot;&gt;apollo-client-preset&lt;/a&gt;：整合完成的客户端包&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/basics/setup.html#ApolloClient&quot;&gt;ApolloClient&lt;/a&gt;：客户端实例&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/&quot;&gt;ApolloLink&lt;/a&gt;：这部分有点不太能理解
+  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/apollo-client-preset&quot; target=&quot;_blank&quot;&gt;apollo-client-preset&lt;/a&gt;：整合完成的客户端包&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/basics/setup.html#ApolloClient&quot; target=&quot;_blank&quot;&gt;ApolloClient&lt;/a&gt;：客户端实例&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/&quot; target=&quot;_blank&quot;&gt;ApolloLink&lt;/a&gt;：这部分有点不太能理解
     &lt;ul&gt;
       &lt;li&gt;Apollo Link is a simple yet powerful way to describe how you want to get the result of a GraphQL operation, and what you want to do with the results.&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/stateful.html&quot;&gt;StatefulLink&lt;/a&gt;：有状态的Link可以看下，在实例内部保存了一些状态数据&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/stateful.html&quot; target=&quot;_blank&quot;&gt;StatefulLink&lt;/a&gt;：有状态的Link可以看下，在实例内部保存了一些状态数据&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;剩下的内容和React等实现联系得太过紧密，可以不用在高层抽象理解的时候即刻就去看，放后面也没问题&lt;/li&gt;
@@ -1000,8 +1610,8 @@
 
 &lt;h4 id=&quot;223-服务器&quot;&gt;2.2.3 服务器&lt;/h4&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot;&gt;End-to-End Example&lt;/a&gt;：Apollo官方的Example，基本上简单到极致了，和直接裸用GraphQL.js没有本质区别&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/requests.html&quot;&gt;POST and GET format&lt;/a&gt;：请求格式，就是GraphQL的基本格式，没有黑科技&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot; target=&quot;_blank&quot;&gt;End-to-End Example&lt;/a&gt;：Apollo官方的Example，基本上简单到极致了，和直接裸用GraphQL.js没有本质区别&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/requests.html&quot; target=&quot;_blank&quot;&gt;POST and GET format&lt;/a&gt;：请求格式，就是GraphQL的基本格式，没有黑科技&lt;/li&gt;
   &lt;li&gt;其他没什么有营养的东西了，服务器实在是简单，当然也意味着没有解决我之前提到的问题&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -1013,11 +1623,11 @@
 &lt;p&gt;简单来说就是一堆API，方便你制作Schema和Resolvers。但实际上并没有解决映射和代码量（研发工作量）的问题。&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema&quot;&gt;makeExecutableSchema&lt;/a&gt;：这个连接用工具函数貌似是唯一需要仔细看下的&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema&quot; target=&quot;_blank&quot;&gt;makeExecutableSchema&lt;/a&gt;：这个连接用工具函数貌似是唯一需要仔细看下的&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;3-范例---apollo&quot;&gt;3. 范例 - Apollo&lt;/h2&gt;
-&lt;p&gt;看下官方的&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot;&gt;End-to-End Example&lt;/a&gt;基本上就足够了。当然这里仅只有服务器端的代码，但鉴于GraphQL的复杂度基本上都集中在服务器端，这个例子也OK了。&lt;/p&gt;
+&lt;p&gt;看下官方的&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot; target=&quot;_blank&quot;&gt;End-to-End Example&lt;/a&gt;基本上就足够了。当然这里仅只有服务器端的代码，但鉴于GraphQL的复杂度基本上都集中在服务器端，这个例子也OK了。&lt;/p&gt;
 
 &lt;h2 id=&quot;4-总结&quot;&gt;4. 总结&lt;/h2&gt;
 &lt;h3 id=&quot;41-结论&quot;&gt;4.1 结论&lt;/h3&gt;
@@ -1041,7 +1651,7 @@
 &lt;p&gt;所以GraphQL的项目，难度在前面，好处在后面，对小型项目来说根本没有意义。小型项目当然会选技术和社区更成熟的RESTful解决方案。&lt;/p&gt;
 
 &lt;h3 id=&quot;43-设计理念&quot;&gt;4.3 设计理念&lt;/h3&gt;
-&lt;p&gt;在我看来，GraphQL要真的爆发开来，还是必须要有一款杀手级应用做好工具和生态。由我设计的框架，比如最近用的很重的&lt;a href=&quot;https://github.com/agreatfool/SASDN&quot;&gt;SASDN&lt;/a&gt;，设计理念很简单：为使用者减负，使用者只需要编写数据模型的定义，然后框架会自动将大量代码生成出来，使用者只需要专注在需要他们编写的业务代码上即可。&lt;/p&gt;
+&lt;p&gt;在我看来，GraphQL要真的爆发开来，还是必须要有一款杀手级应用做好工具和生态。由我设计的框架，比如最近用的很重的&lt;a href=&quot;https://github.com/agreatfool/SASDN&quot; target=&quot;_blank&quot;&gt;SASDN&lt;/a&gt;，设计理念很简单：为使用者减负，使用者只需要编写数据模型的定义，然后框架会自动将大量代码生成出来，使用者只需要专注在需要他们编写的业务代码上即可。&lt;/p&gt;
 
 &lt;p&gt;Graphcool目前是在这个道路上走，但离终点仍旧非常遥远。需要解决的问题有很多：Scala的服务器、初级的项目进度、文档匮乏、范例匮乏，等等。&lt;/p&gt;
 
@@ -1067,7 +1677,8 @@
 &lt;h2 id=&quot;sample&quot;&gt;Sample&lt;/h2&gt;
 &lt;h3 id=&quot;client&quot;&gt;Client&lt;/h3&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;request&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;
+  &lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;request&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;msgpack-lite&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 
 &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqObj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -1088,11 +1699,13 @@
   &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Print the error if one occurred&lt;/span&gt;
   &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;statusCode:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;statusCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Print the response status code if a response was received&lt;/span&gt;
   &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;body:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/figure&gt;
 
 &lt;h3 id=&quot;server&quot;&gt;Server&lt;/h3&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Koa&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;koa&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;
+  &lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Koa&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;koa&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Koa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;koaRouter&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;koa-router&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;msgpack-lite&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
@@ -1115,7 +1728,8 @@
 &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
 
 &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;router&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;routes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/figure&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
@@ -1226,12 +1840,12 @@
 
 &lt;p&gt;准备工作到此结束，这样一轮操作下来你就有了 xxx.github.io 这样一个站点。上面这段基本上属于废话，很多github page建站教程上都会说，我这里仅只是想补充下内容和发布分离的建议。&lt;/p&gt;
 
-&lt;p&gt;github官方就有教程，可以查看&lt;a href=&quot;https://guides.github.com/features/pages/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;github官方就有教程，可以查看&lt;a href=&quot;https://guides.github.com/features/pages/&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h2 id=&quot;3-域名绑定--启用https&quot;&gt;3. 域名绑定 &amp;amp; 启用HTTPS&lt;/h2&gt;
 &lt;p&gt;所谓的对你的域名启用HTTPS其实很简单，就是使用cloudflare这家公司的DNS解析，将你博客上的所有内容经过这家公司的CDN缓存，自然所有的访问内容就都经过HTTPS加密了。&lt;/p&gt;
 
-&lt;p&gt;具体的做法可以参见cloudflare的官方博客：&lt;a href=&quot;https://blog.cloudflare.com/secure-and-fast-github-pages-with-cloudflare/&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;具体的做法可以参见cloudflare的官方博客：&lt;a href=&quot;https://blog.cloudflare.com/secure-and-fast-github-pages-with-cloudflare/&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;简单来说就是：&lt;/p&gt;
 
@@ -1250,147 +1864,6 @@
 				<pubDate>Fri, 08 Dec 2017 15:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2017/12/github-page-https/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2017/12/github-page-https/</guid>
-			</item>
-		
-			<item>
-				<title>Js错误处理异步Promise版</title>
-				<description>&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
-&lt;p&gt;一篇纯粹的异步错误处理整理文，以例子为基本进行解释。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;node -v  &lt;br /&gt;
-  8.4.0&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;1-async--await&quot;&gt;1. async / await&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseRejected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;reject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Error in PromiseRejected&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Error in PromiseError&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseRejected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// return await PromiseError();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;注释的部分可以调换直接抛错和使用reject，结果都一样：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;(node:25564) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2): Error: Error in PromiseRejected  &lt;br /&gt;
-(node:25564) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;对上面的例子main部分进行修改：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;错误会得到捕获，并打印出来：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Error: Error in PromiseRejected | PromiseError  &lt;br /&gt;
-    at PromiseRejected (/Prog/Codes/NodeJs/SASDN/async/index.js:2:25)  &lt;br /&gt;
-    at PromiseLv1 (/Prog/Codes/NodeJs/SASDN/async/index.js:10:16)  &lt;br /&gt;
-    at PromiseLv2 (/Prog/Codes/NodeJs/SASDN/async/index.js:15:16)  &lt;br /&gt;
-    at main (/Prog/Codes/NodeJs/SASDN/async/index.js:20:11)  &lt;br /&gt;
-    at Object.&amp;lt;anonymous&amp;gt; (/Prog/Codes/NodeJs/SASDN/async/index.js:26:1)  &lt;br /&gt;
-    at Module._compile (module.js:573:30)  &lt;br /&gt;
-    at Object.Module._extensions..js (module.js:584:10)  &lt;br /&gt;
-    at Module.load (module.js:507:32)  &lt;br /&gt;
-    at tryModuleLoad (module.js:470:12)  &lt;br /&gt;
-    at Function.Module._load (module.js:462:3)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在无捕获的情况下可以下面的方法进行全局处理：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;unhandledRejection&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;reason&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Possibly Unhandled Rejection at: Promise &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;p&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot; reason: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reason&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;process&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;uncaughtException&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;fs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;writeSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`Caught exception: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;n`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;12-promise&quot;&gt;1.2 Promise&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseRejected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;reject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Error in PromiseRejected&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Promise&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;Error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Error in PromiseError&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;exec&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseRejected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// let exec = PromiseError;&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PromiseLv1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;PromiseLv2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Promise版本也是一样的，未捕获的错误就会直接出错：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;(node:45779) UnhandledPromiseRejectionWarning: Unhandled promise rejection (rejection id: 2): Error: Error in PromiseRejected  &lt;br /&gt;
-(node:45779) [DEP0018] DeprecationWarning: Unhandled promise rejections are deprecated. In the future, promise rejections that are not handled will terminate the Node.js process with a non-zero exit code.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;最后可以使用catch的方法捕获错误：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;PromiseLv2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`Caught in main: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;e&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stack&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;13-结论&quot;&gt;1.3 结论&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;无论是Promise还是Async/Await，实际操作上在错误捕获及处理这点上没有差别&lt;/li&gt;
-  &lt;li&gt;错误抛出 =&amp;gt; 中间经过 =&amp;gt; 最终捕获，只要是被抛出来的错误，最后都会在堆栈中层层上传，最后得到捕获，这点不需要再担心了，这部分的行为现在和一般的同步语言没差别&lt;/li&gt;
-  &lt;li&gt;所有的异步逻辑都需要放在try catch或最后进行Promise.catch，进行处理，否则无处理的错误会进到process层面&lt;/li&gt;
-  &lt;li&gt;process给的2个事件可以最终捕获到未处理的reject和错误&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Wed, 06 Dec 2017 10:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/12/js-error-async/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/12/js-error-async/</guid>
 			</item>
 		
 	</channel>

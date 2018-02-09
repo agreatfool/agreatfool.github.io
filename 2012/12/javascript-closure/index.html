@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>js里的闭包一直都没搞清楚过，不过真的写起来的时候，你会发现你不理解js的闭包的话，根本没办法写出像样的js代码。很多高级的技巧使用其实都是基于闭包的原理的，你如果不理解，写出来你也不知道为什么应该这么写。所以今天特别花了时间仔细研究了下js里的闭包（其实也就是网上找帖子看啦）。</p>
 <p>其实也没必要自己写，首先来几个总结：</p>
 <p>来自<a title="codinglabs &gt;&gt; 闭包漫谈（从抽象代数及函数式编程角度）" href="http://www.codinglabs.org/html/closure-perspective-of-abstract-mathematic-and-functional-language.html" target="_blank">codinglabs &gt;&gt; 闭包漫谈（从抽象代数及函数式编程角度）</a>的解释：</p>
@@ -245,6 +283,8 @@ alert(object.getNameFunc()());</pre>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -252,8 +292,6 @@ alert(object.getNameFunc()());</pre>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

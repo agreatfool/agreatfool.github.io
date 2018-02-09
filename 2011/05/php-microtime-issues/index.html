@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>做服务器开发，肯定需要使用某种方法来统计API调用时长，来进行时间统计、优化。在PHP里，能用的函数就是microtime了，这个函数会回给你当前系统的UNIX时间戳和毫秒数。我一直在使用这个函数来统计API时长，但是，最近在统计API执行时长的时候，发现很多时间都是负数。虽然以前也有发现负数的情况出现，但是最近这次比较凶猛，一大半都是负数，逼得我不得不找下原因了。话说找原因，其实也没什么好找的，结束时间减去开始时间，这个逻辑也能错就有鬼了，只可能是原声函数给出的值的问题。</p>
 <p>到php.net上查了下手册，发现几条有趣的comments。但是主要的意思都是说一件事情：php的microtime函数的底层是调用gettimebyday这个函数来实现的。而使用gettimebyday这个函数可能会造成时间的不正确。</p>
 <p>而且我发现我在使用的php手册实在是太老了，microtime之前返回的是一个“micro second”格式的字符串，用户还需要自己手动来获取float数值。不过现在只要 microtime(TRUE)这样，就可以直接获取float数值了，当然不要忘记* 1000来获取毫秒值。</p>
@@ -123,6 +161,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -130,8 +170,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

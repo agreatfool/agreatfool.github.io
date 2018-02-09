@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2 id="0-前言">0. 前言</h2>
 <p>最近在MAC上使用QuickTime Player录了几个苹果手机应用的运行视频，苹果官方的解决方案算是最轻量级也最容易使用的了。到这里都还算靠谱，但接下来就有点麻烦了，录制下来的视频是MOV格式，这玩意儿实在是大的可怕，即便是自己存起来看也实在是太占空间了，更不用说上传视频网站了。于是就有了视频文件转码的需求，这里就想起了FFMPEG这个软件，众所周知的视频处理第一。撰此文仅用来记录一些经验。</p>
 
@@ -112,8 +150,8 @@
 <p>这部分实在是有太多的经验文章，我这里主要参考了：</p>
 
 <ul>
-  <li><a href="https://segmentfault.com/a/1190000002502526">用ffmpeg命令行转压视频</a></li>
-  <li><a href="https://einverne.github.io/post/2015/12/ffmpeg-first.html">ffmpeg 入门</a></li>
+  <li><a href="https://segmentfault.com/a/1190000002502526" target="_blank">用ffmpeg命令行转压视频</a></li>
+  <li><a href="https://einverne.github.io/post/2015/12/ffmpeg-first.html" target="_blank">ffmpeg 入门</a></li>
 </ul>
 
 <h2 id="2-安装">2. 安装</h2>
@@ -205,6 +243,8 @@ file ‘/path/to/file3’</p>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -212,8 +252,6 @@ file ‘/path/to/file3’</p>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

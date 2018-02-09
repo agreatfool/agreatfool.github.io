@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>以前在augmentum的时候CMS做得比较多的是drupal和joomla，wordpress基本没做过。到我自己做blog，也只是和一般用户一样使用wordpress本身的功能，没有进行wordpress编程。比较遗憾，哈哈。</p>
 <p>今天解决的问题是：wordpress的tag cloud，是不会显示所有的tags的。其实也不应该显示所有的tags，因为在边栏里，你显示所有的tags的话，势必让页面变得非常难看。而我们有的时候又希望查找一些文章比较少的tag，这个时候就很麻烦了。我今天创建了一个页面，来显示所有的tags。</p>
 <p>首先我们需要了解，在文章或者页面里显示出所有的tags，需要编写一点PHP代码。而普通用户是不能直接在文章里编写代码的，那么我们有两个选择，第一是使用第三方的插件，比如：<a title="Exec-PHP" href="http://wordpress.org/extend/plugins/exec-php/" target="_blank">Exec-PHP</a>，当然还有其他很多，大家有兴趣可以自己查下；第二个方法比较复杂，就是创建一个模板，然后在模板里写入我们希望的代码，然后在页面上应用这个模板，就OK了。这里我比较推荐第二种方法，因为在你用wordpress的过程中，其实并不是有很多情况是需要使用代码的，而装插件是个永久的事情，装了，然后这个插件会一直显示，比较臃肿。而且从安全的角度来说，这种功能不存在也更安全。好，这里我们就介绍下第二种方法。</p>
@@ -154,6 +192,8 @@ get_header(); ?&gt;
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -161,8 +201,6 @@ get_header(); ?&gt;
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>自2011年初，CSDN在网上发起“2011年软件行业技术人员薪资大调查”以来，引起了广大开发者们的热烈反响，短短两月时间内，近万名开发者提交了调查数据。尽管这只是中国百万开发者大军的一小部分，但他们所在的行业几乎涵盖了整个中国软件的产业链，他们的职位几乎代表了一个软件团队体系的每一个层面，而且 “一叶知秋”，所以透过这些调查数据和变化，我们或许可以一瞰中国软件开发者的普遍生存状态，甚至可帮助开发者，更准确地定位自己在产业内的坐标。</p>
 <p><strong>2011：程序员的日子不算差</strong></p>
 <p>相信每个开发者在回忆当初高校毕业，加入滚滚求职大军的情形时，都能记得那番对美好生活的憧憬和闯荡世界的豪情。而在经济社会，判断成功的可量化方式无疑是薪资了，尽管有点世俗，但暂时也找不到更好的标准。那么现在，中国的程序员们，总体收入水平如何呢？首先我们看程序员们对薪资水平的满意度。</p>
@@ -155,6 +193,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -162,8 +202,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

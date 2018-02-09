@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>因为js里没有访问控制符，所以着实让我头晕了一阵。现在基本搞清楚了，这里留个笔记。首先要先看明白什么是js的闭包：<a title="JavaScript闭包" href="http://xenojoshua.com/2012/12/javascript-closure/" target="_blank">JavaScript闭包</a>。或者有时间的话，可以好好看看<a title="Permalink to Pro JavaScript Design Patterns" href="http://xenojoshua.com/2012/12/pro-javascript-design-patterns/" rel="bookmark" target="_blank">Pro JavaScript Design Patterns</a>。这篇文章里只会写<strong>怎么做</strong>而不是<strong>为什么这么做</strong>，不作深究。</p>
 <h3>公有：</h3>
 <p>[codesyntax lang="javascript"]</p>
@@ -180,6 +218,8 @@ console.log(CLS.HELLO_WORLD()); // HELLO WORLD!</pre>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -187,8 +227,6 @@ console.log(CLS.HELLO_WORLD()); // HELLO WORLD!</pre>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

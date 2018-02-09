@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>这篇文章是一系列redis研究学习的总集篇。文章主要是以提纲、概要的形式将redis的研究学习串联涵盖在一篇文章的篇幅之内，然后在需要细节描述的地方会引用外部的详细描述。</p>
 <p>NoSqlFan是一个非常棒的nosql数据相关前沿技术网站，其中有非常多的redis内容，这里给出它的汇总链接：<a title="Redis资料汇总专题" href="http://blog.nosqlfan.com/html/3537.html" target="_blank">Redis资料汇总专题</a>。<br />
 本文基本只关注在redis作为数据库来看几个比较critical的功能点，关于未提到的一些周边功能，可以查看<a title="Redis系统性介绍" href="http://blog.nosqlfan.com/html/3139.html?ref=rediszt" target="_blank">Redis系统性介绍</a>，这篇文章里有详细的介绍。</p>
@@ -270,6 +308,8 @@ perl resharding.pl --db=9 --from=A2 --nodes=B1,B2,B3,B4,B5</pre>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -277,8 +317,6 @@ perl resharding.pl --db=9 --from=A2 --nodes=B1,B2,B3,B4,B5</pre>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

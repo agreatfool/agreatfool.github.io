@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>很早以前就想写一篇和面试相关的文章了，今天在网络上看到一篇关于如何去面试程序员的<a href="http://www.aaronsw.com/weblog/hiring" target="_blank">英文文章</a>，发现其中有很多和我共鸣的东西，所以仿照其标题通过自己的经历写下了这篇文章。</p>
 <p>工作这么多年来，即被面试过，也面试过他人，对于程序员的面试，经历过很不错的面试，很专业的面试，也经历过一些BT和令人不爽的面试，我个人觉得一个好的面试，面试官是很重要的，所以，本文想从“面试官”的角度来阐述一下。于是，有了下面这样一篇的文章，希望本文对你的职场经历有用，特别是那些正在招聘和面试程序员的朋友，我觉得这篇文章会对大家有很多启示。此外，做为被面试的人，你可以看看本站的《<a href="http://coolshell.cn/articles/1695.html" rel="bookmark">别的程序员是怎么读你的简历的</a>》《<a href="http://coolshell.cn/articles/428.html" rel="bookmark">程序员需要具备的基本技能</a>》《<a href="http://coolshell.cn/articles/222.html" rel="bookmark">优秀程序员的十个习惯</a>》其它一些和<a href="http://coolshell.cn/?tag=programmer" target="_blank">程序员相关的文章</a>。</p>
 <p>对于招聘方来说，在招聘程序员的时候，我估计面试应聘者时，最主要想知道的是下面三件事：</p>
@@ -178,6 +216,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -185,8 +225,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

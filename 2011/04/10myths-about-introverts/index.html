@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>我非常幸运的发现了这本《内向者优势——如何在外向的世界中获得成功》的好书，我感觉就好像是有人专门为我们这个罕见的小群体写了一部百科全书一样，它不仅对我的很多怪癖做了解释，还帮助我从一个崭新且积极的角度重新定义了我的整个人生。</p>
 <p>毫无疑问，几乎所有认识我的人都会说，“啊哈，你不会到现在才发现你是个性格内向者吧？”，其实这并不是那么简单，问题在于将一些人贴上内向者的标签是一种非常浅显且充满各种常见误解的行为，事实要比这复杂的多（在Carl King讲过之后，就更是如此了）</p>
 <p>Laney 的书中有个章节对人的大脑进行了分析，并解释了神经元是如何在内向者和外向者的神经系统中跟随不同的控制通路进行传递。如果这本书基于的科学理论是正确 的，那就证明了内向者是一群对多巴胺过度敏感的群体，太多的外部刺激过量的消耗了它们。相反的，外向者没有足够的多巴胺，他们需要依靠大脑的肾上腺去创造 它们，外向者通常有更短的神经通路，他们的大脑血流量也相对更少，外向者神经系统中的信息大部分都是通过位于前额叶的布罗卡氏区（Broca’s area）传递的，而这里正是我们的大部分思考发生的地方。</p>
@@ -148,6 +186,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -155,8 +195,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

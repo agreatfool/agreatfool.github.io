@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>转自：<a title="NoSQLFan Redis内存容量的预估和优化" href="http://blog.nosqlfan.com/html/3430.html?ref=rediszt" target="_blank">NoSQLFan Redis内存容量的预估和优化</a></p>
 <p>Redis是个内存全集的kv数据库,不存在部分数据在磁盘部分数据在内存里的情况,所以提前预估和节约内存非常重要.本文将以最常用的string和zipmap两类数据结构在jemalloc内存分配器下的内存容量预估和节约内存的方法.</p>
 <p>先说说jemalloc,传说中解决firefox内存问题freebsd的默认malloc分配器,area,thread-cache功能和tmalloc非常的相识.在2.4版本被Redis引入,在<a href="http://antirez.com/post/everything-about-redis-24.html">antirez的博文</a>中提到内节约30%的内存使用.相比glibc的malloc需要在每个内存外附加一个额外的4字节内存块,jemalloc可以通过je_malloc_usable_size函数获得指针实际指向的内存大小,这样Redis里的每个key或者value都可以节约4个字节,不少阿.</p>
@@ -282,6 +320,8 @@ used_memory:817228</pre>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -289,8 +329,6 @@ used_memory:817228</pre>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

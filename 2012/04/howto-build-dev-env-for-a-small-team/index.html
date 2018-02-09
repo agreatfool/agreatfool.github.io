@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2>0. 关于BurstNET和JustHost</h2>
 <p>前几天购买了一个美国VPS，BurstNET最低价位的VPS，512M的内存，单核1000MHz的CPU，20G硬盘，1000G月流量。价格相当便宜，5.95美金一个月，正好我买的时候3月28号到31号提供20%折扣的优惠码，算下来相当于每个月30元人民币。比国内绝大多数的VPS价格都要便宜，而且服务有保证（因为国内很多VPS提供也就是一个reseller，其实是没有服务保障的）。服务器的位置是可选的，对这边来说最优的选择也就是洛杉矶了，在公司网通网络的ping是200多毫秒，家里的电信网络就有点不堪入目了，基本接近400毫秒。</p>
 <p>OK，这个VPS价格上比我买的50%off的JustHost要贵上近1倍（JustHost月租金近17元人民币），速度上来说也稍微快一点（从ping上来看），但是VPS这边就拥有绝对的系统控制权，作为开发来说这真的是必不可少的。</p>
@@ -137,6 +175,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -144,8 +184,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

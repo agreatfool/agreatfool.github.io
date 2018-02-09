@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>这几天想做个防外链的机制，试了很久才成功。参考了很多文章，我自己也转了几篇到我自己的blog上，参考：<a title="HOW DO I STOP HOTLINKING AND BANDWIDTH THEFT?" href="http://xenojoshua.com/2011/04/how-do-i-stop-hotlinking-and-bandwidth-theft/">这里</a>、<a title="Use .htaccess to rewrite/redirect requests" href="http://xenojoshua.com/2011/04/use-htaccess-to-rewriteredirect-requests/">这里</a>和<a title="10个WordPress的.htaccess技巧" href="http://xenojoshua.com/2011/04/10htaccess-hacks-for-wordpress/">这里</a>。</p>
 <p>就不多废话了，直接上步骤：</p>
 <p>1. 在自己的domain文件夹下创建一个.htaccess文件，如果有的话就直接在里面做修改</p>
@@ -163,6 +201,8 @@ RewriteRule .*\.(mp3|exe)$ - [F]
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -170,8 +210,6 @@ RewriteRule .*\.(mp3|exe)$ - [F]
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

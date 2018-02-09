@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -106,7 +145,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2 id="0-前言">0. 前言</h2>
 <p>这篇文章其实来的有点晚了，毕竟我这个博客从之前的wordpress转到github page也已经是很长时间了，当时转的时候就遇到了不是https连接导致打开页面老是弹chrome警告的情况。后来就找了方法开启了https。解决是很早就解决了，这篇文章算是补个记录。</p>
 
@@ -127,12 +165,12 @@
 
 <p>准备工作到此结束，这样一轮操作下来你就有了 xxx.github.io 这样一个站点。上面这段基本上属于废话，很多github page建站教程上都会说，我这里仅只是想补充下内容和发布分离的建议。</p>
 
-<p>github官方就有教程，可以查看<a href="https://guides.github.com/features/pages/">这里</a>。</p>
+<p>github官方就有教程，可以查看<a href="https://guides.github.com/features/pages/" target="_blank">这里</a>。</p>
 
 <h2 id="3-域名绑定--启用https">3. 域名绑定 &amp; 启用HTTPS</h2>
 <p>所谓的对你的域名启用HTTPS其实很简单，就是使用cloudflare这家公司的DNS解析，将你博客上的所有内容经过这家公司的CDN缓存，自然所有的访问内容就都经过HTTPS加密了。</p>
 
-<p>具体的做法可以参见cloudflare的官方博客：<a href="https://blog.cloudflare.com/secure-and-fast-github-pages-with-cloudflare/">这里</a>。</p>
+<p>具体的做法可以参见cloudflare的官方博客：<a href="https://blog.cloudflare.com/secure-and-fast-github-pages-with-cloudflare/" target="_blank">这里</a>。</p>
 
 <p>简单来说就是：</p>
 
@@ -163,6 +201,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -170,8 +210,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

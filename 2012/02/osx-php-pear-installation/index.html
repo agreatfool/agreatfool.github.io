@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -110,7 +149,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2>1. 简介</h2>
 <p>Pear对PHP来说就类似于MacPort对MAC的用处，它可以用来安装和管理PHP的一系列第三方组件。因为我习惯于直接下载源码包进行组件的安装，所以一直都没装PHP的Pear。不过因为很多第三方的组件官方推荐的安装方式都是通过Pear，所以还是有必要安装了解下这个东西。</p>
 <p>说实在的，当我看到这玩意的官方安装guide的时候我真的吓了一跳，日啊，居然要我下一个php脚本，然后用php命令行去跑这个脚本？你就不能给我源码包么？或者是bash脚本也行啊。我的OSX因为使用php5.2.17版本，所以导致了cli和cgi的版本脱节，貌似cgi的安装路径和cli还不一致。所以我不是很想通过cli脚本进行安装。后来发现这个问题他们也考虑到了，有web页面版本的安装脚本。</p>
@@ -216,6 +254,8 @@ Thanks for using go-pear!</pre>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -223,8 +263,6 @@ Thanks for using go-pear!</pre>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

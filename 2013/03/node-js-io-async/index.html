@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>Node.js作为一门单线程的语言，能受到大众接受，并展现其无与伦比的强悍性能，一方面应该感谢google研制的V8引擎，另一方面就应该归功于Node.js自身的优良血统了，这个血统就是"单线程异步非阻塞I/O模型"。这话听多了，我就越来越想了解这个神秘的异步到底是什么意思。在我自己用pomelo框架做了一个长连接的杀人游戏demo后，我明白了。所谓的异步，就是区别于一般编程的同步。</p>
 <p>做过性能测试的都知道，一般程序的性能瓶颈都不在于你写出来的代码，而在于很多外部I/O。比如说，你做一个数据库的写操作，写入就那么分分秒秒的事情，创建数据库连接却可能要花多得多的时间。同步编程的痛处就在于你必须等之前的I/O完成，你的程序才能进行之后的工作，而这个时候，整个程序都是被阻塞的。而Node.js不同，它的异步事件特性保证了在I/O阻塞的时候，后续的程序（回调）会被放入一个回调的事件队列中，等待处理，而当前的程序则被分发出去做其他的事情了。这保证了整个服务器的性能得到了最大的利用，而不会因为I/O的阻塞导致性能的浪费和排队等待。</p>
 <p>这里给出一个cnode网站的帖子链接，这个帖子里有非常详细的例子：<a title="新手入门：理解Node.js的异步非阻塞I/O模型" href="http://cnodejs.org/topic/4f50dd9798766f5a610b808a" target="_blank">新手入门：理解Node.js的异步非阻塞I/O模型</a></p>
@@ -124,6 +162,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -131,8 +171,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

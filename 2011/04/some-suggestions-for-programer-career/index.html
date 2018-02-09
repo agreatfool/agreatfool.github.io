@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>自从四年前被CSDN采访后（“<a title="职业规划就像软件工程" href="http://blog.csdn.net/haoel/archive/2007/07/13/1688104.aspx" target="_blank">职业规化就像软件工程</a>”），经常会有网友（尤其是刚毕业的）写邮件来问我一些程序员职业生涯的一些问题，至到今天。比如，国企还是外企的选择，一直编程有没有前途等等问题。面对这样的邮件，我感到有很大的压力，因为如果我的回复很有可能会误人一生，但我另一方面又很想帮助这些人。所以，我基本上还是会尝试回一下这样的邮件。昨天，我又回了一封。但是我心里还是有点忐忑不安。害怕说错了什么。</p>
 <p>今天，我想把我的一些思路和建议写在这里，一方面供大家参考，另一方面也想听听大家对我的评判，这样不但对更多的人有帮助，同时对我自己也是一个帮助。</p>
 <p>下面是某网友前天给我发来的邮件：</p>
@@ -178,6 +216,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -185,8 +225,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

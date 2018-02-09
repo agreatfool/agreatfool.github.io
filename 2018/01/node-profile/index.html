@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -108,52 +147,47 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
-                <ul class="section-nav">
-<li class="toc-entry toc-h1"><a href="#0-前言">0. 前言</a>
-<ul>
-<li class="toc-entry toc-h2"><a href="#版本信息">版本信息</a></li>
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#0-前言" id="markdown-toc-0-前言">0. 前言</a>    <ul>
+      <li><a href="#版本信息" id="markdown-toc-版本信息">版本信息</a></li>
+    </ul>
+  </li>
+  <li><a href="#1-内存" id="markdown-toc-1-内存">1. 内存</a></li>
+  <li><a href="#2-资料" id="markdown-toc-2-资料">2. 资料</a>    <ul>
+      <li><a href="#21-node相关" id="markdown-toc-21-node相关">2.1 Node相关</a></li>
+      <li><a href="#22-v8--内存" id="markdown-toc-22-v8--内存">2.2 V8 &amp; 内存</a></li>
+      <li><a href="#23-chrome-dev-tool" id="markdown-toc-23-chrome-dev-tool">2.3 Chrome Dev Tool</a></li>
+      <li><a href="#24-专栏--博客" id="markdown-toc-24-专栏--博客">2.4 专栏 &amp; 博客</a></li>
+      <li><a href="#33-内存metrics-api" id="markdown-toc-33-内存metrics-api">3.3 内存Metrics API</a>        <ul>
+          <li><a href="#331-processmemoryusage" id="markdown-toc-331-processmemoryusage">3.3.1 <a href="https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage">process.memoryUsage</a></a></li>
+          <li><a href="#332-requirev8getheapstatistics" id="markdown-toc-332-requirev8getheapstatistics">3.3.2 <a href="https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics">require(“v8”).getHeapStatistics</a></a></li>
+          <li><a href="#333-requirev8getheapspacestatistics" id="markdown-toc-333-requirev8getheapspacestatistics">3.3.3 <a href="https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics">require(“v8”).getHeapSpaceStatistics</a></a></li>
+          <li><a href="#334-top--ps" id="markdown-toc-334-top--ps">3.3.4 top &amp; ps</a></li>
+        </ul>
+      </li>
+      <li><a href="#35-内存泄露--chrome-dev-tool" id="markdown-toc-35-内存泄露--chrome-dev-tool">3.5 内存泄露 &amp; Chrome Dev Tool</a>        <ul>
+          <li><a href="#351-范例" id="markdown-toc-351-范例">3.5.1 范例</a></li>
+          <li><a href="#352-查找问题" id="markdown-toc-352-查找问题">3.5.2 查找问题</a></li>
+        </ul>
+      </li>
+      <li><a href="#36-核心内存metrics" id="markdown-toc-36-核心内存metrics">3.6 核心内存Metrics</a>        <ul>
+          <li><a href="#361-node内存" id="markdown-toc-361-node内存">3.6.1 Node内存</a></li>
+          <li><a href="#362-node-gc" id="markdown-toc-362-node-gc">3.6.2 Node GC</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#4-性能知识点---eventloop" id="markdown-toc-4-性能知识点---eventloop">4. 性能知识点 - EventLoop</a></li>
+  <li><a href="#5-工具" id="markdown-toc-5-工具">5. 工具</a>    <ul>
+      <li><a href="#51-内存泄露--内存正常-范例脚本" id="markdown-toc-51-内存泄露--内存正常-范例脚本">5.1 内存泄露 || 内存正常 范例脚本</a></li>
+      <li><a href="#52-gc解析管道脚本" id="markdown-toc-52-gc解析管道脚本">5.2 GC解析管道脚本</a></li>
+      <li><a href="#53-nimnodejs-调试管理工具" id="markdown-toc-53-nimnodejs-调试管理工具">5.3 <a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">NIM(Node.js 调试管理工具)</a></a></li>
+    </ul>
+  </li>
 </ul>
-</li>
-<li class="toc-entry toc-h1"><a href="#1-内存">1. 内存</a></li>
-<li class="toc-entry toc-h1"><a href="#2-资料">2. 资料</a>
-<ul>
-<li class="toc-entry toc-h2"><a href="#21-node相关">2.1 Node相关</a></li>
-<li class="toc-entry toc-h2"><a href="#22-v8--内存">2.2 V8 & 内存</a></li>
-<li class="toc-entry toc-h2"><a href="#23-chrome-dev-tool">2.3 Chrome Dev Tool</a></li>
-<li class="toc-entry toc-h2"><a href="#24-专栏--博客">2.4 专栏 & 博客</a></li>
-<li class="toc-entry toc-h2"><a href="#33-内存metrics-api">3.3 内存Metrics API</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#331-processmemoryusage">3.3.1 process.memoryUsage</a></li>
-<li class="toc-entry toc-h3"><a href="#332-requirev8getheapstatistics">3.3.2 require(“v8”).getHeapStatistics</a></li>
-<li class="toc-entry toc-h3"><a href="#333-requirev8getheapspacestatistics">3.3.3 require(“v8”).getHeapSpaceStatistics</a></li>
-<li class="toc-entry toc-h3"><a href="#334-top--ps">3.3.4 top & ps</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h2"><a href="#35-内存泄露--chrome-dev-tool">3.5 内存泄露 & Chrome Dev Tool</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#351-范例">3.5.1 范例</a></li>
-<li class="toc-entry toc-h3"><a href="#352-查找问题">3.5.2 查找问题</a></li>
-</ul>
-</li>
-<li class="toc-entry toc-h2"><a href="#36-核心内存metrics">3.6 核心内存Metrics</a>
-<ul>
-<li class="toc-entry toc-h3"><a href="#361-node内存">3.6.1 Node内存</a></li>
-<li class="toc-entry toc-h3"><a href="#362-node-gc">3.6.2 Node GC</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li class="toc-entry toc-h1"><a href="#4-性能知识点---eventloop">4. 性能知识点 - EventLoop</a></li>
-<li class="toc-entry toc-h1"><a href="#5-工具">5. 工具</a>
-<ul>
-<li class="toc-entry toc-h2"><a href="#51-内存泄露--内存正常-范例脚本">5.1 内存泄露 || 内存正常 范例脚本</a></li>
-<li class="toc-entry toc-h2"><a href="#52-gc解析管道脚本">5.2 GC解析管道脚本</a></li>
-<li class="toc-entry toc-h2"><a href="#53-nimnodejs-调试管理工具">5.3 NIM(Node.js 调试管理工具)</a></li>
-</ul>
-</li>
-</ul><h1 id="0-前言">
-<a id="0-前言" class="anchor" href="#0-%E5%89%8D%E8%A8%80" aria-hidden="true"><span class="octicon octicon-link"></span></a>0. 前言</h1>
+
+<h1 id="0-前言">0. 前言</h1>
 <p>知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。</p>
 
 <p>本文主要在于以下几个方面，不局限于狭义的<code>profile</code>或<code>profiler</code>：</p>
@@ -164,14 +198,13 @@
   <li>Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题</li>
 </ul>
 
-<h2 id="版本信息">
-<a id="版本信息" class="anchor" href="#%E7%89%88%E6%9C%AC%E4%BF%A1%E6%81%AF" aria-hidden="true"><span class="octicon octicon-link"></span></a>版本信息</h2>
+<h2 id="版本信息">版本信息</h2>
 <p>本文行文依据的Node版本，及所有范例的运行环境为：</p>
 
 <blockquote>
-  <p>Node version:  <br>
-  v8.4.0  <br>
-  Node v8 version:  <br>
+  <p>Node version:  <br />
+  v8.4.0  <br />
+  Node v8 version:  <br />
   6.0.286.52</p>
 </blockquote>
 
@@ -185,49 +218,39 @@
 
 <p>一般只要版本差异不要太大，信息的可靠性都应该没有问题。但如果版本差异过大，请自行进行信息修正，毕竟Node的发展实在是太快。</p>
 
-<h1 id="1-内存">
-<a id="1-内存" class="anchor" href="#1-%E5%86%85%E5%AD%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. 内存</h1>
+<h1 id="1-内存">1. 内存</h1>
 
 <ul>
   <li><a href="https://xenojoshua.com/2018/01/node-memory/" target="_blank">1.1 V8内存机制</a></li>
   <li><a href="https://xenojoshua.com/2018/01/node-v8-gc/" target="_blank">1.2 V8 GC详解</a></li>
 </ul>
 
-<h1 id="2-资料">
-<a id="2-资料" class="anchor" href="#2-%E8%B5%84%E6%96%99" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. 资料</h1>
+<h1 id="2-资料">2. 资料</h1>
 <p>资料我都放在前面，方便直接打开深度阅读。</p>
 
-<h2 id="21-node相关">
-<a id="21-node相关" class="anchor" href="#21-node%E7%9B%B8%E5%85%B3" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1 Node相关</h2>
+<h2 id="21-node相关">2.1 Node相关</h2>
 <ul>
-  <li>
-<a href="https://nodejs.org/docs/v8.4.0/api/v8.html">V8 Node.js v8.4.0 Documentation</a>：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</li>
+  <li><a href="https://nodejs.org/docs/v8.4.0/api/v8.html">V8 Node.js v8.4.0 Documentation</a>：Node进程中获取V8信息的工具库，里面的部分API是必然会用到的</li>
 </ul>
 
-<h2 id="22-v8--内存">
-<a id="22-v8--内存" class="anchor" href="#22-v8--%E5%86%85%E5%AD%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2 V8 &amp; 内存</h2>
+<h2 id="22-v8--内存">2.2 V8 &amp; 内存</h2>
 <ul>
   <li><a href="https://github.com/v8/v8/wiki/TurboFan">TurboFan · v8/v8 Wiki · GitHub</a></li>
   <li><a href="https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough">DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH</a></li>
   <li><a href="https://zhuanlan.zhihu.com/p/27310544">Node.js 性能调优之内存篇(二)——heapdump</a></li>
 </ul>
 
-<h2 id="23-chrome-dev-tool">
-<a id="23-chrome-dev-tool" class="anchor" href="#23-chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.3 Chrome Dev Tool</h2>
+<h2 id="23-chrome-dev-tool">2.3 Chrome Dev Tool</h2>
 <ul>
   <li><a href="https://developers.google.com/web/tools/chrome-devtools/">Dev工具官方教程</a></li>
   <li><a href="https://developers.google.com/web/tools/chrome-devtools/memory-problems/">解决内存问题</a></li>
 </ul>
 
-<h2 id="24-专栏--博客">
-<a id="24-专栏--博客" class="anchor" href="#24-%E4%B8%93%E6%A0%8F--%E5%8D%9A%E5%AE%A2" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.4 专栏 &amp; 博客</h2>
+<h2 id="24-专栏--博客">2.4 专栏 &amp; 博客</h2>
 <p><a href="https://zhuanlan.zhihu.com/shimo">石墨文档技术酒馆</a></p>
 
-<h2 id="33-内存metrics-api">
-<a id="33-内存metrics-api" class="anchor" href="#33-%E5%86%85%E5%AD%98metrics-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3 内存Metrics API</h2>
-<h3 id="331-processmemoryusage">
-<a id="331-processmemoryusage" class="anchor" href="#331-processmemoryusage" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.1 <a href="https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage">process.memoryUsage</a>
-</h3>
+<h2 id="33-内存metrics-api">3.3 内存Metrics API</h2>
+<h3 id="331-processmemoryusage">3.3.1 <a href="https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage">process.memoryUsage</a></h3>
 <ul>
   <li>rss：node进程总内存占用量</li>
   <li>heapTotal：总堆内存占用量（已申请下来的）</li>
@@ -237,12 +260,9 @@
 
 <p>常用来查看基础的内存信息，特别是rss很有用。</p>
 
-<h3 id="332-requirev8getheapstatistics">
-<a id="332-requirev8getheapstatistics" class="anchor" href="#332-requirev8getheapstatistics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.2 <a href="https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics">require(“v8”).getHeapStatistics</a>
-</h3>
+<h3 id="332-requirev8getheapstatistics">3.3.2 <a href="https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics">require(“v8”).getHeapStatistics</a></h3>
 <ul>
-  <li>total_heap_size：总堆内存占用量（已申请下来的），同<code>process.memoryUsage().heapTotal</code>
-</li>
+  <li>total_heap_size：总堆内存占用量（已申请下来的），同<code>process.memoryUsage().heapTotal</code></li>
   <li>total_heap_size_executable：字节码、优化后的代码等可执行的内容占用的内存量</li>
   <li>total_physical_size：找到部分解释说是<code>Commited size</code>，测试下来该值
     <ul>
@@ -250,10 +270,8 @@
       <li>Committed memory is, essentially, all the memory which has been allocated by applications, whether it’s used or not.</li>
     </ul>
   </li>
-  <li>total_available_size：剩余可用的堆内存量，包括尚未向操作系统申请的部分，其实就是<code>heap_size_limit - used_heap_size</code>
-</li>
-  <li>used_heap_size：实际堆内存使用量，同<code>process.memoryUsage().heapUsed</code>
-</li>
+  <li>total_available_size：剩余可用的堆内存量，包括尚未向操作系统申请的部分，其实就是<code>heap_size_limit - used_heap_size</code></li>
+  <li>used_heap_size：实际堆内存使用量，同<code>process.memoryUsage().heapUsed</code></li>
   <li>heap_size_limit：最大可用堆内存（上限）</li>
   <li>malloced_memory：实际测试是一个很小的值，有解释说是：current amount of memory, obtained via malloc</li>
   <li>peak_malloced_memory：没搜到任何说明，有必要可以读下node源码</li>
@@ -262,13 +280,10 @@
 
 <p>常用来查看堆上限大小。</p>
 
-<h3 id="333-requirev8getheapspacestatistics">
-<a id="333-requirev8getheapspacestatistics" class="anchor" href="#333-requirev8getheapspacestatistics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.3 <a href="https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics">require(“v8”).getHeapSpaceStatistics</a>
-</h3>
+<h3 id="333-requirev8getheapspacestatistics">3.3.3 <a href="https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics">require(“v8”).getHeapSpaceStatistics</a></h3>
 <p>按内存空间分类<code>space</code>种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。</p>
 
-<h3 id="334-top--ps">
-<a id="334-top--ps" class="anchor" href="#334-top--ps" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.3.4 top &amp; ps</h3>
+<h3 id="334-top--ps">3.3.4 top &amp; ps</h3>
 <p>使用系统ps命令更快获取进程的内存占用情况：</p>
 
 <blockquote>
@@ -297,14 +312,11 @@
   </table>
 </blockquote>
 
-<h2 id="35-内存泄露--chrome-dev-tool">
-<a id="35-内存泄露--chrome-dev-tool" class="anchor" href="#35-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--chrome-dev-tool" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5 内存泄露 &amp; Chrome Dev Tool</h2>
-<h3 id="351-范例">
-<a id="351-范例" class="anchor" href="#351-%E8%8C%83%E4%BE%8B" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5.1 范例</h3>
+<h2 id="35-内存泄露--chrome-dev-tool">3.5 内存泄露 &amp; Chrome Dev Tool</h2>
+<h3 id="351-范例">3.5.1 范例</h3>
 <p>内存泄露可以使用下面5.1里的脚本进行试验。</p>
 
-<h3 id="352-查找问题">
-<a id="352-查找问题" class="anchor" href="#352-%E6%9F%A5%E6%89%BE%E9%97%AE%E9%A2%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.5.2 查找问题</h3>
+<h3 id="352-查找问题">3.5.2 查找问题</h3>
 <p>使用node的<a href="https://nodejs.org/en/docs/inspector/">inspector</a>来进行运行状态分析（当然，这工具可以做更多的事情）。关于Chrome Dev Tool，可以看<a href="https://developers.google.com/web/tools/chrome-devtools/">官方教程</a>。</p>
 
 <blockquote>
@@ -345,17 +357,13 @@
 
 <p>更详细的可以看博客：</p>
 <ul>
-  <li>
-<a href="https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough">DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH</a>，这篇文章里的node和chrome版本有点老，但大致的观点和步骤都是没有问题的</li>
-  <li>
-<a href="https://zhuanlan.zhihu.com/p/27310544">Node.js 性能调优之内存篇(二)——heapdump</a>，这篇中文的更容易阅读，界面和操作等细节更多</li>
+  <li><a href="https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough">DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH</a>，这篇文章里的node和chrome版本有点老，但大致的观点和步骤都是没有问题的</li>
+  <li><a href="https://zhuanlan.zhihu.com/p/27310544">Node.js 性能调优之内存篇(二)——heapdump</a>，这篇中文的更容易阅读，界面和操作等细节更多</li>
 </ul>
 
-<h2 id="36-核心内存metrics">
-<a id="36-核心内存metrics" class="anchor" href="#36-%E6%A0%B8%E5%BF%83%E5%86%85%E5%AD%98metrics" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6 核心内存Metrics</h2>
+<h2 id="36-核心内存metrics">3.6 核心内存Metrics</h2>
 
-<h3 id="361-node内存">
-<a id="361-node内存" class="anchor" href="#361-node%E5%86%85%E5%AD%98" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6.1 Node内存</h3>
+<h3 id="361-node内存">3.6.1 Node内存</h3>
 <ul>
   <li>rss：node进程总内存占用量</li>
   <li>heapTotal：总堆内存占用量（已申请下来的）</li>
@@ -366,39 +374,36 @@
 
 <p>按空间分类的堆内存信息可以酌情收集，如果有需要分析单独的<code>新生代</code>或<code>老生代</code>内存情况的话。</p>
 
-<h3 id="362-node-gc">
-<a id="362-node-gc" class="anchor" href="#362-node-gc" aria-hidden="true"><span class="octicon octicon-link"></span></a>3.6.2 Node GC</h3>
+<h3 id="362-node-gc">3.6.2 Node GC</h3>
 <ul>
   <li>gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低</li>
   <li>gcPause：GC中断，需要按不同GC类型进行分类收集，老生代的<code>markSweepCompact</code>数据最为关键</li>
-  <li>
+  <li></li>
   <li>allocationRate：新内存分配下来的速率，bytes/second</li>
   <li>promotionRate：内存从新生代到老生代的晋升速度，bytes/second</li>
 </ul>
 
-<h1 id="4-性能知识点---eventloop">
-<a id="4-性能知识点---eventloop" class="anchor" href="#4-%E6%80%A7%E8%83%BD%E7%9F%A5%E8%AF%86%E7%82%B9---eventloop" aria-hidden="true"><span class="octicon octicon-link"></span></a>4. 性能知识点 - EventLoop</h1>
+<h1 id="4-性能知识点---eventloop">4. 性能知识点 - EventLoop</h1>
 
-<h1 id="5-工具">
-<a id="5-工具" class="anchor" href="#5-%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>5. 工具</h1>
-<h2 id="51-内存泄露--内存正常-范例脚本">
-<a id="51-内存泄露--内存正常-范例脚本" class="anchor" href="#51-%E5%86%85%E5%AD%98%E6%B3%84%E9%9C%B2--%E5%86%85%E5%AD%98%E6%AD%A3%E5%B8%B8-%E8%8C%83%E4%BE%8B%E8%84%9A%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.1 内存泄露 || 内存正常 范例脚本</h2>
+<h1 id="5-工具">5. 工具</h1>
+<h2 id="51-内存泄露--内存正常-范例脚本">5.1 内存泄露 || 内存正常 范例脚本</h2>
 <p>为了观察内存泄露和GC日志，需要一个范例运行的脚本，我这里制作了一个：</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript>
+  <pre>400: Invalid request
+</pre>
+</noscript>
 <script src="https://gist.github.com/024d11c54c1a8e474ded5269d54f5c99.js"> </script>
 
-<h2 id="52-gc解析管道脚本">
-<a id="52-gc解析管道脚本" class="anchor" href="#52-gc%E8%A7%A3%E6%9E%90%E7%AE%A1%E9%81%93%E8%84%9A%E6%9C%AC" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.2 GC解析管道脚本</h2>
+<h2 id="52-gc解析管道脚本">5.2 GC解析管道脚本</h2>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
+<noscript>
+  <pre>400: Invalid request
+</pre>
+</noscript>
 <script src="https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js"> </script>
 
-<h2 id="53-nimnodejs-调试管理工具">
-<a id="53-nimnodejs-调试管理工具" class="anchor" href="#53-nimnodejs-%E8%B0%83%E8%AF%95%E7%AE%A1%E7%90%86%E5%B7%A5%E5%85%B7" aria-hidden="true"><span class="octicon octicon-link"></span></a>5.3 <a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">NIM(Node.js 调试管理工具)</a>
-</h2>
+<h2 id="53-nimnodejs-调试管理工具">5.3 <a href="https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj">NIM(Node.js 调试管理工具)</a></h2>
 <p>可在node进程使用<code>--inspect</code> flag时，自动打开chrome的调试tab。</p>
 
 <blockquote>
@@ -420,6 +425,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -427,8 +434,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

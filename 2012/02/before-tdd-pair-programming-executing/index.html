@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2>1. 前言</h2>
 <p>公司准备试点施行TDD和Pair Programming，很奇妙的两个东西，都是我在7年编程经历里想都没想过，并很难接受的东西。先说TDD。TDD是一种很违背自然思考的事情，一般我们做事情的时候总是先做事情然后再来检查，所以一般都是写代码先，然后再写test case，这是很自然的想法。而TDD则要求我们将测试代码写在逻辑代码之前，囧啊。然后是pair programming。在我的认知范围内，包括我自己，应该所有的程序员都不希望在自己写代码的时候旁边有个人看着你，甚至对你写的代码指指点点。所以这两个东西在很多软件公司，是推行不开来的。但是从另一个方面来看，存在即合理，这个东西既然有人提倡（公司的CTO也是大力提倡者），那么肯定有其意义所在。周2，大家开了个会，把所有的点都过了下，会上我仔细思考了下这两个东西，发现所得颇多，这里权作下笔记。</p>
 <h2>2. TDD解决了什么</h2>
@@ -160,6 +198,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -167,8 +207,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

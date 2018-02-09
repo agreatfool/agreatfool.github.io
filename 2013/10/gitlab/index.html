@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>Git作为一种VCS工具在VCS工具群中，基本上就是唯一的选择了，在用过git后，还想回到svn等旧式VCS的开发者应该是不存在的。当然，作为一家私营的企业，私有的git库是必须的，你无法想象一家企业将所有的代码都开源在github上（当然，部分的还是可能的）。这里我们就需要寻找一种方便，强力，高效的git库管理工具。</p>
 <p>现在市面上比较出名的git库管理软件和社区有github和bitbucket，两者都支持免费的开源。前者的私有项目是收费的，后者的私有项目是根据用户数量收费的，个人的私有项目免费。作为公司，当然希望尽量能免费，且有高质量的服务，那就需要开源的工具。我曾经考察过几种开源的git库管理软件，过程和细节就不详述了，当时的结论是gitblit尚堪一用，安装非常简单（一个war包），gitlab很好，但是安装太过复杂。所以当时就开始使用gitblit了，结果发现这玩意用起来功能太少了，连最基本的用户管理和组管理都没有，简直无法接受了。于是又重头回来，拾回gitlab。</p>
 <p>项目github：<a href="https://github.com/gitlabhq/gitlabhq" target="_blank">https://github.com/gitlabhq/gitlabhq</a></p>
@@ -173,6 +211,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -180,8 +220,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

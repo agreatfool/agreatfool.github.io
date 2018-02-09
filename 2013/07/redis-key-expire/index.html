@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -106,7 +145,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>转载自：<a title="NoSQLFan &gt;&gt; 深入理解Redis主键失效原理及实现机制" href="http://blog.nosqlfan.com/html/4218.html" target="_blank">NoSQLFan &gt;&gt; 深入理解Redis主键失效原理及实现机制</a></p>
 <p>------------------------------------------------------------------------------------------------</p>
 <p>作为一种定期清理无效数据的重要机制，主键失效存在于大多数缓存系统中，Redis 也不例外。在 Redis 提供的诸多命令中，EXPIRE、EXPIREAT、PEXPIRE、PEXPIREAT 以及 SETEX 和 PSETEX 均可以用来设置一条 Key-Value 对的<a title="查看 失效时间 的全部文章" href="http://blog.nosqlfan.com/tags/%e5%a4%b1%e6%95%88%e6%97%b6%e9%97%b4" target="_blank">失效时间</a>，而一条 Key-Value 对一旦被关联了失效时间就会在到期后自动删除（或者说变得无法访问更为准确）。可以说，主键失效这个概念还是比较容易理解的，但是在具体实现到 Redis 中又是如何呢？最近本博主就对 Redis 中的主键失效机制产生了几个疑问，并根据这些疑问对其进行了仔细的探究，现总结所得如下，以飨各位看客。</p>
@@ -300,6 +338,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -307,8 +347,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

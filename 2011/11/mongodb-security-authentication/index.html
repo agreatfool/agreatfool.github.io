@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -106,7 +145,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>先把官方文档的地址贴上来，所有的内容都来自这里：<a href="http://www.mongodb.org/display/DOCS/Security+and+Authentication">http://www.mongodb.org/display/DOCS/Security+and+Authentication</a></p>
 <p>最近项目需要mongodb，简单试了下，一直都没找到安全验证的机制，在linux下很简单就用mongo命令登进去了，也没有指定用户名和密码，也没有host和port，直接就进去了。当时还感觉蛮方便的，但是事后想想，完全没有安全机制和验证的，还是有点不放心啊。后来仔细看了下文档，原来还是有的，只是不太好找而已。</p>
 <p>官方文档的说法是：目前mongodb的安全机制还是比较简陋的，主要是表现在权限方面，一个用户只要被授权了，那么他就直接拥有了全部的读写权限。mongodb也可以创建只读用户，只有读取的权限。</p>
@@ -152,6 +190,8 @@ db.removeUser("username")</p>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -159,8 +199,6 @@ db.removeUser("username")</p>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

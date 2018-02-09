@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -110,7 +149,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>当年写过一篇文章，怎么在linux下将java作为daemon运行：<a title="Permalink to 将Java作为守护进程运行" href="http://xenojoshua.com/2011/05/java-as-a-daemon-service/" target="_blank" rel="bookmark">将Java作为守护进程运行</a>。这个方法还不错，但是针对的面有点狭窄，必须使用start-stop-daemon这个命令，在没有这个命令的MAC系统，问题就稍嫌麻烦了。不过这个方法也有它的优点，就是不需要代码层面的改动。</p>
 <p>今天介绍一个通用的将java作为守护进程启动的方法，使用的工具是apache的daemon包，这个东西最早来自于tomcat，后来单独分离了出来。主页在：<a href="http://commons.apache.org/proper/commons-daemon/index.html" target="_blank">http://commons.apache.org/proper/commons-daemon/index.html</a>，我们最主要需要的是里面的jsvc命令：<a href="http://commons.apache.org/proper/commons-daemon/jsvc.html" target="_blank">http://commons.apache.org/proper/commons-daemon/jsvc.html</a>。</p>
 <h2>安装：</h2>
@@ -152,6 +190,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -159,8 +199,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

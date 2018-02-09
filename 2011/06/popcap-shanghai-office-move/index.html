@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>今天终于从原PopCap上海办公司旧层（西藏中路585号新金桥广场6楼）搬到了新租下并装修完毕的新层（8楼）。毕竟是从6到8，就那么2层，还是很快就搞定了。和旧办公室比起来，最大的变化就是密度了。本来因为最近公司规模扩容得很厉害，导致了办公室人员密度异常拥挤。上到8楼，分流一半人员（一半留在6楼）的结果是很明显的，办公室区域宽敞了很多，不会再有很多人从你身边走来走去了。另外一个很大的变化就是色调，原来6楼的色调是橘红色，和美国那边PopCap的红色风格色调比较接近，有亲切感，而且办公的时候不至于觉得冰冷。而8楼现在的色调则变成了白色为主辅以蓝色，一下变身为了冷色调，感觉很无趣。</p>
 <p>想我on board的时候是2009年的9月底，正好赶上公司从15楼（半层）搬到6楼的前期。10月就搬到了6楼（整层），当时感觉办公室真宽敞，有很多地方有空位置。随着时间慢慢推移，公司人员慢慢扩充（特别是2011年左右，爆炸式增长），地方就越来越拥挤了。我在2010年中从原来的位置换到了靠墙的位置，当时还感觉有点不爽，但是真的搬过去之后就知道了，那个位置简直是公司里的神器啊！那一整排位置，背后靠墙，右边没有出入口，人都必须从左边一个立柱旁边的小口子进出。虽然有点不方便，但是坐在里面的人面朝出入口、背靠墙，所有人的进出都一目了然，爽得不得了。现在到8楼就成了四通八达的位置了，感觉有点小怀念以前的位置。</p>
 <p>想当年第一份工作正好赶上augmentum高速扩展的一年，2007年。2008年augmentum租了新办公室，装修完毕。却赶上了经济危机，公司一下子就完蛋了。装修好的新办公区都放弃了，简直凄惨。想PopCap最近扩展得很凶，但是还没有一款主打产品拿到台面上（虽然有在日本、韩国的游戏销售撑场面，中国的周边产业也在铺开），真希望植物大战僵尸社区版上线之后能真的叫好又叫座。否则我的职业生涯岂不是一直都是坐在下行列车上~囧。</p>
@@ -124,6 +162,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -131,8 +171,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

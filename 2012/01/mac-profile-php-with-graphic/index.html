@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -106,7 +145,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>PHP脚本的性能调优一贯是使用xdebug进行profile的脚本输出，在windows下有一款软件叫<a title="WinCacheGrind" href="http://sourceforge.net/projects/wincachegrind/" target="_blank">WinCacheGrind</a>的软件进行图形界面的细节结果观察。今天就在找mac下有没有同样功能好用的软件。</p>
 <p>第一款查到的软件叫<a title="MacCallGrind" href="http://www.maccallgrind.com/" target="_blank">MacCallGrind</a>，非常好用。不用自己编译安装，直接下载就能使用了，和一般的mac软件没啥差别，而且图形界面做得也不错。可惜，要钱的，而且要价很高。500K的一个软件要$149，抢钱呢。</p>
 <p>然后到xdebug的官方网站逛了逛，发现官方有介绍一个软件叫<a title="QCacheGrind / KCacheGrind" href="http://kcachegrind.sourceforge.net/html/Home.html" target="_blank">qcachegrind(kcachegrind)</a>。虽然名字有两个，其实是一个软件，区别在于界面的安装是使用QT还是KDE。貌似使用QT作为界面被推荐得多一点，于是就决定用这个了。</p>
@@ -146,6 +184,8 @@ make</p>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -153,8 +193,6 @@ make</p>
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

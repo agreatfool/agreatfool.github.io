@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -106,7 +145,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2>前言</h2>
 <p>我已经很久没有写前端代码了，所以我对于前端js的概念还停留在2007年左右的时代，那时候还没有很好用的前端js模板引擎，所以写漂亮的前端ajax真的很难。数据你可以通过ajax获得到，但是如何漂亮地维护模板呢，当时是没有办法的，所以我当年做小型站点的做法都是ajax直接返回渲染好的HTML代码。现在不用了，jade很好地解决了这个问题。</p>
 <p>官方网站：<a href="http://jade-lang.com/" target="_blank">http://jade-lang.com/</a>，奇葩的是，你会发现这个网站就是个静态页面，没有任何内容，它的链接是直接指向jade的github项目网页的，而所有的文档也都写在这里：<a href="https://github.com/visionmedia/jade" target="_blank">https://github.com/visionmedia/jade</a>。然而，这个时候你会发现这个文档极其不好用，我是找了很久，才找到一个不错的tutorial网站：<a href="http://naltatis.github.com/jade-syntax-docs/#basics" target="_blank">http://naltatis.github.com/jade-syntax-docs/#basics</a>，建议需要看例子的，就直接去这个网站好了。</p>
@@ -289,6 +327,8 @@ each itemVal, itemKey in items
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -296,8 +336,6 @@ each itemVal, itemKey in items
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

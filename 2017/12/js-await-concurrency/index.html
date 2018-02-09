@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -102,7 +141,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <h2 id="0-前言">0. 前言</h2>
 <p>Js的异步一直都是很难处理的一个东西，即便到了最新的ES7，正式引入了async/await能将异步语法糖封装到类同步的写法，里面的很多细节及原理仍旧需要我们非常小心地学习和处理。这次遇到了一个比较傻的问题，而我居然都楞了一下，事后觉得有必要记录下来。</p>
 
@@ -120,7 +158,8 @@
 
 <p>await 例子：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">waitForResponse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<figure class="highlight">
+  <pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">waitForResponse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Done&#39;</span><span class="p">);</span>
@@ -139,11 +178,13 @@
 <span class="c1">// Result:</span>
 <span class="c1">// Before</span>
 <span class="c1">// Done</span>
-<span class="c1">// After</span></code></pre></figure>
+<span class="c1">// After</span></code></pre>
+</figure>
 
 <p>promise 例子：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">waitForResponse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<figure class="highlight">
+  <pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">waitForResponse</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">return</span> <span class="k">new</span> <span class="nb">Promise</span><span class="p">((</span><span class="nx">resolve</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="p">{</span>
     <span class="nx">setTimeout</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="p">{</span>
       <span class="nx">resolve</span><span class="p">(</span><span class="s1">&#39;Done&#39;</span><span class="p">);</span>
@@ -164,14 +205,16 @@
 <span class="c1">// Result:</span>
 <span class="c1">// Before</span>
 <span class="c1">// After</span>
-<span class="c1">// Done</span></code></pre></figure>
+<span class="c1">// Done</span></code></pre>
+</figure>
 
 <h2 id="2-问题2">2. 问题2</h2>
 <p>问题2的结论也非常简单，任何并发请求都会进入到事件循环中，并不会受到await语句的阻塞。await语句的停顿只会在逻辑层面，而不会在进程层面。并发请求不会受到任何影响，这是node赖以生存的关键核心，不可能受到干扰。</p>
 
 <p>例子：</p>
 
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="c1">// server.js</span>
+<figure class="highlight">
+  <pre><code class="language-javascript" data-lang="javascript"><span></span><span class="c1">// server.js</span>
 <span class="kr">const</span> <span class="nx">Koa</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;koa&#39;</span><span class="p">);</span>
 <span class="kr">const</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Koa</span><span class="p">();</span>
 <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;koa-qs&#39;</span><span class="p">)(</span><span class="nx">app</span><span class="p">);</span>
@@ -252,7 +295,8 @@
 <span class="c1">// Client[0]: Child response of 0: Response 0</span>
 <span class="c1">// Client[4]: Child response of 4: Response 4</span>
 <span class="c1">// Client[1]: Child response of 1: Response 1 waited 1s</span>
-<span class="c1">// Client[2]: Child response of 2: Response 2 waited 2s </span></code></pre></figure>
+<span class="c1">// Client[2]: Child response of 2: Response 2 waited 2s </span></code></pre>
+</figure>
 
 <p>可以看到 0、3、4的返回结果几乎是同一个时间节点出来的，而1和2则各等待了1秒和2秒</p>
 
@@ -275,6 +319,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -282,8 +328,6 @@
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>

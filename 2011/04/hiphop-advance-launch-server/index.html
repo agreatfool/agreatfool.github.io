@@ -14,6 +14,45 @@
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
 </head>
 
 <body>
@@ -104,7 +143,6 @@
                 </ul>
               </div>
               <div class="post-content">
-                <div id="toc" class="toc"></div>
                 <p>hiphop编译完成只是hiphop的开始，代码的服务才是我们最终的目的。hiphop自带了hphpi服务器，根据我最近看的文章都说需要启动hiphop自带的服务器，nginx并不是必须的，如果需要的话也是拿来做前端代理，带入一些用户需要的web服务器附加功能。</p>
 <p>要启动服务器，首先需要找到我们编译完成的东西，一般是放在/tmp下面，如果你在编译的时候没有自己定义过输出位置的话。可以去/tmp下找/tmp/hphp_*这样的文件夹，这些都是hiphop编译出来的可执行文件。进入刚才所编译完成的目录下，执行刚才编译完成的二进制文件就可以了，如果在编译的时候没有给予指定的参数的话，可执行文件的名字默认是program。</p>
 <p>接下来介绍一些启动时的参数：</p>
@@ -157,6 +195,8 @@ log下的内容就不解释了，直接使用就好。server这里有个东西�
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/02/grpc-node-ecosystem/">探讨gRPC的Node技术生态及实现工具</a></li>
+    
     <li><a href="/2018/02/protobuf-options/">Protobuf中的Options功能</a></li>
     
     <li><a href="/2018/01/node-v8-gc/">Node.JS Profile 1.2 V8 GC详解</a></li>
@@ -164,8 +204,6 @@ log下的内容就不解释了，直接使用就好。server这里有个东西�
     <li><a href="/2018/01/node-memory/">Node.JS Profile 1.1 V8内存机制</a></li>
     
     <li><a href="/2018/01/node-profile/">Node.JS Profile</a></li>
-    
-    <li><a href="/2018/01/embedded-github-code/">Github 代码片段嵌入</a></li>
     
   </ul>
 </div>
