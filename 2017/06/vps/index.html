@@ -154,8 +154,7 @@
 <h3 id="20-系统">2.0 系统</h3>
 <p>操作系统选的是最新的ubuntu，17.04</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>cat /etc/issue
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>cat /etc/issue
 <span class="c1"># Ubuntu 17.04 \n \l</span>
 sudo lsb_release -a
 <span class="c1"># No LSB modules are available.</span>
@@ -164,13 +163,11 @@ sudo lsb_release -a
 <span class="c1"># Release:	17.04</span>
 <span class="c1"># Codename:	zesty</span>
 uname -r
-<span class="c1"># 4.10.0-20-generic</span></code></pre>
-</figure>
+<span class="c1"># 4.10.0-20-generic</span></code></pre></figure>
 
 <h3 id="21-启用bbr">2.1 启用BBR</h3>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span><span class="nb">echo</span> <span class="s2">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="nb">echo</span> <span class="s2">&quot;net.core.default_qdisc=fq&quot;</span> &gt;&gt; /etc/sysctl.conf
 <span class="nb">echo</span> <span class="s2">&quot;net.ipv4.tcp_congestion_control=bbr&quot;</span> &gt;&gt; /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 <span class="c1"># net.ipv6.conf.all.accept_ra = 2</span>
@@ -179,64 +176,52 @@ sysctl -p /etc/sysctl.conf
 sysctl net.ipv4.tcp_available_congestion_control
 <span class="c1"># net.ipv4.tcp_available_congestion_control = bbr cubic reno</span>
 lsmod <span class="p">|</span> grep bbr
-<span class="c1"># tcp_bbr                20480  0</span></code></pre>
-</figure>
+<span class="c1"># tcp_bbr                20480  0</span></code></pre></figure>
 
 <h3 id="21-安装libsodium">2.1 安装libsodium</h3>
 <p>详见：<a href="https://github.com/breakwa11/shadowsocks-rss/wiki/libsodium" target="_blank">Link</a></p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>apt-get install build-essential
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>apt-get install build-essential
 wget https://github.com/jedisct1/libsodium/releases/download/1.0.12/libsodium-1.0.12.tar.gz
 tar xf libsodium-1.0.12.tar.gz <span class="o">&amp;&amp;</span> <span class="nb">cd</span> libsodium-1.0.12
 ./configure <span class="o">&amp;&amp;</span> make -j2 <span class="o">&amp;&amp;</span> make install
-ldconfig</code></pre>
-</figure>
+ldconfig</code></pre></figure>
 
 <h3 id="22-安装ss">2.2 安装SS</h3>
 <p>详见：<a href="https://github.com/breakwa11/shadowsocks-rss/wiki/Server-Setup" target="_blank">Link</a></p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>git clone -b manyuser https://github.com/shadowsocksr/shadowsocksr.git
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>git clone -b manyuser https://github.com/shadowsocksr/shadowsocksr.git
 <span class="nb">cd</span> shadowsocksr
-bash initcfg.sh</code></pre>
-</figure>
+bash initcfg.sh</code></pre></figure>
 
 <h3 id="23-安装python">2.3 安装python</h3>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>apt-get install checkinstall
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>apt-get install checkinstall
 apt-get install libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 
 wget https://www.python.org/ftp/python/2.7.13/Python-2.7.13.tgz
 tar xzf Python-2.7.13.tgz
 <span class="nb">cd</span> Python-2.7.13
 ./configure
-make install</code></pre>
-</figure>
+make install</code></pre></figure>
 
 <h3 id="24-创建命令脚本和运维环境">2.4 创建命令脚本和运维环境</h3>
 <p>修改文件limit</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span><span class="nb">echo</span> <span class="s2">&quot;fs.file-max=1024000&quot;</span> &gt;&gt; /etc/sysctl.conf
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="nb">echo</span> <span class="s2">&quot;fs.file-max=1024000&quot;</span> &gt;&gt; /etc/sysctl.conf
 sysctl -p /etc/sysctl.conf
 <span class="nb">echo</span> <span class="s2">&quot;*               soft    nofile           512000&quot;</span> &gt;&gt; /etc/security/limits.conf
-<span class="nb">echo</span> <span class="s2">&quot;*               hard    nofile          1024000&quot;</span> &gt;&gt; /etc/security/limits.conf</code></pre>
-</figure>
+<span class="nb">echo</span> <span class="s2">&quot;*               hard    nofile          1024000&quot;</span> &gt;&gt; /etc/security/limits.conf</code></pre></figure>
 
 <p>日志和启动文件</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>touch shadowsocks.sh
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>touch shadowsocks.sh
 chmod +x ./shadowsocks.sh
-ln -s /var/log/shadowsocksr.log ./shadowsocksr.log</code></pre>
-</figure>
+ln -s /var/log/shadowsocksr.log ./shadowsocksr.log</code></pre></figure>
 
 <p>vim shadowsocks.sh</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span><span class="ch">#!/bin/bash</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="ch">#!/bin/bash</span>
 <span class="nv">BASEDIR</span><span class="o">=</span><span class="k">$(</span>dirname <span class="s2">&quot;</span><span class="nv">$0</span><span class="s2">&quot;</span><span class="k">)</span>
 <span class="nv">CMD</span><span class="o">=</span><span class="si">${</span><span class="nv">BASEDIR</span><span class="si">}</span>/shadowsocksr/shadowsocks/server.py
 <span class="nv">CONF</span><span class="o">=</span><span class="si">${</span><span class="nv">BASEDIR</span><span class="si">}</span>/shadowsocksr/user-config.json
@@ -254,13 +239,11 @@ ln -s /var/log/shadowsocksr.log ./shadowsocksr.log</code></pre>
     python <span class="si">${</span><span class="nv">CMD</span><span class="si">}</span> -c <span class="si">${</span><span class="nv">CONF</span><span class="si">}</span> -d stop
 <span class="k">else</span>
     <span class="nb">echo</span> <span class="s2">&quot;Usage: ./shadowsocks.sh start|stop|restart&quot;</span>
-<span class="k">fi</span></code></pre>
-</figure>
+<span class="k">fi</span></code></pre></figure>
 
 <p>vim shadowsocksr/user-config.json</p>
 
-<figure class="highlight">
-  <pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
     <span class="nt">&quot;server&quot;</span><span class="p">:</span> <span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
     <span class="nt">&quot;server_ipv6&quot;</span><span class="p">:</span> <span class="s2">&quot;::&quot;</span><span class="p">,</span>
     <span class="nt">&quot;server_port&quot;</span><span class="p">:</span> <span class="mi">8038</span><span class="p">,</span>
@@ -284,15 +267,13 @@ ln -s /var/log/shadowsocksr.log ./shadowsocksr.log</code></pre>
     <span class="nt">&quot;connect_verbose_info&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nt">&quot;redirect&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;bing.com&quot;</span><span class="p">,</span> <span class="s2">&quot;cloudflare.com:443&quot;</span><span class="p">],</span>
     <span class="nt">&quot;fast_open&quot;</span><span class="p">:</span> <span class="kc">false</span>
-<span class="p">}</span></code></pre>
-</figure>
+<span class="p">}</span></code></pre></figure>
 
 <p>MAC客户端安装基本上和服务器差不多，git clone下来，bash生成config json，从服务器拷贝一份也行。然后只要把客户端的port和服务端的ip配下，就好了。  <br />
 MAC自启动脚本  <br />
 vim org.shadowsocks.macos.plist</p>
 
-<figure class="highlight">
-  <pre><code class="language-xml" data-lang="xml"><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
 <span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;dict&gt;</span>
@@ -325,21 +306,16 @@ vim org.shadowsocks.macos.plist</p>
     <span class="nt">&lt;key&gt;</span>UserName<span class="nt">&lt;/key&gt;</span>
     <span class="nt">&lt;string&gt;</span>root<span class="nt">&lt;/string&gt;</span>
 <span class="nt">&lt;/dict&gt;</span>
-<span class="nt">&lt;/plist&gt;</span></code></pre>
-</figure>
+<span class="nt">&lt;/plist&gt;</span></code></pre></figure>
 
 <p>MAC启动</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>vim /Library/LaunchDaemons/org.shadowsocks.macos.plist
-sudo launchctl load ./org.shadowsocks.macos.plist</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>vim /Library/LaunchDaemons/org.shadowsocks.macos.plist
+sudo launchctl load ./org.shadowsocks.macos.plist</code></pre></figure>
 
 <p>观察日志</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>tail -f ./shadowsocksr.log</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>tail -f ./shadowsocksr.log</code></pre></figure>
 
 <blockquote>
   <p>EOF</p>

@@ -149,32 +149,24 @@
 <h3 id="11-安装rvm--更新ruby">1.1 安装rvm | 更新ruby</h3>
 <p>系统默认带的ruby版本是2.0.0，太老了，需要更新。</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>curl -sSL https://get.rvm.io <span class="p">|</span> bash -s stable
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>curl -sSL https://get.rvm.io <span class="p">|</span> bash -s stable
 rvm list known
 rvm install ruby-2.4.0 --verbose
-rvm use ruby-2.4.0 --default</code></pre>
-</figure>
+rvm use ruby-2.4.0 --default</code></pre></figure>
 
 <h3 id="12-更新gem源">1.2 更新gem源</h3>
 <p>删掉所有莫名其妙的源</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>gem sources -r <span class="si">${</span><span class="nv">source</span><span class="si">}</span></code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>gem sources -r <span class="si">${</span><span class="nv">source</span><span class="si">}</span></code></pre></figure>
 
 <p>添加官方唯一的源</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>gem sources -a https://rubygems.org/</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>gem sources -a https://rubygems.org/</code></pre></figure>
 
 <h3 id="13-安装jekyll">1.3 安装Jekyll</h3>
 <p>别问我为什么需要sudo，这货就是需要权限</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>sudo gem install jekyll --verbose</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>sudo gem install jekyll --verbose</code></pre></figure>
 
 <h3 id="14-安装语法高亮">1.4 安装语法高亮</h3>
 <p>我使用的时候报了个错：</p>
@@ -185,8 +177,7 @@ rvm use ruby-2.4.0 --default</code></pre>
 
 <p>安装pygments的时候报错：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>sudo gem install pygments --verbose
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>sudo gem install pygments --verbose
 <span class="c1"># Password:</span>
 <span class="c1"># HEAD https://api.rubygems.org/api/v1/dependencies</span>
 <span class="c1"># 200 OK</span>
@@ -195,48 +186,37 @@ rvm use ruby-2.4.0 --default</code></pre>
 <span class="c1"># ERROR:  Could not find a valid gem &#39;pygments&#39; (&gt;= 0) in any repository</span>
 <span class="c1"># GET https://api.rubygems.org/latest_specs.4.8.gz</span>
 <span class="c1"># 200 OK</span>
-<span class="c1"># ERROR:  Possible alternatives: pigments, rygments, pigment, rb-pygments, segments</span></code></pre>
-</figure>
+<span class="c1"># ERROR:  Possible alternatives: pigments, rygments, pigment, rb-pygments, segments</span></code></pre></figure>
 
 <p>结果找了半天，正确的gem名字应该是：<code>pygments.rb</code></p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>sudo gem install pygments.rb --verbose</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>sudo gem install pygments.rb --verbose</code></pre></figure>
 
 <h2 id="update-2018-01-18">UPDATE 2018-01-18</h2>
 <p>添加gist插件：jekyll-gist</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>gem install jekyll-gist
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>gem install jekyll-gist
 <span class="c1"># ...</span>
 <span class="c1"># Done installing documentation for multipart-post, faraday, sawyer, octokit, jekyll-gist after 2 seconds</span>
-<span class="c1"># 5 gems installed</span></code></pre>
-</figure>
+<span class="c1"># 5 gems installed</span></code></pre></figure>
 
 <p>修改站点配置<code>_config.yml</code>：</p>
 
-<figure class="highlight">
-  <pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">plugins</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">jekyll-gist</span></code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">plugins</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">jekyll-gist</span></code></pre></figure>
 
 <h2 id="update-2018-01-22">UPDATE 2018-01-22</h2>
 <p>添加toc插件：jekyll-toc</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>gem install jekyll-toc
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>gem install jekyll-toc
 <span class="c1"># ...</span>
 <span class="c1"># Done installing documentation for mini_portile2, nokogiri, jekyll-toc after 9 seconds</span>
-<span class="c1"># 3 gems installed </span></code></pre>
-</figure>
+<span class="c1"># 3 gems installed </span></code></pre></figure>
 
 <p>修改站点配置<code>_config.yml</code>：</p>
 
-<figure class="highlight">
-  <pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">plugins</span><span class="p p-Indicator">:</span>
-  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">jekyll-toc</span></code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">plugins</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">jekyll-toc</span></code></pre></figure>
 
 <p>然后修改<code>_layouts/post.html</code>，把`&lt;h2 id="0-前言"&gt;0. 前言&lt;/h2&gt;</p>
 <p>ReactNative确实是一个不错的移动端研发工具，但作为一个Hybrid的解决方案，它必然有相当多的制约在里面。最主要的就是如果你对原生研发不熟悉，没办法自己制作原生功能到JS的桥接库的话，你就只能使用社区内提供的功能库。虽然现在RN的生态还算是不错的，但显然仍旧有大量的功能是无法靠直接拿来就用的库就能完美支持的。这还是比较奢侈的烦恼，在RN的生态里甚至有一些最基础的功能到现在都不能很好支持，比如我今天想要聊的Navigation。</p>
@@ -265,8 +245,7 @@ rvm use ruby-2.4.0 --default</code></pre>
 
 <p>成功的范例：</p>
 
-<figure class="highlight">
-  <pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">AppNavigator</span> <span class="o">=</span> <span class="nx">StackNavigator</span><span class="p">({</span>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">AppNavigator</span> <span class="o">=</span> <span class="nx">StackNavigator</span><span class="p">({</span>
     <span class="nx">Init</span><span class="o">:</span> <span class="p">{</span><span class="nx">screen</span><span class="o">:</span> <span class="nx">Initialization</span><span class="p">},</span>
     <span class="c1">// ...</span>
 <span class="p">},</span> <span class="p">{</span>
@@ -301,8 +280,7 @@ rvm use ruby-2.4.0 --default</code></pre>
             <span class="o">&lt;</span><span class="err">/Root&gt;</span>
         <span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</figure>
+<span class="p">}</span></code></pre></figure>
 
 <h3 id="24-性能">2.4 性能</h3>
 <p>看看这个帖子：<a href="https://github.com/react-community/react-navigation/issues/706" target="_blank">StackNavigator has performance issues and renders too many screens</a></p>
@@ -359,8 +337,7 @@ rvm use ruby-2.4.0 --default</code></pre>
 
 <p>成功的范例：</p>
 
-<figure class="highlight">
-  <pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">AppNavigator</span> <span class="o">=</span> <span class="nx">StackNavigator</span><span class="p">({</span>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">AppNavigator</span> <span class="o">=</span> <span class="nx">StackNavigator</span><span class="p">({</span>
     <span class="nx">Init</span><span class="o">:</span> <span class="p">{</span><span class="nx">screen</span><span class="o">:</span> <span class="nx">Initialization</span><span class="p">},</span>
     <span class="c1">// ...</span>
 <span class="p">},</span> <span class="p">{</span>
@@ -395,8 +372,7 @@ rvm use ruby-2.4.0 --default</code></pre>
             <span class="o">&lt;</span><span class="err">/Root&gt;</span>
         <span class="p">);</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</figure>
+<span class="p">}</span></code></pre></figure>
 
 <h3 id="24-性能">2.4 性能</h3>
 <p>看看这个帖子：<a href="https://github.com/react-community/react-navigation/issues/706" target="_blank">StackNavigator has performance issues and renders too many screens</a></p>
@@ -436,24 +412,20 @@ rvm use ruby-2.4.0 --default</code></pre>
 <h3 id="toc">TOC</h3>
 <p>创建一个文件<code>_includes/toc.html</code>，内容：</p>
 
-<figure class="highlight">
-  <pre><code class="language-html" data-lang="html"><span></span>\<span class="p">&lt;</span><span class="nt">h4</span><span class="p">&gt;</span>Table of Contents<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span></span>\<span class="p">&lt;</span><span class="nt">h4</span><span class="p">&gt;</span>Table of Contents<span class="p">&lt;/</span><span class="nt">h4</span><span class="p">&gt;</span>
 \* this unordered seed list will be replaced by toc as unordered list
-\{:toc}</code></pre>
-</figure>
+\{:toc}</code></pre></figure>
 
 <p>注意删除转译符。</p>
 
 <p>然后修改站点配置<code>_config.yml</code>：</p>
 
-<figure class="highlight">
-  <pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">markdown</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">kramdown</span>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">markdown</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">kramdown</span>
 <span class="l l-Scalar l-Scalar-Plain">kramdown</span><span class="p p-Indicator">:</span>
   <span class="l l-Scalar l-Scalar-Plain">input</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">GFM</span> <span class="c1"># Enable GitHub Flavored Markdown (fenced code blocks)</span>
   <span class="l l-Scalar l-Scalar-Plain">toc_levels</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">1..6</span>
   <span class="l l-Scalar l-Scalar-Plain">parse_block_html</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
-  <span class="l l-Scalar l-Scalar-Plain">auto_ids</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span></code></pre>
-</figure>
+  <span class="l l-Scalar l-Scalar-Plain">auto_ids</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span></code></pre></figure>
 
 <p>最后在需要TOC的文章中，在文章需要添加TOC的部位加上：</p>
 

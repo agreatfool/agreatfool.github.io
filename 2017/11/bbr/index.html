@@ -153,21 +153,17 @@
 
 <p>下载内核包并安装：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>mkdir kernel <span class="o">&amp;&amp;</span> <span class="nb">cd</span> kernel
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>mkdir kernel <span class="o">&amp;&amp;</span> <span class="nb">cd</span> kernel
 wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.11/linux-headers-4.13.11-041311_4.13.11-041311.201711020532_all.deb
 wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.11/linux-headers-4.13.11-041311-generic_4.13.11-041311.201711020532_amd64.deb
 wget http://kernel.ubuntu.com/~kernel-ppa/mainline/v4.13.11/linux-image-4.13.11-041311-generic_4.13.11-041311.201711020532_amd64.deb
 sudo dpkg -i *.deb
-reboot</code></pre>
-</figure>
+reboot</code></pre></figure>
 
 <p>重启后查看下：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>uname -r
-<span class="m">4</span>.13.11-041311-generic</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>uname -r
+<span class="m">4</span>.13.11-041311-generic</code></pre></figure>
 
 <h2 id="2-启用bbr">2. 启用BBR</h2>
 <p>先检查下BBR是否开启</p>

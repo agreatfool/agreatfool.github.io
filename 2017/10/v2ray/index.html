@@ -176,9 +176,7 @@ V2Ray的这套方案则是在墙外做一个启用HTTPS的Nginx服务，使用�
 <h3 id="31-v2ray本体">3.1 V2Ray本体</h3>
 <p>官方有提供安装脚本，直接使用即可：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>bash &lt;<span class="o">(</span>curl -L -s https://install.direct/go.sh<span class="o">)</span></code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>bash &lt;<span class="o">(</span>curl -L -s https://install.direct/go.sh<span class="o">)</span></code></pre></figure>
 
 <p>几个位置信息：</p>
 
@@ -191,9 +189,7 @@ service：/lib/systemd/system/v2ray.service  <br />
 
 <h3 id="32-安装nginx">3.2 安装nginx</h3>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>apt-get install nginx</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>apt-get install nginx</code></pre></figure>
 
 <p>nginx的几个信息：</p>
 
@@ -208,16 +204,12 @@ www路径：/var/www/html  <br />
 
 <p>安装 acme.sh 命令：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>curl https://get.acme.sh <span class="p">|</span> sh
-<span class="nb">source</span> ~/.bashrc</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>curl https://get.acme.sh <span class="p">|</span> sh
+<span class="nb">source</span> ~/.bashrc</code></pre></figure>
 
 <p>申请证书：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>acme.sh --issue -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> -w /var/www/html</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>acme.sh --issue -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> -w /var/www/html</code></pre></figure>
 
 <blockquote>
   <p>root@vultr:~/opt# acme.sh –issue -d ${domain} -w /var/www/html  <br />
@@ -248,12 +240,10 @@ www路径：/var/www/html  <br />
 
 <p>安装证书：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>acme.sh --installcert -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> <span class="se">\</span>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>acme.sh --installcert -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> <span class="se">\</span>
         --keypath       /var/www/ssl/<span class="si">${</span><span class="nv">domain</span><span class="si">}</span>.key  <span class="se">\</span>
         --fullchainpath /var/www/ssl/<span class="si">${</span><span class="nv">domain</span><span class="si">}</span>.key.pem <span class="se">\</span>
-        --reloadcmd     <span class="s2">&quot;sudo service nginx force-reload&quot;</span></code></pre>
-</figure>
+        --reloadcmd     <span class="s2">&quot;sudo service nginx force-reload&quot;</span></code></pre></figure>
 
 <blockquote>
   <p>[Tue Oct 24 09:23:54 UTC 2017] Installing key to:/var/www/ssl/${domain}.key  <br />
@@ -264,14 +254,11 @@ www路径：/var/www/html  <br />
 
 <p>生成 dhparam.pem 文件：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>openssl dhparam -out /var/www/ssl/dhparam.pem <span class="m">2048</span></code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>openssl dhparam -out /var/www/ssl/dhparam.pem <span class="m">2048</span></code></pre></figure>
 
 <p>修改 Nginx 配置：</p>
 
-<figure class="highlight">
-  <pre><code class="language-apache" data-lang="apache"><span></span><span class="nb">server</span> {
+<figure class="highlight"><pre><code class="language-apache" data-lang="apache"><span></span><span class="nb">server</span> {
     <span class="nb">listen</span> <span class="m">80</span> default_server;
     <span class="nb">listen</span> [::]:80 default_server;
 
@@ -308,16 +295,13 @@ www路径：/var/www/html  <br />
         <span class="nb">proxy_set_header</span> Connection <span class="s2">&quot;upgrade&quot;</span>;
         <span class="nb">proxy_set_header</span> Host $http_host;
     <span class="err">}</span>
-<span class="err">}</span></code></pre>
-</figure>
+<span class="err">}</span></code></pre></figure>
 
 <p>使用检测工具查看安全评级：<code>https://www.ssllabs.com/ssltest/analyze.html?d=${domain}</code></p>
 
 <p>使用 crontab 命令查看 acme.sh 添加的证书刷新脚本：</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>crontab -l</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>crontab -l</code></pre></figure>
 
 <p>并手动尝试执行，看下结果：</p>
 
@@ -361,8 +345,7 @@ www路径：/var/www/html  <br />
 <h3 id="34-配置v2ray服务器">3.4 配置V2Ray服务器</h3>
 <p>编辑配置文件<code>/etc/v2ray/config.json</code>：</p>
 
-<figure class="highlight">
-  <pre><code class="language-javascript" data-lang="javascript"><span></span><span class="p">{</span>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="p">{</span>
     <span class="s2">&quot;log&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;access&quot;</span><span class="o">:</span> <span class="s2">&quot;/var/log/v2ray/access.log&quot;</span><span class="p">,</span>
         <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="s2">&quot;/var/log/v2ray/error.log&quot;</span><span class="p">,</span>
@@ -395,8 +378,7 @@ www路径：/var/www/html  <br />
         <span class="s2">&quot;protocol&quot;</span><span class="o">:</span> <span class="s2">&quot;freedom&quot;</span><span class="p">,</span>
         <span class="s2">&quot;settings&quot;</span><span class="o">:</span> <span class="p">{}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</figure>
+<span class="p">}</span></code></pre></figure>
 
 <p>使用命令启动v2ray：</p>
 
@@ -407,16 +389,14 @@ www路径：/var/www/html  <br />
 <h3 id="35-配置nginx">3.5 配置Nginx</h3>
 <p>在之前安装HTTPS更改过的nginx配置中再添加一个location：</p>
 
-<figure class="highlight">
-  <pre><code class="language-apache" data-lang="apache"><span></span><span class="nb">location</span> <span class="sx">/serv/</span> {
+<figure class="highlight"><pre><code class="language-apache" data-lang="apache"><span></span><span class="nb">location</span> <span class="sx">/serv/</span> {
     <span class="nb">proxy_redirect</span> <span class="k">off</span>;
     <span class="nb">proxy_pass</span> http://127.0.0.1:10000;
     <span class="nb">proxy_http_version</span> <span class="m">1</span>.1;
     <span class="nb">proxy_set_header</span> Upgrade $http_upgrade;
     <span class="nb">proxy_set_header</span> Connection <span class="s2">&quot;upgrade&quot;</span>;
     <span class="nb">proxy_set_header</span> Host $http_host;
-<span class="err">}</span></code></pre>
-</figure>
+<span class="err">}</span></code></pre></figure>
 
 <p>重启nginx：</p>
 
@@ -427,8 +407,7 @@ www路径：/var/www/html  <br />
 <h3 id="36-配置本地v2ray">3.6 配置本地V2Ray</h3>
 <p>仍旧编辑config.json文件：</p>
 
-<figure class="highlight">
-  <pre><code class="language-javascript" data-lang="javascript"><span></span><span class="p">{</span>
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="p">{</span>
     <span class="s2">&quot;log&quot;</span><span class="o">:</span> <span class="p">{</span>
         <span class="s2">&quot;access&quot;</span><span class="o">:</span> <span class="s2">&quot;.../log/access.log&quot;</span><span class="p">,</span>
         <span class="s2">&quot;error&quot;</span><span class="o">:</span> <span class="s2">&quot;.../log/error.log&quot;</span><span class="p">,</span>
@@ -474,8 +453,7 @@ www路径：/var/www/html  <br />
             <span class="p">}</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span></code></pre>
-</figure>
+<span class="p">}</span></code></pre></figure>
 
 <p>启动本地的v2ray：</p>
 
@@ -486,8 +464,7 @@ www路径：/var/www/html  <br />
 <h3 id="37-制作mac启动文件">3.7 制作MAC启动文件</h3>
 <p>vim org.v2ray.macos.plist</p>
 
-<figure class="highlight">
-  <pre><code class="language-xml" data-lang="xml"><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<figure class="highlight"><pre><code class="language-xml" data-lang="xml"><span></span><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
 <span class="cp">&lt;!DOCTYPE plist PUBLIC &quot;-//Apple//DTD PLIST 1.0//EN&quot; &quot;http://www.apple.com/DTDs/PropertyList-1.0.dtd&quot;&gt;</span>
 <span class="nt">&lt;plist</span> <span class="na">version=</span><span class="s">&quot;1.0&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;dict&gt;</span>
@@ -517,15 +494,12 @@ www路径：/var/www/html  <br />
 	<span class="nt">&lt;key&gt;</span>UserName<span class="nt">&lt;/key&gt;</span>
 	<span class="nt">&lt;string&gt;</span>root<span class="nt">&lt;/string&gt;</span>
 <span class="nt">&lt;/dict&gt;</span>
-<span class="nt">&lt;/plist&gt;</span></code></pre>
-</figure>
+<span class="nt">&lt;/plist&gt;</span></code></pre></figure>
 
 <p>MAC启动</p>
 
-<figure class="highlight">
-  <pre><code class="language-bash" data-lang="bash"><span></span>vim /Library/LaunchDaemons/org.v2ray.macos.plist
-sudo launchctl load ./org.v2ray.macos.plist</code></pre>
-</figure>
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>vim /Library/LaunchDaemons/org.v2ray.macos.plist
+sudo launchctl load ./org.v2ray.macos.plist</code></pre></figure>
 
 <blockquote>
   <p>EOF</p>
