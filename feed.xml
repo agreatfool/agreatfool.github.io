@@ -1395,14 +1395,14 @@
   &lt;li&gt;incremental_finalize_steps_count：incremental_marking_scopes[Scope::MC_INCREMENTAL_FINALIZE_BODY].steps&lt;/li&gt;
   &lt;li&gt;incremental_longest_step：incremental_marking_scopes[Scope::MC_INCREMENTAL].longest_step&lt;/li&gt;
   &lt;li&gt;incremental_steps_count：incremental_marking_scopes[Scope::MC_INCREMENTAL].steps&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;incremental_marking_throughput&lt;/code&gt;：增量标记速率，代码见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L787&quot; target=&quot;_blank&quot;&gt;方法定义&lt;/a&gt;
+  &lt;li&gt;&lt;code&gt;incremental_marking_throughput&lt;/code&gt;：增量标记速率 bytes/ms，代码见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L787&quot; target=&quot;_blank&quot;&gt;方法定义&lt;/a&gt;
     &lt;ul&gt;
       &lt;li&gt;如果有已经记录的数值，则直接返回：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L790&quot; target=&quot;_blank&quot;&gt;recorded_incremental_marking_speed_&lt;/a&gt;，该值的计算见：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L776&quot; target=&quot;_blank&quot;&gt;方法定义&lt;/a&gt;，调用是在：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L272&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;如果耗时记录不为0，则&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L793&quot; target=&quot;_blank&quot;&gt;计算赋值&lt;/a&gt;并返回：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L412&quot; target=&quot;_blank&quot;&gt;incremental_marking_bytes_&lt;/a&gt; / &lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L416&quot; target=&quot;_blank&quot;&gt;incremental_marking_duration_&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;最后有一个默认值：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L788&quot; target=&quot;_blank&quot;&gt;128 * KB&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;incremental_walltime_duration&lt;/code&gt;：增量标记总耗时
+  &lt;li&gt;&lt;code&gt;incremental_walltime_duration&lt;/code&gt;：增量标记总耗时 ms
     &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L442&quot; target=&quot;_blank&quot;&gt;定义&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;仅当类型为 Event::INCREMENTAL_MARK_COMPACTOR 时，才会进行计算，否则默认为0&lt;/li&gt;

@@ -540,14 +540,14 @@
   <li>incremental_finalize_steps_count：incremental_marking_scopes[Scope::MC_INCREMENTAL_FINALIZE_BODY].steps</li>
   <li>incremental_longest_step：incremental_marking_scopes[Scope::MC_INCREMENTAL].longest_step</li>
   <li>incremental_steps_count：incremental_marking_scopes[Scope::MC_INCREMENTAL].steps</li>
-  <li><code>incremental_marking_throughput</code>：增量标记速率，代码见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L787" target="_blank">方法定义</a>
+  <li><code>incremental_marking_throughput</code>：增量标记速率 bytes/ms，代码见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L787" target="_blank">方法定义</a>
     <ul>
       <li>如果有已经记录的数值，则直接返回：<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L790" target="_blank">recorded_incremental_marking_speed_</a>，该值的计算见：<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L776" target="_blank">方法定义</a>，调用是在：<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L272" target="_blank">这里</a></li>
       <li>如果耗时记录不为0，则<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L793" target="_blank">计算赋值</a>并返回：<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L412" target="_blank">incremental_marking_bytes_</a> / <a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L416" target="_blank">incremental_marking_duration_</a></li>
       <li>最后有一个默认值：<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L788" target="_blank">128 * KB</a></li>
     </ul>
   </li>
-  <li><code>incremental_walltime_duration</code>：增量标记总耗时
+  <li><code>incremental_walltime_duration</code>：增量标记总耗时 ms
     <ul>
       <li><a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L442" target="_blank">定义</a></li>
       <li>仅当类型为 Event::INCREMENTAL_MARK_COMPACTOR 时，才会进行计算，否则默认为0</li>
