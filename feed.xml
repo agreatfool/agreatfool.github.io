@@ -1243,8 +1243,8 @@
       &lt;li&gt;scavenge处理速率，bytes/ms&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L798&quot; target=&quot;_blank&quot;&gt;方法定义&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;实际上该速率根据&lt;code&gt;ScavengeSpeedMode&lt;/code&gt;模式的不同，返回的数值可能是：&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L260&quot; target=&quot;_blank&quot;&gt;&lt;code&gt;recorded_minor_gcs_total_&lt;/code&gt;&lt;/a&gt;：新生代内存整体的处理速率&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L262&quot; target=&quot;_blank&quot;&gt;&lt;code&gt;recorded_minor_gcs_survived_&lt;/code&gt;&lt;/a&gt;：新生代存活内存的处理速率&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L260&quot; target=&quot;_blank&quot;&gt;recorded_minor_gcs_total_&lt;/a&gt;：新生代内存整体的处理速率&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L262&quot; target=&quot;_blank&quot;&gt;recorded_minor_gcs_survived_&lt;/a&gt;：新生代存活内存的处理速率&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;code&gt;total_size_before&lt;/code&gt;：GC开始时的对象内存大小 bytes（Size of objects in heap set in constructor.），&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L209&quot; target=&quot;_blank&quot;&gt;start_object_size&lt;/a&gt;&lt;/li&gt;
@@ -1253,7 +1253,7 @@
     &lt;ul&gt;
       &lt;li&gt;Total amount of space either wasted or contained in one of free lists before the current GC.&lt;/li&gt;
       &lt;li&gt;直译的意思是：当前GC开始之前被标记为&lt;code&gt;浪费掉的&lt;/code&gt;或&lt;code&gt;处于可用freelist内的&lt;/code&gt;内存空间大小 bytes&lt;/li&gt;
-      &lt;li&gt;乍看这两者的貌似是相反的概念，但仔细阅读后感觉这里的&lt;code&gt;hole&lt;/code&gt;的概念并非一般论的内存空洞，而应该理解为&lt;code&gt;因GC导致的内存空间不连贯的内存&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;乍看这两者的貌似是相反的概念，但仔细阅读后感觉这里的&lt;code&gt;hole&lt;/code&gt;的概念并非一般论的内存空洞，而应该理解为&lt;code&gt;因GC导致的内存空间不连贯&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;这在执行&lt;code&gt;Compacting&lt;/code&gt;的时候会起到判断的作用：&lt;code&gt;Compacting &amp;gt;&amp;gt; 主要发生在某一页中死亡对象留下来的空洞（hole）比较多的时候&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L221&quot; target=&quot;_blank&quot;&gt;start_holes_size&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -1265,35 +1265,35 @@
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;code&gt;allocated&lt;/code&gt;：自上次GC结束到这次GC开始之间的时间里，分配的内存大小 bytes，见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L439&quot; target=&quot;_blank&quot;&gt;赋值&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;promoted&lt;/code&gt;：晋升的对象数量，见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2264&quot; target=&quot;_blank&quot;&gt;定义&lt;/a&gt;和&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L1387&quot; target=&quot;_blank&quot;&gt;getter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;semi_space_copied&lt;/code&gt;：新生代内存空间对半拷贝的对象数量，见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2267&quot; target=&quot;_blank&quot;&gt;定义&lt;/a&gt;和&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L1392&quot; target=&quot;_blank&quot;&gt;getter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;promoted&lt;/code&gt;：晋升的对象内存大小 bytes，见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2264&quot; target=&quot;_blank&quot;&gt;定义&lt;/a&gt;和&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L1387&quot; target=&quot;_blank&quot;&gt;getter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;semi_space_copied&lt;/code&gt;：新生代内存空间对半拷贝的对象内存大小 bytes，见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2267&quot; target=&quot;_blank&quot;&gt;定义&lt;/a&gt;和&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L1392&quot; target=&quot;_blank&quot;&gt;getter&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;nodes_died_in_new：源码中针对这里的&lt;code&gt;Node&lt;/code&gt;说明很模糊，不清楚是不是内存页的意思，源码可以见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/global-handles.h#L173&quot; target=&quot;_blank&quot;&gt;Node定义&lt;/a&gt;和&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/global-handles.h#L205&quot; target=&quot;_blank&quot;&gt;new_space_nodes_&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;nodes_copied_in_new：同上&lt;/li&gt;
   &lt;li&gt;nodes_promoted：同上&lt;/li&gt;
   &lt;li&gt;&lt;code&gt;promotion_ratio&lt;/code&gt;：
     &lt;ul&gt;
       &lt;li&gt;新生代对象晋升率&lt;/li&gt;
-      &lt;li&gt;晋升对象数量 / GC开始时新生代对象数量&lt;/li&gt;
+      &lt;li&gt;晋升对象内存大小 bytes / GC开始时新生代对象内存大小 bytes&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.cc#L1286&quot; target=&quot;_blank&quot;&gt;计算赋值&lt;/a&gt;：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2264&quot; target=&quot;_blank&quot;&gt;promoted_objects_size_&lt;/a&gt; / &lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.cc#L1335&quot; target=&quot;_blank&quot;&gt;start_new_space_size&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;code&gt;average_survival_ratio&lt;/code&gt;：新生代对象平均生存率，计算见&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L880&quot; target=&quot;_blank&quot;&gt;方法定义&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;code&gt;promotion_rate&lt;/code&gt;：
     &lt;ul&gt;
-      &lt;li&gt;晋升对象数量 / 上次GC中，经过新生代GC并存活进行拷贝的对象数量&lt;/li&gt;
+      &lt;li&gt;晋升对象内存大小 bytes / 上次GC中，经过新生代GC并存活进行拷贝的对象内存大小 bytes&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.cc#L1290&quot; target=&quot;_blank&quot;&gt;计算赋值&lt;/a&gt;：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2264&quot; target=&quot;_blank&quot;&gt;promoted_objects_size_&lt;/a&gt; / &lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2268&quot; target=&quot;_blank&quot;&gt;previous_semi_space_copied_object_size_&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;code&gt;semi_space_copy_rate&lt;/code&gt;：
     &lt;ul&gt;
       &lt;li&gt;新生代GC存活对象拷贝率&lt;/li&gt;
-      &lt;li&gt;经过当前新生代GC并存活进行拷贝的对象数量 / GC开始时新生代对象数量&lt;/li&gt;
+      &lt;li&gt;经过当前新生代GC并存活进行拷贝的对象内存大小 bytes / GC开始时新生代对象内存大小 bytes&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.cc#L1297&quot; target=&quot;_blank&quot;&gt;计算赋值&lt;/a&gt;：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L1389&quot; target=&quot;_blank&quot;&gt;semi_space_copied_object_size_&lt;/a&gt; / &lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/heap.cc#L1335&quot; target=&quot;_blank&quot;&gt;start_new_space_size&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;new_space_allocation_throughput：
     &lt;ul&gt;
-      &lt;li&gt;上次GC后新生代分配的内存bytes / 上次GC后新生代内存分配耗时ms&lt;/li&gt;
+      &lt;li&gt;上次GC后新生代分配的内存大小 bytes / 上次GC后新生代内存分配耗时 ms&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L838&quot; target=&quot;_blank&quot;&gt;计算赋值&lt;/a&gt;：&lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L337&quot; target=&quot;_blank&quot;&gt;new_space_allocation_in_bytes_since_gc_&lt;/a&gt; / &lt;a href=&quot;https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L436&quot; target=&quot;_blank&quot;&gt;allocation_duration_since_gc_&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
