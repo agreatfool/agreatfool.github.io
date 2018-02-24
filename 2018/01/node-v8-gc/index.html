@@ -190,7 +190,7 @@
 <h1 id="1-前言">1. 前言</h1>
 <p>本文是系列文章<a href="https://xenojoshua.com/2018/01/node-profile/" target="_blank">Node.JS Profile</a>的一部分，完整的文章列表请去总章查看。</p>
 
-<p>本文是Node内存相关文章的其中一篇，主要负责介绍V8引擎GC相关的详细技术内容。</p>
+<p>本文是Node内存相关文章的其中一篇，主要负责深度解析V8引擎GC相关的技术。</p>
 
 <h1 id="2-gc日志">2. GC日志</h1>
 <p>Node的V8引擎支持使用命令行添加option启动的形式，在stdout中输出GC相关内容的日志。GC日志基本上可以说是了解V8 GC行为及状态的唯一方法。</p>
@@ -349,6 +349,11 @@
       <li>最大不超过1024MB，最小是1：<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L764" target="_blank">const int max_speed = 1024 * MB;</a></li>
     </ul>
   </li>
+  <li>Tracer在停止的时候会进行大量的数据计算，很多输出的统计数据都是在这步里计算的，可以仔细阅读下：
+    <ul>
+      <li><a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L223" target="_blank">void GCTracer::Stop(GarbageCollector collector) {</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h3 id="global-handlesh">global-handles.h</h3>
@@ -378,14 +383,22 @@
   <li>semispace：类似上面的heap.*，按scope分的耗时：Scope::SCAVENGER_SEMISPACE（新生代）</li>
   <li>steps_count：增量标记步骤数，见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L509" target="_blank">代码</a>（老生代，MC是指Mark &amp; Compact）</li>
   <li>steps_took: 增量标记步骤，见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L511" target="_blank">代码</a>（老生代，MC是指Mark &amp; Compact）</li>
-  <li><code>scavenge_throughput</code>：scavenge回收速率，bytes/ms，见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L512" target="_blank">使用</a>和<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L798" target="_blank">方法定义</a></li>
-  <li><code>total_size_before</code>：GC开始时的对象总数量（Size of objects in heap set in constructor.），<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L209" target="_blank">start_object_size</a></li>
-  <li><code>total_size_after</code>：GC结束时的对象总数量（Size of objects in heap set in destructor.），<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L212" target="_blank">end_object_size</a></li>
+  <li><code>scavenge_throughput</code>：
+    <ul>
+      <li>scavenge处理速率，bytes/ms</li>
+      <li><a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L798" target="_blank">方法定义</a></li>
+      <li>实际上该速率根据<code>ScavengeSpeedMode</code>模式的不同，返回的数值可能是：</li>
+      <li><a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L260" target="_blank"><code>recorded_minor_gcs_total_</code></a>：新生代内存整体的处理速率</li>
+      <li><a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L262" target="_blank"><code>recorded_minor_gcs_survived_</code></a>：新生代存活内存的处理速率</li>
+    </ul>
+  </li>
+  <li><code>total_size_before</code>：GC开始时的对象内存大小 bytes（Size of objects in heap set in constructor.），<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L209" target="_blank">start_object_size</a></li>
+  <li><code>total_size_after</code>：GC结束时的对象内存大小 bytes（Size of objects in heap set in destructor.），<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L212" target="_blank">end_object_size</a></li>
   <li><code>holes_size_before</code>：
     <ul>
       <li>Total amount of space either wasted or contained in one of free lists before the current GC.</li>
-      <li>直译的意思是：当前GC开始之前被标记为<code>浪费掉的</code>或<code>处于可用freelist内的</code>内存空间</li>
-      <li>乍看这两者的貌似是相反的概念，但仔细阅读后感觉这里的<code>hole</code>的概念并非一般论的内存空洞，而应该理解为`因GC导致的内存空间不连贯的内存</li>
+      <li>直译的意思是：当前GC开始之前被标记为<code>浪费掉的</code>或<code>处于可用freelist内的</code>内存空间大小 bytes</li>
+      <li>乍看这两者的貌似是相反的概念，但仔细阅读后感觉这里的<code>hole</code>的概念并非一般论的内存空洞，而应该理解为<code>因GC导致的内存空间不连贯的内存</code></li>
       <li>这在执行<code>Compacting</code>的时候会起到判断的作用：<code>Compacting &gt;&gt; 主要发生在某一页中死亡对象留下来的空洞（hole）比较多的时候</code></li>
       <li><a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L221" target="_blank">start_holes_size</a></li>
     </ul>
@@ -396,7 +409,7 @@
       <li><a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.h#L225" target="_blank">end_holes_size</a></li>
     </ul>
   </li>
-  <li><code>allocated</code>：自上次GC结束到这次GC开始之间的时间里，分配的内存对象数量，见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L439" target="_blank">赋值</a></li>
+  <li><code>allocated</code>：自上次GC结束到这次GC开始之间的时间里，分配的内存大小 bytes，见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/gc-tracer.cc#L439" target="_blank">赋值</a></li>
   <li><code>promoted</code>：晋升的对象数量，见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2264" target="_blank">定义</a>和<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L1387" target="_blank">getter</a></li>
   <li><code>semi_space_copied</code>：新生代内存空间对半拷贝的对象数量，见<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L2267" target="_blank">定义</a>和<a href="https://github.com/v8/v8/blob/6.0.286/src/heap/heap.h#L1392" target="_blank">getter</a></li>
   <li>nodes_died_in_new：源码中针对这里的<code>Node</code>说明很模糊，不清楚是不是内存页的意思，源码可以见<a href="https://github.com/v8/v8/blob/6.0.286/src/global-handles.h#L173" target="_blank">Node定义</a>和<a href="https://github.com/v8/v8/blob/6.0.286/src/global-handles.h#L205" target="_blank">new_space_nodes_</a></li>
