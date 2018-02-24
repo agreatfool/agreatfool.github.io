@@ -1229,7 +1229,7 @@
   &lt;li&gt;&lt;a href=&quot;https://github.com/marcominetti/node-memwatch&quot; target=&quot;_blank&quot;&gt;marcominetti/node-memwatch&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27509546&quot; target=&quot;_blank&quot;&gt;Node.js 性能调优之内存篇(三)——memwatch-next&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/NodejsFoundation/are-your-v8-garbage-collection-logs-speaking-to-youjoyee-cheung-alibaba-cloudalibaba-group&quot; target=&quot;_blank&quot;&gt;Are your v8 garbage collection logs speaking to you?Joyee Cheung -Alibaba Cloud(Alibaba Group)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/tree/6.0.286&quot;&gt;v8/v8 6.0.286&lt;/a&gt; {:target=”_blank”}&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/tree/6.0.286&quot; target=&quot;_blank&quot;&gt;v8/v8 6.0.286&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://groups.google.com/forum/#!topic/v8-users/Y3aFhooU2F4&quot; target=&quot;_blank&quot;&gt;What is mutator?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
