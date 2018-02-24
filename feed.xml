@@ -1469,7 +1469,7 @@
       &lt;li&gt;&lt;a href=&quot;#34-orinoco-young-generation-garbage-collection-2017-11-29&quot; id=&quot;markdown-toc-34-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-资料&quot; id=&quot;markdown-toc-4-资料&quot;&gt;4. 资料&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#ID4&quot; id=&quot;markdown-toc-ID4&quot;&gt;4. 资料&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
@@ -1518,7 +1518,7 @@
 &lt;p&gt;遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。&lt;/p&gt;
 
 &lt;h1 id=&quot;3-gc&quot;&gt;3. GC&lt;/h1&gt;
-&lt;p&gt;这部分的概念和技术要点主要阅读上文资料中阿里团队的两篇GC文章即可，即&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot; target=&quot;_blank&quot;&gt;这篇1&lt;/a&gt;和&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot; target=&quot;_blank&quot;&gt;这篇2&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;这部分的概念和技术要点主要阅读&lt;a href=&quot;#ID4&quot;&gt;资料&lt;/a&gt;中阿里团队的两篇GC文章即可，即&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot; target=&quot;_blank&quot;&gt;这篇1&lt;/a&gt;和&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot; target=&quot;_blank&quot;&gt;这篇2&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看&lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;这篇&lt;/a&gt;官方的v8博客文章，撰于2017-11-29。&lt;/p&gt;
 
@@ -1719,7 +1719,7 @@
   &lt;li&gt;该新算法减少了20%-50%的新生代垃圾回收时间（V8 now ships with the parallel Scavenger which reduces the main thread young generation garbage collection total time by about 20%–50%）&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&quot;4-资料&quot;&gt;4. 资料&lt;/h1&gt;
+&lt;h1 id=&quot;ID4&quot;&gt;4. 资料&lt;/h1&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot; target=&quot;_blank&quot;&gt;解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识&lt;/a&gt;：阿里团队的几篇Node的内存文章，很不错&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot; target=&quot;_blank&quot;&gt;解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法&lt;/a&gt;：同上&lt;/li&gt;
