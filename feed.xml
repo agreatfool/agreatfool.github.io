@@ -1640,8 +1640,10 @@
 
 &lt;ul&gt;
   &lt;li&gt;三色：白、灰、黑&lt;/li&gt;
-  &lt;li&gt;堆内非根节点对象全部标白&lt;/li&gt;
-  &lt;li&gt;沿着根对象，将所有带引用的对象标黑，检索过程中先标黑&lt;/li&gt;
+  &lt;li&gt;初始状态下堆内非根节点对象全部标白&lt;/li&gt;
+  &lt;li&gt;沿着根对象，将跟对象引用到的对象标成灰色，push到栈内&lt;/li&gt;
+  &lt;li&gt;然后将栈内的对象pop出来，标记成黑色，再将该对象引用的对象标记灰色，push进栈&lt;/li&gt;
+  &lt;li&gt;以此类推，慢慢扫描所有的对象&lt;/li&gt;
   &lt;li&gt;扫描完毕后，堆内非根节点对象就只剩黑和白，黑色不可回收，白色可以回收&lt;/li&gt;
   &lt;li&gt;因标记过程中对象会push进栈，而大对象则无法这么做，会走一个比较特殊的标记过程，因此大对象过多会显著影响GC效率&lt;/li&gt;
   &lt;li&gt;Marking后的回收分：&lt;code&gt;Sweeping&lt;/code&gt;和&lt;code&gt;Compacting&lt;/code&gt;&lt;/li&gt;
