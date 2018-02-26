@@ -241,6 +241,16 @@ Usage with NPM scripts:</p>
 Note that it’s important to specify the option with_underscores since that’s the only one that NODE_OPTIONS accepts.</p>
 </blockquote>
 
+<p>在设置堆内存上限这个问题上，没有银弹，一般来说直接根据需求设置即可。但，切记一点，作为一个拥有垃圾回收机制的VM，堆内存越大，对GC系统来说负担越重。意味着你并不能一味根据自己的需求将堆内存上限提升上去，可能当你将内存上限提升到某个程度的时候，你会发现你的Node VM花费了明显超越你预期的时间在GC上，导致你的程序明显的卡顿、中断。</p>
+
+<p>在早期的帖子中，TJ经常将堆内存上限设置为<code>15G左右</code>，可以作为参考，但这帖子的时间也比较古早了，2014年的，仅供参考。</p>
+
+<p>原帖见：<a href="https://twitter.com/tjholowaychuk/status/480753206301966336" target="_blank">Twitter</a></p>
+
+<blockquote>
+  <p>in my case ~15gb, that flags seems to raise the limit</p>
+</blockquote>
+
 <h1 id="3-gc">3. GC</h1>
 <p>这部分的概念和技术要点主要阅读<a href="#ID4">资料</a>中阿里团队的两篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37" target="_blank">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38" target="_blank">这篇2</a>。</p>
 

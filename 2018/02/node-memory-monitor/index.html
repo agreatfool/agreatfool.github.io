@@ -294,9 +294,12 @@
 <p>按空间分类的堆内存信息可以酌情收集，如果有需要分析单独的<code>新生代</code>或<code>老生代</code>内存情况的话。</p>
 
 <h2 id="42-node-gc">4.2 Node GC</h2>
+<p>所有的GC相关Metrics采集都应该按GC触发的时间节点进行收集，毕竟数据来自GC行为，没有GC行为那也就没数据可采集，所以不可能做到类似CPU和Node进程内存这样的按时间定时进行采集。</p>
+
 <ul>
+  <li>gcTime：GC发生的时间，精度可能需要提高到ms级别，而不是second级别</li>
   <li>gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低</li>
-  <li>gcPause：GC中断，需要按不同GC类型进行分类收集，老生代的<code>markSweepCompact</code>数据最为关键</li>
+  <li>gcPause：GC中断时长，需要按不同GC类型进行分类收集，老生代的<code>markSweepCompact</code>数据最为关键</li>
   <li></li>
   <li>allocationRate：新内存分配下来的速率，bytes/second</li>
   <li>promotionRate：内存从新生代到老生代的晋升速度，bytes/second</li>

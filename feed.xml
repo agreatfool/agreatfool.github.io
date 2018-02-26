@@ -155,9 +155,12 @@
 &lt;p&gt;按空间分类的堆内存信息可以酌情收集，如果有需要分析单独的&lt;code&gt;新生代&lt;/code&gt;或&lt;code&gt;老生代&lt;/code&gt;内存情况的话。&lt;/p&gt;
 
 &lt;h2 id=&quot;42-node-gc&quot;&gt;4.2 Node GC&lt;/h2&gt;
+&lt;p&gt;所有的GC相关Metrics采集都应该按GC触发的时间节点进行收集，毕竟数据来自GC行为，没有GC行为那也就没数据可采集，所以不可能做到类似CPU和Node进程内存这样的按时间定时进行采集。&lt;/p&gt;
+
 &lt;ul&gt;
+  &lt;li&gt;gcTime：GC发生的时间，精度可能需要提高到ms级别，而不是second级别&lt;/li&gt;
   &lt;li&gt;gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低&lt;/li&gt;
-  &lt;li&gt;gcPause：GC中断，需要按不同GC类型进行分类收集，老生代的&lt;code&gt;markSweepCompact&lt;/code&gt;数据最为关键&lt;/li&gt;
+  &lt;li&gt;gcPause：GC中断时长，需要按不同GC类型进行分类收集，老生代的&lt;code&gt;markSweepCompact&lt;/code&gt;数据最为关键&lt;/li&gt;
   &lt;li&gt;&lt;/li&gt;
   &lt;li&gt;allocationRate：新内存分配下来的速率，bytes/second&lt;/li&gt;
   &lt;li&gt;promotionRate：内存从新生代到老生代的晋升速度，bytes/second&lt;/li&gt;
@@ -1541,6 +1544,16 @@ Usage with NPM scripts:&lt;/p&gt;
   “start”: “cross-env NODE_OPTIONS=--max_old_space_size=4096 webpack”  &lt;br /&gt;
 }  &lt;br /&gt;
 Note that it’s important to specify the option with_underscores since that’s the only one that NODE_OPTIONS accepts.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;在设置堆内存上限这个问题上，没有银弹，一般来说直接根据需求设置即可。但，切记一点，作为一个拥有垃圾回收机制的VM，堆内存越大，对GC系统来说负担越重。意味着你并不能一味根据自己的需求将堆内存上限提升上去，可能当你将内存上限提升到某个程度的时候，你会发现你的Node VM花费了明显超越你预期的时间在GC上，导致你的程序明显的卡顿、中断。&lt;/p&gt;
+
+&lt;p&gt;在早期的帖子中，TJ经常将堆内存上限设置为&lt;code&gt;15G左右&lt;/code&gt;，可以作为参考，但这帖子的时间也比较古早了，2014年的，仅供参考。&lt;/p&gt;
+
+&lt;p&gt;原帖见：&lt;a href=&quot;https://twitter.com/tjholowaychuk/status/480753206301966336&quot; target=&quot;_blank&quot;&gt;Twitter&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;in my case ~15gb, that flags seems to raise the limit&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;h1 id=&quot;3-gc&quot;&gt;3. GC&lt;/h1&gt;
