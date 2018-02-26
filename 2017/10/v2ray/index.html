@@ -212,7 +212,7 @@ www路径：/var/www/html  <br />
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>acme.sh --issue -d <span class="si">${</span><span class="nv">domain</span><span class="si">}</span> -w /var/www/html</code></pre></figure>
 
 <blockquote>
-  <p>root@vultr:~/opt# acme.sh –issue -d ${domain} -w /var/www/html  <br />
+  <p>root@vultr:~/opt# acme.sh --issue -d ${domain} -w /var/www/html  <br />
 [Tue Oct 24 09:00:39 UTC 2017] Registering account  <br />
 [Tue Oct 24 09:00:40 UTC 2017] Registered  <br />
 [Tue Oct 24 09:00:40 UTC 2017] Update account tos info success.  <br />
@@ -229,9 +229,9 @@ www路径：/var/www/html  <br />
 [Tue Oct 24 09:00:44 UTC 2017] Verify finished, start to sign.  <br />
 /root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input  <br />
 [Tue Oct 24 09:00:45 UTC 2017] Cert success.  <br />
-—–BEGIN CERTIFICATE—–  <br />
+-----BEGIN CERTIFICATE-----  <br />
 …  <br />
-—–END CERTIFICATE—–  <br />
+-----END CERTIFICATE-----  <br />
 [Tue Oct 24 09:00:45 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer  <br />
 [Tue Oct 24 09:00:45 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key  <br />
 [Tue Oct 24 09:00:45 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer  <br />
@@ -314,7 +314,7 @@ www路径：/var/www/html  <br />
 [Tue Oct 24 09:47:37 UTC 2017] ===End cron===</p>
 </blockquote>
 
-<p>时间没到命令并不会直接刷新证书，要尝试的话，可以添加 –force 来强制执行：</p>
+<p>时间没到命令并不会直接刷新证书，要尝试的话，可以添加 --force 来强制执行：</p>
 
 <blockquote>
   <p>[Tue Oct 24 09:48:45 UTC 2017] ===Starting cron===  <br />
@@ -328,9 +328,9 @@ www路径：/var/www/html  <br />
 [Tue Oct 24 09:48:46 UTC 2017] Verify finished, start to sign.  <br />
 /root/.acme.sh/acme.sh: line 1819: warning: command substitution: ignored null byte in input  <br />
 [Tue Oct 24 09:48:47 UTC 2017] Cert success.  <br />
-—–BEGIN CERTIFICATE—–  <br />
+-----BEGIN CERTIFICATE-----  <br />
 …  <br />
-—–END CERTIFICATE—–  <br />
+-----END CERTIFICATE-----  <br />
 [Tue Oct 24 09:48:47 UTC 2017] Your cert is in  /root/.acme.sh/${domain}/${domain}.cer  <br />
 [Tue Oct 24 09:48:47 UTC 2017] Your cert key is in  /root/.acme.sh/${domain}/${domain}.key  <br />
 [Tue Oct 24 09:48:47 UTC 2017] The intermediate CA cert is in  /root/.acme.sh/${domain}/ca.cer  <br />

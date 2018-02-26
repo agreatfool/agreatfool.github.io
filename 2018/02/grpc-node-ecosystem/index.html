@@ -295,12 +295,11 @@
 <p>grpc-tools没有README入口文档。使用文档放在一个很幺二三的角落：<a href="https://github.com/grpc/grpc/blob/master/examples/node/static_codegen/README.md" target="_blank">grpc/examples/node/static_codegen/README.md</a></p>
 
 <p>e.g</p>
-<blockquote>
-  <p>cd ../../protos  <br />
-  npm install -g grpc-tools  <br />
-  grpc_tools_node_protoc –js_out=import_style=commonjs,binary:../node/static_codegen/ –grpc_out=../node/static_codegen –plugin=protoc-gen-grpc=<code>which grpc_tools_node_protoc_plugin</code> helloworld.proto  <br />
-  grpc_tools_node_protoc –js_out=import_style=commonjs,binary:../node/static_codegen/route_guide/ –grpc_out=../node/static_codegen/route_guide/ –plugin=protoc-gen-grpc=<code>which grpc_tools_node_protoc_plugin</code> route_guide.proto</p>
-</blockquote>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="nb">cd</span> ../../protos    
+npm install -g grpc-tools    
+grpc_tools_node_protoc --js_out<span class="o">=</span><span class="nv">import_style</span><span class="o">=</span>commonjs,binary:../node/static_codegen/ --grpc_out<span class="o">=</span>../node/static_codegen --plugin<span class="o">=</span>protoc-gen-grpc<span class="o">=</span><span class="sb">`</span>which grpc_tools_node_protoc_plugin<span class="sb">`</span> helloworld.proto    
+grpc_tools_node_protoc --js_out<span class="o">=</span><span class="nv">import_style</span><span class="o">=</span>commonjs,binary:../node/static_codegen/route_guide/ --grpc_out<span class="o">=</span>../node/static_codegen/route_guide/ --plugin<span class="o">=</span>protoc-gen-grpc<span class="o">=</span><span class="sb">`</span>which grpc_tools_node_protoc_plugin<span class="sb">`</span> route_guide.proto    </code></pre></figure>
 
 <p>生成的代码范例如下：</p>
 
@@ -444,9 +443,7 @@
 
 <p>用到了非标准的<code>annotation</code>，主要是在proto文件中引入了额外的官方proto定义：</p>
 
-<blockquote>
-  <p>import “google/api/annotations.proto”;</p>
-</blockquote>
+<figure class="highlight"><pre><code class="language-proto" data-lang="proto"><span></span><span class="k">import</span> <span class="s">&quot;google/api/annotations.proto&quot;</span><span class="p">;</span></code></pre></figure>
 
 <p>这个引入的proto还引入了两个其他的proto，总共3个proto文件，如下：</p>
 

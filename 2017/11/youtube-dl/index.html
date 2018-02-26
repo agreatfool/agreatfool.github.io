@@ -183,6 +183,20 @@
 
 <p>细节是相当的多，不得不佩服作者的细致处理的功力。因功能相当强大，很多细节的配置可以参考github上的手册，这里就不一一展开了。</p>
 
+<p>一般来说，下载常用的命令：</p>
+
+<p>下载单独视频：</p>
+<blockquote>
+  <p>$ youtube-dl --proxy socks5://127.0.0.1:10803 -o “~/Downloads/youtube/%(title)s.%(ext)s” $url</p>
+</blockquote>
+
+<p>下载视频列表：</p>
+<blockquote>
+  <p>$ youtube-dl --proxy socks5://127.0.0.1:10803 -o “~/Downloads/youtube/%(playlist_title)s/%(playlist_index)s - %(title)s-%(id)s.%(ext)s” $url</p>
+</blockquote>
+
+<p>注意这里的视频列表地址格式必须是：https://www.youtube.com/playlist?list=$列表ID，否则解析<code>playlist_title</code>等信息会出错</p>
+
 <blockquote>
   <p>EOF</p>
 </blockquote>

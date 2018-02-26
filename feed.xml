@@ -29,7 +29,7 @@
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#5-工具&quot; id=&quot;markdown-toc-5-工具&quot;&gt;5. 工具&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID51&quot; id=&quot;markdown-toc-ID51&quot;&gt;5.1 内存泄露 || 内存正常 范例脚本&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID51&quot; id=&quot;markdown-toc-ID51&quot;&gt;5.1 内存泄露 or 正常运行 范例脚本&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID52&quot; id=&quot;markdown-toc-ID52&quot;&gt;5.2 GC解析管道脚本&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID53&quot; id=&quot;markdown-toc-ID53&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot; target=&quot;_blank&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -148,8 +148,8 @@
   &lt;li&gt;rss：node进程总内存占用量&lt;/li&gt;
   &lt;li&gt;heapTotal：总堆内存占用量（已申请下来的）&lt;/li&gt;
   &lt;li&gt;heapUsed：实际堆内存使用量&lt;/li&gt;
-  &lt;li&gt;external：扩展等外部程序的内存占用量&lt;/li&gt;
-  &lt;li&gt;heapSizeLimit：堆内存上限&lt;/li&gt;
+  &lt;li&gt;external：扩展等外部程序的内存占用量，在某些情况下rss很大但堆内存很小的时候，就需要定点关注外部插件使用的内存了&lt;/li&gt;
+  &lt;li&gt;heapSizeLimit：堆内存上限，建议在node启动的时候每次都确定好堆内存大小&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;按空间分类的堆内存信息可以酌情收集，如果有需要分析单独的&lt;code&gt;新生代&lt;/code&gt;或&lt;code&gt;老生代&lt;/code&gt;内存情况的话。&lt;/p&gt;
@@ -164,7 +164,7 @@
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;5-工具&quot;&gt;5. 工具&lt;/h1&gt;
-&lt;h2 id=&quot;ID51&quot;&gt;5.1 内存泄露 || 内存正常 范例脚本&lt;/h2&gt;
+&lt;h2 id=&quot;ID51&quot;&gt;5.1 内存泄露 or 正常运行 范例脚本&lt;/h2&gt;
 &lt;p&gt;为了观察内存泄露和GC日志，需要一个范例运行的脚本，我这里制作了一个。如何使用请查看该脚本头部的注释：&lt;/p&gt;
 
 &lt;noscript&gt;&lt;pre&gt;400: Invalid request
@@ -643,12 +643,11 @@
 &lt;p&gt;grpc-tools没有README入口文档。使用文档放在一个很幺二三的角落：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/examples/node/static_codegen/README.md&quot; target=&quot;_blank&quot;&gt;grpc/examples/node/static_codegen/README.md&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;e.g&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;cd ../../protos  &lt;br /&gt;
-  npm install -g grpc-tools  &lt;br /&gt;
-  grpc_tools_node_protoc –js_out=import_style=commonjs,binary:../node/static_codegen/ –grpc_out=../node/static_codegen –plugin=protoc-gen-grpc=&lt;code&gt;which grpc_tools_node_protoc_plugin&lt;/code&gt; helloworld.proto  &lt;br /&gt;
-  grpc_tools_node_protoc –js_out=import_style=commonjs,binary:../node/static_codegen/route_guide/ –grpc_out=../node/static_codegen/route_guide/ –plugin=protoc-gen-grpc=&lt;code&gt;which grpc_tools_node_protoc_plugin&lt;/code&gt; route_guide.proto&lt;/p&gt;
-&lt;/blockquote&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../../protos    
+npm install -g grpc-tools    
+grpc_tools_node_protoc --js_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;import_style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;commonjs,binary:../node/static_codegen/ --grpc_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;../node/static_codegen --plugin&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;protoc-gen-grpc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;which grpc_tools_node_protoc_plugin&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; helloworld.proto    
+grpc_tools_node_protoc --js_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;import_style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;commonjs,binary:../node/static_codegen/route_guide/ --grpc_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;../node/static_codegen/route_guide/ --plugin&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;protoc-gen-grpc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;which grpc_tools_node_protoc_plugin&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; route_guide.proto    &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;生成的代码范例如下：&lt;/p&gt;
 
@@ -792,9 +791,7 @@
 
 &lt;p&gt;用到了非标准的&lt;code&gt;annotation&lt;/code&gt;，主要是在proto文件中引入了额外的官方proto定义：&lt;/p&gt;
 
-&lt;blockquote&gt;
-  &lt;p&gt;import “google/api/annotations.proto”;&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;google/api/annotations.proto&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;这个引入的proto还引入了两个其他的proto，总共3个proto文件，如下：&lt;/p&gt;
 
@@ -1530,6 +1527,22 @@
 
 &lt;p&gt;遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。&lt;/p&gt;
 
+&lt;p&gt;如果在使用npm等第三方封装好的命令或脚本时，希望调整堆大小的话，可以使用node8引入的&lt;code&gt;NODE_OPTIONS&lt;/code&gt;功能来实现：&lt;a href=&quot;https://medium.com/the-node-js-collection/node-options-has-landed-in-8-x-5fba57af703d&quot; target=&quot;_blank&quot;&gt;NODE_OPTIONS has landed in 8.x!&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;下面的内容来自：&lt;a href=&quot;https://github.com/npm/npm/issues/12238&quot; target=&quot;_blank&quot;&gt;Best way to set –max-old-space-size when running npm?&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;So it turns out that instead of needing to alias npm or otherwise call node directly, you can increase Node’s max heap size by setting the NODE_OPTIONS environmental variable (introduced in Node 8) as follows:&lt;/p&gt;
+
+  &lt;p&gt;NODE_OPTIONS=--max_old_space_size=4096  &lt;br /&gt;
+Usage with NPM scripts:&lt;/p&gt;
+
+  &lt;p&gt;“scripts”: {  &lt;br /&gt;
+  “start”: “cross-env NODE_OPTIONS=--max_old_space_size=4096 webpack”  &lt;br /&gt;
+}  &lt;br /&gt;
+Note that it’s important to specify the option with_underscores since that’s the only one that NODE_OPTIONS accepts.&lt;/p&gt;
+&lt;/blockquote&gt;
+
 &lt;h1 id=&quot;3-gc&quot;&gt;3. GC&lt;/h1&gt;
 &lt;p&gt;这部分的概念和技术要点主要阅读&lt;a href=&quot;#ID4&quot;&gt;资料&lt;/a&gt;中阿里团队的两篇GC文章即可，即&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot; target=&quot;_blank&quot;&gt;这篇1&lt;/a&gt;和&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot; target=&quot;_blank&quot;&gt;这篇2&lt;/a&gt;。&lt;/p&gt;
 
@@ -1747,6 +1760,7 @@
   &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub43823.html&quot; target=&quot;_blank&quot;&gt;Memento Mori: Dynamic Allocation-site-based Optimizations&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub42478.html&quot; target=&quot;_blank&quot;&gt;Allocation Folding Based on Dominance&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;amp;rep=rep1&amp;amp;type=pdf&quot; target=&quot;_blank&quot;&gt;Garbage-First Garbage Collection&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://medium.com/the-node-js-collection/node-options-has-landed-in-8-x-5fba57af703d&quot;&gt;NODE_OPTIONS has landed in 8.x!&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;

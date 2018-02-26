@@ -225,6 +225,22 @@
 
 <p>遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。</p>
 
+<p>如果在使用npm等第三方封装好的命令或脚本时，希望调整堆大小的话，可以使用node8引入的<code>NODE_OPTIONS</code>功能来实现：<a href="https://medium.com/the-node-js-collection/node-options-has-landed-in-8-x-5fba57af703d" target="_blank">NODE_OPTIONS has landed in 8.x!</a></p>
+
+<p>下面的内容来自：<a href="https://github.com/npm/npm/issues/12238" target="_blank">Best way to set –max-old-space-size when running npm?</a></p>
+
+<blockquote>
+  <p>So it turns out that instead of needing to alias npm or otherwise call node directly, you can increase Node’s max heap size by setting the NODE_OPTIONS environmental variable (introduced in Node 8) as follows:</p>
+
+  <p>NODE_OPTIONS=--max_old_space_size=4096  <br />
+Usage with NPM scripts:</p>
+
+  <p>“scripts”: {  <br />
+  “start”: “cross-env NODE_OPTIONS=--max_old_space_size=4096 webpack”  <br />
+}  <br />
+Note that it’s important to specify the option with_underscores since that’s the only one that NODE_OPTIONS accepts.</p>
+</blockquote>
+
 <h1 id="3-gc">3. GC</h1>
 <p>这部分的概念和技术要点主要阅读<a href="#ID4">资料</a>中阿里团队的两篇GC文章即可，即<a href="http://alinode.aliyun.com/blog/37" target="_blank">这篇1</a>和<a href="http://alinode.aliyun.com/blog/38" target="_blank">这篇2</a>。</p>
 
@@ -442,6 +458,7 @@
   <li><a href="https://research.google.com/pubs/pub43823.html" target="_blank">Memento Mori: Dynamic Allocation-site-based Optimizations</a></li>
   <li><a href="https://research.google.com/pubs/pub42478.html" target="_blank">Allocation Folding Based on Dominance</a></li>
   <li><a href="http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;rep=rep1&amp;type=pdf" target="_blank">Garbage-First Garbage Collection</a></li>
+  <li><a href="https://medium.com/the-node-js-collection/node-options-has-landed-in-8-x-5fba57af703d">NODE_OPTIONS has landed in 8.x!</a></li>
 </ul>
 
 <blockquote>
