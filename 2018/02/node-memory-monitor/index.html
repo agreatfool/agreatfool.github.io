@@ -300,9 +300,16 @@
   <li>gcTime：GC发生的时间，精度可能需要提高到ms级别，而不是second级别</li>
   <li>gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低</li>
   <li>gcPause：GC中断时长，需要按不同GC类型进行分类收集，老生代的<code>markSweepCompact</code>数据最为关键</li>
-  <li></li>
-  <li>allocationRate：新内存分配下来的速率，bytes/second</li>
-  <li>promotionRate：内存从新生代到老生代的晋升速度，bytes/second</li>
+  <li>sizeBefore：GC前内存大小 bytes</li>
+  <li>sizeAfter：GC后内存大小 bytes</li>
+  <li>holesBefore：GC前内存空洞大小 bytes</li>
+  <li>holesAfter：GC后内存空洞大小 bytes</li>
+  <li>allocated：GC间，内存分配量 bytes</li>
+  <li>promoted：GC间，对象晋升量 bytes</li>
+  <li>allocationThroughput：GC间，新生代内存申请速率 bytes/ms</li>
+  <li>promotionRatio：当前GC中内存从新生代晋升到老生代的百分比 %</li>
+  <li>incrementalWalltime：增量标记时长 ms</li>
+  <li>compactionSpeed：内存Compacting速率 bytes/ms</li>
 </ul>
 
 <h1 id="5-工具">5. 工具</h1>

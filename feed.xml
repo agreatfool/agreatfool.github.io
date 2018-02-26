@@ -161,9 +161,16 @@
   &lt;li&gt;gcTime：GC发生的时间，精度可能需要提高到ms级别，而不是second级别&lt;/li&gt;
   &lt;li&gt;gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低&lt;/li&gt;
   &lt;li&gt;gcPause：GC中断时长，需要按不同GC类型进行分类收集，老生代的&lt;code&gt;markSweepCompact&lt;/code&gt;数据最为关键&lt;/li&gt;
-  &lt;li&gt;&lt;/li&gt;
-  &lt;li&gt;allocationRate：新内存分配下来的速率，bytes/second&lt;/li&gt;
-  &lt;li&gt;promotionRate：内存从新生代到老生代的晋升速度，bytes/second&lt;/li&gt;
+  &lt;li&gt;sizeBefore：GC前内存大小 bytes&lt;/li&gt;
+  &lt;li&gt;sizeAfter：GC后内存大小 bytes&lt;/li&gt;
+  &lt;li&gt;holesBefore：GC前内存空洞大小 bytes&lt;/li&gt;
+  &lt;li&gt;holesAfter：GC后内存空洞大小 bytes&lt;/li&gt;
+  &lt;li&gt;allocated：GC间，内存分配量 bytes&lt;/li&gt;
+  &lt;li&gt;promoted：GC间，对象晋升量 bytes&lt;/li&gt;
+  &lt;li&gt;allocationThroughput：GC间，新生代内存申请速率 bytes/ms&lt;/li&gt;
+  &lt;li&gt;promotionRatio：当前GC中内存从新生代晋升到老生代的百分比 %&lt;/li&gt;
+  &lt;li&gt;incrementalWalltime：增量标记时长 ms&lt;/li&gt;
+  &lt;li&gt;compactionSpeed：内存Compacting速率 bytes/ms&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;5-工具&quot;&gt;5. 工具&lt;/h1&gt;
