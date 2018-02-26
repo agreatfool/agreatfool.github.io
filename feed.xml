@@ -99,7 +99,7 @@
 &lt;p&gt;使用node的&lt;a href=&quot;https://nodejs.org/en/docs/inspector/&quot; target=&quot;_blank&quot;&gt;inspector&lt;/a&gt;来进行运行状态分析（当然，这工具可以做更多的事情）。关于Chrome Dev Tool，可以看&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/&quot;&gt;官方教程&lt;/a&gt;。&lt;/p&gt;
 
 &lt;blockquote&gt;
-  &lt;p&gt;DEBUG=* node –inspect xxx.js&lt;/p&gt;
+  &lt;p&gt;DEBUG=* node --inspect xxx.js&lt;/p&gt;
 &lt;/blockquote&gt;
 
 &lt;p&gt;然后打开浏览器&lt;code&gt;chrome://inspect/&lt;/code&gt;，找到你的脚本进行调试。也可以使用&lt;a href=&quot;#ID53&quot;&gt;5.3里提到的工具&lt;/a&gt;，简化操作。&lt;/p&gt;
