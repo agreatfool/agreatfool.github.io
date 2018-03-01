@@ -7,6 +7,366 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>提问的典范 &amp; 修BUG的典范</title>
+				<description>&lt;h1 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h1&gt;
+&lt;p&gt;我在公司内部培训的时候一直都说：程序员的能力体现在各个方面，从一个很小的提问题的事情上，也能看出一个人的职业素养。这里做一个笔记，记录下今天定位和解决的一个问题。&lt;/p&gt;
+
+&lt;p&gt;本文中提到的issue在：&lt;a href=&quot;https://github.com/typeorm/typeorm/issues/1672&quot; target=&quot;_blank&quot;&gt;Performance issue, result set processing&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;ID1&quot;&gt;1. 提问的典范&lt;/h1&gt;
+
+&lt;p&gt;工作中使用到了TypeOrm这个库，在功能上确实非常强大，性能上一直都没有特别关注，到了今天遇到了个性能问题，然后就需要解决这个问题。&lt;/p&gt;
+
+&lt;p&gt;如何解决这个问题，可以很简单粗暴的到TypeOrm的官方issue上提问，把遇到的现象直接描述下。但如果你真的这么做了，对方可能完全无法理解你提出的问题到底是什么原因造成的，或他解决这个问题还需要从你这里得到什么额外的信息。&lt;/p&gt;
+
+&lt;p&gt;所以我是这么做的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;本地重现问题&lt;/li&gt;
+  &lt;li&gt;隔离问题发生的情况中，和TypeOrm不相关的内容（重写一份隔离业务的超小demo，复现问题）&lt;/li&gt;
+  &lt;li&gt;使用简化的demo重新进行测试&lt;/li&gt;
+  &lt;li&gt;获取TypeOrm的测试数据&lt;/li&gt;
+  &lt;li&gt;隔离TypeOrm，在数据库中直接执行查询，获取测试数据&lt;/li&gt;
+  &lt;li&gt;比对TypeOrm的测试数据和数据库中的测试数据，定位问题在TypeOrm还是数据库&lt;/li&gt;
+  &lt;li&gt;对简化的demo进行profile：&lt;code&gt;node --prof index.js&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;解析profile数据，尝试自行理解问题发生的根本原因&lt;/li&gt;
+  &lt;li&gt;将问题复现相关的代码和资料上传到gist，方便提issue的时候链接给库作者查看&lt;/li&gt;
+  &lt;li&gt;在TypeOrm的官方issue上提问，并提出自己的理解和后续的诉求&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;可以看到我在提问之前做了巨量的准备工作，给到库作者完备的信息，提出自己的问题定位假设，并作出后续的解决诉求。那么对方就能够很快解决并处理。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-修bug的典范&quot;&gt;2. 修BUG的典范&lt;/h1&gt;
+
+&lt;p&gt;正如在&lt;a href=&quot;#ID1&quot;&gt;提问的典范&lt;/a&gt;中预期的，TypeOrm的作者果然极速响应了这个BUG解决需求，秒发了一个&lt;code&gt;0.1.14&lt;/code&gt;版本。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Tue, 27 Feb 2018 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/02/how-to-raise-question/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/02/how-to-raise-question/</guid>
+			</item>
+		
+			<item>
+				<title>Node.JS Profile 4.1 Profile实践</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-介绍&quot; id=&quot;markdown-toc-2-介绍&quot;&gt;2. 介绍&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-node原生工具进行profile&quot; id=&quot;markdown-toc-3-node原生工具进行profile&quot;&gt;3. Node原生工具进行Profile&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-node官方guide&quot; id=&quot;markdown-toc-31-node官方guide&quot;&gt;3.1 Node官方Guide&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#32-版本要求&quot; id=&quot;markdown-toc-32-版本要求&quot;&gt;3.2 版本要求&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-profile范例&quot; id=&quot;markdown-toc-33-profile范例&quot;&gt;3.3 Profile范例&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#34-解析profile日志&quot; id=&quot;markdown-toc-34-解析profile日志&quot;&gt;3.4 解析Profile日志&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#35-理解profile日志内容&quot; id=&quot;markdown-toc-35-理解profile日志内容&quot;&gt;3.5 理解Profile日志内容&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#351-shared-libraries&quot; id=&quot;markdown-toc-351-shared-libraries&quot;&gt;3.5.1 Shared libraries&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#352-javascriptcsummary&quot; id=&quot;markdown-toc-352-javascriptcsummary&quot;&gt;3.5.2 JavaScript、C++、Summary&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#javascript&quot; id=&quot;markdown-toc-javascript&quot;&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#c&quot; id=&quot;markdown-toc-c&quot;&gt;C++&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#summary&quot; id=&quot;markdown-toc-summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#列含义&quot; id=&quot;markdown-toc-列含义&quot;&gt;列含义&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#353-c-entry-points&quot; id=&quot;markdown-toc-353-c-entry-points&quot;&gt;3.5.3 C++ entry points&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#354-bottom-up-heavy-profile&quot; id=&quot;markdown-toc-354-bottom-up-heavy-profile&quot;&gt;3.5.4 Bottom up (heavy) profile&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-资料&quot; id=&quot;markdown-toc-4-资料&quot;&gt;4. 资料&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-火焰图相关&quot; id=&quot;markdown-toc-41-火焰图相关&quot;&gt;4.1 火焰图相关&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-附录&quot; id=&quot;markdown-toc-5-附录&quot;&gt;5. 附录&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID51&quot; id=&quot;markdown-toc-ID51&quot;&gt;5.1 解析完成的Profile日志内容&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
+
+&lt;p&gt;本文主要负责介绍Node的命令行Profile知识及实践操作。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-介绍&quot;&gt;2. 介绍&lt;/h1&gt;
+&lt;p&gt;在系列文章的前几节里，基本上已经把Node应用程序最关键的几个性能指标项目都过了一遍，这几节的主要目的都是为了Profile进行知识储备，并打好对某一方面进行针对性查错的基础。&lt;/p&gt;
+
+&lt;p&gt;在掌握了前几节的内容之后，就可以回过头来回到当前这个系列文章的主题&lt;code&gt;Profile&lt;/code&gt;来了，当然我们这里说的是&lt;code&gt;狭义上的Profile（时间消耗）&lt;/code&gt;，即观察，并了解Node进程具体在做什么，每一步都花了多少时间，以便有针对性地进行查错和调优。&lt;/p&gt;
+
+&lt;p&gt;狭义上的Profile（时间消耗）是非常重要的。一个应用程序如果需要顺利运行需要很多资源，包括且不限于：CPU、内存、磁盘、网络，很多情况下应用程序都会去申请、消耗这些资源以完成自身的工作任务，而Profile让应用程序研发者详细了解应用程序是如何申请、消耗这些资源并完成任务的。只有了解了这些信息之后，研发者才能知道哪里出了问题，哪里还有提升空间。&lt;/p&gt;
+
+&lt;p&gt;Note：&lt;/p&gt;
+
+&lt;p&gt;本文的版本时效性可能比较敏感，关于行文及范例中使用的Node版本，请查看&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;总章&lt;/a&gt;进行了解。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-node原生工具进行profile&quot;&gt;3. Node原生工具进行Profile&lt;/h1&gt;
+&lt;h2 id=&quot;31-node官方guide&quot;&gt;3.1 Node官方Guide&lt;/h2&gt;
+&lt;p&gt;Node官方文档有一篇&lt;a href=&quot;https://nodejs.org/en/docs/guides/simple-profiling/&quot; target=&quot;_blank&quot;&gt;Guide&lt;/a&gt;，详细介绍了如何进行profile。本文下面主要就是对该Guide进行翻译及针对实际操作进行总结。&lt;/p&gt;
+
+&lt;p&gt;Node的内置Profiler来自V8，V8官方的Profiler介绍可以查看：&lt;a href=&quot;https://github.com/v8/v8/wiki/Using%20V8%E2%80%99s%20internal%20profiler&quot; target=&quot;_blank&quot;&gt;Using V8’s internal profiler&lt;/a&gt;，其实和Node的Guide比起来差的不多，但更针对性地对浏览器进行了操作介绍。&lt;/p&gt;
+
+&lt;h2 id=&quot;32-版本要求&quot;&gt;3.2 版本要求&lt;/h2&gt;
+&lt;p&gt;Node官方的Profiler内嵌自版本4.4.0，所以请至少使用这个及以上的版本：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Luckily, tools have recently been introduced into Node.js 4.4.0 that facilitate the consumption of this information without separately building V8 from source.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;33-profile范例&quot;&gt;3.3 Profile范例&lt;/h2&gt;
+&lt;p&gt;调优前的范例代码如下，注意运行前请预先装好&lt;a href=&quot;https://httpd.apache.org/docs/2.4/programs/ab.html&quot; target=&quot;_blank&quot;&gt;ApacheBench&lt;/a&gt;：&lt;/p&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/a55f5cbdd66d097ba4855e47d42338e5.js&quot;&gt; &lt;/script&gt;
+
+&lt;p&gt;文件夹结构：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;bash/profile-ab.sh&lt;/li&gt;
+  &lt;li&gt;bash/profile-server.sh&lt;/li&gt;
+  &lt;li&gt;profile/package.json&lt;/li&gt;
+  &lt;li&gt;profile/server.js&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;执行步骤：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;cd profile&lt;/li&gt;
+  &lt;li&gt;npm install&lt;/li&gt;
+  &lt;li&gt;cd ..&lt;/li&gt;
+  &lt;li&gt;chmod +x bash/profile-ab.sh&lt;/li&gt;
+  &lt;li&gt;chmod +x bash/profile-server.sh&lt;/li&gt;
+  &lt;li&gt;./bash/profile-server.sh：保证服务器进程运行中&lt;/li&gt;
+  &lt;li&gt;./bash/profile-ab.sh&lt;/li&gt;
+  &lt;li&gt;查看结果&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;执行结果：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Benchmarking localhost (be patient)
+Completed 100 requests
+Completed 200 requests
+Finished 250 requests
+
+
+Server Software:        
+Server Hostname:        localhost
+Server Port:            5000
+
+Document Path:          /auth?username=matt&amp;amp;password=password
+Document Length:        2 bytes
+
+Concurrency Level:      20
+Time taken for tests:   24.817 seconds
+Complete requests:      250
+Failed requests:        0
+Keep-Alive requests:    250
+Total transferred:      51500 bytes
+HTML transferred:       500 bytes
+Requests per second:    10.07 [#/sec] (mean)
+Time per request:       1985.384 [ms] (mean)
+Time per request:       99.269 [ms] (mean, across all concurrent requests)
+Transfer rate:          2.03 [Kbytes/sec] received
+
+Connection Times (ms)
+ 	             min  mean[+/-sd] median   max
+Connect:        0    0   0.1      0       1
+Processing:    99 1909 305.1   1985    2019
+Waiting:       99 1909 305.1   1985    2019
+Total:        100 1909 304.9   1985    2019
+
+Percentage of the requests served within a certain time (ms)
+  50%   1985
+  66%   1991
+  75%   1995
+  80%   1997
+  90%   2002
+  95%   2005
+  98%   2011
+  99%   2014
+ 100%   2019 (longest request)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结论：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;20&lt;/code&gt;个并发，完成&lt;code&gt;250&lt;/code&gt;个请求，耗时&lt;code&gt;24.817&lt;/code&gt;秒&lt;/li&gt;
+  &lt;li&gt;平均每秒只能处理&lt;code&gt;10.07&lt;/code&gt;个请求&lt;/li&gt;
+  &lt;li&gt;很糟糕&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;34-解析profile日志&quot;&gt;3.4 解析Profile日志&lt;/h2&gt;
+&lt;p&gt;在刚才运行&lt;code&gt;profile-ab.sh&lt;/code&gt;脚本的路径下，会产生一个文件名类似&lt;code&gt;isolate-0x103000000-v8.log&lt;/code&gt;这样的文件。该文件比较大，就不放gist了，请自行实验获取范例。&lt;/p&gt;
+
+&lt;p&gt;然后使用以下命令将该日志解析生成可读的内容：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;node --prof-process isolate-0x103000000-v8.log &amp;gt; processed.txt&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;35-理解profile日志内容&quot;&gt;3.5 理解Profile日志内容&lt;/h2&gt;
+&lt;p&gt;解析出来的日志文件内容有点多，原文放在附录部分，点击&lt;a href=&quot;#ID51&quot;&gt;这里&lt;/a&gt;查看。&lt;/p&gt;
+
+&lt;p&gt;从上到下主要分为几个耗时分类，一个个细说。&lt;/p&gt;
+
+&lt;h3 id=&quot;351-shared-libraries&quot;&gt;3.5.1 Shared libraries&lt;/h3&gt;
+&lt;p&gt;Node进程使用到的系统级动态链接库部分的时间消耗，会显示在这个分类下。&lt;/p&gt;
+
+&lt;p&gt;该分类的几列：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ticks：每个库所占用的ticks数量&lt;/li&gt;
+  &lt;li&gt;total：每个库占用的ticks总量百分比&lt;/li&gt;
+  &lt;li&gt;nonlib：这列在当前分类不适用，因为本来这里列的就都是类库时间消耗，nonlib当然没有数据&lt;/li&gt;
+  &lt;li&gt;name：动态链接库的文件位置&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;352-javascriptcsummary&quot;&gt;3.5.2 JavaScript、C++、Summary&lt;/h3&gt;
+&lt;p&gt;这几个分类放一起说，因为他们的列数据含义相同。&lt;/p&gt;
+
+&lt;h4 id=&quot;javascript&quot;&gt;JavaScript&lt;/h4&gt;
+&lt;p&gt;JavaScript代码部分的时间消耗，包括了当前项目源代码部分的时间消耗和第三方node_modules的时间消耗。&lt;/p&gt;
+
+&lt;h4 id=&quot;c&quot;&gt;C++&lt;/h4&gt;
+&lt;p&gt;Node进程在C++代码里的时间消耗，Node本身是构建在V8引擎之上的，所以一些Node标准库里的API，基本上都是C++时间消耗。当然这个分类也包含了一些作为第三方addon加载的插件的时间消耗。&lt;/p&gt;
+
+&lt;h4 id=&quot;summary&quot;&gt;Summary&lt;/h4&gt;
+&lt;p&gt;这个分类应该是当前报表中最重要的部分，没有细节，就仅仅只是将所有的分类的时间消耗总量都放在一起，形成一个直观的结果。一般来说看Profile结论报表，第一个要看的就是Summary，有一个最直观的结论之后再去找对应部分的细节。&lt;/p&gt;
+
+&lt;p&gt;这里需要注意的有两处：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GC：整个报表中唯一只在这个Summary中能找到&lt;code&gt;内存回收（GC）&lt;/code&gt;相关的时间消耗数据&lt;/li&gt;
+  &lt;li&gt;Unaccounted：偶尔，Profiler会无法当前执行的内容到底是什么，这类的ticks就会被归类到&lt;code&gt;Unaccounted&lt;/code&gt;这个分类下&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;列含义&quot;&gt;列含义&lt;/h4&gt;
+&lt;ul&gt;
+  &lt;li&gt;ticks：占用的ticks数量&lt;/li&gt;
+  &lt;li&gt;total：占用的ticks总量百分比&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;nonlib&lt;/code&gt;：
+    &lt;ul&gt;
+      &lt;li&gt;这列描述的是将&lt;code&gt;Shared libraries&lt;/code&gt;所产生的时间消耗忽略之后，当前条目自身产生的时间消耗（ticks）所占的百分比&lt;/li&gt;
+      &lt;li&gt;举例来说：你写的JS代码中new了一个对象，然后内存分配器会问系统去要内存，这里可能就会产生&lt;code&gt;/usr/lib/system/libsystem_malloc.dylib&lt;/code&gt;的时间消耗了，&lt;code&gt;nonlib&lt;/code&gt;列给的百分比就是去掉这个&lt;code&gt;libsystem_malloc.dylib&lt;/code&gt;库产生的时间消耗之后，你代码中new对象所产生的时间消耗所占的百分比&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;name：
+    &lt;ul&gt;
+      &lt;li&gt;JavaScript：函数名，以及其在源代码中的位置&lt;/li&gt;
+      &lt;li&gt;C++：函数名，一般都是Node运行时和V8相关的函数&lt;/li&gt;
+      &lt;li&gt;Summary：分类名&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;关于JavaScript的name列，还有一些细节可以说一下：&lt;/p&gt;
+
+&lt;p&gt;每个name列实际函数名之前一般会有一个&lt;code&gt;*&lt;/code&gt;或&lt;code&gt;~&lt;/code&gt;，星号表示该函数得到了优化，而波浪号则表示没有。&lt;a href=&quot;#ID51&quot;&gt;这个例子&lt;/a&gt;里只有未优化的范例，下面放一个有优化的例子：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;ticks parent  name
+3567   16.9%  Builtin: StringEqual
+3567  100.0%    LazyCompile: *&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:43:54
+3567  100.0%      LazyCompile: *InnerArrayFind native array.js:843:24
+3441   96.5%        LazyCompile: *find native array.js:855:19
+3278   95.3%          LazyCompile: *&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
+3278  100.0%            Builtin: ArrayForEach
+ 163    4.7%          Function: ~&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
+ 163  100.0%            Builtin: ArrayForEach
+ 126    3.5%        Function: ~find native array.js:855:19
+ 114   90.5%          LazyCompile: *&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
+ 114  100.0%            Builtin: ArrayForEach
+  12    9.5%          Function: ~&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
+  12  100.0%            Builtin: ArrayForEach
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;此外，函数名之前都会有一个前缀，例如：&lt;code&gt;LazyCompile&lt;/code&gt;，他们都有各自的意义，这里罗列下一般常见的（不保证全）：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Function：普通的JS函数&lt;/li&gt;
+  &lt;li&gt;LazyCompile：懒编译的JS函数&lt;/li&gt;
+  &lt;li&gt;RegExp：正则表达式引擎&lt;/li&gt;
+  &lt;li&gt;Builtin：Node运行时内建的JS函数&lt;/li&gt;
+  &lt;li&gt;Stub：Node运行时内建的C函数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;353-c-entry-points&quot;&gt;3.5.3 C++ entry points&lt;/h3&gt;
+&lt;p&gt;这部分描述的是当逻辑从JS代码跨界到C++代码运行时，其中消耗的时间。&lt;/p&gt;
+
+&lt;p&gt;这部分的意义不是很大，毕竟如果真的有大量和C++相关的时间消耗的话，直接看C++相关的部分即可。只有一种情况是需要仔细查看这部分的，就是从JS到C++之间的交换出了问题，JS本身没有很大的性能问题，且C++也没有，而是在两者之间做数据和消息交换的时候出了问题。&lt;/p&gt;
+
+&lt;p&gt;范例直接看&lt;a href=&quot;#ID51&quot;&gt;本文附带的例子&lt;/a&gt;即可，里面C++占了绝大部分的时间消耗，而同样的在C++ entry points也有对应的巨量时间消耗占比。&lt;/p&gt;
+
+&lt;h3 id=&quot;354-bottom-up-heavy-profile&quot;&gt;3.5.4 Bottom up (heavy) profile&lt;/h3&gt;
+&lt;p&gt;这部分是性能问题的暴露部分，一般看完Summery不想了解其细节就直接来看这部分是解决问题的最快方案。&lt;/p&gt;
+
+&lt;p&gt;和之前其他分类耗时部分不同的是，在这部分里按空行分隔的不同段落都是一个个单独的性能瓶颈点，每个段落的多行表示的是一个调用栈。&lt;/p&gt;
+
+&lt;p&gt;此外，这个部分的列内容也和之前的略有不同（主要是parent字段），&lt;code&gt;parent&lt;/code&gt;列的百分比意味着：当前行有&lt;code&gt;X%&lt;/code&gt;的统计结果会调用当前行的上一行里的函数。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Within each of the “call stacks” above, the percentage in the parent column tells you the percentage of samples for which the function in the row above was called by the function in the current row.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;一般情况下，看完Profile报表中的这部分，性能问题都能找到原因。&lt;/p&gt;
+
+&lt;h1 id=&quot;4-资料&quot;&gt;4. 资料&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://httpd.apache.org/docs/2.4/programs/ab.html&quot; target=&quot;_blank&quot;&gt;ApacheBench&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/en/docs/guides/simple-profiling/&quot; target=&quot;_blank&quot;&gt;Easy profiling for Node.js Applications&lt;/a&gt;：如何在命令行下进行Profile的官方指引&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/wiki/Using%20V8%E2%80%99s%20internal%20profiler&quot; target=&quot;_blank&quot;&gt;Using V8’s internal profiler&lt;/a&gt;：V8官方wiki的一篇教程&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.continuation.io/node-js-profiling-using-the-v8-tick-profiler/&quot; target=&quot;_blank&quot;&gt;Node.js Profiling Using the V8 Tick Profiler&lt;/a&gt;：细节相当多的博文，唯一找到的一篇对profile分析文本的每个段落都有细节解释的文章&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/23934451/how-to-read-nodejs-internal-profiler-tick-processor-output&quot; target=&quot;_blank&quot;&gt;How to read nodejs internal profiler tick-processor output&lt;/a&gt;：stackoverflow的一个帖子&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://groups.google.com/forum/#!topic/nodejs/oRbX5eZvOPg&quot; target=&quot;_blank&quot;&gt;Understanding the v8-profiler output&lt;/a&gt;：google论坛上的一个帖子，细节蛮多的&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.jetbrains.com/help/webstorm/v8-cpu-and-memory-profiling.html&quot; target=&quot;_blank&quot;&gt;V8 CPU and Memory Profiling&lt;/a&gt;：WebStorm官方的一个教程贴，当然教的是他们的整合工具，但底层本质仍旧是V8的Profiler&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mrale.ph/blog/2011/12/18/v8-optimization-checklist.html&quot; target=&quot;_blank&quot;&gt;I-want-to-optimize-my-JS-application-on-V8 checklist&lt;/a&gt;：这篇有点老了&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;41-火焰图相关&quot;&gt;4.1 火焰图相关&lt;/h2&gt;
+
+&lt;p&gt;MAC下的简单生成步骤：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ npm install stackvis -g
+
+$ &lt;span class=&quot;nv&quot;&gt;NODE_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production node profile/server.js
+Server started, listening on port &lt;span class=&quot;m&quot;&gt;5000&lt;/span&gt; ...
+
+$ ps aux &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep node &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep -v grep
+XXX         &lt;span class=&quot;m&quot;&gt;69941&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.0  &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.2  &lt;span class=&quot;m&quot;&gt;4920704&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;34256&lt;/span&gt; s003  S+    &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;:45Pm   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;:00.43 node profile/server.js
+
+$ sudo dtrace -n &lt;span class=&quot;s1&quot;&gt;&amp;#39;profile-99 /pid == 69941 &amp;amp;&amp;amp; arg1/ { @[ustack()] = count(); }&amp;#39;&lt;/span&gt; &amp;gt; stacks.out
+
+$ ./bash/profile-ab.sh
+
+$ stackvis dtrace flamegraph-svg &amp;lt; stacks.out &amp;gt; stacks.svg
+
+&lt;span class=&quot;c1&quot;&gt;# 在浏览器中打开 stacks.svg&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;资料：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/en/blog/uncategorized/profiling-node-js/&quot; target=&quot;_blank&quot;&gt;Profiling Node.js&lt;/a&gt;：使用dtrace获取数据，并制作火焰图&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://cn.windyland.me/2015/11/28/profiling-with-dtrace/&quot; target=&quot;_blank&quot;&gt;Dtrace on Mac OS X&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://carol-nichols.com/2017/04/20/rust-profiling-with-dtrace-on-osx/&quot; target=&quot;_blank&quot;&gt;Rust Profiling with DTrace and FlameGraph on OSX&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/brendangregg/FlameGraph&quot; target=&quot;_blank&quot;&gt;brendangregg/FlameGraph&lt;/a&gt;：虽然是个工具库，但README里有不少如何采集数据的指引&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://xizhibei.github.io/2017/09/09/node-js-profiling-tool-flamegraph/&quot; target=&quot;_blank&quot;&gt;Node.js 性能分析之火焰图&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;5-附录&quot;&gt;5. 附录&lt;/h1&gt;
+&lt;h2 id=&quot;ID51&quot;&gt;5.1 解析完成的Profile日志内容&lt;/h2&gt;
+
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/0a77653e033db0779e55993f97ed65ca.js&quot;&gt; &lt;/script&gt;
+
+</description>
+				<pubDate>Tue, 27 Feb 2018 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/02/node-profile-practice/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/02/node-profile-practice/</guid>
+			</item>
+		
+			<item>
 				<title>Node.JS Profile 1.3 Node内存监控实践</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -130,6 +490,19 @@
   &lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;结果页面上会有多个列，里面的意义这里简单介绍下，方便理解和查找问题：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Constructor：对象构造函数名称&lt;/li&gt;
+  &lt;li&gt;Distance：对象到根节点的引用层级&lt;/li&gt;
+  &lt;li&gt;Objects Count：对象的数量&lt;/li&gt;
+  &lt;li&gt;Shallow Size： 对象本身所占用的内存，这里不包含其引用对象所占的内存&lt;/li&gt;
+  &lt;li&gt;Retained Size： 对象所占总内存&lt;/li&gt;
+  &lt;li&gt;Retainers：对象的引用层级关系&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;和RSS类似，这里的&lt;code&gt;Retained Size&lt;/code&gt;是最重要需要关注的值。&lt;/p&gt;
+
 &lt;p&gt;在线上运行时有的时候如果需要看堆快照的话，可以使用第三方库&lt;a href=&quot;https://github.com/bnoordhuis/node-heapdump&quot; target=&quot;_blank&quot;&gt;bnoordhuis/node-heapdump&lt;/a&gt;在runtime使用代码导出快照。然后使用Chrome Dev Tool打开这个快照文件来查看内容。&lt;/p&gt;
 
 &lt;p&gt;Chrome Dev Tool可以加载多个堆快照，并对他们进行比对分析，这对内存量增长变化的分析非常有用。可以在程序里隔一定时间获取一次堆快照，然后线下慢慢分析。&lt;/p&gt;
@@ -200,6 +573,7 @@
   &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27310544&quot; target=&quot;_blank&quot;&gt;Node.js 性能调优之内存篇(二)——heapdump&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/shimo&quot; target=&quot;_blank&quot;&gt;石墨文档技术酒馆&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/bnoordhuis/node-heapdump&quot; target=&quot;_blank&quot;&gt;bnoordhuis/node-heapdump&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/33816534&quot; target=&quot;_blank&quot;&gt;V8 内存浅析&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;
@@ -1781,6 +2155,7 @@ Note that it’s important to specify the option with_underscores since that’s
   &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub42478.html&quot; target=&quot;_blank&quot;&gt;Allocation Folding Based on Dominance&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;amp;rep=rep1&amp;amp;type=pdf&quot; target=&quot;_blank&quot;&gt;Garbage-First Garbage Collection&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://medium.com/the-node-js-collection/node-options-has-landed-in-8-x-5fba57af703d&quot;&gt;NODE_OPTIONS has landed in 8.x!&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/33816534&quot; target=&quot;_blank&quot;&gt;V8 内存浅析&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;
@@ -1927,252 +2302,6 @@ Note that it’s important to specify the option with_underscores since that’s
 				<pubDate>Thu, 18 Jan 2018 10:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/01/embedded-github-code/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2018/01/embedded-github-code/</guid>
-			</item>
-		
-			<item>
-				<title>GraphQL笔记</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#11-为什么graphql&quot; id=&quot;markdown-toc-11-为什么graphql&quot;&gt;1.1 为什么GraphQL&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#12-资料列表&quot; id=&quot;markdown-toc-12-资料列表&quot;&gt;1.2 资料列表&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#13-选择&quot; id=&quot;markdown-toc-13-选择&quot;&gt;1.3 选择&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-技术点学习&quot; id=&quot;markdown-toc-2-技术点学习&quot;&gt;2. 技术点学习&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-graphql&quot; id=&quot;markdown-toc-21-graphql&quot;&gt;2.1 GraphQL&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-apollo&quot; id=&quot;markdown-toc-22-apollo&quot;&gt;2.2 Apollo&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#221-主要文档入口&quot; id=&quot;markdown-toc-221-主要文档入口&quot;&gt;2.2.1 主要文档入口&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#222-客户端&quot; id=&quot;markdown-toc-222-客户端&quot;&gt;2.2.2 客户端&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#223-服务器&quot; id=&quot;markdown-toc-223-服务器&quot;&gt;2.2.3 服务器&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#224-工具集&quot; id=&quot;markdown-toc-224-工具集&quot;&gt;2.2.4 工具集&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-范例---apollo&quot; id=&quot;markdown-toc-3-范例---apollo&quot;&gt;3. 范例 - Apollo&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-总结&quot; id=&quot;markdown-toc-4-总结&quot;&gt;4. 总结&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-结论&quot; id=&quot;markdown-toc-41-结论&quot;&gt;4.1 结论&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#42-问题&quot; id=&quot;markdown-toc-42-问题&quot;&gt;4.2 问题&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#43-设计理念&quot; id=&quot;markdown-toc-43-设计理念&quot;&gt;4.3 设计理念&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#44-展望&quot; id=&quot;markdown-toc-44-展望&quot;&gt;4.4 展望&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
-&lt;h3 id=&quot;11-为什么graphql&quot;&gt;1.1 为什么GraphQL&lt;/h3&gt;
-&lt;p&gt;REST作为前后端数据交互的业界标杆有其存在的合理性和必要性，但同时用过的人自然也很明白REST接口有其固有的问题存在，而且是很难通过设计和实现上的优化来进行规避。业界一直有各种声音想找到REST的替代者，直到这两年，终于在FB的引导下做出了GraphQL这个设计。GraphQL确实解决了不少REST接口中存在的问题。&lt;/p&gt;
-
-&lt;p&gt;本文的主要目的就是初探GraphQL的实现，制作简单的例子，寻找GraphQL和REST的异同，并尽可能找到GraphQL中存在的问题。&lt;/p&gt;
-
-&lt;p&gt;详细阅读：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://sofish.github.io/restcookbook/&quot; target=&quot;_blank&quot;&gt;RESTful 手册&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.infoq.com/cn/news/2013/06/rest-drawbacks&quot; target=&quot;_blank&quot;&gt;REST的缺点是什么？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://dev-blog.apollodata.com/graphql-vs-rest-5d425123e34b&quot; target=&quot;_blank&quot;&gt;GraphQL vs. REST&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;12-资料列表&quot;&gt;1.2 资料列表&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://graphql.org/&quot; target=&quot;_blank&quot;&gt;网站&lt;/a&gt;：学习第一站，必然先去这里取经
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;http://graphql.cn/&quot; target=&quot;_blank&quot;&gt;中文网站&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;FB官方的GraphQL&lt;a href=&quot;http://facebook.github.io/graphql/&quot; target=&quot;_blank&quot;&gt;specification&lt;/a&gt;：类似RFC的东西，详细的文字specification&lt;/li&gt;
-  &lt;li&gt;Github上FB的GraphQL&lt;a href=&quot;https://github.com/graphql&quot; target=&quot;_blank&quot;&gt;项目组&lt;/a&gt;：一些好用的工具和类库&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/graphql/graphql-js&quot; target=&quot;_blank&quot;&gt;GraphQL.js&lt;/a&gt;：FB官方的JS实现&lt;/li&gt;
-  &lt;li&gt;Github官方的GraphQL API手册&lt;a href=&quot;https://developer.github.com/v4/&quot; target=&quot;_blank&quot;&gt;V4版本&lt;/a&gt;：有相当多值得借鉴的地方&lt;/li&gt;
-  &lt;li&gt;Github上的Apollo GraphQL&lt;a href=&quot;https://github.com/apollographql&quot; target=&quot;_blank&quot;&gt;项目组&lt;/a&gt;：算是看到现在做的最好的GraphQL解决方案集合之一了&lt;/li&gt;
-  &lt;li&gt;Github上的Graphcool&lt;a href=&quot;https://github.com/graphcool&quot; target=&quot;_blank&quot;&gt;项目组&lt;/a&gt;：设计思路很优秀的一个GraphQL解决方案，目前的进度较初步&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hackernoon.com/building-url-shortener-using-react-apollo-and-graphql-part-i-467aef8c64ce&quot; target=&quot;_blank&quot;&gt;Building URL shortener using React, Apollo and GraphQL — Part I&lt;/a&gt;：一篇蛮贴近使用者的教程，用的技术是apollo作为前端，graphcool作为后端，可以阅读理解下&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;13-选择&quot;&gt;1.3 选择&lt;/h3&gt;
-&lt;p&gt;任何一个技术，在我观察下来值得进场进行学习的时间点上，肯定已经有至少一到两款成熟（半成熟）的解决方案可以选择使用了。即便只是一个很简单的学习案例，技术的选择仍旧需要谨慎。&lt;/p&gt;
-
-&lt;p&gt;就目前看来apollo和graphcool是比较重量级的两个选择，或者可以说是主流的选择。&lt;/p&gt;
-
-&lt;p&gt;就这两者的选择，我最后的理由很简单：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;apollo是纯JS的实现，对纯JS技术堆栈的团队来说相对友好，出了问题可以自行解决，甚至可以反向贡献&lt;/li&gt;
-  &lt;li&gt;graphcool的后端是Scala实现的，所有的其他语言的工具类库都只是桥接，一旦出了问题，就需要理解Scala语言的实现，甚至需要去找JVM中的问题，很不友好&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;后续的行文都会以Apollo解决方案为核心。（其实Apollo也就是一些插件，说到底真正使用的核心其实还是FB官方的graphql）&lt;/p&gt;
-
-&lt;h2 id=&quot;2-技术点学习&quot;&gt;2. 技术点学习&lt;/h2&gt;
-&lt;p&gt;其实这里的技术点最关键的还是本质的GraphQL的技术点，后面其他类似Apollo和Graphcool，无非也是在这个基础上再做封装和拓展。&lt;/p&gt;
-
-&lt;h3 id=&quot;21-graphql&quot;&gt;2.1 GraphQL&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/queries/&quot; target=&quot;_blank&quot;&gt;查询和变更&lt;/a&gt;：GraphQL（客户端）如何进行查询，查询语句的格式&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/schema/&quot; target=&quot;_blank&quot;&gt;Schema 和类型&lt;/a&gt;：GraphQL的类型系统，如何定义类型&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/validation/&quot; target=&quot;_blank&quot;&gt;验证&lt;/a&gt;：GraphQL（服务器）如何对查询进行验证&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/execution/&quot; target=&quot;_blank&quot;&gt;执行&lt;/a&gt;：GraphQL（服务器）如何处理查询请求，如何组织返回结构&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://graphql.cn/learn/introspection/&quot; target=&quot;_blank&quot;&gt;内省&lt;/a&gt;：如何在不明白服务器具体提供哪些查询功能的情况下使用GraphQL接口&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;基本上，官方的GraphQL教程只提供了最基础的GraphQL自身的一些点，要真正应用起来还缺了不少东西，e.g：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如何批量化自动化地进行客户端请求：GraphQL的客户端请求不单单仅仅只是一个URL或者一个Post请求带几个参数，作为只有一个入口的API系统，所有的客户端请求都要以字符串的形式构建，对于客户端来说也是很大的工作量&lt;/li&gt;
-  &lt;li&gt;如何做好数据到接口的映射：最好能有数据模型到API接口的转换映射工具，如果按FB官方GraphQL简介中那样每一段代码都自己写，这个工作量还不如去写REST&lt;/li&gt;
-  &lt;li&gt;如何做好缓存工作：GraphQL的请求非常自由，在对外的API这一层到中间的业务层之间，如何添加缓存就成了设计上的一个大问题&lt;/li&gt;
-  &lt;li&gt;等等&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;22-apollo&quot;&gt;2.2 Apollo&lt;/h3&gt;
-&lt;h4 id=&quot;221-主要文档入口&quot;&gt;2.2.1 主要文档入口&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/&quot; target=&quot;_blank&quot;&gt;Apollo客户端&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/&quot; target=&quot;_blank&quot;&gt;Apollo服务器&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/&quot; target=&quot;_blank&quot;&gt;Apollo工具集&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;222-客户端&quot;&gt;2.2.2 客户端&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/apollo-client-preset&quot; target=&quot;_blank&quot;&gt;apollo-client-preset&lt;/a&gt;：整合完成的客户端包&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/react/basics/setup.html#ApolloClient&quot; target=&quot;_blank&quot;&gt;ApolloClient&lt;/a&gt;：客户端实例&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/&quot; target=&quot;_blank&quot;&gt;ApolloLink&lt;/a&gt;：这部分有点不太能理解
-    &lt;ul&gt;
-      &lt;li&gt;Apollo Link is a simple yet powerful way to describe how you want to get the result of a GraphQL operation, and what you want to do with the results.&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/link/stateful.html&quot; target=&quot;_blank&quot;&gt;StatefulLink&lt;/a&gt;：有状态的Link可以看下，在实例内部保存了一些状态数据&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;剩下的内容和React等实现联系得太过紧密，可以不用在高层抽象理解的时候即刻就去看，放后面也没问题&lt;/li&gt;
-  &lt;li&gt;从现在简单了解来看，Apollo的客户端其实并没有解决什么实际的问题，API仍旧需要自己组装一堆字符串去进行调用；Apollo提供的无非就是一些封装好的接口，本质仍旧是那套&lt;/li&gt;
-  &lt;li&gt;对GraphQL来说，相对服务器的复杂度，客户端的复杂度其实要低得多，问题仅在于如何高效地研发，减少编码量&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;223-服务器&quot;&gt;2.2.3 服务器&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot; target=&quot;_blank&quot;&gt;End-to-End Example&lt;/a&gt;：Apollo官方的Example，基本上简单到极致了，和直接裸用GraphQL.js没有本质区别&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/requests.html&quot; target=&quot;_blank&quot;&gt;POST and GET format&lt;/a&gt;：请求格式，就是GraphQL的基本格式，没有黑科技&lt;/li&gt;
-  &lt;li&gt;其他没什么有营养的东西了，服务器实在是简单，当然也意味着没有解决我之前提到的问题&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;224-工具集&quot;&gt;2.2.4 工具集&lt;/h4&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;GraphQL Tools is an npm package and an opinionated structure for how to build a GraphQL schema and resolvers in JavaScript, following the GraphQL-first development workflow.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;简单来说就是一堆API，方便你制作Schema和Resolvers。但实际上并没有解决映射和代码量（研发工作量）的问题。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.apollographql.com/docs/graphql-tools/generate-schema.html#makeExecutableSchema&quot; target=&quot;_blank&quot;&gt;makeExecutableSchema&lt;/a&gt;：这个连接用工具函数貌似是唯一需要仔细看下的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;3-范例---apollo&quot;&gt;3. 范例 - Apollo&lt;/h2&gt;
-&lt;p&gt;看下官方的&lt;a href=&quot;https://www.apollographql.com/docs/apollo-server/example.html&quot; target=&quot;_blank&quot;&gt;End-to-End Example&lt;/a&gt;基本上就足够了。当然这里仅只有服务器端的代码，但鉴于GraphQL的复杂度基本上都集中在服务器端，这个例子也OK了。&lt;/p&gt;
-
-&lt;h2 id=&quot;4-总结&quot;&gt;4. 总结&lt;/h2&gt;
-&lt;h3 id=&quot;41-结论&quot;&gt;4.1 结论&lt;/h3&gt;
-&lt;p&gt;先说结论，就目前GraphQL的情况来看，仍旧不适合选为业务的主力技术选型投入生产。经过那么多年的发展，GraphQL的表现只能说不温不火。仔细看下FB的GraphQL的specification的话，其实内容也没多少，而FB的教程网站上，内容也就那么点。可以说GraphQL本身并不是一个很复杂的技术，就类似FB的另一个开源项目React，其中的理念”虚拟DOM”也是类似的量级设计，作为比较可以很清楚看到React的社区和现状应该说是非常繁荣的，爆炸式的发展。而相较之下GraphQL就很一般了。&lt;/p&gt;
-
-&lt;p&gt;关键的杀手级的产品到现在仍旧还看不见。我所知道的两款比较重要的产品：Apollo仅仅只能说是能用，它只是在GraphQL官方的基础上做了一些简化API的封装，仅此而已；而Graphcool，我只能说现在还处在一个早期阶段，无论是文档，还是范例，还是社区，都很初级，远没到能投入生产的地步。&lt;/p&gt;
-
-&lt;p&gt;所以目前来看，GraphQL仍旧只适合观望，而不是投入。&lt;/p&gt;
-
-&lt;h3 id=&quot;42-问题&quot;&gt;4.2 问题&lt;/h3&gt;
-&lt;p&gt;那么GraphQL的问题是什么呢，就我的理解，主要在于复杂度的分配。&lt;/p&gt;
-
-&lt;p&gt;举例来说，如果一个项目的业务复杂度是5，技术复杂度（纯架构设计）是10。那么REST在项目初期整个复杂度只有1，随着项目的发展，业务的拓展，复杂度可能在后期急速上升。而GraphQL则相反，在项目初期，整体的复杂度就直接上到了可能8、9的位置，而后面则一直保持，即便业务在后期再怎么拓展，整体的复杂度都会稳定维持在这个水准线附近。&lt;/p&gt;
-
-&lt;p&gt;简单解释下一下，其实这很容易理解。&lt;/p&gt;
-
-&lt;p&gt;RESTful作为一项成熟的技术，在JS界就有诸如Swagger这样的神器工具，社区对它的支持非常完美。项目投产，基本上不需要考虑技术上的问题，直接做就是了。业务需要数据A，那我就做一个endpoint A，业务需要数据B，那我就做一个endpoint B。如果客户端需要混合数据A+B，且觉得两次HTTP请求Cost太大，那我就做个新的endpoint AB，把A+B的数据直接吐出去就好了。这样，根据需求来，要什么给什么，研发的效率会非常高。当然，RESTful的问题也是出在这里，当你的业务量级急速发展的时候，项目的后续维护管理会非常困难，那么多的endpoint哪些有用哪些没用没有任何人清楚，到后来数据模型一改可能需要改动的API不计其数。项目的维护成本呈指数级上升。&lt;/p&gt;
-
-&lt;p&gt;GraphQL则完全相反，其理念在于客户端endpoint只有一个，而这个终端可以根据查询条件来获取后端数据模型中的任何数据。在项目投产初期，及后续业务拓展的时候，研发的代码量会比较高，因为无论客户端需要不需要服务端都必须将模型解析出去（resolver），而且是解析到字段级别，层层下行直到目标成为标量。当然有人可能会说，没有人强制要求把所有的服务端模型都解析出去，但一旦在研发的过程中某些解析某些不解析，到后面会遇到和RESTful一样的问题：管理复杂度上升，所以最好的做法就是一开始都解析，访问权限则另说。所以在项目复杂度上，GraphQL是非常平稳的，只要有模型，我就要做映射要做解析，做完了，那么客户端想要什么和我就没关系了，反正都能拿得到，不存在API后期泛滥的问题。但解析和映射的代码量将非常可观，研发的成本可以想见是不会低的，而且初期的构建难度会高于RESTful，架构师必须把很多东西都想清楚才能开始。毕竟GraphQL是对于后端数据的图映射，在resolver里基本上是一一对应的关系，不方便做类似RESTful接口那样在逻辑层进行返回数据和模型之间的转换。&lt;/p&gt;
-
-&lt;p&gt;所以GraphQL的项目，难度在前面，好处在后面，对小型项目来说根本没有意义。小型项目当然会选技术和社区更成熟的RESTful解决方案。&lt;/p&gt;
-
-&lt;h3 id=&quot;43-设计理念&quot;&gt;4.3 设计理念&lt;/h3&gt;
-&lt;p&gt;在我看来，GraphQL要真的爆发开来，还是必须要有一款杀手级应用做好工具和生态。由我设计的框架，比如最近用的很重的&lt;a href=&quot;https://github.com/agreatfool/SASDN&quot; target=&quot;_blank&quot;&gt;SASDN&lt;/a&gt;，设计理念很简单：为使用者减负，使用者只需要编写数据模型的定义，然后框架会自动将大量代码生成出来，使用者只需要专注在需要他们编写的业务代码上即可。&lt;/p&gt;
-
-&lt;p&gt;Graphcool目前是在这个道路上走，但离终点仍旧非常遥远。需要解决的问题有很多：Scala的服务器、初级的项目进度、文档匮乏、范例匮乏，等等。&lt;/p&gt;
-
-&lt;h3 id=&quot;44-展望&quot;&gt;4.4 展望&lt;/h3&gt;
-&lt;p&gt;GraphQL是业界的将来，这点毋庸置疑。目前不推荐使用，仅仅只是因为当前来看仍旧不成熟，工作量大，投入产出不成正比（特别是小型项目）。但对于大公司（比如目前已经到v4的Github API），GraphQL无疑是解决RESTful带来的一系列顽疾的良药。&lt;/p&gt;
-
-&lt;p&gt;期待后续的发展。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Mon, 15 Jan 2018 10:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/01/graphql/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/01/graphql/</guid>
-			</item>
-		
-			<item>
-				<title>Message Pack 解析问题</title>
-				<description>&lt;h2 id=&quot;问题&quot;&gt;问题&lt;/h2&gt;
-&lt;p&gt;在实际应用过程中，发现message pack压缩产生的二进制内容，通过HTTP请求发送到服务器之后，无法正确解析。经过简单调研后发现，原来是对服务器端程序koa的理解不充分，使用的请求对象错误导致的。这里简单放一个能跑通的例子，以作笔记。&lt;/p&gt;
-
-&lt;h2 id=&quot;sample&quot;&gt;Sample&lt;/h2&gt;
-&lt;h3 id=&quot;client&quot;&gt;Client&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;request&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;msgpack-lite&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqObj&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;s2&quot;&gt;&amp;quot;req&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;msgpack&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqBuffer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;encode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;reqObj&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://127.0.0.1:3000/req&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;POST&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqBuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;Content-Type&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;application/octet-stream&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;Content-Length&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;reqBuffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;error:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Print the error if one occurred&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;statusCode:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;statusCode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// Print the response status code if a response was received&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;body:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;server&quot;&gt;Server&lt;/h3&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Koa&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;koa&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Koa&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;koaRouter&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;koa-router&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;msgpack-lite&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;router&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;koaRouter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;router&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;post&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;/req&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// console.log(ctx.request);&lt;/span&gt;
-
-  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;data&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// console.log(&amp;#39;ctx request data emit...&amp;#39;);&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Buffer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;concat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;chunk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;end&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// console.log(&amp;#39;ctx request data end&amp;#39;);&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;decoded:&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;msgpack&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;decode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;buf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;Hello World&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;router&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;routes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Thu, 28 Dec 2017 10:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2017/12/msgpack-http/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2017/12/msgpack-http/</guid>
 			</item>
 		
 	</channel>
