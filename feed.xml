@@ -2175,13 +2175,21 @@ Note that it’s important to specify the option with_underscores since that’s
       &lt;li&gt;&lt;a href=&quot;#版本信息&quot; id=&quot;markdown-toc-版本信息&quot;&gt;版本信息&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-内存-memory&quot; id=&quot;markdown-toc-1-内存-memory&quot;&gt;1. 内存 Memory&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-内存-memory&quot; id=&quot;markdown-toc-1-内存-memory&quot;&gt;1. 内存 Memory&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#11-v8内存机制&quot; id=&quot;markdown-toc-11-v8内存机制&quot;&gt;1.1 &lt;a href=&quot;https://xenojoshua.com/2018/01/node-memory/&quot; target=&quot;_blank&quot;&gt;V8内存机制&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#12-v8-gc详解&quot; id=&quot;markdown-toc-12-v8-gc详解&quot;&gt;1.2 &lt;a href=&quot;https://xenojoshua.com/2018/01/node-v8-gc/&quot; target=&quot;_blank&quot;&gt;V8 GC详解&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#13-node内存监控实践&quot; id=&quot;markdown-toc-13-node内存监控实践&quot;&gt;1.3 &lt;a href=&quot;https://xenojoshua.com/2018/02/node-memory-monitor/&quot; target=&quot;_blank&quot;&gt;Node内存监控实践&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#2-事件循环-eventloop&quot; id=&quot;markdown-toc-2-事件循环-eventloop&quot;&gt;2. 事件循环 EventLoop&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#3-cpu&quot; id=&quot;markdown-toc-3-cpu&quot;&gt;3. CPU&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-profile&quot; id=&quot;markdown-toc-4-profile&quot;&gt;4. Profile&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-profile&quot; id=&quot;markdown-toc-4-profile&quot;&gt;4. Profile&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-profile实践&quot; id=&quot;markdown-toc-41-profile实践&quot;&gt;4.1 &lt;a href=&quot;https://xenojoshua.com/2018/02/node-profile-practice/&quot; target=&quot;_blank&quot;&gt;Profile实践&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h1&gt;
+&lt;h2 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h2&gt;
 &lt;p&gt;知其然，知其所以然。作为后端程序，如果对所用的工具没有一定程度的了解，还真不敢放到线上进行运行。否则出了问题，如何解决都没谱，到时候可是线上事故。&lt;/p&gt;
 
 &lt;p&gt;本文主要在于以下几个方面，不局限于狭义的&lt;code&gt;profile&lt;/code&gt;或&lt;code&gt;profiler&lt;/code&gt;：&lt;/p&gt;
@@ -2192,7 +2200,7 @@ Note that it’s important to specify the option with_underscores since that’s
   &lt;li&gt;Node 的GC：Memory以及GC相关的知识点，以及如何进行profile和观察，当然也需要关注memory leak及如何查找问题&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;版本信息&quot;&gt;版本信息&lt;/h2&gt;
+&lt;h3 id=&quot;版本信息&quot;&gt;版本信息&lt;/h3&gt;
 &lt;p&gt;本文行文依据的Node版本，及所有范例的运行环境为：&lt;/p&gt;
 
 &lt;blockquote&gt;
@@ -2212,23 +2220,19 @@ Note that it’s important to specify the option with_underscores since that’s
 
 &lt;p&gt;一般只要版本差异不要太大，信息的可靠性都应该没有问题。但如果版本差异过大，请自行进行信息修正，毕竟Node的发展实在是太快。&lt;/p&gt;
 
-&lt;h1 id=&quot;1-内存-memory&quot;&gt;1. 内存 Memory&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/01/node-memory/&quot; target=&quot;_blank&quot;&gt;1.1 V8内存机制&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/01/node-v8-gc/&quot; target=&quot;_blank&quot;&gt;1.2 V8 GC详解&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/02/node-memory-monitor/&quot; target=&quot;_blank&quot;&gt;1.3 Node内存监控实践&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h2 id=&quot;1-内存-memory&quot;&gt;1. 内存 Memory&lt;/h2&gt;
+&lt;h3 id=&quot;11-v8内存机制&quot;&gt;1.1 &lt;a href=&quot;https://xenojoshua.com/2018/01/node-memory/&quot; target=&quot;_blank&quot;&gt;V8内存机制&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;12-v8-gc详解&quot;&gt;1.2 &lt;a href=&quot;https://xenojoshua.com/2018/01/node-v8-gc/&quot; target=&quot;_blank&quot;&gt;V8 GC详解&lt;/a&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;13-node内存监控实践&quot;&gt;1.3 &lt;a href=&quot;https://xenojoshua.com/2018/02/node-memory-monitor/&quot; target=&quot;_blank&quot;&gt;Node内存监控实践&lt;/a&gt;&lt;/h3&gt;
 
-&lt;h1 id=&quot;2-事件循环-eventloop&quot;&gt;2. 事件循环 EventLoop&lt;/h1&gt;
+&lt;h2 id=&quot;2-事件循环-eventloop&quot;&gt;2. 事件循环 EventLoop&lt;/h2&gt;
 &lt;p&gt;待更新&lt;/p&gt;
 
-&lt;h1 id=&quot;3-cpu&quot;&gt;3. CPU&lt;/h1&gt;
+&lt;h2 id=&quot;3-cpu&quot;&gt;3. CPU&lt;/h2&gt;
 &lt;p&gt;待更新&lt;/p&gt;
 
-&lt;h1 id=&quot;4-profile&quot;&gt;4. Profile&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/02/node-profile-practice/&quot; target=&quot;_blank&quot;&gt;4.1 Profile实践&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h2 id=&quot;4-profile&quot;&gt;4. Profile&lt;/h2&gt;
+&lt;h3 id=&quot;41-profile实践&quot;&gt;4.1 &lt;a href=&quot;https://xenojoshua.com/2018/02/node-profile-practice/&quot; target=&quot;_blank&quot;&gt;Profile实践&lt;/a&gt;&lt;/h3&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
