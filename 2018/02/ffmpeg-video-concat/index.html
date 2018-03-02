@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>ActionScript3殿堂之路  学习笔记 | Xenojoshua</title>
+  <title>ffmpeg视频剪切超简单教程 | Xenojoshua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://xenojoshua.com/js/jquery.min.js"></script>
   <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
   <script src="https://xenojoshua.com/js/header.js"></script>
   <script src="https://xenojoshua.com/js/toc.js"></script>
-  <link href="https://xenojoshua.com//2012/08/actionscript3-reading-note/" rel="canonical" />
+  <link href="https://xenojoshua.com//2018/02/ffmpeg-video-concat/" rel="canonical" />
   <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
@@ -128,135 +128,66 @@
         <div class="col-md-8">
           <div class="article">
             <div class="well">
-              <h1><a href="https://xenojoshua.com/2012/08/actionscript3-reading-note/">ActionScript3殿堂之路  学习笔记</a></h1>
+              <h1><a href="https://xenojoshua.com/2018/02/ffmpeg-video-concat/">ffmpeg视频剪切超简单教程</a></h1>
               <div class="post-meta">
                 <div class="post-time">
                   <i class="fa fa-calendar"></i>
-                  <time>10 Aug 2012</time>
+                  <time>27 Feb 2018</time>
                 </div>
                 <ul>
                   
-                    <li><a href="https://xenojoshua.com/tag/ActionScript3">ActionScript3</a></li>
+                    <li><a href="https://xenojoshua.com/tag/FFMPEG">FFMPEG</a></li>
                   
-                    <li><a href="https://xenojoshua.com/tag/Flash">Flash</a></li>
+                    <li><a href="https://xenojoshua.com/tag/Video">Video</a></li>
                   
                 </ul>
               </div>
               <div class="post-content">
-                <h1>Chapter2. ActionScript3语言基本元素</h1>
-<ul>
-<li>用var进行变量声明，未声明数据类型的，默认为untyped</li>
-<li>基本类型Boolean、int、Number、String和uint为值类型，其余皆为引用</li>
-<li>基本类型即值类型为不变对象，一旦创建，将不会再更改，一切运算和改动将由创建新对象并更改指针指向的内存地址来实现</li>
-<li>小数相加不一定是整数：Number类型循环+0.1十次，得出的结论是0.9999999999...，使用Math.round()来修正</li>
-<li>类型声明默认值：</li>
-<ul>
-<li>int默认为0, uint默认为0, Number默认为NaN</li>
-<li>String默认为null, Boolean默认为false, Array默认为null</li>
-<li>Object默认为null, 未声明类型默认为undefined</li>
-</ul>
-<li>NaN与任何Number类型变量进行运算，结果都是NaN</li>
-<li>NaN与任何int或uint类型变量进行运算，结果都是0</li>
-<li>NaN的Number类型变量在进行相等判断时，永远只会返回false</li>
-<li>Flash默认编译模式为Strict mode，相等判断为类型判断，即===</li>
-<li>typeof用来返回变量类型：</li>
-<ul>
-<li>Array =&gt; object, Boolean =&gt; boolean, Function =&gt; function</li>
-<li>int =&gt; number, uint =&gt; number, Number =&gt; number</li>
-<li>Object =&gt; object, String =&gt; string, XML =&gt; xml, XMLList =&gt; xml</li>
-</ul>
-<li>is用来判断类型是否相同，返回布尔值：trace(9 is Number) // true</li>
-<li>as用来判断类型是否相同，相同返回对象，不同则返回null：trace(9 as Number) // 9, trace(9 as String) // null</li>
-<li>in用来判断对象中键是否存在：var a:Array = ["1", "2", "3"]; trace(2 in a) // true, trace(3 in a) // false</li>
-<li>delete用来删除对象的属性，不能用来删除对象，删除对象请赋值null</li>
-</ul>
-<h1>Chapter3. ActionScript3 流程控制</h1>
-<ul>
-<li>循环，for ... in：for (var i in array) { trace(array[i]); }</li>
-<li>循环，for each ... in：for each (var value in array) { trace(value); }</li>
-<li>break与continue控制只会控制当前代码所在的那一层循环结构</li>
-<li>可以使用循环标签的方式来控制各个层级的循环流</li>
-</ul>
-<h1>Chapter4. ActionScript3 中的函数及高级使用技巧</h1>
-<ul>
-<li>使用函数表达式定义方法（JavaScript中匿名函数定义式样）定义的函数，只有在定义的语句之后这个函数才能被调用到</li>
-<li>函数参数传入，如果是基本类型的话可以理解成传值（实质上还是引用，但是基本类型都是不变对象），其他都是传引用</li>
-<li>函数语句定义法定义的函数，本质上是一个MethodClosure类对象</li>
-<li>函数表达式定义法定义的函数，本质上是一个Function-N，这个N会根据你定义的函数个数而变化</li>
-</ul>
-<h1>Chapter5. 类和对象</h1>
-<ul>
-<li>构造函数只能使用public访问控制</li>
-<li>构造函数无法声明返回类型</li>
-<li>类分为动态类和密封类，动态类需要在类名前加上dynamic关键字，动态类可以运行时添加属性和方法</li>
-<li>如果要在一个as文件内塞入多个类的话，package关键字内只能定义一个和当前文件同名的类，其余的类必须定义在package外</li>
-<li>定义在package外的类称为包外类，必须当前类文件中的成员类才能访问</li>
-</ul>
-<h1>Chapter7. 命名空间</h1>
-<ul>
-<li>ActionScript3的命名空间在使用上比我接触过的其他语言的命名空间要灵活，实用性稍高</li>
-</ul>
-<h1>Chapter8. 复合与继承</h1>
-<ul>
-<li>子类无法继承父类的静态成员，但是在子类中可以不加类名直接访问父类的静态成员。举例来说A类有一个静态函数hello，B类继承A类，但是直接使用B.hello()将会报错，但是在B类内直接使用hello()则不会报错，不需要写A.hello()</li>
-<li>重写（Override）只能重写实例方法，不能重写实例属性</li>
-<li>Override的时候必须在函数public function声明关键字前加上override关键字</li>
-<li>父类中函数b调用了其私有函数a，而子类中由于私有函数a无法被继承，导致调用子类继承自父类的函数b的时候，其内部的实现仍旧是父类的a，而不是子类自己实现的同名函数a</li>
-<li>使用super来获取父类引用</li>
-<li>使用final来终止继承</li>
-<li>ActionScript3中类只能单继承</li>
-</ul>
-<h1>Chapter10. 抽象类和接口</h1>
-<ul>
-<li>ActionScript3中没有abstract关键字，所以抽象类和方法没有关键字进行规范化</li>
-<li>接口不可定义常量，所有方法强制为public，不可添加访问修饰符</li>
-<li>接口可以多继承，子接口自动继承父接口的所有方法定义</li>
-</ul>
-<h1>Chapter12. 数组：Array</h1>
-<ul>
-<li>数组的复制分浅复制和深复制之分，浅复制只是将当前数组的引用赋给一个新的变量而已，而深复制则是完全的值拷贝。这和PHP中的等号赋值和clone是一样的概念</li>
-<li>浅复制：var copy:Array = originalArray.concat();</li>
-<li>深复制：</li>
-<ul>
-<li>var foo:Array = ["this is a string", [1,2,3], {name: "jonathan", gender: "male"}];</li>
-<li>var fooBA:ByteArray = new ByteArray();</li>
-<li>fooBA.writeObject(foo);</li>
-<li>fooBA.position = 0;</li>
-<li>var bar:Array = fooBA.readObject() as Array;</li>
-</ul>
-<li>数组循环函数：</li>
-<ul>
-<li>forEach(callback:Function, thisObject:* = null):void，操作数组中每一项元素，无返回</li>
-<li>filter(callback:Function, thisObject:* = null):Array，将符合条件的元素提出来，构成新数组返回</li>
-<li>map(callback:Function, thisObject:* = null):Array，操作数组中的每一项元素，并构成新数组返回</li>
-<li>some(callback:Function, thisObject:* = null):Boolean，单个元素为真，则返回真，否则为假</li>
-<li>every(callback:Function, thisObject:* = null):Boolean，所有元素皆为真，则返回真，否则为假</li>
-</ul>
-</ul>
-<h1>Chapter13. 字符串：String</h1>
-<ul>
-<li>indexOf是使用字符串匹配来查找子字串，而search则是使用正则来查找子字串</li>
-<li>substring和slice都是使用开始位置和结束位置来获取子字串，substring无法使用负数index，slice可以</li>
-<li>substr是使用开始位置和字串长度来获取子字串</li>
-<li>split分割字串可使用RegExp正则来作为参数</li>
-</ul>
-<h1>Chapter18. 事件发送和处理</h1>
-<ul>
-<li>首先来看几个概念，完成一个事件处理流程需要三个概念：</li>
-<ul>
-<li>Event对象，用来描述事件，并作为转发载体的对象：使用静态变量定义事件的type（相当于事件的名字），随用super调用父类的构造函数</li>
-<li>EventDispatcher对象，事件发送对象，事件的触发对象，必须有一个函数调用到了dispatchEvent(*:Event)，用来发送事件</li>
-<li>逻辑处理对象，这个对象没有需要继承的父类，只需要将事件逻辑处理函数暴露出来就行了（这个函数可以是private的函数）</li>
-</ul>
-<li>完整的事件流程：</li>
-<ul>
-<li>首先保证上述的三个概念都已经实现完毕了</li>
-<li>在主逻辑中实例化EventDispatcher对象：ed = new EventDispatcher对象</li>
-<li>在主逻辑中实例化逻辑处理对象：handler = new 逻辑处理对象</li>
-<li>绑定事件：ed.addEventListener(Event对象.事件类型, handler.逻辑处理函数)</li>
-<li>最后发送事件：ed.发送事件函数，这个函数里应该会调用dispatchEvent来真正发送一个事件</li>
-</ul>
-</ul>
+                <h1 id="0-前言">0. 前言</h1>
+<p>录了个视频，当中有大段的空档，于是想剪切掉中间的一段，这里记录下做法。</p>
+
+<h1 id="视频剪切">视频剪切</h1>
+<p>原视频大致是这么一个段落划分：</p>
+
+<pre><code>~/Downloads/noname.mov
+
+00:00:00     00:01:05            00:02:08
+需要的第一部分     |     中间的空档      |      需要的第二部分
+</code></pre>
+
+<p>剪切的操作说明：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1"># 从00秒开始裁剪到00+30=30秒结束，总共30秒的视频</span>
+    
+$ ffmpeg -ss <span class="m">00</span>:00:00 -t <span class="m">00</span>:00:30 -i test.mp4 -vcodec copy -acodec copy output.mp4
+
+<span class="c1"># -ss 指定从什么时间开始</span>
+<span class="c1"># -t 指定需要截取多长时间</span>
+<span class="c1"># -i 指定输入文件</span></code></pre></figure>
+
+<p>先把视频剪成两段：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ ffmpeg -ss <span class="m">00</span>:00:00 -t <span class="m">00</span>:01:05 -i ~/Downloads/noname.mov -vcodec copy -acodec copy ~/Downloads/cut2.mov    
+$ ffmpeg -ss <span class="m">00</span>:02:08 -t <span class="m">01</span>:00:00 -i ~/Downloads/noname.mov -vcodec copy -acodec copy ~/Downloads/cut2.mov</code></pre></figure>
+
+<h1 id="视频合并">视频合并</h1>
+<p>然后合并起来：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ <span class="nb">cd</span> ~/Downloads 
+$ touch ./list.txt
+$ vim ./list.txt
+
+<span class="c1"># file</span>
+file ./cut1.mov
+file ./cut2.mov
+
+ffmpeg -f concat -i ./list.txt -c copy ./concat.mov</code></pre></figure>
+
+<p>完成。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
 
               </div>
               
@@ -358,7 +289,7 @@
 <script type="text/javascript">
   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
   var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
-  var disqus_identifier = "/2012/08/actionscript3-reading-note/";
+  var disqus_identifier = "/2018/02/ffmpeg-video-concat/";
 
   /* * * DON'T EDIT BELOW THIS LINE * * */
   (function() {

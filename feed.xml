@@ -7,6 +7,59 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>ffmpeg视频剪切超简单教程</title>
+				<description>&lt;h1 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h1&gt;
+&lt;p&gt;录了个视频，当中有大段的空档，于是想剪切掉中间的一段，这里记录下做法。&lt;/p&gt;
+
+&lt;h1 id=&quot;视频剪切&quot;&gt;视频剪切&lt;/h1&gt;
+&lt;p&gt;原视频大致是这么一个段落划分：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;~/Downloads/noname.mov
+
+00:00:00     00:01:05            00:02:08
+需要的第一部分     |     中间的空档      |      需要的第二部分
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;剪切的操作说明：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# 从00秒开始裁剪到00+30=30秒结束，总共30秒的视频&lt;/span&gt;
+    
+$ ffmpeg -ss &lt;span class=&quot;m&quot;&gt;00&lt;/span&gt;:00:00 -t &lt;span class=&quot;m&quot;&gt;00&lt;/span&gt;:00:30 -i test.mp4 -vcodec copy -acodec copy output.mp4
+
+&lt;span class=&quot;c1&quot;&gt;# -ss 指定从什么时间开始&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# -t 指定需要截取多长时间&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# -i 指定输入文件&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;先把视频剪成两段：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ ffmpeg -ss &lt;span class=&quot;m&quot;&gt;00&lt;/span&gt;:00:00 -t &lt;span class=&quot;m&quot;&gt;00&lt;/span&gt;:01:05 -i ~/Downloads/noname.mov -vcodec copy -acodec copy ~/Downloads/cut2.mov    
+$ ffmpeg -ss &lt;span class=&quot;m&quot;&gt;00&lt;/span&gt;:02:08 -t &lt;span class=&quot;m&quot;&gt;01&lt;/span&gt;:00:00 -i ~/Downloads/noname.mov -vcodec copy -acodec copy ~/Downloads/cut2.mov&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;视频合并&quot;&gt;视频合并&lt;/h1&gt;
+&lt;p&gt;然后合并起来：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads 
+$ touch ./list.txt
+$ vim ./list.txt
+
+&lt;span class=&quot;c1&quot;&gt;# file&lt;/span&gt;
+file ./cut1.mov
+file ./cut2.mov
+
+ffmpeg -f concat -i ./list.txt -c copy ./concat.mov&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;完成。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Tue, 27 Feb 2018 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/02/ffmpeg-video-concat/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/02/ffmpeg-video-concat/</guid>
+			</item>
+		
+			<item>
 				<title>提问的典范 &amp; 修BUG的典范</title>
 				<description>&lt;h1 id=&quot;0-前言&quot;&gt;0. 前言&lt;/h1&gt;
 &lt;p&gt;我在公司内部培训的时候一直都说：程序员的能力体现在各个方面，从一个很小的提问题的事情上，也能看出一个人的职业素养。这里做一个笔记，记录下今天定位和解决的一个问题。&lt;/p&gt;
@@ -2241,73 +2294,6 @@ Note that it’s important to specify the option with_underscores since that’s
 				<pubDate>Fri, 19 Jan 2018 10:33:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/01/node-profile/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2018/01/node-profile/</guid>
-			</item>
-		
-			<item>
-				<title>Github 代码片段嵌入</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-github-gist&quot; id=&quot;markdown-toc-1-github-gist&quot;&gt;1. Github Gist&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-jekyll插件&quot; id=&quot;markdown-toc-2-jekyll插件&quot;&gt;2. Jekyll插件&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-例子&quot; id=&quot;markdown-toc-3-例子&quot;&gt;3. 例子&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;1-github-gist&quot;&gt;1. Github Gist&lt;/h2&gt;
-&lt;p&gt;Github上有一个功能，可以让用户存放很短小的一个个代码片段，这就是gist。现在写技术博客很流行的一个做法就是把代码存在gist上，然后在自己的博客里嵌入对应的github gist。&lt;/p&gt;
-
-&lt;p&gt;奇妙的是这东西我没有招到官方的介绍，只是看到别人的博客上有这么做的，然后搜了下做法，搜到的都是三方的解决方案。当然这东西github肯定是支持的，否则三方也没什么方法能拿到对应的gist内容。&lt;/p&gt;
-
-&lt;p&gt;搜索靠前的几个：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/blog/122-embedded-gists&quot; target=&quot;_blank&quot;&gt;Embedded Gists · GitHub&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/blairvanderhoof/gist-embed&quot; target=&quot;_blank&quot;&gt;How to use gist-embed to spice up code snippets on your blog&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/hanxue/8488835&quot; target=&quot;_blank&quot;&gt;Embed Gists in Blogger · GitHub&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;2-jekyll插件&quot;&gt;2. Jekyll插件&lt;/h2&gt;
-&lt;p&gt;使用Jekyll博客系统就不需要自己操心这个事情了，已经有人把这个功能的插件做出来了。见&lt;a href=&quot;https://github.com/jekyll/jekyll-gist&quot; target=&quot;_blank&quot;&gt;jekyll/jekyll-gist&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;安装：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;gem install jekyll-gist
-&lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# Done installing documentation for multipart-post, faraday, sawyer, octokit, jekyll-gist after 2 seconds&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# 5 gems installed&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;然后编辑&lt;code&gt;_config.yml&lt;/code&gt;，添加：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;plugins&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;jekyll-gist&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;嵌入代码：
-找到你的目标gist的编码，在URL上就有：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;https://gist.github.com/agreatfool/&lt;code&gt;9894fc4159d2a1dd2c893250dc4ae0d3&lt;/code&gt;&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在博客中插入代码：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;{\% gist 9894fc4159d2a1dd2c893250dc4ae0d3 \%} 记得去掉文本内的back slash转译符&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;就OK了，剩下的，自动生成站点的时候会自然生成。&lt;/p&gt;
-
-&lt;h2 id=&quot;3-例子&quot;&gt;3. 例子&lt;/h2&gt;
-
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/9894fc4159d2a1dd2c893250dc4ae0d3.js&quot;&gt; &lt;/script&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Thu, 18 Jan 2018 10:33:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/01/embedded-github-code/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/01/embedded-github-code/</guid>
 			</item>
 		
 	</channel>
