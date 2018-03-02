@@ -54,9 +54,9 @@ ffmpeg -f concat -i ./list.txt -c copy ./concat.mov&lt;/code&gt;&lt;/pre&gt;&lt;
   &lt;p&gt;EOF&lt;/p&gt;
 &lt;/blockquote&gt;
 </description>
-				<pubDate>Tue, 27 Feb 2018 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/02/ffmpeg-video-concat/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/02/ffmpeg-video-concat/</guid>
+				<pubDate>Fri, 02 Mar 2018 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/03/ffmpeg-video-concat/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/03/ffmpeg-video-concat/</guid>
 			</item>
 		
 			<item>
