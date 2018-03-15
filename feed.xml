@@ -53,7 +53,7 @@
 &lt;p&gt;关于应用程序的响应状况和EventLoop lag之间的关系，有一篇文章有举例描述，可以阅读下：&lt;a href=&quot;https://nodesource.com/blog/node-js-performance-monitoring-part-3-debugging-the-event-loop/&quot; target=&quot;_blank&quot;&gt;Node.js Performance Monitoring - Part 3: Debugging the Event Loop&lt;/a&gt;。因为很简单，我这里就不翻译了，直接阅读即可。&lt;/p&gt;
 
 &lt;h1 id=&quot;4-lag-monitor&quot;&gt;4. Lag Monitor&lt;/h1&gt;
-&lt;p&gt;Lag获取相关的工具库没有一款非常权威的工具库占有绝对的领导地位，这个点的功能确实也非常简单，就百来行代码就搞定了，因此也可以理解。这里选择的工具是：&lt;a href=&quot;https://github.com/pebble/event-loop-lag&quot; target=&quot;_blank&quot;&gt;pebble/event-loop-lag&lt;/a&gt;。从源码上来看，作者非常认真仔细，写了不少注释。&lt;/p&gt;
+&lt;p&gt;Lag获取相关的工具库没有一款非常权威的工具库占有绝对的领导地位，这个点的功能确实也非常简单，就百来行代码就搞定了，因此也可以理解。这里选择的工具是：&lt;a href=&quot;https://github.com/pebble/event-loop-lag&quot; target=&quot;_blank&quot;&gt;pebble/event-loop-lag&lt;/a&gt;。从源码上来看，作者非常认真仔细，写了不少注释。源码只有一个文件，阅读很快：&lt;a href=&quot;https://github.com/pebble/event-loop-lag/blob/master/event-loop-lag.js&quot; target=&quot;_blank&quot;&gt;event-loop-lag.js&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;使用上非常简单，这里可以看一个例子：&lt;/p&gt;
 
