@@ -79,7 +79,7 @@
 &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
 &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Server started, listening on port 5000 ...&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;测试2，制作一个wrk请求客户端脚本（lua脚本见：&lt;a href=&quot;https://github.com/wg/wrk/blob/master/scripts/delay.lua&quot; target=&quot;_blank&quot;&gt;delay.lua&lt;/a&gt;）：&lt;/p&gt;
+&lt;p&gt;测试2，制作一个基于wrk发送请求的客户端脚本（lua脚本见：&lt;a href=&quot;https://github.com/wg/wrk/blob/master/scripts/delay.lua&quot; target=&quot;_blank&quot;&gt;delay.lua&lt;/a&gt;）：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
 
