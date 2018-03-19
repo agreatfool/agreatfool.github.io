@@ -7,6 +7,131 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Node.JS Profile 3.1 CPU Usage</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-目标&quot; id=&quot;markdown-toc-2-目标&quot;&gt;2. 目标&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-工具选择&quot; id=&quot;markdown-toc-3-工具选择&quot;&gt;3. 工具选择&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-node工具和linux原生工具的选择问题&quot; id=&quot;markdown-toc-4-node工具和linux原生工具的选择问题&quot;&gt;4. Node工具和Linux原生工具的选择问题&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-资料&quot; id=&quot;markdown-toc-5-资料&quot;&gt;5. 资料&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
+
+&lt;p&gt;本文主要负责介绍Node的CPU Profile相关工具及使用。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-目标&quot;&gt;2. 目标&lt;/h1&gt;
+&lt;p&gt;CPU相关监控的必要性应该也不需要在这里多说了，但当前这篇文章的目标并不是找出高CPU消耗的原因，这部分的技术和释疑放在了后面的&lt;a href=&quot;https://xenojoshua.com/2018/02/node-profile-practice/&quot; target=&quot;_blank&quot;&gt;4.1 Profile实践&lt;/a&gt;进行详述。&lt;/p&gt;
+
+&lt;p&gt;当前这篇文章的目标是让程序能够定时采集到CPU的用量，用来存入监控系统，以进行预警。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-工具选择&quot;&gt;3. 工具选择&lt;/h1&gt;
+&lt;p&gt;作为一个微型级别的功能，相关的工具库制作思路其实都非常简单，无非：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;根据node原生的&lt;a href=&quot;https://nodejs.org/api/os.html#os_os_cpus&quot; target=&quot;_blank&quot;&gt;os.cpus&lt;/a&gt;接口给出的数据进行计算&lt;/li&gt;
+  &lt;li&gt;根据node原生的&lt;a href=&quot;https://nodejs.org/api/process.html#process_process_cpuusage_previousvalue&quot; target=&quot;_blank&quot;&gt;process.cpuUsage([previousValue])&lt;/a&gt;接口给出的数据进行计算：该接口给出的仅只是当前进程CPU的耗时，而没有针对性的计算百分比，所以百分比的最终结果需要自己计算&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;前者能找到的有类似于&lt;a href=&quot;https://github.com/jub3i/node-cpu-stat&quot; target=&quot;_blank&quot;&gt;jub3i/node-cpu-stat&lt;/a&gt;这样的工具，但按照os库里的API算出来的，都是机器CPU数据，而不是Node进程数据，故不太符合本文的目标。&lt;/p&gt;
+
+&lt;p&gt;后者才是符合当前需求的Node当前进程CPU占用消耗的数据，但实际上在找的时候，发现基本上这类的库都是前者，后者相当的少。偶尔有几个感觉计算也不是很对：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/dotchev/cpu-gauge&quot; target=&quot;_blank&quot;&gt;dotchev/cpu-gauge&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/pmuellr/8c349726392bb47da680410eb7904092&quot; target=&quot;_blank&quot;&gt;get CPU usage percent for a process in node, using proposed process.cpuUsage() function&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最后自制了一个：&lt;a href=&quot;https://github.com/agreatfool/node-process-cpu-usage&quot; target=&quot;_blank&quot;&gt;agreatfool/node-process-cpu-usage&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;如何使用：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ProcessCPULoad&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;process-cpu-usage&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ProcessCPULoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tracker&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ProcessCPULoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;tracker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;CPU Usage: Total: %d, User: %d, System: %d&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;测试1，制作一个WEB服务器入口：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;#!/usr/bin/env node&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&amp;quot;use strict&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ProcessCPULoad&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;../build/index&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ProcessCPULoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tracker&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;ProcessCPULoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;node&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// &amp;quot;node&amp;quot; | &amp;quot;linux&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;tracker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;CPU Usage: Total: %d, User: %d, System: %d&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;system&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;express&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;express&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;/test&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;req&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sendStatus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;listen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;Server started, listening on port 5000 ...&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;测试2，制作一个wrk请求客户端脚本（lua脚本见：&lt;a href=&quot;https://github.com/wg/wrk/blob/master/scripts/delay.lua&quot; target=&quot;_blank&quot;&gt;delay.lua&lt;/a&gt;）：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;CONCURRENCY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;55&lt;/span&gt;
+
+wrk &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+ -d 2h &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+ -t &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CONCURRENCY&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+ -c &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CONCURRENCY&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+ -s ./bash/delay.lua &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+ http://127.0.0.1:5000/test&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;先后启动后就可以在服务器脚本的控制台上看到CPU使用情况，此外可以使用linux系统的ps命令来查看对应进程的CPU使用情况来进行印证：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;PID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;ps aux &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep &lt;span class=&quot;s2&quot;&gt;&amp;quot;YOUR_SCRIPT_NAME.js&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep -v &lt;span class=&quot;s2&quot;&gt;&amp;quot;grep&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; awk &lt;span class=&quot;s1&quot;&gt;&amp;#39;{print $2}&amp;#39;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Tracing cpu usage of pid: &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PID&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;while&lt;/span&gt; true&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    sleep &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+    ps -p &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PID&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; -o %cpu &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep -v &lt;span class=&quot;s2&quot;&gt;&amp;quot;%CPU&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;4-node工具和linux原生工具的选择问题&quot;&gt;4. Node工具和Linux原生工具的选择问题&lt;/h1&gt;
+&lt;p&gt;Node原生的工具是使用Node的API来进行计算得到CPU使用的情况，该工具的最大问题就是当Node进程内部EventLoop阻塞的时候，监听的API就会无响应，对监控来说其实并不是一个最佳选择，类似运动员和裁判同台竞技。&lt;/p&gt;
+
+&lt;p&gt;所以有的时候可能选用Linux操作系统的ps命令来监控进程级别的CPU使用会更好。当然一切都看使用方的监控系统集成便利等因素，综合选用，没有所谓的最优解。&lt;/p&gt;
+
+&lt;h1 id=&quot;5-资料&quot;&gt;5. 资料&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/node-inspector/v8-profiler&quot; target=&quot;_blank&quot;&gt;node-inspector/v8-profiler&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/jub3i/node-cpu-stat&quot; target=&quot;_blank&quot;&gt;jub3i/node-cpu-stat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/kimmobrunfeldt/f7dddeb171535dcabb5befd0e0de122b&quot; target=&quot;_blank&quot;&gt;Helper to record node CPU profiles, which can be easily viewed as CPU flame graphs using Chrome debugger&lt;/a&gt;：这条gist是v8-profiler的一个使用范例&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/bag-man/5570809&quot; target=&quot;_blank&quot;&gt;How to calculate the current CPU load with Node.js; without using any external modules or OS specific calls.&lt;/a&gt;：这条gist下面有一堆人写的comments，各种修改版本，简直了&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/api/os.html#os_os_cpus&quot; target=&quot;_blank&quot;&gt;os.cpus&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/api/process.html#process_process_cpuusage_previousvalue&quot; target=&quot;_blank&quot;&gt;process.cpuUsage([previousValue])&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/dotchev/cpu-gauge&quot; target=&quot;_blank&quot;&gt;dotchev/cpu-gauge&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/pmuellr/8c349726392bb47da680410eb7904092&quot; target=&quot;_blank&quot;&gt;get CPU usage percent for a process in node, using proposed process.cpuUsage() function&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Fri, 16 Mar 2018 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/03/node-profile-cpu/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/03/node-profile-cpu/</guid>
+			</item>
+		
+			<item>
 				<title>Node.JS Profile 2.1 EventLoop Lag</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -1958,342 +2083,6 @@ grpc_tools_node_protoc --js_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt
 				<pubDate>Wed, 31 Jan 2018 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/01/node-v8-gc/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2018/01/node-v8-gc/</guid>
-			</item>
-		
-			<item>
-				<title>Node.JS Profile 1.1 V8内存机制</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-基础概念&quot; id=&quot;markdown-toc-2-基础概念&quot;&gt;2. 基础概念&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-rss&quot; id=&quot;markdown-toc-21-rss&quot;&gt;2.1 RSS&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-heap&quot; id=&quot;markdown-toc-22-heap&quot;&gt;2.2 Heap&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#23-heap-limit&quot; id=&quot;markdown-toc-23-heap-limit&quot;&gt;2.3 Heap Limit&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-gc&quot; id=&quot;markdown-toc-3-gc&quot;&gt;3. GC&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-gc基础知识&quot; id=&quot;markdown-toc-31-gc基础知识&quot;&gt;3.1 GC基础知识&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-堆内存划分&quot; id=&quot;markdown-toc-32-堆内存划分&quot;&gt;3.2 堆内存划分&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#321-内存页基础概念&quot; id=&quot;markdown-toc-321-内存页基础概念&quot;&gt;3.2.1 内存页基础概念&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#322-new-space新生代&quot; id=&quot;markdown-toc-322-new-space新生代&quot;&gt;3.2.2 New Space（新生代）&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#323-old-space老生代&quot; id=&quot;markdown-toc-323-old-space老生代&quot;&gt;3.2.3 Old Space（老生代）&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#324-large-object-space老生代&quot; id=&quot;markdown-toc-324-large-object-space老生代&quot;&gt;3.2.4 Large Object Space（老生代）&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#325-map-space老生代&quot; id=&quot;markdown-toc-325-map-space老生代&quot;&gt;3.2.5 Map Space（老生代）&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#326-code-space老生代&quot; id=&quot;markdown-toc-326-code-space老生代&quot;&gt;3.2.6 Code Space（老生代）&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#327-堆空间页管理抽象memory-allocator&quot; id=&quot;markdown-toc-327-堆空间页管理抽象memory-allocator&quot;&gt;3.2.7 堆空间页管理抽象：Memory Allocator&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#328-堆外内存external-memory&quot; id=&quot;markdown-toc-328-堆外内存external-memory&quot;&gt;3.2.8 堆外内存：External memory&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#33-gc算法&quot; id=&quot;markdown-toc-33-gc算法&quot;&gt;3.3 GC算法&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#331-新生代scavenge&quot; id=&quot;markdown-toc-331-新生代scavenge&quot;&gt;3.3.1 新生代：Scavenge&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#332-老生代mark-sweepmark-compact&quot; id=&quot;markdown-toc-332-老生代mark-sweepmark-compact&quot;&gt;3.3.2 老生代：Mark-Sweep／Mark-Compact&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#34-orinoco-young-generation-garbage-collection-2017-11-29&quot; id=&quot;markdown-toc-34-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#ID4&quot; id=&quot;markdown-toc-ID4&quot;&gt;4. 资料&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
-
-&lt;p&gt;本文是Node内存相关文章的其中一篇，主要负责介绍内存相关的基础知识，及Node V8内存相关的一些理论知识，为读者打好基础方便后续内存实践相关知识点的理解。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-基础概念&quot;&gt;2. 基础概念&lt;/h1&gt;
-&lt;p&gt;Node进程的内存分为三大部分：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Code: the actual code being executed&lt;/li&gt;
-  &lt;li&gt;Stack: contains all value types (primitives like integer or Boolean) with pointers referencing objects on the heap and pointers defining the control flow of the program&lt;/li&gt;
-  &lt;li&gt;Heap: a memory segment dedicated to storing reference types like objects, strings and closures.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;21-rss&quot;&gt;2.1 RSS&lt;/h2&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;A running program is always represented through some space allocated in memory. This space is called Resident Set.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;Node进程整体占用内存大小，也就是你在系统面板之类的地方看到的node进程的内存占用大小。&lt;/p&gt;
-
-&lt;h2 id=&quot;22-heap&quot;&gt;2.2 Heap&lt;/h2&gt;
-&lt;p&gt;用户的程序基本上使用的就是这块内存，堆内存。我们需要关心的也只有这里的内存信息。&lt;/p&gt;
-
-&lt;h2 id=&quot;23-heap-limit&quot;&gt;2.3 Heap Limit&lt;/h2&gt;
-&lt;p&gt;node进程的堆大小是有上限的。在64位操作系统上，不带任何参数启动node，进程默认的堆大小是1.4G。所以有大量内存开销的应用程序必须非常注意这一点，否则会遇到：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed - JavaScript heap out of memory&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;以下是一个简单的范例，如何查看堆内存，注意查看&lt;code&gt;heap_size_limit&lt;/code&gt;字段的值。&lt;/p&gt;
-
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/e3ab8817d882bc74b3cee58974f11096.js&quot;&gt; &lt;/script&gt;
-
-&lt;p&gt;这个堆大小可以用过v8参数flag&lt;code&gt;--max-old-space-size&lt;/code&gt;来修改，单位是&lt;code&gt;MB&lt;/code&gt;。&lt;/p&gt;
-
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/c7ad7c782c6a293b15f54e12c8793970.js&quot;&gt; &lt;/script&gt;
-
-&lt;p&gt;遇到内存泄露的情况，也可以使用这个方法加大堆大小来争取时间。&lt;/p&gt;
-
-&lt;p&gt;如果在使用npm等第三方封装好的命令或脚本时，希望调整堆大小的话，可以使用node8引入的&lt;code&gt;NODE_OPTIONS&lt;/code&gt;功能来实现：&lt;a href=&quot;https://medium.com/the-node-js-collection/node-options-has-landed-in-8-x-5fba57af703d&quot; target=&quot;_blank&quot;&gt;NODE_OPTIONS has landed in 8.x!&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;下面的内容来自：&lt;a href=&quot;https://github.com/npm/npm/issues/12238&quot; target=&quot;_blank&quot;&gt;Best way to set –max-old-space-size when running npm?&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;So it turns out that instead of needing to alias npm or otherwise call node directly, you can increase Node’s max heap size by setting the NODE_OPTIONS environmental variable (introduced in Node 8) as follows:&lt;/p&gt;
-
-  &lt;p&gt;NODE_OPTIONS=--max_old_space_size=4096  &lt;br /&gt;
-Usage with NPM scripts:&lt;/p&gt;
-
-  &lt;p&gt;“scripts”: {  &lt;br /&gt;
-  “start”: “cross-env NODE_OPTIONS=--max_old_space_size=4096 webpack”  &lt;br /&gt;
-}  &lt;br /&gt;
-Note that it’s important to specify the option with_underscores since that’s the only one that NODE_OPTIONS accepts.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;在设置堆内存上限这个问题上，没有银弹，一般来说直接根据需求设置即可。但，切记一点，作为一个拥有垃圾回收机制的VM，堆内存越大，对GC系统来说负担越重。意味着你并不能一味根据自己的需求将堆内存上限提升上去，可能当你将内存上限提升到某个程度的时候，你会发现你的Node VM花费了明显超越你预期的时间在GC上，导致你的程序明显的卡顿、中断。&lt;/p&gt;
-
-&lt;p&gt;在早期的帖子中，TJ经常将堆内存上限设置为&lt;code&gt;15G左右&lt;/code&gt;，可以作为参考，但这帖子的时间也比较古早了，2014年的，仅供参考。&lt;/p&gt;
-
-&lt;p&gt;原帖见：&lt;a href=&quot;https://twitter.com/tjholowaychuk/status/480753206301966336&quot; target=&quot;_blank&quot;&gt;Twitter&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;in my case ~15gb, that flags seems to raise the limit&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h1 id=&quot;3-gc&quot;&gt;3. GC&lt;/h1&gt;
-&lt;p&gt;这部分的概念和技术要点主要阅读&lt;a href=&quot;#ID4&quot;&gt;资料&lt;/a&gt;中阿里团队的两篇GC文章即可，即&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot; target=&quot;_blank&quot;&gt;这篇1&lt;/a&gt;和&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot; target=&quot;_blank&quot;&gt;这篇2&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;阿里的文章分析的是v4的node，现在最新的LTS版本v8的node还是有部分调整的。最新内容可以看&lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;这篇&lt;/a&gt;官方的v8博客文章，撰于2017-11-29。&lt;/p&gt;
-
-&lt;p&gt;本文会梳理下大致的技术要点。下述内容全部假设读者有最基础的GC相关概念，部分名词解释会被忽略。&lt;/p&gt;
-
-&lt;h2 id=&quot;31-gc基础知识&quot;&gt;3.1 GC基础知识&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;GC回收的目标是从根节点开始，不可达（unreachable）的对象&lt;/li&gt;
-  &lt;li&gt;GC触发：
-    &lt;ul&gt;
-      &lt;li&gt;内存分配遇到内存不足&lt;/li&gt;
-      &lt;li&gt;内存使用量的阈值触发&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;allocation failure：内存分配失败，而启动的GC&lt;/li&gt;
-  &lt;li&gt;last resort gc：两次allocation failure失败之后的最终GC，再失败则OOM&lt;/li&gt;
-  &lt;li&gt;Stop-the-world：应用程序停顿，执行GC
-    &lt;ul&gt;
-      &lt;li&gt;增量式 GC（incremental）：程序不需要等到垃圾回收完全结束才能重新开始运行，在垃圾回收的过程中控制权可以临时交还给运行时进行一定的操作
-        &lt;ul&gt;
-          &lt;li&gt;2011年即存在，主要发生在 Mark-Sweep/Mark-Compact 的 marking 阶段（incremental_marking_throughput）&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;并发式 GC（concurrent）：在垃圾回收的同时不需要停止程序的运行，两者可以同时进行，只有在个别时候需要短暂停下来让垃圾回收器做一些特殊的操作&lt;/li&gt;
-      &lt;li&gt;并行式 GC（parallel）：即在 GC 的时候使用多个线程一起来完成 GC 工作，提高单位时间的 GC 吞吐量&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;准确式 GC (Accurate GC)：通过底层设计的方法，能在GC的时候无需访问内容就判断出内存是指针还是整数，精确回收需要回收的内存&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;32-堆内存划分&quot;&gt;3.2 堆内存划分&lt;/h2&gt;
-&lt;h3 id=&quot;321-内存页基础概念&quot;&gt;3.2.1 内存页基础概念&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;内存按照 1MB 分页，并且都按照 1MB 对齐&lt;/li&gt;
-  &lt;li&gt;新生代的内存页是连续的&lt;/li&gt;
-  &lt;li&gt;老生代的内存页是分散的，以链表的形式串联起来&lt;/li&gt;
-  &lt;li&gt;Large Object Space 也分页，但页的大小会比 1MB 大一些&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;322-new-space新生代&quot;&gt;3.2.2 New Space（新生代）&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;大部分的对象都属于新生代，诞生在这里&lt;/li&gt;
-  &lt;li&gt;使用 Scavenge 回收内存，新生代内存空间被平分成两半（两个 semispace），任一时刻只有一半被使用（空间换时间）&lt;/li&gt;
-  &lt;li&gt;GC日志中看到的 new 和 semispace 相关的字段就与 New Space 有关&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;323-old-space老生代&quot;&gt;3.2.3 Old Space（老生代）&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;对象大部分是从新生代（即 New Space）晋升而来&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;pretenuring&lt;/code&gt;机制：某些函数创建的对象有很高的存活率率（survival rate），经常晋升到老生代（存活超过2次）的时候，下次这些函数再创建的对象将会直接在 Old Space 分配&lt;/li&gt;
-  &lt;li&gt;GC日志中看到的 old 相关的字段就与 Old Space 有关&lt;/li&gt;
-  &lt;li&gt;survival 和 promoted 相关的字段则与对象在新老生代之间的迁移有关&lt;/li&gt;
-  &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;324-large-object-space老生代&quot;&gt;3.2.4 Large Object Space（老生代）&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;需要分配一个 1MB 的页（减去 header）无法直接容纳的对象时，就会直接在 Large Object Space 而不是 New Space 分配&lt;/li&gt;
-  &lt;li&gt;GC时 Large Object Space 里的对象不会被移动或者复制（因为成本太高）&lt;/li&gt;
-  &lt;li&gt;Large Object Space 属于老生代，使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;325-map-space老生代&quot;&gt;3.2.5 Map Space（老生代）&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;存储&lt;code&gt;对象布局结构&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;326-code-space老生代&quot;&gt;3.2.6 Code Space（老生代）&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;编译器针对运行平台架构编译出的机器码（存储在可执行内存中）本身也是数据，连同一些其它的元数据（比如由哪个编译器编译，源代码的位置等），放置在 Code Space 中&lt;/li&gt;
-  &lt;li&gt;JavaScript 代码中的函数一开始只会被解析成抽象语法树，只有在它第一次执行的时候才会被真正编译成机器码，并且在程序的执行过程中会根据统计数据不断进行优化和修改&lt;/li&gt;
-  &lt;li&gt;使用 Mark-Sweep-Compact 回收内存&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;327-堆空间页管理抽象memory-allocator&quot;&gt;3.2.7 堆空间页管理抽象：Memory Allocator&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;与操作系统交互，当空间需要新的页的时候，它从操作系统手上分配（使用&lt;code&gt;mmap&lt;/code&gt;）内存再交给空间&lt;/li&gt;
-  &lt;li&gt;当有内存页不再使用的时侯，它从空间手上接过这些内存，还给操作系统（使用&lt;code&gt;munmap&lt;/code&gt;）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;328-堆外内存external-memory&quot;&gt;3.2.8 堆外内存：External memory&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一般是C++插件，会自行管理内存，这部分内存就是非Node堆内部的内存，即堆外内存&lt;/li&gt;
-  &lt;li&gt;但Node语法中的Buffer，是自己管理内存的，即堆外内存&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;33-gc算法&quot;&gt;3.3 GC算法&lt;/h2&gt;
-&lt;h3 id=&quot;331-新生代scavenge&quot;&gt;3.3.1 新生代：Scavenge&lt;/h3&gt;
-&lt;p&gt;Scavenge&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;空间换时间&lt;/li&gt;
-  &lt;li&gt;将新生代内存空间内存一切为二，任一时刻只有一半（semispace）被使用&lt;/li&gt;
-  &lt;li&gt;每次触发新生代GC，则把存活的对象拷贝（&lt;code&gt;memcpy&lt;/code&gt;）到另一半中，然后将需要清理的对象清理掉&lt;/li&gt;
-  &lt;li&gt;Scavenge会Stop-the-world&lt;/li&gt;
-  &lt;li&gt;Scavenge一般在0~3ms内，对应用不产生影响&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;写屏障（write barrier）&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;用来解决从老生代到新生代的引用检索问题&lt;/li&gt;
-  &lt;li&gt;每次往一个对象写入一个指针（添加引用）的时候，都执行一段代码，这段代码会检查这个被写入的指针是否是由老生代对象指向新生代对象的&lt;/li&gt;
-  &lt;li&gt;如果是，则往store buffer中添加一条记录&lt;/li&gt;
-  &lt;li&gt;通过检索store buffer就能很快找到所有老生代到新生代的引用&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;332-老生代mark-sweepmark-compact&quot;&gt;3.3.2 老生代：Mark-Sweep／Mark-Compact&lt;/h3&gt;
-&lt;p&gt;三色 marking&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;三色：白、灰、黑&lt;/li&gt;
-  &lt;li&gt;初始状态下堆内非根节点对象全部标白&lt;/li&gt;
-  &lt;li&gt;沿着根对象，将跟对象引用到的对象标成灰色，push到栈内&lt;/li&gt;
-  &lt;li&gt;然后将栈内的对象pop出来，标记成黑色，再将该对象引用的对象标记灰色，push进栈&lt;/li&gt;
-  &lt;li&gt;以此类推，慢慢扫描所有的对象&lt;/li&gt;
-  &lt;li&gt;扫描完毕后，堆内非根节点对象就只剩黑和白，黑色不可回收，白色可以回收&lt;/li&gt;
-  &lt;li&gt;因标记过程中对象会push进栈，而大对象则无法这么做，会走一个比较特殊的标记过程，因此大对象过多会显著影响GC效率&lt;/li&gt;
-  &lt;li&gt;Marking后的回收分：&lt;code&gt;Sweeping&lt;/code&gt;和&lt;code&gt;Compacting&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Sweeping&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;找到死亡对象占用的连续区块，将这些块添加到随该页维护的一个 freelist 里&lt;/li&gt;
-  &lt;li&gt;这个数据结构保存了页上可用于下次分配的内存位置&lt;/li&gt;
-  &lt;li&gt;V8 中按照可用内存块大小的区间分出了多个 freelist，这样能更快找到合适的可用内存&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Compacting&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;将页中的所有存活的对象都转移到另一页里（evacuation）&lt;/li&gt;
-  &lt;li&gt;存活对象都被移走了的那一页就可以直接还给操作系统&lt;/li&gt;
-  &lt;li&gt;主要发生在某一页中死亡对象留下来的空洞（hole）比较多的时候&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;优化：增量式 marking（incremental marking）&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;将 marking 拆分开来，当堆大小涨到一定程度的时候，开始增量式 GC&lt;/li&gt;
-  &lt;li&gt;在每次分配了一定量的内存后／触发了足够多次写屏障后，就暂停一下程序，做几毫秒到几十毫秒的 marking，然后恢复程序的运行&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;优化：black allocation&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;v8 5.x 引入&lt;/li&gt;
-  &lt;li&gt;将所有新出现在 Old Space 的对象（包括pretentured 的分配或者晋升）直接标记为黑色，放在特殊的内存页（black page）中&lt;/li&gt;
-  &lt;li&gt;直接活过下一次GC&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;优化：lazy sweeping, concurrent sweeping, parallel sweeping&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;lazy sweeping
-    &lt;ul&gt;
-      &lt;li&gt;已经标记完哪些对象的内存可以被回收之后，并没有必要马上回收完这些内存&lt;/li&gt;
-      &lt;li&gt;只有当所有页的内存都被回收完之后，才会重新开始 marking&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;concurrent sweeping
-    &lt;ul&gt;
-      &lt;li&gt;让非程序线程的其他线程进行sweeping工作&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;parallel sweeping
-    &lt;ul&gt;
-      &lt;li&gt;让多个sweeping线程同时工作&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;34-orinoco-young-generation-garbage-collection-2017-11-29&quot;&gt;3.4 &lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt; 2017-11-29&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;新生代内存空间封顶16M（up to 16MiB）&lt;/li&gt;
-  &lt;li&gt;从M62号版本开始，v8开始使用&lt;code&gt;parallel Scavenger&lt;/code&gt;算法回收新生代垃圾（Starting with M62, V8 switched the default algorithm for collecting the young generation to a parallel Scavenger）&lt;/li&gt;
-  &lt;li&gt;Parallel Mark-Evacuate
-    &lt;ul&gt;
-      &lt;li&gt;工作人员在新生代垃圾回收中试验了&lt;code&gt;Parallel Mark-Evacuate&lt;/code&gt;算法（We experimented with a parallel Mark-Evacuate algorithm based on the V8’s full Mark-Sweep-Compact collector.）&lt;/li&gt;
-      &lt;li&gt;该算法借鉴了老生代的标记清除回收机制&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Parallel Scavenge
-    &lt;ul&gt;
-      &lt;li&gt;Parallel Mark-Evacuate算法分离了扫描标记存活对象、拷贝存活对象、更新指针这几个步骤&lt;/li&gt;
-      &lt;li&gt;&lt;code&gt;Parallel Scavenge&lt;/code&gt;则是将上述几个步骤合而为一，进一步提升效率，也是M62版本开始v8使用的新生代垃圾回收算法&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;该新算法减少了20%-50%的新生代垃圾回收时间（V8 now ships with the parallel Scavenger which reduces the main thread young generation garbage collection total time by about 20%–50%）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;ID4&quot;&gt;4. 资料&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/37&quot; target=&quot;_blank&quot;&gt;解读 V8 GC Log（一）: Node.js 应用背景与 GC 基础知识&lt;/a&gt;：阿里团队的几篇Node的内存文章，很不错&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://alinode.aliyun.com/blog/38&quot; target=&quot;_blank&quot;&gt;解读 V8 GC Log（二）: 堆内外内存的划分与 GC 算法&lt;/a&gt;：同上&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://v8project.blogspot.com/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt;：至2017年年底，v8团队官方博客最新的一篇GC相关文章&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://newhtml.net/v8-garbage-collection/&quot; target=&quot;_blank&quot;&gt;V8 之旅： 垃圾回收器&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://v8project.blogspot.com/2016/04/jank-busters-part-two-orinoco.html&quot; target=&quot;_blank&quot;&gt;Jank Busters Part Two: Orinoco&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.infoq.com/presentations/chrome-v8-optimization&quot; target=&quot;_blank&quot;&gt;New Optimizations of Google Chrome’s V8&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.youtube.com/watch?v=VhpdsjBUS3g&quot; target=&quot;_blank&quot;&gt;Google I/O 2013 - Accelerating Oz with V8: Follow the Yellow Brick Road to JavaScript Performance&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub45361.html&quot; target=&quot;_blank&quot;&gt;Idle Time Garbage Collection Scheduling&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub43823.html&quot; target=&quot;_blank&quot;&gt;Memento Mori: Dynamic Allocation-site-based Optimizations&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://research.google.com/pubs/pub42478.html&quot; target=&quot;_blank&quot;&gt;Allocation Folding Based on Dominance&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.63.6386&amp;amp;rep=rep1&amp;amp;type=pdf&quot; target=&quot;_blank&quot;&gt;Garbage-First Garbage Collection&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://medium.com/the-node-js-collection/node-options-has-landed-in-8-x-5fba57af703d&quot;&gt;NODE_OPTIONS has landed in 8.x!&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/33816534&quot; target=&quot;_blank&quot;&gt;V8 内存浅析&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Wed, 31 Jan 2018 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/01/node-memory/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/01/node-memory/</guid>
 			</item>
 		
 	</channel>
