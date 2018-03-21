@@ -7,7 +7,7 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title></title>
+				<title>V8 Blog | Orinoco: young generation garbage collection 2017-11-29</title>
 				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt;&lt;/p&gt;
 
@@ -69,9 +69,9 @@
   &lt;p&gt;EOF&lt;/p&gt;
 &lt;/blockquote&gt;
 </description>
-				<pubDate>Wed, 21 Mar 2018 15:56:35 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/03/2018-03-21-orinoco-parallel-scavenger/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/03/2018-03-21-orinoco-parallel-scavenger/</guid>
+				<pubDate>Wed, 21 Mar 2018 11:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/03/orinoco-parallel-scavenger/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/03/orinoco-parallel-scavenger/</guid>
 			</item>
 		
 			<item>
