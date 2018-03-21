@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>php中使用header函数的http头设置 | Xenojoshua</title>
+  <title>V8 Blog | JavaScript code coverage 2017-12-13 | Xenojoshua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://xenojoshua.com/js/jquery.min.js"></script>
   <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
   <script src="https://xenojoshua.com/js/header.js"></script>
   <script src="https://xenojoshua.com/js/toc.js"></script>
-  <link href="https://xenojoshua.com//2011/04/php-header-functions/" rel="canonical" />
+  <link href="https://xenojoshua.com//2018/03/javascript-code-coverage/" rel="canonical" />
   <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
@@ -128,68 +128,69 @@
         <div class="col-md-8">
           <div class="article">
             <div class="well">
-              <h1><a href="https://xenojoshua.com/2011/04/php-header-functions/">php中使用header函数的http头设置</a></h1>
+              <h1><a href="https://xenojoshua.com/2018/03/javascript-code-coverage/">V8 Blog | JavaScript code coverage 2017-12-13</a></h1>
               <div class="post-meta">
                 <div class="post-time">
                   <i class="fa fa-calendar"></i>
-                  <time>11 Apr 2011</time>
+                  <time>21 Mar 2018</time>
                 </div>
                 <ul>
                   
-                    <li><a href="https://xenojoshua.com/tag/PHP">PHP</a></li>
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/V8">V8</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Translation">Translation</a></li>
                   
                 </ul>
               </div>
               <div class="post-content">
-                <div>//ok<br />
-header('HTTP/1.1 200 OK');</div>
-<p>//设置一个404头:<br />
-header('HTTP/1.1 404 Not Found');</p>
-<p>//设置地址被永久的重定向<br />
-header('HTTP/1.1 301 Moved Permanently');</p>
-<p>//转到一个新地址<br />
-header('Location: <a href="http://www.example.org/'" target="_blank"></a><a href="http://www.example.org/" target="_blank">http://www.example.org/</a>');</p>
-<p>//文件延迟转向:<br />
-header('Refresh: 10; url=<a href="http://www.example.org/" target="_blank">http://www.example.org/</a>');<br />
-print 'You will be redirected in 10 seconds';</p>
-<p>//当然，也可以使用html语法实现<br />
-// &lt;meta http-equiv="refresh" content="10;<a href="http://www.example.org/" target="_blank">http://www.example.org/</a> /&gt;</p>
-<p>// override X-Powered-By: PHP:<br />
-header('X-Powered-By: PHP/4.4.0');<br />
-header('X-Powered-By: Brain/0.6b');</p>
-<p>//文档语言<br />
-header('Content-language: en');</p>
-<p>//告诉浏览器最后一次修改时间<br />
-$time = time() - 60; // or filemtime($fn), etc<br />
-header('Last-Modified: '.gmdate('D, d M Y H:i:s', $time).' GMT');</p>
-<p>//告诉浏览器文档内容没有发生改变<br />
-header('HTTP/1.1 304 Not Modified');</p>
-<p>//设置内容长度<br />
-header('Content-Length: 1234');</p>
-<p>//设置为一个下载类型<br />
-header('Content-Type: application/octet-stream');<br />
-header('Content-Disposition: attachment; filename="example.zip"');<br />
-header('Content-Transfer-Encoding: binary');<br />
-// load the file to send:<br />
-readfile('example.zip');</p>
-<p>// 对当前文档禁用缓存<br />
-header('Cache-Control: no-cache, no-store, max-age=0, must-revalidate');<br />
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past<br />
-header('Pragma: no-cache');</p>
-<p>//设置内容类型:<br />
-header('Content-Type: text/html; charset=iso-8859-1');<br />
-header('Content-Type: text/html; charset=utf-8');<br />
-header('Content-Type: text/plain'); //纯文本格式<br />
-header('Content-Type: image/jpeg'); //JPG***<br />
-header('Content-Type: application/zip'); // ZIP文件<br />
-header('Content-Type: application/pdf'); // PDF文件<br />
-header('Content-Type: audio/mpeg'); // 音频文件<br />
-header('Content-Type: application/x-shockw**e-flash'); //Flash动画</p>
-<p>//显示登陆对话框<br />
-header('HTTP/1.1 401 Unauthorized');<br />
-header('WWW-Authenticate: Basic realm="Top Secret"');<br />
-print 'Text that will be displayed if the user hits cancel or ';<br />
-print 'enters wrong login data';</p>
+                <h1 id="1-原文">1. 原文</h1>
+<p><a href="https://v8project.blogspot.hk/2017/12/javascript-code-coverage.html" target="_blank">JavaScript code coverage</a></p>
+
+<h1 id="2-摘要翻译">2. 摘要翻译</h1>
+<h2 id="what-is-it">What is it?</h2>
+<h2 id="why-is-it-useful">Why is it useful?</h2>
+<h2 id="javascript-code-coverage-in-v8">JavaScript code coverage in V8</h2>
+
+<ul>
+  <li>5.9版本开始，V8加入了native的代码覆盖率支持，当时是函数粒度的</li>
+  <li>6.2版本，该功能拓展到代码块粒度</li>
+</ul>
+
+<h2 id="for-javascript-developers">For JavaScript developers</h2>
+<p>JavaScript开发者可以使用Chrome开发者工具的<a href="https://developers.google.com/web/updates/2017/04/devtools-release-notes#coverage" target="_blank">Coverage tab</a>来查看代码覆盖率和未使用到的代码。</p>
+
+<h2 id="for-embedders">For embedders</h2>
+<p>对嵌入式和框架作者来说，可以使用API来获得数据，并有两种模式可供选择：</p>
+
+<ul>
+  <li>性能模式：对性能影响最小，但可能在垃圾回收函数上丢失数据</li>
+  <li>精确模式：不会因GC而丢失数据，但可能对性能造成影响</li>
+</ul>
+
+<p>API如下：</p>
+
+<ul>
+  <li><a href="https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-startPreciseCoverage" target="_blank">Profiler.startPreciseCoverage(callCount, detailed)</a> 开始覆盖率数据采集</li>
+  <li><a href="https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-takePreciseCoverage" target="_blank">Profiler.takePreciseCoverage()</a> 返回采集到的数据</li>
+  <li><a href="https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-stopPreciseCoverage" target="_blank">Profiler.stopPreciseCoverage()</a> 关闭采集，并清除数据</li>
+</ul>
+
+<p>类似的，性能模式覆盖率数据可以使用API：<a href="https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-getBestEffortCoverage" target="_blank">Profiler.getBestEffortCoverage()</a></p>
+
+<h2 id="behind-the-scenes">Behind the scenes</h2>
+<p>下面是大量的篇幅介绍性能模式和精确模式的一些设计和细节，就不翻译了，感兴趣的可以看原文。</p>
+
+<h3 id="best-effort-coverage">Best-effort coverage</h3>
+<h3 id="precise-coverage-function-granularity">Precise coverage (function granularity)</h3>
+<h3 id="precise-coverage-block-granularity">Precise coverage (block granularity)</h3>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
 
               </div>
               
@@ -291,7 +292,7 @@ print 'enters wrong login data';</p>
 <script type="text/javascript">
   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
   var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
-  var disqus_identifier = "/2011/04/php-header-functions/";
+  var disqus_identifier = "/2018/03/javascript-code-coverage/";
 
   /* * * DON'T EDIT BELOW THIS LINE * * */
   (function() {

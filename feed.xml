@@ -7,6 +7,60 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>V8 Blog | JavaScript code coverage 2017-12-13</title>
+				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2017/12/javascript-code-coverage.html&quot; target=&quot;_blank&quot;&gt;JavaScript code coverage&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;2-摘要翻译&quot;&gt;2. 摘要翻译&lt;/h1&gt;
+&lt;h2 id=&quot;what-is-it&quot;&gt;What is it?&lt;/h2&gt;
+&lt;h2 id=&quot;why-is-it-useful&quot;&gt;Why is it useful?&lt;/h2&gt;
+&lt;h2 id=&quot;javascript-code-coverage-in-v8&quot;&gt;JavaScript code coverage in V8&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;5.9版本开始，V8加入了native的代码覆盖率支持，当时是函数粒度的&lt;/li&gt;
+  &lt;li&gt;6.2版本，该功能拓展到代码块粒度&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;for-javascript-developers&quot;&gt;For JavaScript developers&lt;/h2&gt;
+&lt;p&gt;JavaScript开发者可以使用Chrome开发者工具的&lt;a href=&quot;https://developers.google.com/web/updates/2017/04/devtools-release-notes#coverage&quot; target=&quot;_blank&quot;&gt;Coverage tab&lt;/a&gt;来查看代码覆盖率和未使用到的代码。&lt;/p&gt;
+
+&lt;h2 id=&quot;for-embedders&quot;&gt;For embedders&lt;/h2&gt;
+&lt;p&gt;对嵌入式和框架作者来说，可以使用API来获得数据，并有两种模式可供选择：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;性能模式：对性能影响最小，但可能在垃圾回收函数上丢失数据&lt;/li&gt;
+  &lt;li&gt;精确模式：不会因GC而丢失数据，但可能对性能造成影响&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;API如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-startPreciseCoverage&quot; target=&quot;_blank&quot;&gt;Profiler.startPreciseCoverage(callCount, detailed)&lt;/a&gt; 开始覆盖率数据采集&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-takePreciseCoverage&quot; target=&quot;_blank&quot;&gt;Profiler.takePreciseCoverage()&lt;/a&gt; 返回采集到的数据&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-stopPreciseCoverage&quot; target=&quot;_blank&quot;&gt;Profiler.stopPreciseCoverage()&lt;/a&gt; 关闭采集，并清除数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;类似的，性能模式覆盖率数据可以使用API：&lt;a href=&quot;https://chromedevtools.github.io/devtools-protocol/tot/Profiler/#method-getBestEffortCoverage&quot; target=&quot;_blank&quot;&gt;Profiler.getBestEffortCoverage()&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;behind-the-scenes&quot;&gt;Behind the scenes&lt;/h2&gt;
+&lt;p&gt;下面是大量的篇幅介绍性能模式和精确模式的一些设计和细节，就不翻译了，感兴趣的可以看原文。&lt;/p&gt;
+
+&lt;h3 id=&quot;best-effort-coverage&quot;&gt;Best-effort coverage&lt;/h3&gt;
+&lt;h3 id=&quot;precise-coverage-function-granularity&quot;&gt;Precise coverage (function granularity)&lt;/h3&gt;
+&lt;h3 id=&quot;precise-coverage-block-granularity&quot;&gt;Precise coverage (block granularity)&lt;/h3&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Wed, 21 Mar 2018 12:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/03/javascript-code-coverage/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/03/javascript-code-coverage/</guid>
+			</item>
+		
+			<item>
 				<title>V8 Blog | Orinoco: young generation garbage collection 2017-11-29</title>
 				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt;&lt;/p&gt;
@@ -1227,429 +1281,6 @@ $ stackvis dtrace flamegraph-svg &amp;lt; stacks.out &amp;gt; stacks.svg
 				<pubDate>Sun, 11 Feb 2018 16:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/02/grpc-req-res-modes/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2018/02/grpc-req-res-modes/</guid>
-			</item>
-		
-			<item>
-				<title>探讨gRPC的Node技术生态及实现工具</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-grpc生态技术点&quot; id=&quot;markdown-toc-2-grpc生态技术点&quot;&gt;2. gRPC生态技术点&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-grpcgrpc-node&quot; id=&quot;markdown-toc-3-grpcgrpc-node&quot;&gt;3. &lt;a href=&quot;https://github.com/grpc/grpc-node&quot; target=&quot;_blank&quot;&gt;grpc/grpc-node&lt;/a&gt;&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-代码库拆分的问题&quot; id=&quot;markdown-toc-31-代码库拆分的问题&quot;&gt;3.1 代码库拆分的问题&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-生态功能点支持&quot; id=&quot;markdown-toc-32-生态功能点支持&quot;&gt;3.2 生态功能点支持&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#33-grpc&quot; id=&quot;markdown-toc-33-grpc&quot;&gt;3.3 grpc&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#34-grpc-tools&quot; id=&quot;markdown-toc-34-grpc-tools&quot;&gt;3.4 grpc-tools&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#35-技术问题&quot; id=&quot;markdown-toc-35-技术问题&quot;&gt;3.5 技术问题&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-protobufjs&quot; id=&quot;markdown-toc-4-protobufjs&quot;&gt;4. &lt;a href=&quot;https://github.com/dcodeIO/protobuf.js&quot; target=&quot;_blank&quot;&gt;protobuf.js&lt;/a&gt;&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-生态功能点支持&quot; id=&quot;markdown-toc-41-生态功能点支持&quot;&gt;4.1 生态功能点支持&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#42-技术问题&quot; id=&quot;markdown-toc-42-技术问题&quot;&gt;4.2 技术问题&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-grpc-gateway&quot; id=&quot;markdown-toc-5-grpc-gateway&quot;&gt;5. &lt;a href=&quot;https://github.com/grpc-ecosystem/grpc-gateway&quot; target=&quot;_blank&quot;&gt;grpc-gateway&lt;/a&gt;&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#51-生态功能点支持&quot; id=&quot;markdown-toc-51-生态功能点支持&quot;&gt;5.1 生态功能点支持&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-结论&quot; id=&quot;markdown-toc-6-结论&quot;&gt;6. 结论&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-其他&quot; id=&quot;markdown-toc-7-其他&quot;&gt;7. 其他&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#8-资料&quot; id=&quot;markdown-toc-8-资料&quot;&gt;8. 资料&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&quot;https://grpc.io/docs/&quot; target=&quot;_blank&quot;&gt;gRPC&lt;/a&gt;是谷歌出品的一个RPC库，从使用上来说，大厂的技术实力和维护保障还是比较有说服力的，因此选择这个技术投入生产的技术人还不少。gRPC作为一款跨语言的技术栈，各语言都有针对性的客户端实现，也包含了JavaScript。因此各语言各自的实现及技术生态都不尽相同。&lt;/p&gt;
-
-&lt;p&gt;本文的主旨是就现在gRPC的Node技术生态进行简单的介绍及实际工具选择进行分析。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-grpc生态技术点&quot;&gt;2. gRPC生态技术点&lt;/h1&gt;
-&lt;p&gt;首先简单看一下，如果要构成一个高自动化程度的gRPC技术生态需要哪些技术点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;A. 使用proto定义文件解决所有的消息及数据结构的定义（Protobuf官方支持）&lt;/li&gt;
-  &lt;li&gt;B. 使用proto定义文件解决所有的RPC输入输出定义（Protobuf对gRPC的官方支持）&lt;/li&gt;
-  &lt;li&gt;C. 使用proto定义文件解决所有的HTTP Gateway输入输出定义（官方不支持，需第三方实现）&lt;/li&gt;
-  &lt;li&gt;D. 能根据proto定义输出对外的说明文档，含数据模型及API接口（官方不支持，需第三方实现）&lt;/li&gt;
-  &lt;li&gt;E. 能根据proto定义产生静态JS源代码文件（官方支持，且也有不错的第三方实现）&lt;/li&gt;
-  &lt;li&gt;F. 能根据proto定义产生JS源代码对应的TypeScript定义（官方不支持，需要第三方实现）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这样就做到了程序员只需要定义一份proto文件，然后所有的：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;数据模型代码&lt;/li&gt;
-  &lt;li&gt;RPC接口代码&lt;/li&gt;
-  &lt;li&gt;Gateway接口代码&lt;/li&gt;
-  &lt;li&gt;代码对应的TypeScript定义&lt;/li&gt;
-  &lt;li&gt;文档&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;都能够自动生成，然后程序员只需要专注在自己的业务代码上即可。&lt;/p&gt;
-
-&lt;p&gt;RPC生态中列出的几点需求点，现在主要有几个工具可以作为解决方案（暂且先不论文档和Gateway等功能）。下面主要过一下这几个工具。&lt;/p&gt;
-
-&lt;h1 id=&quot;3-grpcgrpc-node&quot;&gt;3. &lt;a href=&quot;https://github.com/grpc/grpc-node&quot; target=&quot;_blank&quot;&gt;grpc/grpc-node&lt;/a&gt;&lt;/h1&gt;
-&lt;p&gt;grpc官方的支持库。文档极度匮乏，这个库其实是一个集合类型的东西，不算是真正意义上的很清晰的项目代码库。里面有意义的主要是两个：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;grpc：
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc&quot; target=&quot;_blank&quot;&gt;npm&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-js-core/src&quot; target=&quot;_blank&quot;&gt;JS源码&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-native-core&quot; target=&quot;_blank&quot;&gt;C语言Addone源码&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;Node的gRPC实现，其实是一个基于Node的C++ Addone，在Node下要用gRPC就一定要装这个库。但也正由于是Addone形式，导致很多需要深入查看的地方查到后面都发现是桥接代码，并没有真正的JS实现代码。在debug和深入研究的时候容易出现障碍，有时候不得不去看C++的源码。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;grpc-tools：
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc-tools&quot; target=&quot;_blank&quot;&gt;npm&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-tools&quot; target=&quot;_blank&quot;&gt;源码&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;gRPC官方的工具，其实就是个代码生成插件，用在protoc命令行执行的时候&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;31-代码库拆分的问题&quot;&gt;3.1 代码库拆分的问题&lt;/h2&gt;
-&lt;p&gt;Node的gRPC代码之前是放在gRPC主库里面的，但在后面的版本中分离了出来，这里可能会有部分资料的分裂和资源难以查找的问题，因此这里单独列一个段落对这块进行描述。&lt;/p&gt;
-
-&lt;p&gt;这个库作为Node的gRPC主库单独分离出来是在grpc的1.7.0版本之后，查看：&lt;a href=&quot;https://github.com/grpc/grpc/releases/tag/v1.7.0&quot; target=&quot;_blank&quot;&gt;grpc release 1.7.0&lt;/a&gt;。之前两者是放在同一个git库里的。&lt;/p&gt;
-
-&lt;p&gt;所以在&lt;a href=&quot;https://github.com/grpc/grpc-node&quot; target=&quot;_blank&quot;&gt;grpc/grpc-node&lt;/a&gt;这个库的&lt;a href=&quot;https://github.com/grpc/grpc-node/releases&quot; target=&quot;_blank&quot;&gt;release&lt;/a&gt;里你是找不到1.7.0之前的版本的。&lt;/p&gt;
-
-&lt;p&gt;但供Node使用的npm上的grpc安装包则一直是这一个库，没有改动，可以放心使用。查看历史版本可以使用命令：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;npm view grpc time&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;部分老版本的grpc在npm上存在，但实际安装可能会有编译，可以参考&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-native-core&quot; target=&quot;_blank&quot;&gt;这篇文档&lt;/a&gt;从源码开始安装。&lt;/p&gt;
-
-&lt;h2 id=&quot;32-生态功能点支持&quot;&gt;3.2 生态功能点支持&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br /&gt;
-可以看到这套技术解决方案除了最核心的技术点之外，外围周边的东西都是不支持的。从现在官方对核心那块的研发支持的度上来说，就不难理解为什么很有用的外围技术点就更加没有支持了。&lt;/p&gt;
-
-&lt;h2 id=&quot;33-grpc&quot;&gt;3.3 grpc&lt;/h2&gt;
-&lt;p&gt;教程文档可以在&lt;a href=&quot;https://grpc.io/docs/tutorials/basic/node.html&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;找到。比较有价值的sample基本上都在代码文件的文件夹里。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;$ git clone -b v1.9.x https://github.com/grpc/grpc  &lt;br /&gt;
-  $ cd grpc  &lt;br /&gt;
-  $ cd examples/node&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;从这里就可以看出来拆分还是不彻底，库和文档主要部分都拆开了，但示例代码居然仍旧在grpc库里。&lt;/p&gt;
-
-&lt;h2 id=&quot;34-grpc-tools&quot;&gt;3.4 grpc-tools&lt;/h2&gt;
-&lt;p&gt;grpc-tools没有README入口文档。使用文档放在一个很幺二三的角落：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/examples/node/static_codegen/README.md&quot; target=&quot;_blank&quot;&gt;grpc/examples/node/static_codegen/README.md&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;e.g&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ../../protos    
-npm install -g grpc-tools    
-grpc_tools_node_protoc --js_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;import_style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;commonjs,binary:../node/static_codegen/ --grpc_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;../node/static_codegen --plugin&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;protoc-gen-grpc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;which grpc_tools_node_protoc_plugin&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; helloworld.proto    
-grpc_tools_node_protoc --js_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;import_style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;commonjs,binary:../node/static_codegen/route_guide/ --grpc_out&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;../node/static_codegen/route_guide/ --plugin&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;protoc-gen-grpc&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;which grpc_tools_node_protoc_plugin&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; route_guide.proto    &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;生成的代码范例如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/5e3a41052c6dd2f6d04b30901fc0269b&quot; target=&quot;_blank&quot;&gt;范例proto文件&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/97d87bfe2ea6e2d2db209fc278b17ef7&quot; target=&quot;_blank&quot;&gt;生成的代码文件&lt;/a&gt;，请忽略&lt;code&gt;d.ts&lt;/code&gt;文件，这些代码文件是别的工具生成的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;35-技术问题&quot;&gt;3.5 技术问题&lt;/h2&gt;
-&lt;p&gt;官方的这套grpc-node解决方案有几个问题还是比较麻烦的，最主要的有几点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;使用grpc-tools工具生成出来的JS代码：
-    &lt;ul&gt;
-      &lt;li&gt;语法上非常古老，还是上个世代的JS语法，实在不能说是很好的使用体验，和现在的现代化JS项目格格不入&lt;/li&gt;
-      &lt;li&gt;虽然是JS代码，但囿于grpc整体的设计，生成出来的代码语言特性上更接近Java和C++，而不是JS&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;运行时使用的&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-native-core/src&quot; target=&quot;_blank&quot;&gt;grpc的js代码&lt;/a&gt;
-    &lt;ul&gt;
-      &lt;li&gt;语法上非常古老，还是上个世代的JS语法，实在不能说是很好的使用体验，和现在的现代化JS项目格格不入&lt;/li&gt;
-      &lt;li&gt;其实就是包裹在C++Addone上的一层桥接，在需要debug的时候各种看不懂，还需要去研究C++源码&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;异步调用的处理：
-    &lt;ul&gt;
-      &lt;li&gt;囿于grpc的消息处理设计，async/await、甚至退一步说 Promise，在grpc现在的JS代码中都是无法使用的&lt;/li&gt;
-      &lt;li&gt;早的有&lt;a href=&quot;https://github.com/grpc/grpc/issues/8592&quot; target=&quot;_blank&quot;&gt;[Features] Node client support Promise&lt;/a&gt;进行过讨论，无疾而终&lt;/li&gt;
-      &lt;li&gt;近一点的也有&lt;a href=&quot;https://github.com/grpc/grpc-node/issues/54&quot; target=&quot;_blank&quot;&gt;[NodeJS] Promises and async/await&lt;/a&gt;进行过类似话题的讨论，但也没有结论。在这个帖子里，官方人员也解释了设计上的难点&lt;/li&gt;
-      &lt;li&gt;当然也有第三方的库尝试解决这个问题，&lt;a href=&quot;https://github.com/bojand/grpc-caller&quot; target=&quot;_blank&quot;&gt;bojand/grpc-caller&lt;/a&gt;就是一个，但始终也只是个玩具&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;主要的问题还是在于更新的支持力度上，代码版本过于古早，技术上需要发点力才能解决的异步处理等等，都没有推进。现在的状态就是，能用，但离理想状态还太遥远。特别是生成出来的JS代码以及grpc的JS代码还不支持TS定义（生成），在TS使用者眼里看来，简直完全等于不可用了。&lt;/p&gt;
-
-&lt;p&gt;不过好在新的纯JS实现的&lt;a href=&quot;https://github.com/grpc/grpc-node/tree/master/packages/grpc-js-core/src&quot; target=&quot;_blank&quot;&gt;JS源码&lt;/a&gt;（研发中），让人对未来抱有期待。此外，1.7.0版本之后官方也带了grpc自身的JS的TS定义，总算是可以用了。我这边也研发了一个&lt;a href=&quot;https://github.com/agreatfool/grpc_tools_node_protoc_ts&quot; target=&quot;_blank&quot;&gt;protoc的插件&lt;/a&gt;，帮助生成被生成出来的JS那份的TS定义，算是圆上了生态。&lt;/p&gt;
-
-&lt;h1 id=&quot;4-protobufjs&quot;&gt;4. &lt;a href=&quot;https://github.com/dcodeIO/protobuf.js&quot; target=&quot;_blank&quot;&gt;protobuf.js&lt;/a&gt;&lt;/h1&gt;
-&lt;p&gt;这是一款第三方制作的开源Protobuf解析库，需要注意的是，这个库的偏向是&lt;code&gt;面向Protobuf&lt;/code&gt;，它主要服务的是Protobuf的解析，以及对应protobuf的JS代码生成，RPC并不是它的主要方向。&lt;/p&gt;
-
-&lt;p&gt;资源：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/protobufjs&quot; target=&quot;_blank&quot;&gt;npm&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/dcodeIO/ProtoBuf.js&quot; target=&quot;_blank&quot;&gt;源码&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;教程文档直接看官方的README文档就差不多了，写得非常好，grpc官方的文档和它完全不能比。&lt;/p&gt;
-
-&lt;p&gt;需要注意的主要是用来代码生成的命令行工具的教程，官方文档：&lt;a href=&quot;ttps://github.com/dcodeIO/protobuf.js#command-line&quot; target=&quot;_blank&quot;&gt;Command line&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;生成出来的代码和grpc-tools有很大差别，可以比对查看下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/5e3a41052c6dd2f6d04b30901fc0269b&quot; target=&quot;_blank&quot;&gt;范例proto文件&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/5c49dad4f3360d4b49895232c8a24347&quot; target=&quot;_blank&quot;&gt;生成的代码文件&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/agreatfool/97d87bfe2ea6e2d2db209fc278b17ef7&quot; target=&quot;_blank&quot;&gt;grpc生成的代码文件&lt;/a&gt;，请忽略&lt;code&gt;d.ts&lt;/code&gt;文件，这些代码文件是别的工具生成的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;生成出来的代码文件是一个大而全的&lt;code&gt;compiled.js&lt;/code&gt;，此外&lt;code&gt;int64&lt;/code&gt;类型转换成了它自己的一个子工具库&lt;a href=&quot;https://github.com/dcodeIO/long.js&quot; target=&quot;_blank&quot;&gt;dcodeIO/long.js&lt;/a&gt;需要注意。&lt;/p&gt;
-
-&lt;h2 id=&quot;41-生态功能点支持&quot;&gt;4.1 生态功能点支持&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br /&gt;
-这套技术解决方案相比官方的grpc方案，多了一个TypeScript支持。且，其代码生成都是基于ES6最新的语言规范支持，对于最新的JS和TS开发者来说都非常友好。而且接口设计上也&lt;code&gt;更JS&lt;/code&gt;：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;所有的对象 attributes 都是使用 getter 和 setter 进行访问的，而不是类Java那种的 setXXX、getXXX&lt;/li&gt;
-  &lt;li&gt;对象的创建可以直接使用&lt;code&gt;create(object)&lt;/code&gt;的方式来进行，代码上简化不少，不会有grpc官方的 let xxx = new XXX；接着一串 xxx.setXXX&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;总而言之，无论是看还是写，都比官方的代码要好上不止一点。&lt;/p&gt;
-
-&lt;p&gt;虽然Gateway和文档的生成仍旧不支持，当然这是基于它的定位，这部分本来就不在它的涉足范围内。&lt;/p&gt;
-
-&lt;h2 id=&quot;42-技术问题&quot;&gt;4.2 技术问题&lt;/h2&gt;
-&lt;p&gt;这里说的技术问题说实在的也不能说是&lt;code&gt;问题&lt;/code&gt;，主要是基于当前Topic的&lt;code&gt;gRPC&lt;/code&gt;这个基准而产生的使用上的问题。问题来自我介绍这个库时候一开始说的，它是&lt;code&gt;面向Protobuf&lt;/code&gt;，而不是&lt;code&gt;gRPC&lt;/code&gt;。因此在设计上，这个库给予使用者选择rpc框架的自由，代码中的rpc部分只给出了接口，实现部分需要自己处理。&lt;/p&gt;
-
-&lt;p&gt;因此如果你是一个gRPC的用户，根本不考虑其他的库的话，那么使用Protobuf.js需要额外付出劳力对这块进行整合。&lt;/p&gt;
-
-&lt;p&gt;官方的rpc使用教程在：&lt;a href=&quot;https://github.com/dcodeIO/protobuf.js#using-services&quot; target=&quot;_blank&quot;&gt;Using services&lt;/a&gt;
-官方的范例代码在：&lt;a href=&quot;https://github.com/dcodeIO/protobuf.js/blob/master/examples/streaming-rpc.js&quot; target=&quot;_blank&quot;&gt;examples/streaming-rpc.js&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;可能是因为最新的版本出来时间还不久，关于如何在Protobuf.js里集成使用rpc的讨论非常非常少，简单搜了一圈，基本上没有官方的，或者三方的gRPC整合教程，如果要使用的话，可以预期会有大量的时间投入。这基本上能算是协同Protobuf.js组建gRPC生态的最大问题了。&lt;/p&gt;
-
-&lt;p&gt;这里还有一个设计相关的讨论帖：&lt;a href=&quot;https://github.com/dcodeIO/protobuf.js/issues/529&quot; target=&quot;_blank&quot;&gt;Streaming RPCs / GRPC Compatibility&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;5-grpc-gateway&quot;&gt;5. &lt;a href=&quot;https://github.com/grpc-ecosystem/grpc-gateway&quot; target=&quot;_blank&quot;&gt;grpc-gateway&lt;/a&gt;&lt;/h1&gt;
-&lt;p&gt;这个项目隶属于一个名叫&lt;a href=&quot;https://github.com/grpc-ecosystem&quot; target=&quot;_blank&quot;&gt;gRPC Ecosystem&lt;/a&gt;的官方群组。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;gRPC Ecosystem that complements gRPC&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;总的来说算是一些补足gRPC生态的边角料项目的组合。&lt;/p&gt;
-
-&lt;p&gt;这个群组里看下来最有意义的应该说就是这个项目了，核心的设计和工作目标可以看&lt;a href=&quot;https://camo.githubusercontent.com/e75a8b46b078a3c1df0ed9966a16c24add9ccb83/68747470733a2f2f646f63732e676f6f676c652e636f6d2f64726177696e67732f642f3132687034435071724e5046686174744c5f63496f4a707446766c41716d35774c513067677149356d6b43672f7075623f773d37343926683d333730&quot; target=&quot;_blank&quot;&gt;这张图&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;简单来说就是可以根据protobuf的（扩展）定义，生成对应的：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;swagger.json 配合&lt;a href=&quot;https://swagger.io/&quot; target=&quot;_blank&quot;&gt;swagger&lt;/a&gt;生态使用&lt;/li&gt;
-  &lt;li&gt;生成Gateway代码，注意这个项目是Go语言的，因此生成出来的代码也是Go语言的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;用到了非标准的&lt;code&gt;annotation&lt;/code&gt;，主要是在proto文件中引入了额外的官方proto定义：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-proto&quot; data-lang=&quot;proto&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;google/api/annotations.proto&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;这个引入的proto还引入了两个其他的proto，总共3个proto文件，如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/googleapis/googleapis/blob/master/google/api/annotations.proto&quot; target=&quot;_blank&quot;&gt;googleapis/google/api/annotations.proto&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/googleapis/googleapis/blob/master/google/api/http.proto&quot; target=&quot;_blank&quot;&gt;googleapis/google/api/http.proto&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/google/protobuf/blob/master/src/google/protobuf/descriptor.proto&quot; target=&quot;_blank&quot;&gt;protobuf/src/google/protobuf/descriptor.proto&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;作为Node来说，主要能拿到生成出来的swagger文件，后面的gateway代码生成也就简单了。&lt;/p&gt;
-
-&lt;h2 id=&quot;51-生态功能点支持&quot;&gt;5.1 生态功能点支持&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br /&gt;
-简单来说这套工具主要能弥补之前提到的两套工具的Gateway方面短板，补全整个生态。&lt;/p&gt;
-
-&lt;h1 id=&quot;6-结论&quot;&gt;6. 结论&lt;/h1&gt;
-&lt;p&gt;从目前来看，用Node.js和TypeScript来构建gRPC生态架构还是非常乐观的：&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;功能&lt;/th&gt;
-      &lt;th style=&quot;text-align: center&quot;&gt;支持与否&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;消息及数据结构的定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;RPC输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Gateway输入输出定义&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;说明文档生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;X&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;JS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;TS代码生成&lt;/td&gt;
-      &lt;td style=&quot;text-align: center&quot;&gt;√&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;br /&gt;
-除了文档的生成之外，其他的功能点基本上都有工具可以覆盖到。此外官方的TypeScript定义也已经正式上线，并在积极更新，可以期待后续的发展。&lt;/p&gt;
-
-&lt;p&gt;技术选型：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如果对于自己的技术团队有自信，并有时间和精力能适配Protobuf.js的rpc实现的话，那么Protobuf.js应该说是一个更现代化、更新更高速、更好的选择&lt;/li&gt;
-  &lt;li&gt;如果对于时间和精力没有余裕，更愿意相信官方的话，那么grpc官方的工具套件可以说是一个虽然读写不是很完美，但功能完备更有稳定性保障的选择&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;总而言之，如何选择端看需求和自身的条件情况。&lt;/p&gt;
-
-&lt;h1 id=&quot;7-其他&quot;&gt;7. 其他&lt;/h1&gt;
-&lt;p&gt;其他还有一些工具也能起到补助作用这里简单列下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/ts-protoc-gen&quot; target=&quot;_blank&quot;&gt;ts-protoc-gen&lt;/a&gt;：Protoc Plugin for TypeScript Declarations&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc_tools_node_protoc_ts&quot; target=&quot;_blank&quot;&gt;grpc_tools_node_protoc_ts&lt;/a&gt;：Generate corresponding TypeScript d.ts codes according to js codes generated by grpc_tools_node_protoc&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/grpc-tsd&quot; target=&quot;_blank&quot;&gt;grpc-tsd&lt;/a&gt;：Maintain a grpc.d.ts file for gRPC TypeScript project.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;8-资料&quot;&gt;8. 资料&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc/releases&quot; target=&quot;_blank&quot;&gt;grpc主库release&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Tue, 06 Feb 2018 16:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/02/grpc-node-ecosystem/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/02/grpc-node-ecosystem/</guid>
 			</item>
 		
 	</channel>
