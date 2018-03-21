@@ -13,14 +13,14 @@
 
 &lt;p&gt;而，作为一门快速发展的技术，JS的V8引擎在Google的助力下演进异常的快速，远超一门语言和一个引擎一般的进展速度。市面上的书本和文章大部分都很难跟上V8的发展，这就导致了学习者必须订阅跟随V8官方的博客，他们会在这个消息渠道上发布最新的进展（貌似也只有这个地方）。&lt;/p&gt;
 
-&lt;p&gt;因此我一直长期都有关注V8的博客。最近在更进一步深入V8的过程中感到还是不够，觉得应该需要将V8的官方博客进一步：&lt;/p&gt;
+&lt;p&gt;因此我一直长期都有关注V8的博客。最近在更深入V8的过程中感到还是不够，觉得应该需要将V8的官方博客进一步：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;凝缩归纳关键核心的改动要点，省去官方博客的大量解释型描述（只关注改了什么，不关注为什么改）&lt;/li&gt;
   &lt;li&gt;翻译成中文方便理解&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;这样能更好的跟进这个技术的演进指导日常工作中我们需要跟着改进的部分。&lt;/p&gt;
+&lt;p&gt;这样能更好地跟进这个技术的演进，并指导日常工作中我们需要改进的部分。&lt;/p&gt;
 
 &lt;h1 id=&quot;2-计划&quot;&gt;2. 计划&lt;/h1&gt;
 &lt;p&gt;当然全博客翻译是不现实的，从最近的&lt;a href=&quot;https://v8project.blogspot.hk/2017/11/orinoco-parallel-scavenger.html&quot; target=&quot;_blank&quot;&gt;Orinoco: young generation garbage collection&lt;/a&gt;开始。&lt;/p&gt;
