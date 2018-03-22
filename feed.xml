@@ -7,6 +7,117 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>V8 Blog | Optimizing hash tables: hiding the hash code 2018-01-29</title>
+				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2018/01/hash-code.html&quot; target=&quot;_blank&quot;&gt;Optimizing hash tables: hiding the hash code&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;2-摘要翻译&quot;&gt;2. 摘要翻译&lt;/h1&gt;
+&lt;p&gt;ECMAScript 2015引入了几种新的数据结构，如：Map、Set、WeakSet、WeakMap，它们的底层实现都是hash table。本文会详细介绍通过&lt;a href=&quot;https://bugs.chromium.org/p/v8/issues/detail?id=6404&quot; target=&quot;_blank&quot;&gt;最近的几项性能优化&lt;/a&gt;在&lt;a href=&quot;https://v8project.blogspot.com/2017/10/v8-release-63.html&quot; target=&quot;_blank&quot;&gt;V8 v6.3+&lt;/a&gt;里是如何存储hash table的key的。&lt;/p&gt;
+
+&lt;h2 id=&quot;hash-code&quot;&gt;Hash code&lt;/h2&gt;
+&lt;p&gt;一个&lt;a href=&quot;https://en.wikipedia.org/wiki/Hash_function&quot; target=&quot;_blank&quot;&gt;hash function&lt;/a&gt;是用来将一个key映射到hash table中某个位置上的。而_hash code_则是hash function根据某个key运算后得到的结果。&lt;/p&gt;
+
+&lt;p&gt;在V8中，hash code是一个随机数字（random number），与object value无关。因此，我们无法重新计算它，就意味着一定要存储它。&lt;/p&gt;
+
+&lt;p&gt;因为在JS中，对象是可以作为key来使用的。因此之前是将hash code作为一个private symbol存储在key对象里的。private symbol在V8里类似&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol&quot; target=&quot;_blank&quot;&gt;Symbol&lt;/a&gt;，除了几点：它不可被枚举，也不会被暴露到JS的用户空间内。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;GetObjectHash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hash&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hashCodeSymbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IS_UNDEFINED&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;hash&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;MathRandom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mh&quot;&gt;0x40000000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hash&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hash&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;hashCodeSymbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hash&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这种方案工作得很好，因为在对象被加到hash table之前我们不需要为hash code字段预留内存。直到加入到hash table的时间点，private symbol才会被存储到对象内。&lt;/p&gt;
+
+&lt;p&gt;V8可以优化hash code symbol查找，通过使用和其他属性查找相同的IC System方案来提供非常快的hash code查找。这套方案在&lt;a href=&quot;https://en.wikipedia.org/wiki/Inline_caching#Monomorphic_inline_caching&quot; target=&quot;_blank&quot;&gt;monomorphic IC查找&lt;/a&gt;上工作的很好，前提条件是当所有的key都拥有相同的&lt;a href=&quot;https://github.com/v8/v8/wiki/Design-Elements&quot; target=&quot;_blank&quot;&gt;hidden class&lt;/a&gt;。然而真实世界的JS代码一般不按这套方式编写，且key经常都拥有不同的hidden class导致如果使用&lt;a href=&quot;https://en.wikipedia.org/wiki/Inline_caching#Monomorphic_inline_caching&quot; target=&quot;_blank&quot;&gt;monomorphic IC查找&lt;/a&gt;来查找hash code会非常慢。&lt;/p&gt;
+
+&lt;p&gt;使用private symbol方案的另一个问题是它导致存储hash code的对象发生了hidden class transition。这导致了低效的多态代码，不单单只是反应在hash code查找上，还反应在key对象的其他属性查找上，而且还导致了优化代码的&lt;a href=&quot;https://floitsch.blogspot.com/2012/03/optimizing-for-v8-inlining.html&quot; target=&quot;_blank&quot;&gt;deoptimization&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;javascript-object-backing-stores&quot;&gt;JavaScript object backing stores&lt;/h2&gt;
+&lt;p&gt;每个JS对象（JSObject）在V8中除了头部之外还使用了两个word，一个用来存储指向elements backing store的指针，另一个用来存储指向properties backing store的指针。&lt;/p&gt;
+
+&lt;p&gt;elements backing store用来存储类似&lt;a href=&quot;https://tc39.github.io/ecma262/#sec-array-index&quot; target=&quot;_blank&quot;&gt;array indices&lt;/a&gt;的属性，而backing store则是存储key是字符串和symbol的属性。查看&lt;a href=&quot;https://v8project.blogspot.com/2017/08/fast-properties.html&quot; target=&quot;_blank&quot;&gt;这篇博客&lt;/a&gt;来进一步了解backing stores。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{};&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;      &lt;span class=&quot;c1&quot;&gt;// ← stored in elements&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;foo&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;bar&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;// ← stored in properties&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;hiding-the-hash-code&quot;&gt;Hiding the hash code&lt;/h2&gt;
+&lt;p&gt;最简单存储hash code的解决方案就是再在JS对象上拓展一个word的空间，将hash code直接存储在对象里。然而这样做会导致那些未被加入hash table的对象里的内存空间被浪费。作为替代方案，我们尝试将hash code存储在elements store或properties store内。&lt;/p&gt;
+
+&lt;p&gt;elements backing store是一个包含了长度和所有elements的数组。在这里我们没有什么能做的，因为将hash code存储在reserved slot（类似the 0th index）仍旧会在未将对象作为hash table的key使用的时候浪费内存。&lt;/p&gt;
+
+&lt;p&gt;因此我们将视线转到properties backing store。properties backing store的数据结构有两种：数组和字典。&lt;/p&gt;
+
+&lt;p&gt;不像elements backing store使用的数组没有长度限制（upper limit），properties backing store中的数组有1022个值的长度限制（upper limit）。V8将长度超限的情况转而使用字典，为了性能考虑。（这里我稍微简化了下 —— 在其他某些场景下V8也是可以使用字典的）&lt;/p&gt;
+
+&lt;p&gt;因此，properties backing store有三种可能的状态：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;空（没有属性）&lt;/li&gt;
+  &lt;li&gt;数组（最多可以存储1022个值）&lt;/li&gt;
+  &lt;li&gt;字典&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;the-properties-backing-store-is-empty&quot;&gt;The properties backing store is empty&lt;/h3&gt;
+&lt;p&gt;当&lt;code&gt;空&lt;/code&gt;的情况，我们可以直接把hash code存储在JS对象的这个offset里：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;data:image/png;base64,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&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;the-properties-backing-store-is-an-array&quot;&gt;The properties backing store is an array&lt;/h3&gt;
+&lt;p&gt;在32位机器上，V8中的整型是长度小于2&lt;sup&gt;31&lt;/sup&gt;的unboxed数字，这被称为&lt;a href=&quot;https://wingolog.org/archives/2011/05/18/value-representation-in-javascript-implementations&quot; target=&quot;_blank&quot;&gt;Smi&lt;/a&gt;。在一个Smi中，最小的一位（the least significant bit）是用来区分和指针之间差异的tag，其他的31位（31 bits）用来存储整型的值。&lt;/p&gt;
+
+&lt;p&gt;通常情况下，数组将它们的长度存储成Smi。因为我们知道这里的数组的容量上限是1022，我们只需要10位（10 bits）来存储这个长度。我们就可以使用剩下的21位（21 bits）来存储hash code！&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;data:image/png;base64,&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;the-properties-backing-store-is-a-dictionary&quot;&gt;The properties backing store is a dictionary&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;字典&lt;/code&gt;的情况，我们为存储hash code增加了字典一个word的长度，在字典的开头专门辟出了一个slot专门用来存储hash code。这种解决方案默认会浪费一个word长度的内存空间，因为按比例来看这个尺寸的空间增长的影响并不像内存的情况那样大。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;data:image/png;base64,&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;使用这些解决方案之后，hash code的查找就不再需要通过复杂的JS对象属性查找机制了。&lt;/p&gt;
+
+&lt;h2 id=&quot;performance-improvements&quot;&gt;Performance improvements&lt;/h2&gt;
+&lt;p&gt;通过&lt;a href=&quot;https://github.com/kpdecker/six-speed&quot; target=&quot;_blank&quot;&gt;SixSpeed&lt;/a&gt; benchmark跟踪的Map和Set性能变化反应性能提升了大约500%（a ~500% improvement）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;data:image/png;base64,&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这项改进也提升了基准benchmark &lt;a href=&quot;https://webkit.org/blog/7536/jsc-loves-es6/&quot; target=&quot;_blank&quot;&gt;ARES6&lt;/a&gt;的性能5%（a 5% improvement）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;data:image/png;base64,&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在使用&lt;a href=&quot;https://v8project.blogspot.hk/2018/01/hash-code.html&quot; target=&quot;_blank&quot;&gt;Emberperf&lt;/a&gt; benchmark套件中的某个benchmark测试Ember.js的时候也反馈了18%的性能提升（an 18% improvement）。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;data:image/png;base64,&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;3-注&quot;&gt;3. 注&lt;/h1&gt;
+&lt;p&gt;翻译Smi的时候查看上文提到的链接中的内容辅助理解了下，这里放一下链接里的原文，方便以后查看：&lt;/p&gt;
+
+&lt;p&gt;来源：&lt;a href=&quot;https://wingolog.org/archives/2011/05/18/value-representation-in-javascript-implementations&quot; target=&quot;_blank&quot;&gt;value representation in javascript implementations&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;引用：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;&lt;a href=&quot;http://code.google.com/p/v8/source/browse/branches/bleeding_edge/src/objects.h#112&quot; target=&quot;_blank&quot;&gt;Google’s V8 JavaScript engine still does it this way.&lt;/a&gt; This yields 31-bit immediate signed integers; you can just do a signed right-shift to get the value. They call them “smi” values, for “small integers”; they are more commonly called “fixnums”. There are other fun tricks you can do to avoid shifts for some common operations, like addition. Note that they also take advantage of the four-byte alignment (in their case) to encode another immediate value, “failure objects”, using the other low bit.&lt;/p&gt;
+
+  &lt;p&gt;The size of a tagged pointer is the size of a pointer, so 32 bits on a 32-bit machine, and 64 on a 64-bit machine. V8 doesn’t actually use 63-bit smi values on 64-bit machines, AFAIK.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Wed, 21 Mar 2018 14:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/03/hash-code/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/03/hash-code/</guid>
+			</item>
+		
+			<item>
 				<title>V8 Blog | Chrome welcomes Speedometer 2.0! 2018-01-24</title>
 				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2018/01/speedometer-2.html&quot; target=&quot;_blank&quot;&gt;Chrome welcomes Speedometer 2.0!&lt;/a&gt;&lt;/p&gt;
@@ -542,323 +653,6 @@ ffmpeg -f concat -i ./list.txt -c copy ./concat.mov&lt;/code&gt;&lt;/pre&gt;&lt;
 				<pubDate>Tue, 27 Feb 2018 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/02/how-to-raise-question/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2018/02/how-to-raise-question/</guid>
-			</item>
-		
-			<item>
-				<title>Node.JS Profile 4.1 Profile实践</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-介绍&quot; id=&quot;markdown-toc-2-介绍&quot;&gt;2. 介绍&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-node原生工具进行profile&quot; id=&quot;markdown-toc-3-node原生工具进行profile&quot;&gt;3. Node原生工具进行Profile&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-node官方guide&quot; id=&quot;markdown-toc-31-node官方guide&quot;&gt;3.1 Node官方Guide&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-版本要求&quot; id=&quot;markdown-toc-32-版本要求&quot;&gt;3.2 版本要求&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#33-profile范例&quot; id=&quot;markdown-toc-33-profile范例&quot;&gt;3.3 Profile范例&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#34-解析profile日志&quot; id=&quot;markdown-toc-34-解析profile日志&quot;&gt;3.4 解析Profile日志&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#35-理解profile日志内容&quot; id=&quot;markdown-toc-35-理解profile日志内容&quot;&gt;3.5 理解Profile日志内容&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#351-shared-libraries&quot; id=&quot;markdown-toc-351-shared-libraries&quot;&gt;3.5.1 Shared libraries&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#352-javascriptcsummary&quot; id=&quot;markdown-toc-352-javascriptcsummary&quot;&gt;3.5.2 JavaScript、C++、Summary&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#javascript&quot; id=&quot;markdown-toc-javascript&quot;&gt;JavaScript&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#c&quot; id=&quot;markdown-toc-c&quot;&gt;C++&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#summary&quot; id=&quot;markdown-toc-summary&quot;&gt;Summary&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#列含义&quot; id=&quot;markdown-toc-列含义&quot;&gt;列含义&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#353-c-entry-points&quot; id=&quot;markdown-toc-353-c-entry-points&quot;&gt;3.5.3 C++ entry points&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#354-bottom-up-heavy-profile&quot; id=&quot;markdown-toc-354-bottom-up-heavy-profile&quot;&gt;3.5.4 Bottom up (heavy) profile&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-资料&quot; id=&quot;markdown-toc-4-资料&quot;&gt;4. 资料&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-火焰图相关&quot; id=&quot;markdown-toc-41-火焰图相关&quot;&gt;4.1 火焰图相关&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-附录&quot; id=&quot;markdown-toc-5-附录&quot;&gt;5. 附录&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID51&quot; id=&quot;markdown-toc-ID51&quot;&gt;5.1 解析完成的Profile日志内容&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
-
-&lt;p&gt;本文主要负责介绍Node的命令行Profile知识及实践操作。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-介绍&quot;&gt;2. 介绍&lt;/h1&gt;
-&lt;p&gt;在系列文章的前几节里，基本上已经把Node应用程序最关键的几个性能指标项目都过了一遍，这几节的主要目的都是为了Profile进行知识储备，并打好对某一方面进行针对性查错的基础。&lt;/p&gt;
-
-&lt;p&gt;在掌握了前几节的内容之后，就可以回过头来回到当前这个系列文章的主题&lt;code&gt;Profile&lt;/code&gt;来了，当然我们这里说的是&lt;code&gt;狭义上的Profile（时间消耗）&lt;/code&gt;，即观察，并了解Node进程具体在做什么，每一步都花了多少时间，以便有针对性地进行查错和调优。&lt;/p&gt;
-
-&lt;p&gt;狭义上的Profile（时间消耗）是非常重要的。一个应用程序如果需要顺利运行需要很多资源，包括且不限于：CPU、内存、磁盘、网络，很多情况下应用程序都会去申请、消耗这些资源以完成自身的工作任务，而Profile让应用程序研发者详细了解应用程序是如何申请、消耗这些资源并完成任务的。只有了解了这些信息之后，研发者才能知道哪里出了问题，哪里还有提升空间。&lt;/p&gt;
-
-&lt;p&gt;Note：&lt;/p&gt;
-
-&lt;p&gt;本文的版本时效性可能比较敏感，关于行文及范例中使用的Node版本，请查看&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;总章&lt;/a&gt;进行了解。&lt;/p&gt;
-
-&lt;h1 id=&quot;3-node原生工具进行profile&quot;&gt;3. Node原生工具进行Profile&lt;/h1&gt;
-&lt;h2 id=&quot;31-node官方guide&quot;&gt;3.1 Node官方Guide&lt;/h2&gt;
-&lt;p&gt;Node官方文档有一篇&lt;a href=&quot;https://nodejs.org/en/docs/guides/simple-profiling/&quot; target=&quot;_blank&quot;&gt;Guide&lt;/a&gt;，详细介绍了如何进行profile。本文下面主要就是对该Guide进行翻译及针对实际操作进行总结。&lt;/p&gt;
-
-&lt;p&gt;Node的内置Profiler来自V8，V8官方的Profiler介绍可以查看：&lt;a href=&quot;https://github.com/v8/v8/wiki/Using%20V8%E2%80%99s%20internal%20profiler&quot; target=&quot;_blank&quot;&gt;Using V8’s internal profiler&lt;/a&gt;，其实和Node的Guide比起来差的不多，但更针对性地对浏览器进行了操作介绍。&lt;/p&gt;
-
-&lt;h2 id=&quot;32-版本要求&quot;&gt;3.2 版本要求&lt;/h2&gt;
-&lt;p&gt;Node官方的Profiler内嵌自版本4.4.0，所以请至少使用这个及以上的版本：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Luckily, tools have recently been introduced into Node.js 4.4.0 that facilitate the consumption of this information without separately building V8 from source.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;33-profile范例&quot;&gt;3.3 Profile范例&lt;/h2&gt;
-&lt;p&gt;调优前的范例代码如下，注意运行前请预先装好&lt;a href=&quot;https://httpd.apache.org/docs/2.4/programs/ab.html&quot; target=&quot;_blank&quot;&gt;ApacheBench&lt;/a&gt;：&lt;/p&gt;
-
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/a55f5cbdd66d097ba4855e47d42338e5.js&quot;&gt; &lt;/script&gt;
-
-&lt;p&gt;文件夹结构：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;bash/profile-ab.sh&lt;/li&gt;
-  &lt;li&gt;bash/profile-server.sh&lt;/li&gt;
-  &lt;li&gt;profile/package.json&lt;/li&gt;
-  &lt;li&gt;profile/server.js&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;执行步骤：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;cd profile&lt;/li&gt;
-  &lt;li&gt;npm install&lt;/li&gt;
-  &lt;li&gt;cd ..&lt;/li&gt;
-  &lt;li&gt;chmod +x bash/profile-ab.sh&lt;/li&gt;
-  &lt;li&gt;chmod +x bash/profile-server.sh&lt;/li&gt;
-  &lt;li&gt;./bash/profile-server.sh：保证服务器进程运行中&lt;/li&gt;
-  &lt;li&gt;./bash/profile-ab.sh&lt;/li&gt;
-  &lt;li&gt;查看结果&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;执行结果：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Benchmarking localhost (be patient)
-Completed 100 requests
-Completed 200 requests
-Finished 250 requests
-
-
-Server Software:        
-Server Hostname:        localhost
-Server Port:            5000
-
-Document Path:          /auth?username=matt&amp;amp;password=password
-Document Length:        2 bytes
-
-Concurrency Level:      20
-Time taken for tests:   24.817 seconds
-Complete requests:      250
-Failed requests:        0
-Keep-Alive requests:    250
-Total transferred:      51500 bytes
-HTML transferred:       500 bytes
-Requests per second:    10.07 [#/sec] (mean)
-Time per request:       1985.384 [ms] (mean)
-Time per request:       99.269 [ms] (mean, across all concurrent requests)
-Transfer rate:          2.03 [Kbytes/sec] received
-
-Connection Times (ms)
- 	             min  mean[+/-sd] median   max
-Connect:        0    0   0.1      0       1
-Processing:    99 1909 305.1   1985    2019
-Waiting:       99 1909 305.1   1985    2019
-Total:        100 1909 304.9   1985    2019
-
-Percentage of the requests served within a certain time (ms)
-  50%   1985
-  66%   1991
-  75%   1995
-  80%   1997
-  90%   2002
-  95%   2005
-  98%   2011
-  99%   2014
- 100%   2019 (longest request)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;结论：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;20&lt;/code&gt;个并发，完成&lt;code&gt;250&lt;/code&gt;个请求，耗时&lt;code&gt;24.817&lt;/code&gt;秒&lt;/li&gt;
-  &lt;li&gt;平均每秒只能处理&lt;code&gt;10.07&lt;/code&gt;个请求&lt;/li&gt;
-  &lt;li&gt;很糟糕&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;34-解析profile日志&quot;&gt;3.4 解析Profile日志&lt;/h2&gt;
-&lt;p&gt;在刚才运行&lt;code&gt;profile-ab.sh&lt;/code&gt;脚本的路径下，会产生一个文件名类似&lt;code&gt;isolate-0x103000000-v8.log&lt;/code&gt;这样的文件。该文件比较大，就不放gist了，请自行实验获取范例。&lt;/p&gt;
-
-&lt;p&gt;然后使用以下命令将该日志解析生成可读的内容：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;node --prof-process isolate-0x103000000-v8.log &amp;gt; processed.txt&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;h2 id=&quot;35-理解profile日志内容&quot;&gt;3.5 理解Profile日志内容&lt;/h2&gt;
-&lt;p&gt;解析出来的日志文件内容有点多，原文放在附录部分，点击&lt;a href=&quot;#ID51&quot;&gt;这里&lt;/a&gt;查看。&lt;/p&gt;
-
-&lt;p&gt;从上到下主要分为几个耗时分类，一个个细说。&lt;/p&gt;
-
-&lt;h3 id=&quot;351-shared-libraries&quot;&gt;3.5.1 Shared libraries&lt;/h3&gt;
-&lt;p&gt;Node进程使用到的系统级动态链接库部分的时间消耗，会显示在这个分类下。&lt;/p&gt;
-
-&lt;p&gt;该分类的几列：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ticks：每个库所占用的ticks数量&lt;/li&gt;
-  &lt;li&gt;total：每个库占用的ticks总量百分比&lt;/li&gt;
-  &lt;li&gt;nonlib：这列在当前分类不适用，因为本来这里列的就都是类库时间消耗，nonlib当然没有数据&lt;/li&gt;
-  &lt;li&gt;name：动态链接库的文件位置&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;352-javascriptcsummary&quot;&gt;3.5.2 JavaScript、C++、Summary&lt;/h3&gt;
-&lt;p&gt;这几个分类放一起说，因为他们的列数据含义相同。&lt;/p&gt;
-
-&lt;h4 id=&quot;javascript&quot;&gt;JavaScript&lt;/h4&gt;
-&lt;p&gt;JavaScript代码部分的时间消耗，包括了当前项目源代码部分的时间消耗和第三方node_modules的时间消耗。&lt;/p&gt;
-
-&lt;h4 id=&quot;c&quot;&gt;C++&lt;/h4&gt;
-&lt;p&gt;Node进程在C++代码里的时间消耗，Node本身是构建在V8引擎之上的，所以一些Node标准库里的API，基本上都是C++时间消耗。当然这个分类也包含了一些作为第三方addon加载的插件的时间消耗。&lt;/p&gt;
-
-&lt;h4 id=&quot;summary&quot;&gt;Summary&lt;/h4&gt;
-&lt;p&gt;这个分类应该是当前报表中最重要的部分，没有细节，就仅仅只是将所有的分类的时间消耗总量都放在一起，形成一个直观的结果。一般来说看Profile结论报表，第一个要看的就是Summary，有一个最直观的结论之后再去找对应部分的细节。&lt;/p&gt;
-
-&lt;p&gt;这里需要注意的有两处：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;GC：整个报表中唯一只在这个Summary中能找到&lt;code&gt;内存回收（GC）&lt;/code&gt;相关的时间消耗数据&lt;/li&gt;
-  &lt;li&gt;Unaccounted：偶尔，Profiler会无法当前执行的内容到底是什么，这类的ticks就会被归类到&lt;code&gt;Unaccounted&lt;/code&gt;这个分类下&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;列含义&quot;&gt;列含义&lt;/h4&gt;
-&lt;ul&gt;
-  &lt;li&gt;ticks：占用的ticks数量&lt;/li&gt;
-  &lt;li&gt;total：占用的ticks总量百分比&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;nonlib&lt;/code&gt;：
-    &lt;ul&gt;
-      &lt;li&gt;这列描述的是将&lt;code&gt;Shared libraries&lt;/code&gt;所产生的时间消耗忽略之后，当前条目自身产生的时间消耗（ticks）所占的百分比&lt;/li&gt;
-      &lt;li&gt;举例来说：你写的JS代码中new了一个对象，然后内存分配器会问系统去要内存，这里可能就会产生&lt;code&gt;/usr/lib/system/libsystem_malloc.dylib&lt;/code&gt;的时间消耗了，&lt;code&gt;nonlib&lt;/code&gt;列给的百分比就是去掉这个&lt;code&gt;libsystem_malloc.dylib&lt;/code&gt;库产生的时间消耗之后，你代码中new对象所产生的时间消耗所占的百分比&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;name：
-    &lt;ul&gt;
-      &lt;li&gt;JavaScript：函数名，以及其在源代码中的位置&lt;/li&gt;
-      &lt;li&gt;C++：函数名，一般都是Node运行时和V8相关的函数&lt;/li&gt;
-      &lt;li&gt;Summary：分类名&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;关于JavaScript的name列，还有一些细节可以说一下：&lt;/p&gt;
-
-&lt;p&gt;每个name列实际函数名之前一般会有一个&lt;code&gt;*&lt;/code&gt;或&lt;code&gt;~&lt;/code&gt;，星号表示该函数得到了优化，而波浪号则表示没有。&lt;a href=&quot;#ID51&quot;&gt;这个例子&lt;/a&gt;里只有未优化的范例，下面放一个有优化的例子：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ticks parent  name
-3567   16.9%  Builtin: StringEqual
-3567  100.0%    LazyCompile: *&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:43:54
-3567  100.0%      LazyCompile: *InnerArrayFind native array.js:843:24
-3441   96.5%        LazyCompile: *find native array.js:855:19
-3278   95.3%          LazyCompile: *&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
-3278  100.0%            Builtin: ArrayForEach
- 163    4.7%          Function: ~&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
- 163  100.0%            Builtin: ArrayForEach
- 126    3.5%        Function: ~find native array.js:855:19
- 114   90.5%          LazyCompile: *&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
- 114  100.0%            Builtin: ArrayForEach
-  12    9.5%          Function: ~&amp;lt;anonymous&amp;gt; .../node_modules/typeorm/query-builder/transformer/RawSqlResultsToEntityTransformer.js:39:37
-  12  100.0%            Builtin: ArrayForEach
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;此外，函数名之前都会有一个前缀，例如：&lt;code&gt;LazyCompile&lt;/code&gt;，他们都有各自的意义，这里罗列下一般常见的（不保证全）：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Function：普通的JS函数&lt;/li&gt;
-  &lt;li&gt;LazyCompile：懒编译的JS函数&lt;/li&gt;
-  &lt;li&gt;RegExp：正则表达式引擎&lt;/li&gt;
-  &lt;li&gt;Builtin：Node运行时内建的JS函数&lt;/li&gt;
-  &lt;li&gt;Stub：Node运行时内建的C函数&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;353-c-entry-points&quot;&gt;3.5.3 C++ entry points&lt;/h3&gt;
-&lt;p&gt;这部分描述的是当逻辑从JS代码跨界到C++代码运行时，其中消耗的时间。&lt;/p&gt;
-
-&lt;p&gt;这部分的意义不是很大，毕竟如果真的有大量和C++相关的时间消耗的话，直接看C++相关的部分即可。只有一种情况是需要仔细查看这部分的，就是从JS到C++之间的交换出了问题，JS本身没有很大的性能问题，且C++也没有，而是在两者之间做数据和消息交换的时候出了问题。&lt;/p&gt;
-
-&lt;p&gt;范例直接看&lt;a href=&quot;#ID51&quot;&gt;本文附带的例子&lt;/a&gt;即可，里面C++占了绝大部分的时间消耗，而同样的在C++ entry points也有对应的巨量时间消耗占比。&lt;/p&gt;
-
-&lt;h3 id=&quot;354-bottom-up-heavy-profile&quot;&gt;3.5.4 Bottom up (heavy) profile&lt;/h3&gt;
-&lt;p&gt;这部分是性能问题的暴露部分，一般看完Summery不想了解其细节就直接来看这部分是解决问题的最快方案。&lt;/p&gt;
-
-&lt;p&gt;和之前其他分类耗时部分不同的是，在这部分里按空行分隔的不同段落都是一个个单独的性能瓶颈点，每个段落的多行表示的是一个调用栈。&lt;/p&gt;
-
-&lt;p&gt;此外，这个部分的列内容也和之前的略有不同（主要是parent字段），&lt;code&gt;parent&lt;/code&gt;列的百分比意味着：当前行有&lt;code&gt;X%&lt;/code&gt;的统计结果会调用当前行的上一行里的函数。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Within each of the “call stacks” above, the percentage in the parent column tells you the percentage of samples for which the function in the row above was called by the function in the current row.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;一般情况下，看完Profile报表中的这部分，性能问题都能找到原因。&lt;/p&gt;
-
-&lt;h1 id=&quot;4-资料&quot;&gt;4. 资料&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://httpd.apache.org/docs/2.4/programs/ab.html&quot; target=&quot;_blank&quot;&gt;ApacheBench&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/en/docs/guides/simple-profiling/&quot; target=&quot;_blank&quot;&gt;Easy profiling for Node.js Applications&lt;/a&gt;：如何在命令行下进行Profile的官方指引&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/v8/v8/wiki/Using%20V8%E2%80%99s%20internal%20profiler&quot; target=&quot;_blank&quot;&gt;Using V8’s internal profiler&lt;/a&gt;：V8官方wiki的一篇教程&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.continuation.io/node-js-profiling-using-the-v8-tick-profiler/&quot; target=&quot;_blank&quot;&gt;Node.js Profiling Using the V8 Tick Profiler&lt;/a&gt;：细节相当多的博文，唯一找到的一篇对profile分析文本的每个段落都有细节解释的文章&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/23934451/how-to-read-nodejs-internal-profiler-tick-processor-output&quot; target=&quot;_blank&quot;&gt;How to read nodejs internal profiler tick-processor output&lt;/a&gt;：stackoverflow的一个帖子&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://groups.google.com/forum/#!topic/nodejs/oRbX5eZvOPg&quot; target=&quot;_blank&quot;&gt;Understanding the v8-profiler output&lt;/a&gt;：google论坛上的一个帖子，细节蛮多的&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.jetbrains.com/help/webstorm/v8-cpu-and-memory-profiling.html&quot; target=&quot;_blank&quot;&gt;V8 CPU and Memory Profiling&lt;/a&gt;：WebStorm官方的一个教程贴，当然教的是他们的整合工具，但底层本质仍旧是V8的Profiler&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://mrale.ph/blog/2011/12/18/v8-optimization-checklist.html&quot; target=&quot;_blank&quot;&gt;I-want-to-optimize-my-JS-application-on-V8 checklist&lt;/a&gt;：这篇有点老了&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;41-火焰图相关&quot;&gt;4.1 火焰图相关&lt;/h2&gt;
-
-&lt;p&gt;MAC下的简单生成步骤：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ npm install stackvis -g
-
-$ &lt;span class=&quot;nv&quot;&gt;NODE_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production node profile/server.js
-Server started, listening on port &lt;span class=&quot;m&quot;&gt;5000&lt;/span&gt; ...
-
-$ ps aux &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep node &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; grep -v grep
-XXX         &lt;span class=&quot;m&quot;&gt;69941&lt;/span&gt;   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.0  &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;.2  &lt;span class=&quot;m&quot;&gt;4920704&lt;/span&gt;  &lt;span class=&quot;m&quot;&gt;34256&lt;/span&gt; s003  S+    &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;:45Pm   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;:00.43 node profile/server.js
-
-$ sudo dtrace -n &lt;span class=&quot;s1&quot;&gt;&amp;#39;profile-99 /pid == 69941 &amp;amp;&amp;amp; arg1/ { @[ustack()] = count(); }&amp;#39;&lt;/span&gt; &amp;gt; stacks.out
-
-$ ./bash/profile-ab.sh
-
-$ stackvis dtrace flamegraph-svg &amp;lt; stacks.out &amp;gt; stacks.svg
-
-&lt;span class=&quot;c1&quot;&gt;# 在浏览器中打开 stacks.svg&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;资料：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/en/blog/uncategorized/profiling-node-js/&quot; target=&quot;_blank&quot;&gt;Profiling Node.js&lt;/a&gt;：使用dtrace获取数据，并制作火焰图&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://cn.windyland.me/2015/11/28/profiling-with-dtrace/&quot; target=&quot;_blank&quot;&gt;Dtrace on Mac OS X&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://carol-nichols.com/2017/04/20/rust-profiling-with-dtrace-on-osx/&quot; target=&quot;_blank&quot;&gt;Rust Profiling with DTrace and FlameGraph on OSX&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/brendangregg/FlameGraph&quot; target=&quot;_blank&quot;&gt;brendangregg/FlameGraph&lt;/a&gt;：虽然是个工具库，但README里有不少如何采集数据的指引&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://xizhibei.github.io/2017/09/09/node-js-profiling-tool-flamegraph/&quot; target=&quot;_blank&quot;&gt;Node.js 性能分析之火焰图&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;5-附录&quot;&gt;5. 附录&lt;/h1&gt;
-&lt;h2 id=&quot;ID51&quot;&gt;5.1 解析完成的Profile日志内容&lt;/h2&gt;
-
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/0a77653e033db0779e55993f97ed65ca.js&quot;&gt; &lt;/script&gt;
-
-</description>
-				<pubDate>Tue, 27 Feb 2018 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/02/node-profile-practice/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/02/node-profile-practice/</guid>
 			</item>
 		
 	</channel>

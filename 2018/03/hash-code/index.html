@@ -1,0 +1,403 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>V8 Blog | Optimizing hash tables: hiding the hash code 2018-01-29 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2018/03/hash-code/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2018/03/hash-code/">V8 Blog | Optimizing hash tables: hiding the hash code 2018-01-29</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>21 Mar 2018</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/V8">V8</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Translation">Translation</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h1 id="1-原文">1. 原文</h1>
+<p><a href="https://v8project.blogspot.hk/2018/01/hash-code.html" target="_blank">Optimizing hash tables: hiding the hash code</a></p>
+
+<h1 id="2-摘要翻译">2. 摘要翻译</h1>
+<p>ECMAScript 2015引入了几种新的数据结构，如：Map、Set、WeakSet、WeakMap，它们的底层实现都是hash table。本文会详细介绍通过<a href="https://bugs.chromium.org/p/v8/issues/detail?id=6404" target="_blank">最近的几项性能优化</a>在<a href="https://v8project.blogspot.com/2017/10/v8-release-63.html" target="_blank">V8 v6.3+</a>里是如何存储hash table的key的。</p>
+
+<h2 id="hash-code">Hash code</h2>
+<p>一个<a href="https://en.wikipedia.org/wiki/Hash_function" target="_blank">hash function</a>是用来将一个key映射到hash table中某个位置上的。而_hash code_则是hash function根据某个key运算后得到的结果。</p>
+
+<p>在V8中，hash code是一个随机数字（random number），与object value无关。因此，我们无法重新计算它，就意味着一定要存储它。</p>
+
+<p>因为在JS中，对象是可以作为key来使用的。因此之前是将hash code作为一个private symbol存储在key对象里的。private symbol在V8里类似<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol" target="_blank">Symbol</a>，除了几点：它不可被枚举，也不会被暴露到JS的用户空间内。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kd">function</span> <span class="nx">GetObjectHash</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kr">const</span> <span class="nx">hash</span> <span class="o">=</span> <span class="nx">key</span><span class="p">[</span><span class="nx">hashCodeSymbol</span><span class="p">];</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">IS_UNDEFINED</span><span class="p">(</span><span class="nx">hash</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">hash</span> <span class="o">=</span> <span class="p">(</span><span class="nx">MathRandom</span><span class="p">()</span> <span class="o">*</span> <span class="mh">0x40000000</span><span class="p">)</span> <span class="o">|</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">hash</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">hash</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="nx">key</span><span class="p">[</span><span class="nx">hashCodeSymbol</span><span class="p">]</span> <span class="o">=</span> <span class="nx">hash</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">return</span> <span class="nx">hash</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>这种方案工作得很好，因为在对象被加到hash table之前我们不需要为hash code字段预留内存。直到加入到hash table的时间点，private symbol才会被存储到对象内。</p>
+
+<p>V8可以优化hash code symbol查找，通过使用和其他属性查找相同的IC System方案来提供非常快的hash code查找。这套方案在<a href="https://en.wikipedia.org/wiki/Inline_caching#Monomorphic_inline_caching" target="_blank">monomorphic IC查找</a>上工作的很好，前提条件是当所有的key都拥有相同的<a href="https://github.com/v8/v8/wiki/Design-Elements" target="_blank">hidden class</a>。然而真实世界的JS代码一般不按这套方式编写，且key经常都拥有不同的hidden class导致如果使用<a href="https://en.wikipedia.org/wiki/Inline_caching#Monomorphic_inline_caching" target="_blank">monomorphic IC查找</a>来查找hash code会非常慢。</p>
+
+<p>使用private symbol方案的另一个问题是它导致存储hash code的对象发生了hidden class transition。这导致了低效的多态代码，不单单只是反应在hash code查找上，还反应在key对象的其他属性查找上，而且还导致了优化代码的<a href="https://floitsch.blogspot.com/2012/03/optimizing-for-v8-inlining.html" target="_blank">deoptimization</a>。</p>
+
+<h2 id="javascript-object-backing-stores">JavaScript object backing stores</h2>
+<p>每个JS对象（JSObject）在V8中除了头部之外还使用了两个word，一个用来存储指向elements backing store的指针，另一个用来存储指向properties backing store的指针。</p>
+
+<p>elements backing store用来存储类似<a href="https://tc39.github.io/ecma262/#sec-array-index" target="_blank">array indices</a>的属性，而backing store则是存储key是字符串和symbol的属性。查看<a href="https://v8project.blogspot.com/2017/08/fast-properties.html" target="_blank">这篇博客</a>来进一步了解backing stores。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">x</span> <span class="o">=</span> <span class="p">{};</span>
+<span class="nx">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bar&#39;</span><span class="p">;</span>      <span class="c1">// ← stored in elements</span>
+<span class="nx">x</span><span class="p">[</span><span class="s1">&#39;foo&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;bar&#39;</span><span class="p">;</span>  <span class="c1">// ← stored in properties</span></code></pre></figure>
+
+<h2 id="hiding-the-hash-code">Hiding the hash code</h2>
+<p>最简单存储hash code的解决方案就是再在JS对象上拓展一个word的空间，将hash code直接存储在对象里。然而这样做会导致那些未被加入hash table的对象里的内存空间被浪费。作为替代方案，我们尝试将hash code存储在elements store或properties store内。</p>
+
+<p>elements backing store是一个包含了长度和所有elements的数组。在这里我们没有什么能做的，因为将hash code存储在reserved slot（类似the 0th index）仍旧会在未将对象作为hash table的key使用的时候浪费内存。</p>
+
+<p>因此我们将视线转到properties backing store。properties backing store的数据结构有两种：数组和字典。</p>
+
+<p>不像elements backing store使用的数组没有长度限制（upper limit），properties backing store中的数组有1022个值的长度限制（upper limit）。V8将长度超限的情况转而使用字典，为了性能考虑。（这里我稍微简化了下 —— 在其他某些场景下V8也是可以使用字典的）</p>
+
+<p>因此，properties backing store有三种可能的状态：</p>
+
+<ul>
+  <li>空（没有属性）</li>
+  <li>数组（最多可以存储1022个值）</li>
+  <li>字典</li>
+</ul>
+
+<h3 id="the-properties-backing-store-is-empty">The properties backing store is empty</h3>
+<p>当<code>空</code>的情况，我们可以直接把hash code存储在JS对象的这个offset里：</p>
+
+<p><img src="data:image/png;base64,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" /></p>
+
+<h3 id="the-properties-backing-store-is-an-array">The properties backing store is an array</h3>
+<p>在32位机器上，V8中的整型是长度小于2<sup>31</sup>的unboxed数字，这被称为<a href="https://wingolog.org/archives/2011/05/18/value-representation-in-javascript-implementations" target="_blank">Smi</a>。在一个Smi中，最小的一位（the least significant bit）是用来区分和指针之间差异的tag，其他的31位（31 bits）用来存储整型的值。</p>
+
+<p>通常情况下，数组将它们的长度存储成Smi。因为我们知道这里的数组的容量上限是1022，我们只需要10位（10 bits）来存储这个长度。我们就可以使用剩下的21位（21 bits）来存储hash code！</p>
+
+<p><img src="data:image/png;base64," /></p>
+
+<h3 id="the-properties-backing-store-is-a-dictionary">The properties backing store is a dictionary</h3>
+<p><code>字典</code>的情况，我们为存储hash code增加了字典一个word的长度，在字典的开头专门辟出了一个slot专门用来存储hash code。这种解决方案默认会浪费一个word长度的内存空间，因为按比例来看这个尺寸的空间增长的影响并不像内存的情况那样大。</p>
+
+<p><img src="data:image/png;base64," /></p>
+
+<p>使用这些解决方案之后，hash code的查找就不再需要通过复杂的JS对象属性查找机制了。</p>
+
+<h2 id="performance-improvements">Performance improvements</h2>
+<p>通过<a href="https://github.com/kpdecker/six-speed" target="_blank">SixSpeed</a> benchmark跟踪的Map和Set性能变化反应性能提升了大约500%（a ~500% improvement）。</p>
+
+<p><img src="data:image/png;base64," /></p>
+
+<p>这项改进也提升了基准benchmark <a href="https://webkit.org/blog/7536/jsc-loves-es6/" target="_blank">ARES6</a>的性能5%（a 5% improvement）。</p>
+
+<p><img src="data:image/png;base64," /></p>
+
+<p>在使用<a href="https://v8project.blogspot.hk/2018/01/hash-code.html" target="_blank">Emberperf</a> benchmark套件中的某个benchmark测试Ember.js的时候也反馈了18%的性能提升（an 18% improvement）。</p>
+
+<p><img src="data:image/png;base64," /></p>
+
+<h1 id="3-注">3. 注</h1>
+<p>翻译Smi的时候查看上文提到的链接中的内容辅助理解了下，这里放一下链接里的原文，方便以后查看：</p>
+
+<p>来源：<a href="https://wingolog.org/archives/2011/05/18/value-representation-in-javascript-implementations" target="_blank">value representation in javascript implementations</a></p>
+
+<p>引用：</p>
+
+<blockquote>
+  <p><a href="http://code.google.com/p/v8/source/browse/branches/bleeding_edge/src/objects.h#112" target="_blank">Google’s V8 JavaScript engine still does it this way.</a> This yields 31-bit immediate signed integers; you can just do a signed right-shift to get the value. They call them “smi” values, for “small integers”; they are more commonly called “fixnums”. There are other fun tricks you can do to avoid shifts for some common operations, like addition. Note that they also take advantage of the four-byte alignment (in their case) to encode another immediate value, “failure objects”, using the other low bit.</p>
+
+  <p>The size of a tagged pointer is the size of a pointer, so 32 bits on a 32-bit machine, and 64 on a 64-bit machine. V8 doesn’t actually use 63-bit smi values on 64-bit machines, AFAIK.</p>
+</blockquote>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2018/03/hash-code/">V8 Blog | Optimizing hash tables: hiding the hash code 2018-01-29</a></li>
+    
+    <li><a href="/2018/03/speedometer-2/">V8 Blog | Chrome welcomes Speedometer 2.0! 2018-01-24</a></li>
+    
+    <li><a href="/2018/03/v8-release-64/">V8 Blog | V8 release v6.4 2017-12-19</a></li>
+    
+    <li><a href="/2018/03/javascript-code-coverage/">V8 Blog | JavaScript code coverage 2017-12-13</a></li>
+    
+    <li><a href="/2018/03/orinoco-parallel-scavenger/">V8 Blog | Orinoco: young generation garbage collection 2017-11-29</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2018/03/hash-code/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
