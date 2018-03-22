@@ -7,6 +7,40 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>V8 Blog | Chrome welcomes Speedometer 2.0! 2018-01-24</title>
+				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2018/01/speedometer-2.html&quot; target=&quot;_blank&quot;&gt;Chrome welcomes Speedometer 2.0!&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;2-摘要翻译&quot;&gt;2. 摘要翻译&lt;/h1&gt;
+&lt;p&gt;自从2014年Speedometer 1.0发布以来，Blink和V8团队一直都在使用这个benchmark作为真实世界众多流行的JS框架的映射进行性能评估，并获得了显著的性能提升。经验证流行网站上的页面加载速度的提升确实也提高了这个benchmark的得分。&lt;/p&gt;
+
+&lt;p&gt;JS语言也在急速进化，添加了诸如ES2015等众多新的语言特性。这也导致了大量框架以及Speedometer 1.0显得越来越过时。因此再使用Speedometer 1.0作为优化指标的话，将会显著提升遇到性能检验指标和真实使用的语法模板不一致的情况的风险。&lt;/p&gt;
+
+&lt;p&gt;Blink和V8团队都非常欢迎&lt;a href=&quot;https://webkit.org/blog/8063/speedometer-2-0-a-benchmark-for-modern-web-app-responsiveness/&quot; target=&quot;_blank&quot;&gt;最近release的升级版Speedometer 2.0 Benchmark&lt;/a&gt;。在针对符合当前时代的框架、转译器、ES2015语言特性进行调整之后，该benchmark重新成为主流的JS优化指标。Speedometer 2.0将加入真实世界性能衡量指标工具，成为其中的一份子。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;&quot; target=&quot;_blank&quot;&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;chromes-mileage-so-far&quot;&gt;Chrome’s mileage so far&lt;/h2&gt;
+&lt;p&gt;Blink和V8团队已经使用该benchmark完成了一次提升测试，来反应该benchmark对我们有多重要并继续我们聚焦在真实世界性能提升的旅程。比对2017年7月release的Chrome 60和最新的Chrome 64，在一台mid-2016 Macbook Pro (4 core, 16GB RAM)机器上跑完benchmark之后总分提升了21%。&lt;/p&gt;
+
+&lt;p&gt;接下来让我们聚焦Speedometer 2.0中的单个条目。藉由&lt;a href=&quot;https://chromium.googlesource.com/v8/v8/+/808dc8cff3f6530a627ade106cbd814d16a10a18&quot; target=&quot;_blank&quot;&gt;Function.prototype.bind&lt;/a&gt;的性能提升，React runtime性能提升了一倍。Vanilla-ES2015、AngularJS、Preact以及VueJS藉由&lt;a href=&quot;https://chromium-review.googlesource.com/c/v8/v8/+/700494&quot; target=&quot;_blank&quot;&gt;speeding up the JSON parsing&lt;/a&gt;和其他诸多性能问题修复提升了19%–42%的性能。
+…&lt;/p&gt;
+
+&lt;p&gt;较之Speedometer 1.0最大的改动应该是final score的计算。之前版本的总分平均值的计算方式只对速度最慢的条目有意义。当我们查看所有条目耗时总量的时候，EmberJS-Debug版本的耗时是最快框架的将近35倍。因此提升EmberJS-Debug版本的性能看上去最有潜力。&lt;/p&gt;
+
+&lt;p&gt;Speedometer 2.0使用几何平均数（geometric mean）来计算final score，这种计算方式对各框架来说更公平。来看之前提到的最快框架Preact最近的16.5%的性能提升，如果我们因为这个框架表现优异（总耗时很少）就忽略16.5%性能提升对这个框架来说的意义是很不公平的。&lt;/p&gt;
+
+&lt;p&gt;我们正在通过提升Speedometer 2.0 benchmark评分的方式来进一步提升性能，并最终回馈到真实世界的WEB环境。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Wed, 21 Mar 2018 14:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/03/speedometer-2/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/03/speedometer-2/</guid>
+			</item>
+		
+			<item>
 				<title>V8 Blog | V8 release v6.4 2017-12-19</title>
 				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2017/12/v8-release-64.html&quot; target=&quot;_blank&quot;&gt;V8 release v6.4&lt;/a&gt;&lt;/p&gt;
@@ -825,225 +859,6 @@ $ stackvis dtrace flamegraph-svg &amp;lt; stacks.out &amp;gt; stacks.svg
 				<pubDate>Tue, 27 Feb 2018 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/02/node-profile-practice/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2018/02/node-profile-practice/</guid>
-			</item>
-		
-			<item>
-				<title>Node.JS Profile 1.3 Node内存监控实践</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-内存metrics-api&quot; id=&quot;markdown-toc-2-内存metrics-api&quot;&gt;2. 内存Metrics API&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-processmemoryusage&quot; id=&quot;markdown-toc-21-processmemoryusage&quot;&gt;2.1 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage&quot; target=&quot;_blank&quot;&gt;process.memoryUsage&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-requirev8getheapstatistics&quot; id=&quot;markdown-toc-22-requirev8getheapstatistics&quot;&gt;2.2 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics&quot; target=&quot;_blank&quot;&gt;require(“v8”).getHeapStatistics&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#23-requirev8getheapspacestatistics&quot; id=&quot;markdown-toc-23-requirev8getheapspacestatistics&quot;&gt;2.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot; target=&quot;_blank&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#24-top--ps&quot; id=&quot;markdown-toc-24-top--ps&quot;&gt;2.4 top &amp;amp; ps&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-内存泄露--chrome-dev-tool&quot; id=&quot;markdown-toc-3-内存泄露--chrome-dev-tool&quot;&gt;3. 内存泄露 &amp;amp; Chrome Dev Tool&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-范例&quot; id=&quot;markdown-toc-31-范例&quot;&gt;3.1 范例&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-查找问题&quot; id=&quot;markdown-toc-32-查找问题&quot;&gt;3.2 查找问题&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-核心内存metrics&quot; id=&quot;markdown-toc-4-核心内存metrics&quot;&gt;4. 核心内存Metrics&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-node内存&quot; id=&quot;markdown-toc-41-node内存&quot;&gt;4.1 Node内存&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#42-node-gc&quot; id=&quot;markdown-toc-42-node-gc&quot;&gt;4.2 Node GC&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-工具&quot; id=&quot;markdown-toc-5-工具&quot;&gt;5. 工具&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID51&quot; id=&quot;markdown-toc-ID51&quot;&gt;5.1 内存泄露 or 正常运行 范例脚本&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID52&quot; id=&quot;markdown-toc-ID52&quot;&gt;5.2 GC解析管道脚本&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID53&quot; id=&quot;markdown-toc-ID53&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot; target=&quot;_blank&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-资料&quot; id=&quot;markdown-toc-6-资料&quot;&gt;6. 资料&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;本文是系列文章&lt;a href=&quot;https://xenojoshua.com/2018/01/node-profile/&quot; target=&quot;_blank&quot;&gt;Node.JS Profile&lt;/a&gt;的一部分，完整的文章列表请去总章查看。&lt;/p&gt;
-
-&lt;p&gt;本文是Node内存相关文章的其中一篇，主要负责介绍内存监控相关的API及实践操作。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-内存metrics-api&quot;&gt;2. 内存Metrics API&lt;/h1&gt;
-&lt;p&gt;本节介绍几个非常有用的获取内存相关信息的API方法。&lt;/p&gt;
-
-&lt;h2 id=&quot;21-processmemoryusage&quot;&gt;2.1 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/process.html#process_process_memoryusage&quot; target=&quot;_blank&quot;&gt;process.memoryUsage&lt;/a&gt;&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;rss：node进程总内存占用量&lt;/li&gt;
-  &lt;li&gt;heapTotal：总堆内存占用量（已申请下来的）&lt;/li&gt;
-  &lt;li&gt;heapUsed：实际堆内存使用量&lt;/li&gt;
-  &lt;li&gt;external：扩展等外部程序的内存占用量&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;常用来查看基础的内存信息，特别是rss很有用。&lt;/p&gt;
-
-&lt;h2 id=&quot;22-requirev8getheapstatistics&quot;&gt;2.2 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapstatistics&quot; target=&quot;_blank&quot;&gt;require(“v8”).getHeapStatistics&lt;/a&gt;&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;total_heap_size：总堆内存占用量（已申请下来的），同&lt;code&gt;process.memoryUsage().heapTotal&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;total_heap_size_executable：字节码、优化后的代码等可执行的内容占用的内存量&lt;/li&gt;
-  &lt;li&gt;total_physical_size：找到部分解释说是&lt;code&gt;Commited size&lt;/code&gt;，测试下来该值
-    &lt;ul&gt;
-      &lt;li&gt;used_heap_size &amp;lt; total_physical_size &amp;lt; total_heap_size&lt;/li&gt;
-      &lt;li&gt;Committed memory is, essentially, all the memory which has been allocated by applications, whether it’s used or not.&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;total_available_size：剩余可用的堆内存量，包括尚未向操作系统申请的部分，其实就是&lt;code&gt;heap_size_limit - used_heap_size&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;used_heap_size：实际堆内存使用量，同&lt;code&gt;process.memoryUsage().heapUsed&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;heap_size_limit：最大可用堆内存（上限）&lt;/li&gt;
-  &lt;li&gt;malloced_memory：实际测试是一个很小的值，有解释说是：current amount of memory, obtained via malloc&lt;/li&gt;
-  &lt;li&gt;peak_malloced_memory：没搜到任何说明，有必要可以读下node源码&lt;/li&gt;
-  &lt;li&gt;does_zap_garbage：覆盖堆垃圾的模式的开关&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;常用来查看堆上限大小。&lt;/p&gt;
-
-&lt;h2 id=&quot;23-requirev8getheapspacestatistics&quot;&gt;2.3 &lt;a href=&quot;https://nodejs.org/docs/v8.4.0/api/v8.html#v8_v8_getheapspacestatistics&quot; target=&quot;_blank&quot;&gt;require(“v8”).getHeapSpaceStatistics&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;按内存空间分类&lt;code&gt;space&lt;/code&gt;种类不同，给出不同空间的内存使用状况统计。实用性不大，一般来说实际使用中需要关心的其实只有old space，且仅仅只有large object space。&lt;/p&gt;
-
-&lt;h2 id=&quot;24-top--ps&quot;&gt;2.4 top &amp;amp; ps&lt;/h2&gt;
-&lt;p&gt;使用系统ps命令更快获取进程的内存占用情况：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;ps -p $(pgrep -lfa node | grep leak-and-gc.js | awk '{print $1}') -o rss,vsz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;以及：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;top -pid $(pgrep -lfa node | grep leak-and-gc.js | awk '{print $1}')
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&quot;3-内存泄露--chrome-dev-tool&quot;&gt;3. 内存泄露 &amp;amp; Chrome Dev Tool&lt;/h1&gt;
-&lt;p&gt;本节会提供实际的内存泄露例子，并指导如何使用工具进行问题点的查找。&lt;/p&gt;
-
-&lt;h2 id=&quot;31-范例&quot;&gt;3.1 范例&lt;/h2&gt;
-&lt;p&gt;内存泄露的实际例子可以使用下面&lt;a href=&quot;#ID51&quot;&gt;5.1里的脚本&lt;/a&gt;进行试验。&lt;/p&gt;
-
-&lt;h2 id=&quot;32-查找问题&quot;&gt;3.2 查找问题&lt;/h2&gt;
-&lt;p&gt;使用node的&lt;a href=&quot;https://nodejs.org/en/docs/inspector/&quot; target=&quot;_blank&quot;&gt;inspector&lt;/a&gt;来进行运行状态分析（当然，这工具可以做更多的事情）。关于Chrome Dev Tool，可以看&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/&quot;&gt;官方教程&lt;/a&gt;。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;DEBUG=* node --inspect xxx.js&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;然后打开浏览器&lt;code&gt;chrome://inspect/&lt;/code&gt;，找到你的脚本进行调试。也可以使用&lt;a href=&quot;#ID53&quot;&gt;5.3里提到的工具&lt;/a&gt;，简化操作。&lt;/p&gt;
-
-&lt;p&gt;在打开的分析面板里，选中&lt;code&gt;Memory&lt;/code&gt;tab，一共有3个选项可以操作：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Take heap snapshot
-    &lt;ul&gt;
-      &lt;li&gt;获取node进程的堆快照&lt;/li&gt;
-      &lt;li&gt;点击之后需要等一段时间采集数据，然后就可以看到heap数据&lt;/li&gt;
-      &lt;li&gt;这个选项信息最全，一般是最常用的内存观察选项&lt;/li&gt;
-      &lt;li&gt;一般来说按最右边的&lt;code&gt;Retained Size&lt;/code&gt;从大到小排序，就找到很有用的信息了&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Record allocation profile
-    &lt;ul&gt;
-      &lt;li&gt;以内存使用者的角度查看内存的分配情况&lt;/li&gt;
-      &lt;li&gt;在需要知道内存使用大户是哪个部分的业务的情况下很有用&lt;/li&gt;
-      &lt;li&gt;一样需要点击之后等一段时间进行采集&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Record allocation timeline
-    &lt;ul&gt;
-      &lt;li&gt;以时间轴为单位查看单位时间内的内存分配量&lt;/li&gt;
-      &lt;li&gt;在需要知道node的内存与时间关系的情况下很有用&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;结果页面上会有多个列，里面的意义这里简单介绍下，方便理解和查找问题：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Constructor：对象构造函数名称&lt;/li&gt;
-  &lt;li&gt;Distance：对象到根节点的引用层级&lt;/li&gt;
-  &lt;li&gt;Objects Count：对象的数量&lt;/li&gt;
-  &lt;li&gt;Shallow Size： 对象本身所占用的内存，这里不包含其引用对象所占的内存&lt;/li&gt;
-  &lt;li&gt;Retained Size： 对象所占总内存&lt;/li&gt;
-  &lt;li&gt;Retainers：对象的引用层级关系&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;和RSS类似，这里的&lt;code&gt;Retained Size&lt;/code&gt;是最重要需要关注的值。&lt;/p&gt;
-
-&lt;p&gt;在线上运行时有的时候如果需要看堆快照的话，可以使用第三方库&lt;a href=&quot;https://github.com/bnoordhuis/node-heapdump&quot; target=&quot;_blank&quot;&gt;bnoordhuis/node-heapdump&lt;/a&gt;在runtime使用代码导出快照。然后使用Chrome Dev Tool打开这个快照文件来查看内容。&lt;/p&gt;
-
-&lt;p&gt;Chrome Dev Tool可以加载多个堆快照，并对他们进行比对分析，这对内存量增长变化的分析非常有用。可以在程序里隔一定时间获取一次堆快照，然后线下慢慢分析。&lt;/p&gt;
-
-&lt;p&gt;更详细的可以看博客：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough&quot; target=&quot;_blank&quot;&gt;DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH&lt;/a&gt;，这篇文章里的node和chrome版本有点老，但大致的观点和步骤都是没有问题的&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27310544&quot; target=&quot;_blank&quot;&gt;Node.js 性能调优之内存篇(二)——heapdump&lt;/a&gt;，这篇中文的更容易阅读，界面和操作等细节更多&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;4-核心内存metrics&quot;&gt;4. 核心内存Metrics&lt;/h1&gt;
-&lt;p&gt;本节整理出监控Node内存的时候需要关心的核心Metrics。&lt;/p&gt;
-
-&lt;h2 id=&quot;41-node内存&quot;&gt;4.1 Node内存&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;rss：node进程总内存占用量&lt;/li&gt;
-  &lt;li&gt;heapTotal：总堆内存占用量（已申请下来的）&lt;/li&gt;
-  &lt;li&gt;heapUsed：实际堆内存使用量&lt;/li&gt;
-  &lt;li&gt;external：扩展等外部程序的内存占用量，在某些情况下rss很大但堆内存很小的时候，就需要定点关注外部插件使用的内存了&lt;/li&gt;
-  &lt;li&gt;heapSizeLimit：堆内存上限，建议在node启动的时候每次都确定好堆内存大小&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;按空间分类的堆内存信息可以酌情收集，如果有需要分析单独的&lt;code&gt;新生代&lt;/code&gt;或&lt;code&gt;老生代&lt;/code&gt;内存情况的话。&lt;/p&gt;
-
-&lt;h2 id=&quot;42-node-gc&quot;&gt;4.2 Node GC&lt;/h2&gt;
-&lt;p&gt;所有的GC相关Metrics采集都应该按GC触发的时间节点进行收集，毕竟数据来自GC行为，没有GC行为那也就没数据可采集，所以不可能做到类似CPU和Node进程内存这样的按时间定时进行采集。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;gcTime：GC发生的时间，精度可能需要提高到ms级别，而不是second级别&lt;/li&gt;
-  &lt;li&gt;gcType：GC类型，一般来说新生代的scavenge回收可以忽略，这个类型GC的量级及可优化性都比较低&lt;/li&gt;
-  &lt;li&gt;gcPause：GC中断时长，需要按不同GC类型进行分类收集，老生代的&lt;code&gt;markSweepCompact&lt;/code&gt;数据最为关键&lt;/li&gt;
-  &lt;li&gt;sizeBefore：GC前内存大小 bytes&lt;/li&gt;
-  &lt;li&gt;sizeAfter：GC后内存大小 bytes&lt;/li&gt;
-  &lt;li&gt;holesBefore：GC前内存空洞大小 bytes&lt;/li&gt;
-  &lt;li&gt;holesAfter：GC后内存空洞大小 bytes&lt;/li&gt;
-  &lt;li&gt;allocated：GC间，内存分配量 bytes&lt;/li&gt;
-  &lt;li&gt;promoted：GC间，对象晋升量 bytes&lt;/li&gt;
-  &lt;li&gt;allocationThroughput：GC间，新生代内存申请速率 bytes/ms&lt;/li&gt;
-  &lt;li&gt;promotionRatio：当前GC中内存从新生代晋升到老生代的百分比 %&lt;/li&gt;
-  &lt;li&gt;incrementalWalltime：增量标记时长 ms&lt;/li&gt;
-  &lt;li&gt;compactionSpeed：内存Compacting速率 bytes/ms&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;5-工具&quot;&gt;5. 工具&lt;/h1&gt;
-&lt;h2 id=&quot;ID51&quot;&gt;5.1 内存泄露 or 正常运行 范例脚本&lt;/h2&gt;
-&lt;p&gt;为了观察内存泄露和GC日志，需要一个范例运行的脚本，我这里制作了一个。如何使用请查看该脚本头部的注释：&lt;/p&gt;
-
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/024d11c54c1a8e474ded5269d54f5c99.js&quot;&gt; &lt;/script&gt;
-
-&lt;h2 id=&quot;ID52&quot;&gt;5.2 GC解析管道脚本&lt;/h2&gt;
-&lt;p&gt;可配合&lt;a href=&quot;#ID51&quot;&gt;5.1的脚本&lt;/a&gt;一起使用，当然使用你自己的业务脚本也是OK的。&lt;/p&gt;
-
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js&quot;&gt; &lt;/script&gt;
-
-&lt;h2 id=&quot;ID53&quot;&gt;5.3 &lt;a href=&quot;https://chrome.google.com/webstore/detail/nodejs-v8-inspector-manag/gnhhdgbaldcilmgcpfddgdbkhjohddkj&quot; target=&quot;_blank&quot;&gt;NIM(Node.js 调试管理工具)&lt;/a&gt;&lt;/h2&gt;
-&lt;p&gt;可在node进程使用&lt;code&gt;--inspect&lt;/code&gt; flag时，自动打开chrome的调试tab。&lt;/p&gt;
-
-&lt;h1 id=&quot;6-资料&quot;&gt;6. 资料&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://nodejs.org/en/docs/inspector/&quot; target=&quot;_blank&quot;&gt;Debugging Node.js Apps&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/&quot; target=&quot;_blank&quot;&gt;Dev工具官方教程&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developers.google.com/web/tools/chrome-devtools/memory-problems/&quot; target=&quot;_blank&quot;&gt;解决内存问题&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.yld.io/2015/08/10/debugging-memory-leaks-in-node-js-a-walkthrough&quot; target=&quot;_blank&quot;&gt;DEBUGGING MEMORY LEAKS IN NODE.JS - A WALKTHROUGH&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27310544&quot; target=&quot;_blank&quot;&gt;Node.js 性能调优之内存篇(二)——heapdump&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/shimo&quot; target=&quot;_blank&quot;&gt;石墨文档技术酒馆&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/bnoordhuis/node-heapdump&quot; target=&quot;_blank&quot;&gt;bnoordhuis/node-heapdump&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/33816534&quot; target=&quot;_blank&quot;&gt;V8 内存浅析&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Sat, 24 Feb 2018 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/02/node-memory-monitor/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/02/node-memory-monitor/</guid>
 			</item>
 		
 	</channel>
