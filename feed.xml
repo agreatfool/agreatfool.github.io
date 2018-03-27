@@ -614,6 +614,7 @@
 &lt;p&gt;列表由新到旧逆向排序，可能会有更新不及时的情况，请留言备注：&lt;/p&gt;
 
 &lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/03/background-compilation/&quot; target=&quot;_blank&quot;&gt;V8 Blog | Background compilation 2018-03-27&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/03/tracing-js-dom/&quot; target=&quot;_blank&quot;&gt;V8 Blog | Tracing from JS to the DOM and back again 2018-03-01&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/03/Lazy-deserialization/&quot; target=&quot;_blank&quot;&gt;V8 Blog | Lazy deserialization 2018-02-12&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://xenojoshua.com/2018/03/v8-release-65/&quot; target=&quot;_blank&quot;&gt;V8 Blog | V8 release v6.5 2018-02-01&lt;/a&gt;&lt;/li&gt;
