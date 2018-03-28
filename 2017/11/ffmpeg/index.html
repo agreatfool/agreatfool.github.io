@@ -190,7 +190,7 @@
   <li>-preset：指定编码的配置。x264编码算法有很多可供配置的参数，不同的参数值会导致编码的速度大相径庭，甚至可能影响质量。为了免去用户了解算法，然后手工配置参数的麻烦。x264提供了一些预设值，而这些预设值可以通过preset指定。fast即可。</li>
   <li>-crf：这是最重要的一个选项，用于指定输出视频的质量，取值范围是0-51，默认值为23，数字越小输出视频的质量越高。这个选项会直接影响到输出视频的码率。一般20减一点点就很好了。</li>
   <li>-y：强制覆盖输出文件，即便该文件已存在</li>
-  <li>-vf：<code>scale=-1:720</code>，意思就是把原视频的横向限死到720P，然后纵向自适应</li>
+  <li>-vf：<code>scale=-1:720</code>，意思就是把原视频的纵向限死到720P，然后横向自适应</li>
   <li>-acodec：libmp3lame，音频解码使用MP3</li>
   <li>-ab：音频码率：128 kb/s</li>
 </ul>
@@ -222,6 +222,18 @@ file ‘/path/to/file3’</p>
 <p>然后使用命令进行合并：</p>
 <blockquote>
   <p>ffmpeg -f concat -i ~/Downloads/mylist.txt -c copy ~/Downloads/noname.mov</p>
+</blockquote>
+
+<p>或者更简单的一个命令搞定：</p>
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>ffmpeg -i “concat:noname1.mov</td>
+        <td>noname2.mov” -c copy noname.mov</td>
+      </tr>
+    </tbody>
+  </table>
 </blockquote>
 
 <blockquote>
