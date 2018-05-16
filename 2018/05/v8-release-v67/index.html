@@ -155,13 +155,13 @@
 <p><a href="https://v8project.blogspot.hk/2018/05/v8-release-v67.html" target="_blank">V8 release v6.7</a></p>
 
 <h1 id="2-摘要翻译">2. 摘要翻译</h1>
-<p>每柳州，我们会创建一个新的V8分支作为我们的release步骤的一部分。每个分支是在Chrome的Beta milestone之前，从V8的 Git master分支上分出来的。今天我们很高兴地宣布我们最新的分支，V8版本6.7，在几周之后同步和Chrome67稳定版本一起release之前将会保持beta装填。V8 6.7充满着各种对开发者有帮助的好东西。这篇文章将会提供一个release的预览。</p>
+<p>每柳州，我们会创建一个新的V8分支作为我们的<a href="https://github.com/v8/v8/wiki/Release-Process" target="_blank">release流程</a>的一部分。每个分支是在Chrome的Beta milestone之前，从V8的 Git master分支上分出来的。今天我们很高兴地宣布我们最新的分支，<a href="https://chromium.googlesource.com/v8/v8.git/+log/branch-heads/6.7" target="_blank">V8版本6.7</a>，在几周之后同步和Chrome67稳定版本一起release之前将会保持beta装填。V8 6.7充满着各种对开发者有帮助的好东西。这篇文章将会提供一个release的预览。</p>
 
 <h2 id="javascript-language-features">JavaScript language features</h2>
-<p>V8 6.7实装了BigInt支持，并默认开启。BigInts是JavaScript中的一个新数字原始类型，能表示任何精度的数字。请阅读the Web Fundamentals article on BigInt这篇文章来获得更多关于BigInt的信息，关于BigInts是如何在JavaScript中被使用的，并了解V8中实现的更多细节信息。</p>
+<p>V8 6.7实装了BigInt支持，并默认开启。BigInts是JavaScript中的一个新数字原始类型，能表示任何精度的数字。请阅读<a href="https://developers.google.com/web/updates/2018/05/bigint" target="_blank">the Web Fundamentals article on BigInt</a>这篇文章来获得更多关于BigInt的信息，关于BigInts是如何在JavaScript中被使用的，并了解V8中实现的更多细节信息。</p>
 
 <h2 id="untrusted-code-mitigations">Untrusted code mitigations</h2>
-<p>在V8 6.7中，我们带来了更多针对”side-channel漏洞的解决方案”来防止信息被泄露给未受信任的JavaScript以及WebAssembly代码。</p>
+<p>在V8 6.7中，我们带来了更多针对”<a href="https://github.com/v8/v8/wiki/Untrusted-code-mitigations" target="_blank">side-channel漏洞的解决方案</a>“来防止信息被泄露给未受信任的JavaScript以及WebAssembly代码。</p>
 
 <h2 id="v8-api">V8 API</h2>
 <p>请使用<code>git log branch-heads/6.6..branch-heads/6.7 include/v8.h</code>来获得API改动的列表。</p>

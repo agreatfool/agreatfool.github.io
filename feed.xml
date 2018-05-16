@@ -12,13 +12,13 @@
 &lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2018/05/v8-release-v67.html&quot; target=&quot;_blank&quot;&gt;V8 release v6.7&lt;/a&gt;&lt;/p&gt;
 
 &lt;h1 id=&quot;2-摘要翻译&quot;&gt;2. 摘要翻译&lt;/h1&gt;
-&lt;p&gt;每柳州，我们会创建一个新的V8分支作为我们的release步骤的一部分。每个分支是在Chrome的Beta milestone之前，从V8的 Git master分支上分出来的。今天我们很高兴地宣布我们最新的分支，V8版本6.7，在几周之后同步和Chrome67稳定版本一起release之前将会保持beta装填。V8 6.7充满着各种对开发者有帮助的好东西。这篇文章将会提供一个release的预览。&lt;/p&gt;
+&lt;p&gt;每柳州，我们会创建一个新的V8分支作为我们的&lt;a href=&quot;https://github.com/v8/v8/wiki/Release-Process&quot; target=&quot;_blank&quot;&gt;release流程&lt;/a&gt;的一部分。每个分支是在Chrome的Beta milestone之前，从V8的 Git master分支上分出来的。今天我们很高兴地宣布我们最新的分支，&lt;a href=&quot;https://chromium.googlesource.com/v8/v8.git/+log/branch-heads/6.7&quot; target=&quot;_blank&quot;&gt;V8版本6.7&lt;/a&gt;，在几周之后同步和Chrome67稳定版本一起release之前将会保持beta装填。V8 6.7充满着各种对开发者有帮助的好东西。这篇文章将会提供一个release的预览。&lt;/p&gt;
 
 &lt;h2 id=&quot;javascript-language-features&quot;&gt;JavaScript language features&lt;/h2&gt;
-&lt;p&gt;V8 6.7实装了BigInt支持，并默认开启。BigInts是JavaScript中的一个新数字原始类型，能表示任何精度的数字。请阅读the Web Fundamentals article on BigInt这篇文章来获得更多关于BigInt的信息，关于BigInts是如何在JavaScript中被使用的，并了解V8中实现的更多细节信息。&lt;/p&gt;
+&lt;p&gt;V8 6.7实装了BigInt支持，并默认开启。BigInts是JavaScript中的一个新数字原始类型，能表示任何精度的数字。请阅读&lt;a href=&quot;https://developers.google.com/web/updates/2018/05/bigint&quot; target=&quot;_blank&quot;&gt;the Web Fundamentals article on BigInt&lt;/a&gt;这篇文章来获得更多关于BigInt的信息，关于BigInts是如何在JavaScript中被使用的，并了解V8中实现的更多细节信息。&lt;/p&gt;
 
 &lt;h2 id=&quot;untrusted-code-mitigations&quot;&gt;Untrusted code mitigations&lt;/h2&gt;
-&lt;p&gt;在V8 6.7中，我们带来了更多针对”side-channel漏洞的解决方案”来防止信息被泄露给未受信任的JavaScript以及WebAssembly代码。&lt;/p&gt;
+&lt;p&gt;在V8 6.7中，我们带来了更多针对”&lt;a href=&quot;https://github.com/v8/v8/wiki/Untrusted-code-mitigations&quot; target=&quot;_blank&quot;&gt;side-channel漏洞的解决方案&lt;/a&gt;“来防止信息被泄露给未受信任的JavaScript以及WebAssembly代码。&lt;/p&gt;
 
 &lt;h2 id=&quot;v8-api&quot;&gt;V8 API&lt;/h2&gt;
 &lt;p&gt;请使用&lt;code&gt;git log branch-heads/6.6..branch-heads/6.7 include/v8.h&lt;/code&gt;来获得API改动的列表。&lt;/p&gt;
