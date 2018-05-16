@@ -7,6 +7,32 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>V8 Blog | V8 release v6.7 2018-05-04</title>
+				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
+&lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2018/05/v8-release-v67.html&quot; target=&quot;_blank&quot;&gt;V8 release v6.7&lt;/a&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;2-摘要翻译&quot;&gt;2. 摘要翻译&lt;/h1&gt;
+&lt;p&gt;每柳州，我们会创建一个新的V8分支作为我们的release步骤的一部分。每个分支是在Chrome的Beta milestone之前，从V8的 Git master分支上分出来的。今天我们很高兴地宣布我们最新的分支，V8版本6.7，在几周之后同步和Chrome67稳定版本一起release之前将会保持beta装填。V8 6.7充满着各种对开发者有帮助的好东西。这篇文章将会提供一个release的预览。&lt;/p&gt;
+
+&lt;h2 id=&quot;javascript-language-features&quot;&gt;JavaScript language features&lt;/h2&gt;
+&lt;p&gt;V8 6.7实装了BigInt支持，并默认开启。BigInts是JavaScript中的一个新数字原始类型，能表示任何精度的数字。请阅读the Web Fundamentals article on BigInt这篇文章来获得更多关于BigInt的信息，关于BigInts是如何在JavaScript中被使用的，并了解V8中实现的更多细节信息。&lt;/p&gt;
+
+&lt;h2 id=&quot;untrusted-code-mitigations&quot;&gt;Untrusted code mitigations&lt;/h2&gt;
+&lt;p&gt;在V8 6.7中，我们带来了更多针对”side-channel漏洞的解决方案”来防止信息被泄露给未受信任的JavaScript以及WebAssembly代码。&lt;/p&gt;
+
+&lt;h2 id=&quot;v8-api&quot;&gt;V8 API&lt;/h2&gt;
+&lt;p&gt;请使用&lt;code&gt;git log branch-heads/6.6..branch-heads/6.7 include/v8.h&lt;/code&gt;来获得API改动的列表。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Wed, 16 May 2018 15:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2018/05/v8-release-v67/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2018/05/v8-release-v67/</guid>
+			</item>
+		
+			<item>
 				<title>V8 Blog | Adding BigInts to V8 2018-05-02</title>
 				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2018/05/bigint.html&quot; target=&quot;_blank&quot;&gt;Adding BigInts to V8&lt;/a&gt;&lt;/p&gt;
@@ -713,61 +739,6 @@
 				<pubDate>Wed, 21 Mar 2018 14:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2018/03/speedometer-2/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2018/03/speedometer-2/</guid>
-			</item>
-		
-			<item>
-				<title>V8 Blog | V8 release v6.4 2017-12-19</title>
-				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.hk/2017/12/v8-release-64.html&quot; target=&quot;_blank&quot;&gt;V8 release v6.4&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;2-摘要翻译&quot;&gt;2. 摘要翻译&lt;/h1&gt;
-&lt;h2 id=&quot;speed&quot;&gt;Speed&lt;/h2&gt;
-&lt;p&gt;V8 v6.4&lt;a href=&quot;https://bugs.chromium.org/p/v8/issues/detail?id=6971&quot; target=&quot;_blank&quot;&gt;提升&lt;/a&gt;了&lt;code&gt;instanceof&lt;/code&gt;操作符的性能达&lt;code&gt;3.6倍&lt;/code&gt;。经&lt;a href=&quot;https://github.com/v8/web-tooling-benchmark&quot; target=&quot;_blank&quot;&gt;V8’s Web Tooling Benchmark&lt;/a&gt;测试，uglify-js比之前快了15-20%。&lt;/p&gt;
-
-&lt;p&gt;这个版本也定位了一些&lt;code&gt;Function.prototype.bind&lt;/code&gt;中的性能障碍。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakMap&quot; target=&quot;_blank&quot;&gt;WeakMap&lt;/a&gt;和&lt;a href=&quot;https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/WeakSet&quot; target=&quot;_blank&quot;&gt;WeakSet&lt;/a&gt;现在使用&lt;a href=&quot;https://v8project.blogspot.com/2017/11/csa.html&quot; target=&quot;_blank&quot;&gt;CodeStubAssembler&lt;/a&gt;来进行实现，性能提升了&lt;code&gt;5倍&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;经过努力，内置的array性能也得到了提升，通过&lt;code&gt;CodeStubAssembler&lt;/code&gt;重新实现，&lt;code&gt;Array.prototype.slice&lt;/code&gt;的性能提升了约&lt;code&gt;4倍&lt;/code&gt;。此外，&lt;code&gt;Array.prototype.map&lt;/code&gt;和&lt;code&gt;Array.prototype.filter&lt;/code&gt;现在大部分情况下都会被内联，拥有了和手写版本差不多的性能。&lt;/p&gt;
-
-&lt;p&gt;We worked to make out-of-bounds loads in arrays, typed arrays, and strings &lt;a href=&quot;https://bugs.chromium.org/p/v8/issues/detail?id=7027&quot; target=&quot;_blank&quot;&gt;no longer incur a ~10× performance hit&lt;/a&gt; after noticing &lt;a href=&quot;https://v8project.blogspot.com/2017/09/elements-kinds-in-v8.html#avoid-reading-beyond-length&quot; target=&quot;_blank&quot;&gt;this coding pattern&lt;/a&gt; being used in the wild.&lt;/p&gt;
-
-&lt;h2 id=&quot;memory&quot;&gt;Memory&lt;/h2&gt;
-&lt;p&gt;V8内置的代码对象以及字节码处理器现在在快照中将会懒式反序列化，这会显著降低每个Isolate的内存消耗。Benchmarks显示在Chrome打开普通网页的时候，每个tab可以节约下几百KB的内存。&lt;/p&gt;
-
-&lt;h2 id=&quot;ecmascript-language-features&quot;&gt;ECMAScript language features&lt;/h2&gt;
-&lt;p&gt;添加了两个新的正则表达式功能：&lt;/p&gt;
-
-&lt;p&gt;当&lt;code&gt;/u&lt;/code&gt;标识打开的时候，&lt;a href=&quot;https://mathiasbynens.be/notes/es-unicode-property-escapes&quot; target=&quot;_blank&quot;&gt;Unicode property escapes&lt;/a&gt;将默认启用：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;regexGreekSymbol&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/\p{Script_Extensions=Greek}/u;&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;regexGreekSymbol&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;π&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// → true&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;对&lt;a href=&quot;https://developers.google.com/web/updates/2017/07/upcoming-regexp-features#named_captures&quot; target=&quot;_blank&quot;&gt;named capture groups&lt;/a&gt;的支持将默认启用：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pattern&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;/(?&amp;lt;year&amp;gt;\d{4})-(?&amp;lt;month&amp;gt;\d{2})-(?&amp;lt;day&amp;gt;\d{2})/u;&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;2017-12-15&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// result.groups.year === &amp;#39;2017&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// result.groups.month === &amp;#39;12&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// result.groups.day === &amp;#39;15&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;更多的细节可以在这篇博文中查看：&lt;a href=&quot;https://developers.google.com/web/updates/2017/07/upcoming-regexp-features&quot; target=&quot;_blank&quot;&gt;Upcoming regular expression features&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;V8现已实现&lt;a href=&quot;https://github.com/tc39/proposal-import-meta&quot; target=&quot;_blank&quot;&gt;import.meta&lt;/a&gt;，使得嵌入者可以通过该方法暴露当前模块的&lt;code&gt;host-specific metadata&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;新加入的API：&lt;a href=&quot;https://github.com/tc39/proposal-intl-formatToParts&quot; target=&quot;_blank&quot;&gt;Intl.NumberFormat.prototype.formatToParts()&lt;/a&gt;可以帮助开发者将数字国际化成需要的符号和类型。&lt;/p&gt;
-
-&lt;h2 id=&quot;v8-api&quot;&gt;V8 API&lt;/h2&gt;
-&lt;p&gt;请使用&lt;code&gt;git log branch-heads/6.3..branch-heads/6.4 include/v8.h&lt;/code&gt;来获得API改动的列表。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Wed, 21 Mar 2018 13:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2018/03/v8-release-64/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2018/03/v8-release-64/</guid>
 			</item>
 		
 	</channel>
