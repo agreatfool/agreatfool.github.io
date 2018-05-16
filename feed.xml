@@ -37,7 +37,7 @@
 
 &lt;p&gt;That’s the value range of a 32-bit CPU register3, without a sign bit; we store the sign bit separately. In pseudo-code, a BigInt object with 3*32 = 96 bits looks like this:&lt;/p&gt;
 
-&lt;p&gt;那么如何将一个长度为百位、千位、百万位bits的BigInt存储起来？它并不能被存储到寄存器内，因此我们必须为它在内存中申请一个内存块。我们将它做的足够大，能够存储下BigInt所有的bits，这些都存储在一个连续的内存块（chunks）中，我们称它为”digits” - 因为这在概念上非常近似某人使用更多的digits来写入数字大于”9”的情况，比如说”10”；和大数系统（decimal system）使用 0 到 9 的digits不同的是，我们的BigInts则使用 0 到 4294967295 (i.e. 2&lt;em&gt;*32-1)的digits。这是一个32位CPU的寄存器&lt;sup&gt;3&lt;/sup&gt;储值范围，去掉一个符号位（bit）；我们将符号分开存储在其他地方。在伪代码中，一个长度为 3&lt;/em&gt;32 = 96 位（bits）的BigInt对象看起来类似：&lt;/p&gt;
+&lt;p&gt;那么如何将一个长度为百位、千位、百万位bits的BigInt存储起来？它并不能被存储到寄存器内，因此我们必须为它在内存中申请一个内存块。我们将它做的足够大，能够存储下BigInt所有的bits，这些都存储在一个连续的内存块（chunks）中，我们称它为”digits” - 因为这在概念上非常近似某人使用更多的digits来写入数字大于”9”的情况，比如说”10”；和大数系统（decimal system）使用 0 到 9 的digits不同的是，我们的BigInts则使用 0 到 4294967295 (i.e. 2**32-1)的digits。这是一个32位CPU的寄存器&lt;sup&gt;3&lt;/sup&gt;储值范围，去掉一个符号位（bit）；我们将符号分开存储在其他地方。在伪代码中，一个长度为 3*32 = 96 位（bits）的BigInt对象看起来类似：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
   &lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;BigInt&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
