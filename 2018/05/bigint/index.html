@@ -1,0 +1,423 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>V8 Blog | Adding BigInts to V8 2018-05-02 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2018/05/bigint/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2018/05/bigint/">V8 Blog | Adding BigInts to V8 2018-05-02</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>16 May 2018</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/V8">V8</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Translation">Translation</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Memory">Memory</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Chrome">Chrome</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Blog">Blog</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h1 id="1-原文">1. 原文</h1>
+<p><a href="https://v8project.blogspot.hk/2018/05/bigint.html" target="_blank">Adding BigInts to V8</a></p>
+
+<h1 id="2-摘要翻译">2. 摘要翻译</h1>
+<p>在过去的几个月中，我们已经在V8中实现了对于<a href="https://developers.google.com/web/updates/2018/05/bigint" target="_blank">BigInts</a>的支持。该实现是基于将会在未来包含在某个ECMAScript版本中的<a href="https://github.com/tc39/proposal-bigint" target="_blank">提案</a>。下文内容是讲述了该实现的过程。</p>
+
+<p>TL;DR
+作为一名JavaScript程序员，你现在（now<sup>1</sup>）在你的工具箱里有几个任意（arbitrary<sup>2</sup>）精度的整型：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="mi">2172141653</span><span class="nx">n</span><span class="p">;</span>
+<span class="kr">const</span> <span class="nx">b</span> <span class="o">=</span> <span class="mi">15346349309</span><span class="nx">n</span><span class="p">;</span>
+<span class="nx">a</span> <span class="o">*</span> <span class="nx">b</span><span class="p">;</span>
+<span class="c1">// → 33334444555566667777n     // Yay!</span>
+<span class="nb">Number</span><span class="p">(</span><span class="nx">a</span><span class="p">)</span> <span class="o">*</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+<span class="c1">// → 33334444555566670000      // Boo!</span>
+<span class="kr">const</span> <span class="nx">such_many</span> <span class="o">=</span> <span class="mi">2</span><span class="nx">n</span> <span class="o">**</span> <span class="mi">222</span><span class="nx">n</span><span class="p">;</span>
+<span class="c1">// → 6739986666787659948666753771754907668409286105635143120275902562304n</span></code></pre></figure>
+
+<p>对于我们提供的新功能的细节及如何使用它，请参照我们的<a href="https://developers.google.com/web/updates/2018/05/bigint" target="_blank">in-depth Web Fundamentals article on BigInt</a>这篇文章。我们很期待看到你们使用这些功能制作的东西。</p>
+
+<p><sup>1</sup> Now 如果你运行Chrome Beta，Dev，或者Canary，或某个<a href="https://github.com/v8/node/tree/vee-eight-lkgr" target="_blank">Node.js预览版本</a>，要么或是（Chrome 67，同时期的Node.js master版本）。</p>
+
+<p><sup>2</sup> Arbitrary 达到一个实现定义（implementation-defined）的上限。非常抱歉，我们现在还未能找到一个方法将无上限的数据塞入你计算机的有限内存中。</p>
+
+<h2 id="representing-bigints-in-memory">Representing BigInts in memory</h2>
+<p>传统上来说，计算器将整型存储在他们的CPU寄存器中（如今一般来说是32或64位宽），或者是由寄存器定义好尺寸的内存块中。这些做法带来了我们很熟悉的最大和最小值数字。举例来说，一个32位有符号整型能保存从 -2,147,483,648 到 2,147,483,647 的值。关于BigInts的概念，然而，并没有受到这样的限制。</p>
+
+<p>That’s the value range of a 32-bit CPU register3, without a sign bit; we store the sign bit separately. In pseudo-code, a BigInt object with 3*32 = 96 bits looks like this:</p>
+
+<p>那么如何将一个长度为百位、千位、百万位bits的BigInt存储起来？它并不能被存储到寄存器内，因此我们必须为它在内存中申请一个内存块。我们将它做的足够大，能够存储下BigInt所有的bits，这些都存储在一个连续的内存块（chunks）中，我们称它为”digits” - 因为这在概念上非常近似某人使用更多的digits来写入数字大于”9”的情况，比如说”10”；和大数系统（decimal system）使用 0 到 9 的digits不同的是，我们的BigInts则使用 0 到 4294967295 (i.e. 2<em>*32-1)的digits。这是一个32位CPU的寄存器<sup>3</sup>储值范围，去掉一个符号位（bit）；我们将符号分开存储在其他地方。在伪代码中，一个长度为 3</em>32 = 96 位（bits）的BigInt对象看起来类似：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="p">{</span>
+  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;BigInt&#39;</span><span class="p">,</span>
+  <span class="nx">sign</span><span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+  <span class="nx">num_digits</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+  <span class="nx">digits</span><span class="o">:</span> <span class="p">[</span><span class="mh">0x12</span><span class="err">…</span><span class="p">,</span> <span class="mh">0x34</span><span class="err">…</span><span class="p">,</span> <span class="mh">0x56</span><span class="err">…</span><span class="p">],</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><sup>3</sup> 在64位机器上，我们使用64位digits，i.e. 从 0 到 18446744073709551615 (i.e. 2n**64n-1n)。</p>
+
+<h2 id="back-to-school-and-back-to-knuth">Back to school, and back to Knuth</h2>
+<p>处理存储在CPU寄存器里的整型非常简单：举例来说，两者相乘，有一个机器指令能让软件告诉CPU “将这两个寄存器内的内容相乘！”，CPU会执行该操作。对BigInt进行运算，我们则必须自己来解决。感谢，这项特殊的任务每个小孩在某个时候斗湖学会如何解决：还记得你在学校的时候必须不依赖计算器来乘 345 * 678的时候怎么做吗？</p>
+
+<pre><code>345 * 678
+---------
+     30    //   5 * 6
++   24     //  4  * 6
++  18      // 3   * 6
++     35   //   5 *  7
++    28    //  4  *  7
++   21     // 3   *  7
++      40  //   5 *   8
++     32   //  4  *   8
++    24    // 3   *   8
+=========
+   233910
+</code></pre>
+
+<p>这就是V8如何对BigInts进行相乘运算的：每次一个digit，最终将中间结果相加。这个算法对超大的BigInt运作得和 0 到 9 digits的运算一样好。</p>
+
+<p>Donald Knuth在1969年的时候，就已经在他经典的”The Art of Computer Programming”第二卷中发布了一个特殊的对由许多小chunks组成的大型数字进行乘除运算的算法实现。V8的实现方法就是遵照这本书的做法，显示了这阵的是一个相当不受时间影响而得到验证的计算机科学。</p>
+
+<h2 id="less-desugaring--more-sweets">“Less desugaring” == more sweets?</h2>
+<p>也许出乎意料的，我们必须花费大量工作量在让简单的一元运算工作起来，比如说，-x。迄今为止，-x 和 x * (-1)是完全相同的，因此为了简化，V8将这个替代解决方案尽量早地在处理JavaScript的时候运用起来，换句话说就是在解析器（parser）的时候。这个方案被称为”desugaring”，因为它对一个类似 -x 这样的表达式作为 x * (-1) 的语法糖来处理。其他的组件（解释器、编译器、整个运行时）甚至不知道什么是一元运算，因为他们只看到了乘法运算，这个它们无论如何都必须支持的运算。</p>
+
+<p>对于BigInts来说，然而，这套解决方案突然就不可用了，因为对一个BigInt和一个数字（类似 -1）进行相乘，会产生一个类型错误（TypeError<sup>4</sup>）。解析器（parser）必须将 -x desugar 成 x * (-1n)，如果 x 是一个BigInt - 但解析器无从知道 x 等价于什么东西。因此我们必须停止依赖于这种早期的desugaring解决方案，转而为普通数字（Numbers）和BigInts提供一套一体适用的合适解决方案。</p>
+
+<p><sup>4</sup> 将BigInt和Number运算对象类型进行混合一般来说是不被允许的。这对JavaScript来说多少有点不寻常，但对这个决定有<a href="https://developers.google.com/web/updates/2018/05/bigint#operators" target="_blank">一个解释</a>。</p>
+
+<h2 id="a-bit-of-fun-with-bitwise-ops">A bit of fun with bitwise ops</h2>
+<p>现今在使用的大部分计算机系统在存储符号整型这点上使用了一个被称为”two’s complement”的巧妙花招。这种解决方案将第一位表示符号，每在位上添加1（adding 1 to the bit pattern），则总是会将数字加一，符号位则不需要关心。举例来说，一个8位的整型：</p>
+
+<ul>
+  <li>10000000 is -128, the lowest representable number,</li>
+  <li>10000001 is -127,</li>
+  <li>11111111 is -1,</li>
+  <li>00000000 is 0,</li>
+  <li>00000001 is 1,</li>
+  <li>01111111 is 127, the highest representable number.</li>
+</ul>
+
+<p>这种编码方式是如此普遍，大部分的程序员都了解并依赖它，且BigInt规范也反应了这点，并将其作为BigInt必须遵循的行为。但如同上面面熟的，V8并不按这套方法来！</p>
+
+<p>如果根据规范来进行位运算，我们的BigInts必须在底层使用”two’s complement”。对正值来说，这并没有任何差别，但对负值来说必须有额外的工作才可以完成这点。a &amp; b 有稍微令人惊奇的效果，如果 a 和 b 都是负BigInts，实施上最终执行了四步操作（与两者皆为正值相反，正值的情况只需要一步）：所有的输入都被转换成”fake-two’s-complement”的格式，接下来完成真正的操作，再接下来将所有的结果转换回真实的展示。为什么要做这种反复来回的操作？因为所有的非位运算按这种方案来做的话会更简单。</p>
+
+<h2 id="two-new-types-of-typedarrays">Two new types of TypedArrays</h2>
+<p>BitInt提案包含了两个新的 TypedArray 类型：BigInt64Array 和 BigUint64Array。我们能使用 TypedArrays 来存储64位宽的整型元素，BigInts提供了一种自然的方法来读写这些元素中的bits，然而如果尝试使用Numbers来做同样的操作，某些bits将会丢失。这也是为什么这些新的数组不像现存的 8/16/32位整型 TypedArrays：它们将会保持以BitInts的方式来处理内部的元素；如果尝试使用Numbers方式将会抛出错误。</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="o">&gt;</span> <span class="kr">const</span> <span class="nx">big_array</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BigInt64Array</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+<span class="o">&gt;</span> <span class="nx">big_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">123</span><span class="nx">n</span><span class="p">;</span>  <span class="c1">// OK</span>
+<span class="o">&gt;</span> <span class="nx">big_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="mi">123</span><span class="nx">n</span>
+<span class="o">&gt;</span> <span class="nx">big_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">456</span><span class="p">;</span>
+<span class="nx">TypeError</span><span class="o">:</span> <span class="nx">Cannot</span> <span class="nx">convert</span> <span class="mi">456</span> <span class="nx">to</span> <span class="nx">a</span> <span class="nx">BigInt</span>
+<span class="o">&gt;</span> <span class="nx">big_array</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">BigInt</span><span class="p">(</span><span class="mi">456</span><span class="p">);</span>  <span class="c1">// OK</span></code></pre></figure>
+
+<p>就像和这些类型的数组协同工作的 JavaScript 代码看上去有点和传统的 TypedArray 代码不同一样，我们也不得不将我们的 TypedArray 实现扩展，以使得其行为适应这两个新来的数组类型。</p>
+
+<h2 id="optimization-considerations">Optimization considerations</h2>
+<p>目前，我们实装了一个BigInts的基准实现。这个实现功能齐全，并能提供稳定的性能表现（比现存的userland libraries快一点），但它尚未被针对性地优化过。理由是因为为了与我们将现实世界应用程序的性能提高到基准测试目标以上这个目标一致，我们先想看看你们会如何使用这个BigInts，然后我们才能精准的优化你们关心部分的性能点。</p>
+
+<p>举例来说，如果我们观察到相对较小的BigInts（上限至64位）是非常重要的应用场景，我们将会针对它们使用特别的表达结构，使它们更内存高效：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="p">{</span>
+  <span class="nx">type</span><span class="o">:</span> <span class="s1">&#39;BigInt-Int64&#39;</span><span class="p">,</span>
+  <span class="nx">value</span><span class="o">:</span> <span class="mh">0x12</span><span class="err">…</span><span class="p">,</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>其中之一的细节仍旧未决：我们应该针对”int64”值域，还是”uint64”值域，或两者都是，进行优化 - 请谨记在心，不得不需要支持的快速路径越少，意味着我们可以更快将它们实装上线，且没增加一个额外的快速路径将会使得每件事更慢一点，因为受到影响的操作需要被检查是否是合适的。</p>
+
+<p>另一件事情是在优化编译器内添加对BigInts的支持。对那些重计算的应用程序来说，如果是在64位硬件上运作，并操作64位的数值，将这些值保存在CPU的寄存器中将会比在堆内存上进行内存分配存储这些值（当前V8的做法）更高效。对这一点我们有计划如何实现这样的支持，但我们需要先确认这真的是你们，我们的用户，最感到有必要的应用场景；若非如此我们将会将时间花在其他地方。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2018/05/bigint/">V8 Blog | Adding BigInts to V8 2018-05-02</a></li>
+    
+    <li><a href="/2018/04/improved-code-caching/">V8 Blog | Improved code caching 2018-04-24</a></li>
+    
+    <li><a href="/2018/03/v8-release-66/">V8 Blog | V8 release v6.6 2018-03-27</a></li>
+    
+    <li><a href="/2018/03/background-compilation/">V8 Blog | Background compilation 2018-03-27</a></li>
+    
+    <li><a href="/2018/03/tracing-js-dom/">V8 Blog | Tracing from JS to the DOM and back again 2018-03-01</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2018/05/bigint/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
