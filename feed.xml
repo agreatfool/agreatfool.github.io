@@ -11,8 +11,6 @@
 				<description>&lt;h1 id=&quot;1-原文&quot;&gt;1. 原文&lt;/h1&gt;
 &lt;p&gt;&lt;a href=&quot;https://v8project.blogspot.com/2018/06/concurrent-marking.html&quot; target=&quot;_blank&quot;&gt;Concurrent marking in V8&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img style=&quot;background-color: #FFFFFF;&quot; src=&quot;&quot; /&gt;&lt;/p&gt;
-
 &lt;h1 id=&quot;2-摘要翻译&quot;&gt;2. 摘要翻译&lt;/h1&gt;
 &lt;p&gt;本文会描述一种名为&lt;code&gt;并发标记&lt;/code&gt;的垃圾回收技术。这种优化允许JS应用程序在垃圾回收扫描堆内存来标记存活对象的时候仍旧保持应用程序的正常运行。我们的benchmark显示并发标记技术减少了主线程60%-70%的标记耗时。并发标记正是 &lt;a href=&quot;https://v8project.blogspot.com/2016/04/jank-busters-part-two-orinoco.html&quot; target=&quot;_blank&quot;&gt;Orinoco project&lt;/a&gt;（这个项目计划渐进式地替换老版本的垃圾回收器，使用最新主流的并发、平行的垃圾回收器）的最新组成部分。并发标记技术会在 Chrome 64 以及 Node.js v10 中默认开启。&lt;/p&gt;
 
