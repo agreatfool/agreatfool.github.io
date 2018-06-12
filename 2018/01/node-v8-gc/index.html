@@ -149,7 +149,10 @@
               <div class="post-content">
                 <h4>Table of Contents</h4>
 <ul id="markdown-toc">
-  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a>    <ul>
+      <li><a href="#11-演进更新" id="markdown-toc-11-演进更新">1.1 演进更新</a></li>
+    </ul>
+  </li>
   <li><a href="#2-gc日志" id="markdown-toc-2-gc日志">2. GC日志</a>    <ul>
       <li><a href="#21-日志启用" id="markdown-toc-21-日志启用">2.1 日志启用</a></li>
       <li><a href="#22-如何runtime触发gc" id="markdown-toc-22-如何runtime触发gc">2.2 如何Runtime触发GC</a></li>
@@ -191,6 +194,22 @@
 <p>本文是系列文章<a href="https://xenojoshua.com/2018/01/node-profile/" target="_blank">Node.JS Profile</a>的一部分，完整的文章列表请去总章查看。</p>
 
 <p>本文是Node内存相关文章的其中一篇，主要负责深度解析V8引擎GC相关的技术。</p>
+
+<h2 id="11-演进更新">1.1 演进更新</h2>
+<p>后续V8关于内存回收GC相关的技术演进，会更新在这个段落：</p>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>[V8 Blog</td>
+          <td>Concurrent marking in V8](https://xenojoshua.com/2018/06/concurrent-marking/)</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
 
 <h1 id="2-gc日志">2. GC日志</h1>
 <p>Node的V8引擎支持使用命令行添加option启动的形式，在stdout中输出GC相关内容的日志。GC日志基本上可以说是了解V8 GC行为及状态的唯一方法。</p>
@@ -605,6 +624,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2018/06/concurrent-marking/">V8 Blog | Concurrent marking in V8</a></li>
+    
     <li><a href="/2018/05/v8-release-v67/">V8 Blog | V8 release v6.7 2018-05-04</a></li>
     
     <li><a href="/2018/05/bigint/">V8 Blog | Adding BigInts to V8 2018-05-02</a></li>
@@ -612,8 +633,6 @@
     <li><a href="/2018/04/improved-code-caching/">V8 Blog | Improved code caching 2018-04-24</a></li>
     
     <li><a href="/2018/03/v8-release-66/">V8 Blog | V8 release v6.6 2018-03-27</a></li>
-    
-    <li><a href="/2018/03/background-compilation/">V8 Blog | Background compilation 2018-03-27</a></li>
     
   </ul>
 </div>
