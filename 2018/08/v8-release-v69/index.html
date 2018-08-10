@@ -1,0 +1,342 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>V8 Blog | V8 release v6.9 2018-08-07 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2018/08/v8-release-v69/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2018/08/v8-release-v69/">V8 Blog | V8 release v6.9 2018-08-07</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>10 Aug 2018</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/V8">V8</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Translation">Translation</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Memory">Memory</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Chrome">Chrome</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Blog">Blog</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h1 id="1-原文">1. 原文</h1>
+<p><a href="https://v8project.blogspot.com/2018/08/v8-release-69.html" target="_blank">V8 release v6.9</a></p>
+
+<h1 id="2-摘要翻译">2. 摘要翻译</h1>
+<h2 id="memory-savings-through-embedded-built-ins">Memory savings through embedded built-ins</h2>
+<p>V8内含了一个扩展 library 来存储 built-in 函数。（后面花费了一整段话来介绍什么是 built-in 函数，以前介绍很多遍了）</p>
+
+<p>Built-in 函数目前在每个 Isolate 上占用 700KB 的内存。从 v6.4 版本的 V8 开始，引入了惰式反序列化，但仍有消耗。</p>
+
+<p>嵌入式 built-ins 则更进一步。一个嵌入式 built-in 被所有的 Isolates 共享，并嵌入它自身的二进制空间，而不是被拷贝进 JavaScript 的堆内存。这意味着 built-ins 无关乎有多少个 Isolates 正在运行，只会占用一份内存。在启用了嵌入式 built-ins 之后，我们看到了一个中值为 9% 的 V8 堆内存消耗减少，样本为 x64 环境的 top 1万个网站。在这些站点上，50% 的情况下节约了至少 1.2 MB 的内存，30% 的情况节约了至少 2.1 MB 的内存，10% 的情况则节约了 3.7 MB 或更多。</p>
+
+<p>V8 将会在 v6.9 版本中发布针对 x64 平台的嵌入式 built-ins 支持。其他平台将会很快得到更新。并将会发布一篇博客来详细解析其中的细节。</p>
+
+<h2 id="performance">Performance</h2>
+
+<h3 id="liftoff-webassemblys-new-first-tier-compiler">Liftoff, WebAssembly’s new first-tier compiler</h3>
+<p>WebAssembly 得到了一个新的基准编译器为那些含有更大的 WebAssembly 模块的复杂网站的更快启动服务（比如说 Google Earth 和 AutoCAD）。根据硬件不同，我们观察到了 10倍 以上的启动加速。并将会发布一篇博客来详细解析其中的细节。</p>
+
+<h3 id="faster-dataview-operations">Faster DataView operations</h3>
+<p>在 V8 Torque 中，DataView 的方法被重新实现了一遍，将一个消耗很大的调用放到了C++中执行，而之前的实现则是在运行时直接运行。此外我们现在在 Turbofan 中将 JavaScript 代码编译时，将 DataView 的方法进行了内联，这更进一步提升了 hot 代码的峰值性能。现在使用 DataViews 已经和使用 TypedArrays 一样高效了，并最终使得 DataViews 成为了一个性能敏感情况下的可选项。并将会发布一篇博客来详细解析其中的细节。</p>
+
+<h3 id="faster-processing-of-weakmaps-during-garbage-collection">Faster processing of WeakMaps during garbage collection</h3>
+<p>V8 v6.9 版本通过优化 WeakMap 处理，进一步减少了 Mark-Compact 垃圾回收的暂停时间。并发及增量标记现在可以处理 WeakMap 了，而之前这些所有工作都是在最终 Mark-Compact 的暂停中完成的。鉴于并非所有的工作都可以被移出到这个暂停时间之外，GC 仍旧会在并行回收中执行更多工作以期降低暂停时间。这些优化工作使得 Web Tooling Benchmark 中的 Mark-Compact 平均暂停时间减半了。</p>
+
+<p>WeakMap 的处理使用了一个 fixed-point iteration 算法，在某些情况下可以将问题降到二次方程式运行时行为来处理。而在新的发布版本中，V8 切换到了另一种算法，如果 GC 不能在一定的迭代内完成的话，也能保证 GC 可以在现行的时间消耗内完成。之前，最糟的情况可能将 GC 暂停数秒，即便是一个很小的堆内存，而这种线性的算法可以在数毫秒之内完成。</p>
+
+<h2 id="v8-api">V8 API</h2>
+<p>Please use git log branch-heads/6.8..branch-heads/6.9 include/v8.h to get a list of the API changes.</p>
+
+<p>Developers with an active V8 checkout can use git checkout -b 6.9 -t branch-heads/6.9 to experiment with the new features in V8 v6.9. Alternatively you can subscribe to Chrome’s Beta channel and try the new features out yourself soon.</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2018/08/v8-release-v69/">V8 Blog | V8 release v6.9 2018-08-07</a></li>
+    
+    <li><a href="/2018/06/v8-release-v68/">V8 Blog | V8 release v6.8 2018-06-22</a></li>
+    
+    <li><a href="/2018/06/concurrent-marking/">V8 Blog | Concurrent marking in V8 2018-06-12</a></li>
+    
+    <li><a href="/2018/05/v8-release-v67/">V8 Blog | V8 release v6.7 2018-05-04</a></li>
+    
+    <li><a href="/2018/05/bigint/">V8 Blog | Adding BigInts to V8 2018-05-02</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2018/08/v8-release-v69/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
