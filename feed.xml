@@ -109,13 +109,13 @@ The (simplified) V8 embedded build process&lt;/p&gt;
 
 &lt;p&gt;// Information about embedded builtins are included in  &lt;br /&gt;
 // a metadata table.  &lt;br /&gt;
-V8&lt;em&gt;EMBEDDED_TEXT_HEADER(v8_Default_embedded_blob&lt;/em&gt;)  &lt;br /&gt;
-&lt;strong&gt;asm&lt;/strong&gt;(“.byte 0x65,0x6d,0xcd,0x37,0xa8,0x1b,0x25,0x7e\n”  &lt;br /&gt;
+V8_EMBEDDED_TEXT_HEADER(v8_Default_embedded_blob_)  &lt;br /&gt;
+__asm__(“.byte 0x65,0x6d,0xcd,0x37,0xa8,0x1b,0x25,0x7e\n”  &lt;br /&gt;
 [snip metadata]&lt;/p&gt;
 
 &lt;p&gt;// Followed by the generated machine code.  &lt;br /&gt;
-&lt;strong&gt;asm&lt;/strong&gt;(V8_ASM_LABEL(“Builtins_RecordWrite”));  &lt;br /&gt;
-&lt;strong&gt;asm&lt;/strong&gt;(“.byte 0x55,0x48,0x89,0xe5,0x6a,0x18,0x48,0x83\n”  &lt;br /&gt;
+__asm__(V8_ASM_LABEL(“Builtins_RecordWrite”));  &lt;br /&gt;
+__asm__(“.byte 0x55,0x48,0x89,0xe5,0x6a,0x18,0x48,0x83\n”  &lt;br /&gt;
 [snip builtins code]&lt;/p&gt;
 
 &lt;p&gt;Contents of the .text section are mapped into read-only executable memory at runtime, and the operating system will share memory across processes as long as it contains only position-independent code without relocatable symbols. This is exactly what we wanted.&lt;/p&gt;
