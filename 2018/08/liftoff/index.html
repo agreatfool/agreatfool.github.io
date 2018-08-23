@@ -320,10 +320,10 @@ Liftoff Performance on PSPDFKit</p>
 <p>After the initial launch of Liftoff, we are working to further improve startup time, reduce memory usage, and bring the benefits of Liftoff to more users. In particular, we are working on improving the following things:</p>
 
 <ol>
-  <li><strong><em>Port Liftoff to arm and arm64 to also use it on mobile devices.</em></strong> Currently, Liftoff is only implemented for Intel platforms (32 and 64 bit), which mostly captures desktop use cases. In order to also reach mobile users, we will port Liftoff to more architectures.</li>
-  <li><strong><em>Implement dynamic tier-up for mobile devices.</em></strong> Since mobile devices tend to have much less memory available than desktop systems, we need to adapt our tiering strategy for these devices. Just recompiling all functions with TurboFan easily doubles the memory needed to hold all code, at least temporarily (until Liftoff code is discarded). Instead, we are experimenting with a combination of lazy compilation with Liftoff and dynamic tier-up of hot functions in TurboFan.</li>
-  <li><strong><em>Improve performance of Liftoff code generation.</em></strong> The first iteration of an implementation is rarely the best one. There are several things which can be tuned to speed up the compilation speed of Liftoff even more. This will gradually happen over the next releases.</li>
-  <li><strong><em>Improve performance of Liftoff code.</em></strong> Apart from the compiler itself, the size and speed of the generated code can also be improved. This will also happen gradually over the next releases.</li>
+  <li><strong>Port Liftoff to arm and arm64 to also use it on mobile devices.</strong> Currently, Liftoff is only implemented for Intel platforms (32 and 64 bit), which mostly captures desktop use cases. In order to also reach mobile users, we will port Liftoff to more architectures.</li>
+  <li><strong>Implement dynamic tier-up for mobile devices.</strong> Since mobile devices tend to have much less memory available than desktop systems, we need to adapt our tiering strategy for these devices. Just recompiling all functions with TurboFan easily doubles the memory needed to hold all code, at least temporarily (until Liftoff code is discarded). Instead, we are experimenting with a combination of lazy compilation with Liftoff and dynamic tier-up of hot functions in TurboFan.</li>
+  <li><strong>Improve performance of Liftoff code generation.</strong> The first iteration of an implementation is rarely the best one. There are several things which can be tuned to speed up the compilation speed of Liftoff even more. This will gradually happen over the next releases.</li>
+  <li><strong>Improve performance of Liftoff code.</strong> Apart from the compiler itself, the size and speed of the generated code can also be improved. This will also happen gradually over the next releases.</li>
 </ol>
 
 <p>简略翻译：  <br />
