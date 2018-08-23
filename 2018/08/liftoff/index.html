@@ -1,0 +1,501 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>V8 Blog | Liftoff: a new baseline compiler for WebAssembly in V8 2018-08-20 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2018/08/liftoff/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+
+    table tfoot td {
+      font-size: 21px;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2018/08/liftoff/">V8 Blog | Liftoff: a new baseline compiler for WebAssembly in V8 2018-08-20</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>23 Aug 2018</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/V8">V8</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Translation">Translation</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Memory">Memory</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Chrome">Chrome</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Blog">Blog</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h1 id="1-原文">1. 原文</h1>
+<p><a href="https://v8project.blogspot.com/2018/08/liftoff.html" target="_blank">Liftoff: a new baseline compiler for WebAssembly in V8</a></p>
+
+<h1 id="2-摘要翻译">2. 摘要翻译</h1>
+<p>V8 v6.9 includes Liftoff, a new baseline compiler for WebAssembly. Liftoff is now enabled by default on desktop systems. This article details the motivation to add another compilation tier and describes the implementation and performance of Liftoff.</p>
+
+<p>Since WebAssembly <a href="https://v8project.blogspot.com/2017/02/v8-release-57.html" target="_blank">launched</a> more than a year ago, adoption on the web has been steadily increasing. Big applications targeting WebAssembly have started to appear. For example, Epic’s <a href="https://s3.amazonaws.com/mozilla-games/ZenGarden/EpicZenGarden.html" target="_blank">ZenGarden benchmark</a> comprises a 39.5 MB WebAssembly binary, and <a href="https://web.autocad.com/" target="_blank">AutoDesk</a> ships as a 36.8 MB binary. Since compilation time is essentially linear in the binary size, these applications take a considerable time to start up. On many machines it’s more than 30 seconds, which does not provide a great user experience.</p>
+
+<p>But why does it take this long to start up a WebAssembly app, if similar JS apps start up much faster? The reason is that WebAssembly promises to deliver predictable performance, so once the app is running, you can be sure to consistently meet your performance goals (e.g. rendering 60 frames per second, no audio lag or artifacts…). In order to achieve this, WebAssembly code is compiled ahead of time in V8, to avoid any compilation pause introduced by a just-in-time compiler that could result in visible jank in the app.</p>
+
+<p>简略翻译：  <br />
+V8 从版本 v6.9 开始为 WebAssembly 内置了 Liftoff 这个新基准编译器。它会在桌面系统上默认启用。这篇文章就是描述实现的细节和其性能的。</p>
+
+<p>WebAssembly 已经上线超过一年了，使用这种技术的 WEB 站点在稳定增加中。使用 WebAssembly 技术的大型应用也开始出现了。例如，Epic 的 ZenGarden benchmark 包含了一个 39.5 MB 的二进制文件，AutoDesk 发布了一个 36.8 MB 的二进制文件。因为编译时间和二进制文件的体积呈正相关关系，这些应用程序启动需要耗费大量时间。在许多机器上，启动时间都超过了 30 秒，这对用户体验来说是个灾难。</p>
+
+<p>但为什么 WebAssembly 应用需要花那么长时间进行启动，而类似的 JS 应用则启动得快得多？因为 WebAssembly 程度更优秀的性能，因此一旦应用程序运行，则必然会达到预期的性能指标（e.g 每秒渲染 60 帧，没有音效延迟 …）。为了达到这个目标，WebAssembly 代码必须在 V8 中尽早编译，来避免任何因 JIT  编译器编译造成的延迟。</p>
+
+<h2 id="the-existing-compilation-pipeline-turbofan">The existing compilation pipeline (TurboFan)</h2>
+<p>V8’s approach to compiling WebAssembly has relied on TurboFan, the optimizing compiler we designed for JavaScript and asm.js. TurboFan is a powerful compiler with a graph-based intermediate representation (IR) suitable for advanced optimizations such as strength reduction, inlining, code motion, instruction combining, and sophisticated register allocation. TurboFan’s design supports entering the pipeline very late, nearer to machine code, which bypasses many of the stages necessary for supporting JavaScript compilation. By design, transforming WebAssembly code into TurboFan’s IR (including <a href="https://en.wikipedia.org/wiki/Static_single_assignment_form" target="_blank">SSA-construction</a>) in a straightforward single pass is very efficient, partially due to WebAssembly’s structured control flow. Yet the backend of the compilation process still consumes considerable time and memory.</p>
+
+<p>简略翻译：  <br />
+V8 之前编译 WebAssembly 是依赖 TurboFan 这个编译器，它最初是为了 JS 和 asm.js 设计的。后续一大段都是讲 TurboFan 设计及运行中一些问题的原因和优缺点。</p>
+
+<h2 id="the-new-compilation-pipeline-liftoff">The new compilation pipeline (Liftoff)</h2>
+<p>The goal of Liftoff is to reduce startup time for WebAssembly-based apps by generating code as fast as possible. Code quality is secondary, as hot code will eventually be recompiled with Turbofan anyway.. Liftoff avoids the time and memory overhead of constructing an IR and generates machine code in a single pass over the bytecode of a WebAssembly function.</p>
+
+<p><img style="background-color: #FFFFFF;" src="" /></p>
+
+<p>From the diagram above it is obvious that Liftoff should be able to generate code much faster than TurboFan since the pipeline only consists of two stages. In fact, the function body decoder does a single pass over the raw WebAssembly bytes and interacts with the subsequent stage via callbacks, so code generation is performed while decoding and validating the function body. Together with WebAssembly’s <a href="https://v8project.blogspot.com/2018/02/v8-release-65.html" target="_blank">streaming APIs</a>, this allows V8 to compile WebAssembly code to machine code while downloading over the network.</p>
+
+<p>简略翻译：  <br />
+liftoff 的目标就是减少基于 WebAssembly 应用程序的启动时间，尽可能地加快代码生成的速度。代码质量是次要的，因为热带吗最终会被 TurboFan 编译掉。（原理介绍…）</p>
+
+<p>上图已经很清晰地阐明了 Liftoff 能够以比 TurboFan 快得多的速度生成代码。（原理介绍…，结论就是最优解就是在下载的同事进行代码编译和生成工作，以优化性能）</p>
+
+<h3 id="code-generation-in-liftoff">Code generation in Liftoff</h3>
+<p>Liftoff is a simple code generator, and fast. It performs only one pass over the opcodes of a function, generating code for each opcode, one at a time. For simple opcodes like arithmetics, this is often a single machine instruction, but can be more for others like calls. Liftoff maintains metadata about the operand stack in order to know where the inputs of each operation are currently stored. This virtual stack exists only during compilation. WebAssembly’s structured control flow and validation rules guarantee that the location of these inputs can be statically determined. Thus an actual runtime stack onto which operands are pushed and popped is not necessary. During execution, each value on the virtual stack will either be held in a register or be spilled to the physical stack frame of that function. For small integer constants (generated by i32.const), Liftoff only records the constant’s value in the virtual stack and does not generate any code. Only when the constant is used by a subsequent operation, it is emitted or combined with the operation, for example by directly emitting a addl &lt;reg&gt;, &lt;const&gt; instruction on x64. This avoids ever loading that constant into a register, resulting in better code.</p>
+
+<p>Let’s go through a very simple function to see how Liftoff generates code for that.</p>
+
+<p><img style="background-color: #FFFFFF;" src="" /></p>
+
+<p>This example function takes two parameters and returns their sum. When Liftoff decodes the bytes of this function, it first begins by initializing its internal state for the local variables according to the calling convention for WebAssembly functions. For x64, V8’s calling convention passes the two parameters in the registers rax and rdx.</p>
+
+<p>For <code>get_local</code> instructions, Liftoff does not generate any code, but instead just updates its internal state to reflect that these register values are now pushed on the virtual stack. The i32.add instruction then pops the two registers and chooses a register for the result value. We cannot use any of the input registers for the result, since both registers still appear on the stack for holding the local variables. Overwriting them would change the value returned by a later <code>get_local</code> instruction. So Liftoff picks a free register, in this case rcx, and produce the sum of rax and rdx into that register. rcx is then pushed onto the virtual stack.</p>
+
+<p>After the i32.add instruction, the function body is finished, so Liftoff must assemble the function return. As our example function has one return value, validation requires that there must be exactly one value on the virtual stack at the end of the function body. So Liftoff generates code that moves the return value held in rcx into the proper return register rax and then returns from the function.</p>
+
+<p>For the sake of simplicity, the example above does not contain any blocks (if, loop …) or branches. Blocks in WebAssembly introduce control merges, since code can branch to any parent block, and if-blocks can be skipped. These merge points can be reached from different stack states. Following code, however, has to assume a specific stack state to generate code. Thus, Liftoff snapshots the current state of the virtual stack as the state which will be assumed for code following the new block (i.e. when returning to the control level where we currently are). The new block will then continue with the currently active state, potentially changing where stack values or locals are stored: some might be spilled to the stack or held in other registers. When branching to another block or ending a block (which is the same as branching to the parent block), Liftoff must generate code that adapts the current state to the expected state at that point, such that the code emitted for the target we branch to finds the right values where it expects them. Validation guarantees that the height of the current virtual stack matches the height of the expected state, so Liftoff need only generate code to shuffle values between registers and/or the physical stack frame as shown below.</p>
+
+<p>Let’s look at an example of that.</p>
+
+<p><img style="background-color: #FFFFFF;" src="" /></p>
+
+<p>The example above assumes a virtual stack with two values on the operand stack. Before starting the new block, the top value on the virtual stack is popped as argument to the if instruction. The remaining stack value needs to be put in another register, since it is currently shadowing the first parameter, but when branching back to this state we might need to hold two different values for the stack value and the parameter. In this case Liftoff chooses to deduplicate it into the rcx register. This state is then snapshotted, and the active state is modified within the block. At the end of the block, we implicitly branch back to the parent block, so we merge the current state into the snapshot by moving register rbx into rcx and reloading register rdx from the stack frame.</p>
+
+<p>简略翻译：  <br />
+基本上都是代码生成相关的设计和原理</p>
+
+<h3 id="tiering-up-from-liftoff-to-turbofan">Tiering up from Liftoff to TurboFan</h3>
+<p>With Liftoff and Turbofan, V8 now has two compilation tiers for WebAssembly: Liftoff as the baseline compiler for fast startup and TurboFan as optimizing compiler for maximum performance. This poses the question of how to combine the two compilers to provide the best overall user experience.</p>
+
+<p>For JavaScript, V8 uses the Ignition interpreter and the TurboFan compiler and employs a dynamic tier-up strategy. Each function is first executed in Ignition, and if the function becomes hot, TurboFan compiles it into highly-optimized machine code. A similar approach could also be used for Liftoff, but the tradeoffs are a bit different here:</p>
+
+<ol>
+  <li>WebAssembly does not require type feedback to generate fast code. Where JavaScript greatly benefits from gathering type feedback, WebAssembly is statically typed, so the engine can generate optimized code right away.</li>
+  <li>WebAssembly code should run predictably fast, without a lengthy warm-up phase. One of the reasons applications target WebAssembly is to execute on the web with predictable high performance. So we can neither tolerate running suboptimal code for too long, nor do we accept compilation pauses during execution.</li>
+  <li>An important design goal of the Ignition interpreter for JavaScript is to reduce memory usage by not compiling functions at all. Yet we found that an interpreter for WebAssembly is far too slow to deliver on the goal of predictably fast performance. We did, in fact, build such an interpreter, but being 20× or more slower than compiled code, it is only useful for debugging, regardless of how much memory it saves. Given this, the engine must store compiled code anyway; in the end it should store only the most compact and most efficient code, which is TurboFan optimized code.</li>
+</ol>
+
+<p>From these constraints we concluded that dynamic tier-up is not the right tradeoff for V8’s implementation of WebAssembly right now, since it would increase code size and reduce performance for an indeterminate time span. Instead, we chose a strategy of eager tier-up. Immediately after Liftoff compilation of a module finished, the WebAssembly engine starts background threads to generate optimized code for the module. This allows V8 to start executing code quickly (after Liftoff finished), but still have the most performant TurboFan code available as early as possible.</p>
+
+<p>The picture below shows the trace of compiling and executing the <a href="https://s3.amazonaws.com/mozilla-games/ZenGarden/EpicZenGarden.html" target="_blank">EpicZenGarden benchmark</a>. It shows that right after Liftoff compilation we can instantiate the WebAssembly module and start executing it. TurboFan compilation still takes several more seconds, so during that tier-up period the observed execution performance will gradually increase since individual TurboFan functions will be used as soon as they are finished.</p>
+
+<p><img style="background-color: #FFFFFF;" src="" /></p>
+
+<p>简略翻译：  <br />
+目前针对 WebAssembly，V8 有 Liftoff 和 TurboFan 两层编译：Liftoff 作为基准编译器为快速启动服务，而 TurboFan 则作为优化编译器为最大化性能服务。接下来的问题就是如何组合这两个编译器，以期达到最佳的用户体验。</p>
+
+<p>（JS 代码编译管线的例子，以及大量的 WebAssembly 原理及设计解析 …）</p>
+
+<p>最终策略是不使用编译管线的动态排列（dynamic tier-up），而是使用即效排列（eager tier-up）。当 Liftoff 一将某个模块编译完成，后台就会有线程生成对应模块的优化代码。</p>
+
+<h2 id="performance">Performance</h2>
+<p>Two metrics are interesting for evaluating the performance of the new Liftoff compiler. First we want to compare the compilation speed (i.e. time to generate code) with TurboFan. Second, we want to measure the performance of the generated code (i.e. execution speed). The first measure is the more interesting here, since the goal of Liftoff is to reduce startup time by generating code as quickly as possible. On the other hand, the performance of the generated code should still be pretty good since that code might still execute for several seconds or even minutes on low-end hardware.</p>
+
+<p>简略翻译：  <br />
+对 Liftoff 编译器的性能评估需要两个维度。第一，我们需要比较和 TurboFan 之间的编译速度（i.e 代码生成速度）。第二，我们需要评估生成的代码的性能（i.e 执行速度）。</p>
+
+<h3 id="performance-of-generating-code">Performance of generating code</h3>
+<p>For measuring the compiler performance itself, we ran a number of benchmarks and measured the raw compilation time using tracing (see picture above). We run both benchmarks on an HP Z840 machine (2 x Intel Xeon E5-2690 @2.6GHz, 24 cores, 48 threads) and on a Macbook Pro (Intel Core i7-4980HQ @2.8GHz, 4 cores, 8 threads). Note that Chrome does currently not use more than 10 background threads, so most of the cores of the Z840 machine are unused.</p>
+
+<p>We execute three benchmarks:</p>
+
+<ol>
+  <li>EpicZenGarden: The ZenGarden demo running on the Epic framework: <a href="https://s3.amazonaws.com/mozilla-games/ZenGarden/EpicZenGarden.html" target="_blank">https://s3.amazonaws.com/mozilla-games/ZenGarden/EpicZenGarden.html</a></li>
+  <li>Tanks!: A demo of the Unity engine: <a href="https://webassembly.org/demo/" target="_blank">https://webassembly.org/demo/</a></li>
+  <li>AutoDesk: <a href="https://web.autocad.com/" target="_blank">https://web.autocad.com/</a></li>
+  <li>PSPDFKit: <a href="https://pspdfkit.com/webassembly-benchmark/" target="_blank">https://pspdfkit.com/webassembly-benchmark/</a></li>
+</ol>
+
+<p>For each benchmark, we measure the raw compilation time using the tracing output as shown above. This number is more stable than any time reported by the benchmark itself, as it does not rely on a task being scheduled on the main thread and does not include unrelated work like creating the actual WebAssembly instance.</p>
+
+<p>The graphs below show the results of these benchmarks. Each benchmark was executed three times, and we report the average compilation time.</p>
+
+<p><img style="background-color: #FFFFFF;" src="" />  <br />
+Code Generation Performance: Liftoff vs. TurboFan on Macbook</p>
+
+<p><img style="background-color: #FFFFFF;" src="" />  <br />
+Code Generation Performance: Liftoff vs. TurboFan on Z840</p>
+
+<p>As expected, the Liftoff compiler generates code much faster both on the high-end desktop workstation as well as on the MacBook. The speedup of Liftoff over TurboFan is even bigger on the less-capable MacBook hardware.</p>
+
+<p>简略翻译：  <br />
+为了评估编译性能，我们执行数个 benchmark 并使用 tracing（请看上图）记录纯编译时长。我们在 HP Z840 machine (2 x Intel Xeon E5-2690 @2.6GHz, 24 cores, 48 threads) 和 Macbook Pro (Intel Core i7-4980HQ @2.8GHz, 4 cores, 8 threads) 两种机器上进行测试。这里请记住，因为 Chrome 当前并未使用超过 10 个背景线程，因此大部分的 Z840 核心都是未使用状态。</p>
+
+<p>…</p>
+
+<p>结果请看图片，每个 benchmark 都被执行了 3 次，并有平均编译时长结果汇报。</p>
+
+<p>正如期望的，Liftoff 编译器在高端的桌面 workstation 上和 MacBook 上都有非常出色快速的代码生成速度。在性能相对更低的 MacBook 硬件上，Liftoff 的提速效果更明显。</p>
+
+<h3 id="performance-of-the-generated-code">Performance of the generated code</h3>
+<p>Even though performance of the generated code is a secondary goal, we want to preserve user experience with high performance in the startup phase, as Liftoff code might execute for several seconds before TurboFan code is finished.</p>
+
+<p>For measuring Liftoff code performance, we turned off tier-up in order to measure pure Liftoff execution. In this setup, we execute two benchmarks:</p>
+
+<ol>
+  <li>
+    <p>Unity headless benchmarks</p>
+
+    <p>This is a number of benchmarks running in the Unity framework. They are headless, hence can be executed in the d8 shell directly. Each benchmark reports a score, which is not necessarily proportional to the execution performance, but good enough to compare the performance.</p>
+  </li>
+  <li>
+    <p>PSPDFKit: <a href="https://pspdfkit.com/webassembly-benchmark/" target="_blank">https://pspdfkit.com/webassembly-benchmark/</a></p>
+
+    <p>This benchmark reports the time it takes to perform different actions on a pdf document and the time it takes to instantiate the WebAssembly module (including compilation).</p>
+  </li>
+</ol>
+
+<p>Just as before, we execute each benchmark three times and use the average of the three runs. Since the scale of the recorded numbers differs significantly between the benchmarks, we report the relative performance of Liftoff vs TurboFan. A value of +30% means that Liftoff code runs 30% slower than TurboFan. Negative numbers indicate that Liftoff executes faster. Here are the results:</p>
+
+<p><img style="background-color: #FFFFFF;" src="" />  <br />
+Liftoff Performance on Unity</p>
+
+<p>On Unity, Liftoff code execute on average around 50% slower than TurboFan code on the desktop machine and 70% slower on the MacBook. Interestingly, there is one case (Mandelbrot Script) where Liftoff code outperforms TurboFan code. This is likely an outlier where, for example, the register allocator of TurboFan is doing poorly in a hot loop. We are investigating to see if TurboFan can be improved to handle this case better.</p>
+
+<p><img style="background-color: #FFFFFF;" src="" />  <br />
+Liftoff Performance on PSPDFKit</p>
+
+<p>On the PSPDFKit benchmark, Liftoff code executes 18-54% slower than optimized code, while initialization improves significantly, as expected. These numbers show that for real-world code which also interacts with the browser via JavaScript calls, the performance loss of unoptimized code is generally lower than on more computation-intensive benchmarks.</p>
+
+<p>And again, note that for these numbers we turned off tier-up completely, so we only ever executed Liftoff code. In production configurations, Liftoff code will gradually be replaced by TurboFan code, such that the lower performance of Liftoff code lasts only for short period of time.</p>
+
+<p>简略翻译：  <br />
+即便生成出来的代码性能是次要的目标，我们仍旧希望保证启动阶段的高性能以保持优秀的用户体验，因为 Liftoff 生成出来的代码在 TurboFan 的优化代码执行完成之前可能会被运行数秒。</p>
+
+<p>…</p>
+
+<p>Unity 的 benchmark 结果，在桌面硬件上 Liftoff 代码运行速度平均来说比 TurboFan 代码慢 50%，在 MacBook 上慢 70%。…</p>
+
+<p>PSPDFKit 的 benchmark 结果，Liftoff 代码比优化之后的代码运行速度慢 18-54%，…</p>
+
+<p>请记住，这些数字都是关闭排序编译之后的结果，也就是说我们只运行了 Liftoff 编译出来的代码。在生产环境，Liftoff 生成的代码会被 TurboFan 生成的代码逐步代替，因此低性能的 Liftoff 代码仅会保持很短的时间。</p>
+
+<h2 id="future-work">Future work</h2>
+<p>After the initial launch of Liftoff, we are working to further improve startup time, reduce memory usage, and bring the benefits of Liftoff to more users. In particular, we are working on improving the following things:</p>
+
+<ol>
+  <li><strong><em>Port Liftoff to arm and arm64 to also use it on mobile devices.</em></strong> Currently, Liftoff is only implemented for Intel platforms (32 and 64 bit), which mostly captures desktop use cases. In order to also reach mobile users, we will port Liftoff to more architectures.</li>
+  <li><strong><em>Implement dynamic tier-up for mobile devices.</em></strong> Since mobile devices tend to have much less memory available than desktop systems, we need to adapt our tiering strategy for these devices. Just recompiling all functions with TurboFan easily doubles the memory needed to hold all code, at least temporarily (until Liftoff code is discarded). Instead, we are experimenting with a combination of lazy compilation with Liftoff and dynamic tier-up of hot functions in TurboFan.</li>
+  <li><strong><em>Improve performance of Liftoff code generation.</em></strong> The first iteration of an implementation is rarely the best one. There are several things which can be tuned to speed up the compilation speed of Liftoff even more. This will gradually happen over the next releases.</li>
+  <li><strong><em>Improve performance of Liftoff code.</em></strong> Apart from the compiler itself, the size and speed of the generated code can also be improved. This will also happen gradually over the next releases.</li>
+</ol>
+
+<p>简略翻译：  <br />
+在 Liftoff 上线之后，我们正在继续研究如何提升启动时长，减少内存消耗，并将 Liftoff 的优势带给更多的用户。详细来说，我们正在优化下列内容：</p>
+
+<ol>
+  <li>将 Liftoff 移植到 arm 及 arm64 机器上 …</li>
+  <li>为移动设备实现 动态排列（dynamic tier-up）…</li>
+  <li>提升 Liftoff 代码生成的性能 …</li>
+  <li>提升 Liftoff 生成出来的代码的性能 …</li>
+</ol>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>V8 now contains Liftoff, a new baseline compiler for WebAssembly. Liftoff vastly reduces start-up time of WebAssembly applications with a simple and fast code generator. On desktop systems, V8 still reaches maximum peak performance by recompiling all code in the background using TurboFan. Liftoff is enabled by default in V8 v6.9 (Chrome 69), and can be controlled explicitly with the --liftoff/--no-liftoff and chrome://flags/#enable-webassembly-baseline flags in each, respectively.</p>
+
+<p>Posted by Clemens Hammacher, WebAssembly compilation maestro</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2018/08/liftoff/">V8 Blog | Liftoff: a new baseline compiler for WebAssembly in V8 2018-08-20</a></li>
+    
+    <li><a href="/2018/08/embedded-builtins/">V8 Blog | Embedded builtins 2018-08-15</a></li>
+    
+    <li><a href="/2018/08/v8-release-v69/">V8 Blog | V8 release v6.9 2018-08-07</a></li>
+    
+    <li><a href="/2018/06/v8-release-v68/">V8 Blog | V8 release v6.8 2018-06-22</a></li>
+    
+    <li><a href="/2018/06/concurrent-marking/">V8 Blog | Concurrent marking in V8 2018-06-12</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2018/08/liftoff/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
