@@ -39,7 +39,7 @@ V8 之前编译 WebAssembly 是依赖 TurboFan 这个编译器，它最初是为
 &lt;p&gt;From the diagram above it is obvious that Liftoff should be able to generate code much faster than TurboFan since the pipeline only consists of two stages. In fact, the function body decoder does a single pass over the raw WebAssembly bytes and interacts with the subsequent stage via callbacks, so code generation is performed while decoding and validating the function body. Together with WebAssembly’s &lt;a href=&quot;https://v8project.blogspot.com/2018/02/v8-release-65.html&quot; target=&quot;_blank&quot;&gt;streaming APIs&lt;/a&gt;, this allows V8 to compile WebAssembly code to machine code while downloading over the network.&lt;/p&gt;
 
 &lt;p&gt;简略翻译：  &lt;br /&gt;
-liftoff 的目标就是减少基于 WebAssembly 应用程序的启动时间，尽可能地加快代码生成的速度。代码质量是次要的，因为热带吗最终会被 TurboFan 编译掉。（原理介绍…）&lt;/p&gt;
+Liftoff 的目标就是减少基于 WebAssembly 应用程序的启动时间，尽可能地加快代码生成的速度。代码质量是次要的，因为热代码最终会被 TurboFan 编译掉。（原理介绍…）&lt;/p&gt;
 
 &lt;p&gt;上图已经很清晰地阐明了 Liftoff 能够以比 TurboFan 快得多的速度生成代码。（原理介绍…，结论就是最优解就是在下载的同事进行代码编译和生成工作，以优化性能）&lt;/p&gt;
 
