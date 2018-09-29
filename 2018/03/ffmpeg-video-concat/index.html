@@ -181,7 +181,7 @@ $ vim ./list.txt
 file ./cut1.mov
 file ./cut2.mov
 
-ffmpeg -f concat -i ./list.txt -c copy ./concat.mov</code></pre></figure>
+ffmpeg -f concat -safe <span class="m">0</span> -i ./list.txt -c copy ./concat.mov</code></pre></figure>
 
 <p>完成。</p>
 
