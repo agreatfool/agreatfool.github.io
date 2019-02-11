@@ -18,13 +18,13 @@
 &lt;a href=&quot;https://docs.docker.com/storage/&quot; target=&quot;_blank&quot;&gt;ocker storage&lt;/a&gt; &lt;br /&gt;
 &lt;a href=&quot;https://juejin.im/entry/5b3df2b4f265da0f6e5156de&quot; target=&quot;_blank&quot;&gt;docker-machine&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Network&lt;/strong&gt;
+&lt;p&gt;&lt;strong&gt;Network&lt;/strong&gt;  &lt;br /&gt;
 &lt;a href=&quot;http://dockone.io/article/1261&quot; target=&quot;_blank&quot;&gt;Docker网络模式 2016-05-02&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Image&lt;/strong&gt;
+&lt;p&gt;&lt;strong&gt;Image&lt;/strong&gt;  &lt;br /&gt;
 &lt;a href=&quot;https://cameronlonsdale.com/2018/11/26/whats-in-a-docker-image/&quot; target=&quot;_blank&quot;&gt;What’s in a Docker image?&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Layer&lt;/strong&gt;
+&lt;p&gt;&lt;strong&gt;Layer&lt;/strong&gt;  &lt;br /&gt;
 &lt;a href=&quot;https://stackoverflow.com/questions/31222377/what-are-docker-image-layers&quot; target=&quot;_blank&quot;&gt;What are Docker image “layers”?&lt;/a&gt;  &lt;br /&gt;
 &lt;a href=&quot;https://forums.docker.com/t/do-number-of-layers-in-an-image-affect-the-runtime-performance/43119&quot; target=&quot;_blank&quot;&gt;Do number of layers (in an image) affect the runtime performance?&lt;/a&gt;  &lt;br /&gt;
 &lt;a href=&quot;https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612&quot; target=&quot;_blank&quot;&gt;Digging into Docker layers&lt;/a&gt;&lt;/p&gt;
@@ -35,7 +35,7 @@
 &lt;a href=&quot;https://nickjanetakis.com/blog/benchmarking-debian-vs-alpine-as-a-base-docker-image&quot; target=&quot;_blank&quot;&gt;Benchmarking Debian vs Alpine as a Base Docker Image&lt;/a&gt;  &lt;br /&gt;
 &lt;a href=&quot;https://thenewstack.io/alpine-linux-heart-docker/&quot; target=&quot;_blank&quot;&gt;Meet Alpine Linux, Docker’s Distribution of Choice for Containers&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;DNS issue&lt;/strong&gt;
+&lt;p&gt;&lt;strong&gt;DNS issue&lt;/strong&gt;  &lt;br /&gt;
 &lt;a href=&quot;https://github.com/gliderlabs/docker-alpine/issues/255&quot; target=&quot;_blank&quot;&gt;DNS Issue #255&lt;/a&gt;  &lt;br /&gt;
 &lt;a href=&quot;https://github.com/gliderlabs/docker-alpine/blob/master/docs/caveats.md#dns&quot; target=&quot;_blank&quot;&gt;caveats.md » DNS&lt;/a&gt;&lt;/p&gt;
 
