@@ -157,12 +157,12 @@
 <h1 id="2-摘要翻译">2. 摘要翻译</h1>
 <p>During his three-months internship on the V8 team, Hai Dang worked on improving the performance of <code>[...array]</code>, <code>[...string]</code>, <code>[...set]</code>, <code>[...map.keys()]</code>, and <code>[...map.values()]</code> (when the spread elements are at the start of the array literal). He even made <code>Array.from(iterable)</code> much faster as well. This article explains some of the gory details of his changes, which are included in V8 starting with v7.2.</p>
 
-<p>在为期三个月的V8团队内部实习，Hai Dang在努力提升<code>[...array]</code>, <code>[...string]</code>, <code>[...set]</code>, <code>[...map.keys()]</code>, 以及 <code>[...map.values()]</code>的性能（当扩展元素在数组字面量（array literal）的起始）。他甚至让<code>Array.from(iterable)</code>也更快了。这篇文章解释了部分他改动的部分细节，这部分改动被包含在了V8 v7.2开始的版本中。</p>
+<p>在为期三个月的V8团队内部实习中，Hai Dang在努力提升<code>[...array]</code>, <code>[...string]</code>, <code>[...set]</code>, <code>[...map.keys()]</code>, 以及 <code>[...map.values()]</code>的性能（当扩展元素在数组字面量（array literal）的起始）。他甚至让<code>Array.from(iterable)</code>也更快了。这篇文章解释了部分他改动的细节，这部分改动被包含在了V8 v7.2开始的版本中。</p>
 
 <h2 id="spread-elements">Spread elements</h2>
 <p>Spread elements are components of array literals that have the form <code>...iterable</code>. They were introduced in ES2015 as a way to create arrays from iterable objects. For example, the array literal <code>[1, ...arr, 4, ...b]</code> creates an array whose first element is <code>1</code> followed by the elements of the array <code>arr</code>, then <code>4</code>, and finally the elements of the array <code>b</code>:</p>
 
-<p>扩展元素是拥有<code>...iterable</code>形式的数组字面量（array literals）组件。它们ES2015被引入的特性，作为一种从可迭代对象创建数组的方法。举例来说，数组字面量<code>[1, ...arr, 4, ...b]</code>创建了一个数组，这个数组的第一个元素是<code>1</code>，然后跟着是数组<code>arr</code>的元素，接着是<code>4</code>，最后是数组<code>b</code>的元素：</p>
+<p>扩展元素是拥有<code>...iterable</code>形式的数组字面量（array literals）组件。它们是从ES2015被引入的特性，作为一种从可迭代对象创建数组的方法。举例来说，数组字面量<code>[1, ...arr, 4, ...b]</code>创建了一个数组，这个数组的第一个元素是<code>1</code>，然后跟着是数组<code>arr</code>的元素，接着是<code>4</code>，最后是数组<code>b</code>的元素：</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kr">const</span> <span class="nx">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">];</span>
 <span class="kr">const</span> <span class="nx">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">];</span>
@@ -198,7 +198,7 @@
 <h2 id="why-is-or-were-spread-elements-slow">Why is (or were!) spread elements slow?</h2>
 <p>There are many ways to shallow-clone an array <code>arr</code>. For instance, you can use <code>arr.slice()</code>, or <code>arr.concat()</code>, or <code>[...arr]</code>. Or, you can write your own <code>clone</code> function that employs a standard <code>for</code>-loop:</p>
 
-<p>有很多方法可以浅拷贝一个数组<code>arr</code>。录入，你可以使用<code>arr.slice()</code>或<code>arr.concat()</code>，或<code>[...arr]</code>。甚至你可以编写你自己的<code>clone</code>函数来应用在一个标准的<code>for</code>循环：</p>
+<p>有很多方法可以浅拷贝一个数组<code>arr</code>。例如，你可以使用<code>arr.slice()</code>或<code>arr.concat()</code>，或<code>[...arr]</code>。甚至你可以基于标准的<code>for</code>循环来编写你自己的<code>clone</code>函数：</p>
 
 <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="kd">function</span> <span class="nx">clone</span><span class="p">(</span><span class="nx">arr</span><span class="p">)</span> <span class="p">{</span>
   <span class="c1">// Pre-allocate the correct number of elements, to avoid</span>
@@ -233,28 +233,30 @@
 <ol>
   <li>It needs to create the <code>iterator</code> at the beginning by loading and evaluating the <code>Symbol.iterator</code> property.</li>
   <li>It needs to create and query the <code>iteratorResult</code> object at every step.</li>
-  <li>
-    <p>It grows the <code>result</code> array at every step of the iteration by calling push, thus repeatedly reallocating the backing store.</p>
-  </li>
+  <li>It grows the <code>result</code> array at every step of the iteration by calling push, thus repeatedly reallocating the backing store.</li>
+</ol>
+
+<ul>
   <li>它需要在一开始通过读取和评估<code>Symbol.iterator</code>属性，来创建一个<code>iterator</code></li>
   <li>它需要在每一步创建并查询<code>iteratorResult</code>对象</li>
   <li>它在迭代的每一步中都需要使用push方法来增长<code>result</code>的长度，这导致了内存的再分配</li>
-</ol>
+</ul>
 
 <p>The reason for using such an implementation is that, as mentioned earlier, spreading can be done not only on arrays but, in fact, on arbitrary iterable objects, and must follow <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols" target="_blank">the iteration protocol</a>. Nevertheless, V8 should be smart enough to recognize if the object being spread is an array such that it can perform the elements extraction at a lower level and thereby:</p>
 
-<p>会使用这样的实现是因为，这我们之前提到过，扩展运算这个行为可以在很多目标上实施，不仅仅只是数组，事实上，而是任何可迭代的队形，并且必须遵循<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols" target="_blank">迭代协议（the iteration protocol）</a>。尽管如此，V8应该足够聪明，识别扩展对象是不是一个数组，以便在低层级执行元素抽取操作，从而：</p>
+<p>会使用这样的实现是因为，这我们之前提到过，扩展运算这个行为可以在很多目标上实施，不仅仅只是数组，事实上，是任何可迭代的对象，当然这些对象必须遵循<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols" target="_blank">迭代协议（the iteration protocol）</a>。尽管如此，V8应该足够聪明，识别扩展对象是不是一个数组，以便在低层级执行元素抽取操作，从而：</p>
 
 <ol>
   <li>avoid the creation of the iterator object,</li>
   <li>avoid the creation of the iterator result objects, and</li>
-  <li>
-    <p>avoid continuously growing and thus reallocating the result array (we know the number of elements in advance).</p>
-  </li>
+  <li>avoid continuously growing and thus reallocating the result array (we know the number of elements in advance).</li>
+</ol>
+
+<ul>
   <li>避免创建迭代对象</li>
   <li>避免创建迭代结果对象</li>
   <li>避免持续增长结果数组，避免内存的再分配（我们在一开始就知道目标长度了）</li>
-</ol>
+</ul>
 
 <p>We implemented this simple idea using <a href="https://v8.dev/blog/csa" target="_blank">CSA</a> for fast arrays, i.e. arrays with one of the six most common <a href="https://v8.dev/blog/elements-kinds" target="_blank">elements kinds</a>. The optimization applies for <a href="https://v8.dev/blog/real-world-performance" target="_blank">the common real-world scenario</a> where the spread occurs at the start of the array literal, e.g. <code>[...foo]</code>. As shown in the graph below, this new fast path yields roughly a 3× performance improvement for spreading an array of length 100,000, making it about 25% faster than the hand-written <code>clone</code> loop.</p>
 
