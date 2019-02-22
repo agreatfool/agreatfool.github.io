@@ -188,7 +188,9 @@
   <li>docker run 命令中文化：<a href="https://www.jianshu.com/p/ea4a00c6c21c" target="_blank">Docker run 命令参数及使用</a></li>
   <li>docker run –rm 会在容器退出时删除这个容器，与 -d 参数冲突</li>
   <li>docker run -d 会启动一个容器的守护进程，该容器不会退出</li>
-  <li>docker run -i -t $image_name:$version /bin/bash，会启动一个容器，并启动一个终端与该容器连接，可直接操作</li>
+  <li>docker run –rm -i -t $image_name:$version /bin/bash，会启动一个容器，并启动一个终端与该容器连接，可直接操作</li>
+  <li>docker exec -i -t $container_id /bin/bash，会为运行中的容器开启一个新的终端</li>
+  <li>docker run –name $name，会命名一个容器，后面可以用这个名字来快速连接访问，不用再 docker ps -a 来查找容器ID</li>
   <li>ENTRYPOINT和CMD的使用：<a href="https://medium.freecodecamp.org/docker-entrypoint-cmd-dockerfile-best-practices-abc591c30e21" target="_blank">Docker ENTRYPOINT &amp; CMD: Dockerfile best practices</a></li>
 </ul>
 
