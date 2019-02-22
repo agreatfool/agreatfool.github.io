@@ -185,6 +185,10 @@
 <ul>
   <li>做开发的时候可以把镜像构建多包几层，一层层做成镜像存在本地。后面的build可以直接from前面的，节约docker build的时间。否则中间一个步骤出错，很多耗时很长的源码编译工作就要从头来一次，太伤</li>
   <li>docker里的npm安装记得要加上<code>--unsafe-perm</code>，具体可以看：<a href="https://github.com/grpc/grpc-node/issues/604" target="_blank">grpc/grpc-node#604</a></li>
+  <li>docker run 命令中文化：<a href="https://www.jianshu.com/p/ea4a00c6c21c" target="_blank">Docker run 命令参数及使用</a></li>
+  <li>docker run –rm 会在容器退出时删除这个容器，与 -d 参数冲突</li>
+  <li>docker run -d 会启动一个容器的守护进程，该容器不会退出</li>
+  <li>docker run -i -t $image_name:$version /bin/bash，会启动一个容器，并启动一个终端与该容器连接，可直接操作</li>
 </ul>
 
 <blockquote>
