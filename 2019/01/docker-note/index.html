@@ -144,7 +144,7 @@
                 <h1 id="1-前言">1. 前言</h1>
 <p>简略了解 Docker 时看过的一些资料，留点笔记。</p>
 
-<h1 id="2-notes">2. Notes</h1>
+<h1 id="2-知识点">2. 知识点</h1>
 <h2 id="21-docker">2.1 Docker</h2>
 <p><a href="https://docs.docker.com/engine/docker-overview/" target="_blank">docker overview</a> <br />
 <a href="https://docs.docker.com/network/" target="_blank">docker network overview</a> <br />
@@ -189,6 +189,7 @@
   <li>docker run –rm 会在容器退出时删除这个容器，与 -d 参数冲突</li>
   <li>docker run -d 会启动一个容器的守护进程，该容器不会退出</li>
   <li>docker run -i -t $image_name:$version /bin/bash，会启动一个容器，并启动一个终端与该容器连接，可直接操作</li>
+  <li>ENTRYPOINT和CMD的使用：<a href="https://medium.freecodecamp.org/docker-entrypoint-cmd-dockerfile-best-practices-abc591c30e21" target="_blank">Docker ENTRYPOINT &amp; CMD: Dockerfile best practices</a></li>
 </ul>
 
 <blockquote>
