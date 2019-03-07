@@ -145,16 +145,69 @@
 <ul id="markdown-toc">
   <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
   <li><a href="#2-语言基础" id="markdown-toc-2-语言基础">2. 语言基础</a>    <ul>
-      <li><a href="#21-代码模块-module" id="markdown-toc-21-代码模块-module">2.1 代码模块 module</a></li>
-      <li><a href="#22-变量-variable" id="markdown-toc-22-变量-variable">2.2 变量 variable</a></li>
-      <li><a href="#23-循环--判断" id="markdown-toc-23-循环--判断">2.3 循环 &amp; 判断</a></li>
-      <li><a href="#24-通道--信道-channel" id="markdown-toc-24-通道--信道-channel">2.4 通道 / 信道 channel</a></li>
-      <li><a href="#25-函数-func" id="markdown-toc-25-函数-func">2.5 函数 func</a></li>
-      <li><a href="#26-类型-struct" id="markdown-toc-26-类型-struct">2.6 类型 struct</a></li>
+      <li><a href="#21-代码模块-module" id="markdown-toc-21-代码模块-module">2.1 代码模块 module</a>        <ul>
+          <li><a href="#internal" id="markdown-toc-internal">internal</a></li>
+        </ul>
+      </li>
+      <li><a href="#22-变量-variable" id="markdown-toc-22-变量-variable">2.2 变量 variable</a>        <ul>
+          <li><a href="#程序实体" id="markdown-toc-程序实体">程序实体</a></li>
+          <li><a href="#基本类型" id="markdown-toc-基本类型">基本类型</a></li>
+          <li><a href="#引用类型" id="markdown-toc-引用类型">引用类型</a></li>
+          <li><a href="#值传递--引用传递" id="markdown-toc-值传递--引用传递">值传递 &amp; 引用传递</a></li>
+          <li><a href="#变量申明" id="markdown-toc-变量申明">变量申明</a></li>
+          <li><a href="#变量初始化--new--make" id="markdown-toc-变量初始化--new--make">变量初始化 &amp; new &amp; make</a></li>
+          <li><a href="#表达式类型" id="markdown-toc-表达式类型">表达式类型</a></li>
+          <li><a href="#类型别名--再定义" id="markdown-toc-类型别名--再定义">类型别名 &amp; 再定义</a></li>
+          <li><a href="#数组--切片" id="markdown-toc-数组--切片">数组 &amp; 切片</a></li>
+          <li><a href="#map" id="markdown-toc-map">map</a></li>
+          <li><a href="#显示类型转换" id="markdown-toc-显示类型转换">显示类型转换</a></li>
+          <li><a href="#类型断言" id="markdown-toc-类型断言">类型断言</a></li>
+          <li><a href="#打印类型" id="markdown-toc-打印类型">打印类型</a></li>
+        </ul>
+      </li>
+      <li><a href="#23-循环--判断" id="markdown-toc-23-循环--判断">2.3 循环 &amp; 判断</a>        <ul>
+          <li><a href="#if" id="markdown-toc-if">if</a></li>
+          <li><a href="#for" id="markdown-toc-for">for</a></li>
+          <li><a href="#switch" id="markdown-toc-switch">switch</a></li>
+          <li><a href="#range" id="markdown-toc-range">range</a></li>
+        </ul>
+      </li>
+      <li><a href="#24-通道--信道-channel" id="markdown-toc-24-通道--信道-channel">2.4 通道 / 信道 channel</a>        <ul>
+          <li><a href="#通道缓存" id="markdown-toc-通道缓存">通道缓存</a></li>
+          <li><a href="#顺序" id="markdown-toc-顺序">顺序</a></li>
+          <li><a href="#内存" id="markdown-toc-内存">内存</a></li>
+          <li><a href="#阻塞" id="markdown-toc-阻塞">阻塞</a></li>
+          <li><a href="#select" id="markdown-toc-select">select</a></li>
+          <li><a href="#关闭" id="markdown-toc-关闭">关闭</a></li>
+        </ul>
+      </li>
+      <li><a href="#25-函数-func" id="markdown-toc-25-函数-func">2.5 函数 func</a>        <ul>
+          <li><a href="#参数" id="markdown-toc-参数">参数</a></li>
+          <li><a href="#官方闭包tutorial" id="markdown-toc-官方闭包tutorial">官方闭包tutorial</a></li>
+        </ul>
+      </li>
+      <li><a href="#26-类型-struct" id="markdown-toc-26-类型-struct">2.6 类型 struct</a>        <ul>
+          <li><a href="#字符串转换函数" id="markdown-toc-字符串转换函数">字符串转换函数</a></li>
+          <li><a href="#嵌入字段--匿名字段" id="markdown-toc-嵌入字段--匿名字段">嵌入字段 / 匿名字段</a></li>
+          <li><a href="#嵌入字段与继承区别" id="markdown-toc-嵌入字段与继承区别">嵌入字段与继承区别</a></li>
+          <li><a href="#接收者类型" id="markdown-toc-接收者类型">接收者类型</a></li>
+          <li><a href="#struct类型值" id="markdown-toc-struct类型值">struct{}类型值</a></li>
+        </ul>
+      </li>
       <li><a href="#27-接口-interface" id="markdown-toc-27-接口-interface">2.7 接口 interface</a></li>
-      <li><a href="#28-指针-pointer" id="markdown-toc-28-指针-pointer">2.8 指针 pointer</a></li>
+      <li><a href="#28-指针-pointer" id="markdown-toc-28-指针-pointer">2.8 指针 pointer</a>        <ul>
+          <li><a href="#操作符" id="markdown-toc-操作符">操作符</a></li>
+          <li><a href="#可否寻址" id="markdown-toc-可否寻址">可否寻址</a></li>
+          <li><a href="#打印指针方法" id="markdown-toc-打印指针方法">打印指针方法</a></li>
+        </ul>
+      </li>
       <li><a href="#29-go程-goroutine" id="markdown-toc-29-go程-goroutine">2.9 Go程 goroutine</a></li>
-      <li><a href="#210-错误-error" id="markdown-toc-210-错误-error">2.10 错误 error</a></li>
+      <li><a href="#210-错误-error" id="markdown-toc-210-错误-error">2.10 错误 error</a>        <ul>
+          <li><a href="#错误判断" id="markdown-toc-错误判断">错误判断</a></li>
+          <li><a href="#panic" id="markdown-toc-panic">panic</a></li>
+          <li><a href="#defer" id="markdown-toc-defer">defer</a></li>
+        </ul>
+      </li>
     </ul>
   </li>
   <li><a href="#3-工具使用" id="markdown-toc-3-工具使用">3. 工具使用</a>    <ul>
@@ -188,14 +241,14 @@
 
 <p>名称的首字母为大写的程序实体才可以被当前包外的代码引用，否则它就只能被当前包内的其他代码引用。小写，包私有；大写，公开。</p>
 
-<p><strong>internal</strong>  <br />
-路径和包名为internal的是模块私有的代码，无法被外部引用。  <br />
+<h3 id="internal">internal</h3>
+<p>路径和包名为internal的是模块私有的代码，无法被外部引用。  <br />
 具体规则是，internal代码包中声明的公开程序实体仅能被该代码包的直接父包及其子包中的代码引用。当然，引用前需要先导入这个internal包。对于其他代码包，导入该internal包都是非法的，无法通过编译。</p>
 
 <h2 id="22-变量-variable">2.2 变量 variable</h2>
 
-<p><strong>程序实体</strong>  <br />
-Go 语言中的<code>程序实体</code>包括：</p>
+<h3 id="程序实体">程序实体</h3>
+<p>Go 语言中的<code>程序实体</code>包括：</p>
 
 <ul>
   <li>变量</li>
@@ -205,7 +258,7 @@ Go 语言中的<code>程序实体</code>包括：</p>
   <li>接口</li>
 </ul>
 
-<p><strong>基本类型</strong></p>
+<h3 id="基本类型">基本类型</h3>
 
 <blockquote>
   <p>bool</p>
@@ -224,7 +277,7 @@ byte // uint8 的别名</p>
   <p>complex64 complex128</p>
 </blockquote>
 
-<p><strong>引用类型</strong></p>
+<h3 id="引用类型">引用类型</h3>
 
 <ul>
   <li>slice</li>
@@ -234,11 +287,11 @@ byte // uint8 的别名</p>
 
 <p>它们本身就是对某种类型指针的封装：slice封装的指针是一个数组，所以传递的时候直接传递其本身就够了，一般来说不需要取址（&amp;）</p>
 
-<p><strong>值传递 &amp; 引用传递</strong>  <br />
-Go 语言里不存在像 Java 等编程语言中令人困惑的“传值或传引用”问题。在 Go 语言中，我们判断所谓的“传值”或者“传引用”只要看被传递的值的类型就好了。如果传递的值是引用类型的，那么就是“传引用”。如果传递的值是值类型的，那么就是“传值”。从传递成本的角度讲，引用类型的值往往要比值类型的值低很多。</p>
+<h3 id="值传递--引用传递">值传递 &amp; 引用传递</h3>
+<p>Go 语言里不存在像 Java 等编程语言中令人困惑的“传值或传引用”问题。在 Go 语言中，我们判断所谓的“传值”或者“传引用”只要看被传递的值的类型就好了。如果传递的值是引用类型的，那么就是“传引用”。如果传递的值是值类型的，那么就是“传值”。从传递成本的角度讲，引用类型的值往往要比值类型的值低很多。</p>
 
-<p><strong>变量申明</strong>  <br />
-Go 语言在声明变量时，自动对变量对应的内存区域进行初始化操作。每个变量会初始化其类型的默认值，例如：</p>
+<h3 id="变量申明">变量申明</h3>
+<p>Go 语言在声明变量时，自动对变量对应的内存区域进行初始化操作。每个变量会初始化其类型的默认值，例如：</p>
 
 <ul>
   <li>整型和浮点型变量的默认值为 0。</li>
@@ -249,8 +302,8 @@ Go 语言在声明变量时，自动对变量对应的内存区域进行初始�
 
 <p>所以看到某个被申明的变量直接被拿来使用的时候千万不要惊奇，并不是一定要进行初始化才可以使用。</p>
 
-<p><strong>变量初始化 &amp; new &amp; make</strong>  <br />
-<a href="https://golang.org/doc/faq#stack_or_heap" target="_blank">How do I know whether a variable is allocated on the heap or the stack?</a></p>
+<h3 id="变量初始化--new--make">变量初始化 &amp; new &amp; make</h3>
+<p><a href="https://golang.org/doc/faq#stack_or_heap" target="_blank">How do I know whether a variable is allocated on the heap or the stack?</a></p>
 
 <p><a href="https://www.flysnow.org/2017/10/23/go-new-vs-make.html">Go语言中new和make的区别</a>{target:”_blank”}</p>
 
@@ -270,18 +323,18 @@ Go 语言在声明变量时，自动对变量对应的内存区域进行初始�
   </li>
 </ul>
 
-<p><strong>表达式类型</strong>  <br />
-你可以认为，表达式类型就是对表达式进行求值后得到结果的类型。</p>
+<h3 id="表达式类型">表达式类型</h3>
+<p>你可以认为，表达式类型就是对表达式进行求值后得到结果的类型。</p>
 
 <p><code>[]string</code>是一个类型字面量。所谓类型字面量，就是用来表示数据类型本身的若干个字符。</p>
 
-<p><strong>类型别名 &amp; 再定义</strong></p>
+<h3 id="类型别名--再定义">类型别名 &amp; 再定义</h3>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">MyString</span> <span class="p">=</span> <span class="kt">string</span> <span class="c1">// 这条声明语句表示，MyString是string类型的别名类型。    </span>
 <span class="kd">type</span> <span class="nx">MyString2</span> <span class="kt">string</span> <span class="c1">// 注意，这里没有等号。这里的MyString2是一个新的类型，不同于其他任何类型。这种方式也可以被叫做对类型的再定义。</span></code></pre></figure>
 
-<p><strong>数组 &amp; 切片</strong>  <br />
-数组类型的值（以下简称数组）的长度是固定的，而切片类型的值（以下简称切片）是可变长的。Go 语言的切片类型属于引用类型，同属引用类型的还有字典类型、通道类型、函数类型等；而 Go 语言的数组类型则属于值类型，同属值类型的有基础数据类型以及结构体类型。（引用类型主要就这几种，不多的）</p>
+<h3 id="数组--切片">数组 &amp; 切片</h3>
+<p>数组类型的值（以下简称数组）的长度是固定的，而切片类型的值（以下简称切片）是可变长的。Go 语言的切片类型属于引用类型，同属引用类型的还有字典类型、通道类型、函数类型等；而 Go 语言的数组类型则属于值类型，同属值类型的有基础数据类型以及结构体类型。（引用类型主要就这几种，不多的）</p>
 
 <p>Go 语言里的切片长度和容量。长度指当前切片中的真实元素有多少个，容量指切片申请的内存容量是多少。</p>
 
@@ -293,21 +346,21 @@ Go 语言在声明变量时，自动对变量对应的内存区域进行初始�
 
 <p>1号位包含，4号位不含</p>
 
-<p><strong>map</strong>  <br />
-判断map中键是否存在：</p>
+<h3 id="map">map</h3>
+<p>判断map中键是否存在：</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">elem</span><span class="p">,</span> <span class="nx">ok</span> <span class="p">=</span> <span class="nx">m</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span>
 <span class="c1">// OR    </span>
 <span class="nx">_</span><span class="p">,</span> <span class="nx">ok</span> <span class="p">=</span> <span class="nx">m</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span></code></pre></figure>
 
-<p><strong>显示类型转换</strong>  <br />
-表达式 T(v) 将值 v 转换为类型 T。  <br />
+<h3 id="显示类型转换">显示类型转换</h3>
+<p>表达式 T(v) 将值 v 转换为类型 T。  <br />
 所有的类型转换必须是显示的。</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">f</span> <span class="o">:=</span> <span class="nb">float32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></code></pre></figure>
 
-<p><strong>类型断言</strong>  <br />
-类型断言表达式的语法形式是x.(T)。其中的x代表要被判断类型的值。这个值当下的类型必须是接口类型的，不过具体是哪个接口类型其实是无所谓的。  <br />
+<h3 id="类型断言">类型断言</h3>
+<p>类型断言表达式的语法形式是x.(T)。其中的x代表要被判断类型的值。这个值当下的类型必须是接口类型的，不过具体是哪个接口类型其实是无所谓的。  <br />
 <code>value, ok := interface{}(container).([]string)</code>  <br />
 一对不包裹任何东西的花括号，除了可以代表空的代码块之外，还可以用于表示不包含任何内容的数据结构（或者说数据类型）。</p>
 
@@ -333,29 +386,29 @@ Go 语言在声明变量时，自动对变量对应的内存区域进行初始�
 	<span class="k">return</span>
 <span class="p">}</span></code></pre></figure>
 
-<p><strong>打印类型</strong></p>
+<h3 id="打印类型">打印类型</h3>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;The type of pet is %T.\n&quot;</span><span class="p">,</span> <span class="nx">pet</span><span class="p">)</span>
 <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;The type of pet is %s.\n&quot;</span><span class="p">,</span> <span class="nx">reflect</span><span class="p">.</span><span class="nx">TypeOf</span><span class="p">(</span><span class="nx">pet</span><span class="p">).</span><span class="nx">String</span><span class="p">())</span></code></pre></figure>
 
 <h2 id="23-循环--判断">2.3 循环 &amp; 判断</h2>
 
-<p><strong>if</strong>  <br />
-if 在判断之前可以添加一句简单的语句进行执行</p>
+<h3 id="if">if</h3>
+<p>if 在判断之前可以添加一句简单的语句进行执行</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="k">if</span> <span class="nx">v</span> <span class="o">:=</span> <span class="nx">math</span><span class="p">.</span><span class="nx">Pow</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span> <span class="nx">n</span><span class="p">);</span> <span class="nx">v</span> <span class="p">&lt;</span> <span class="nx">lim</span> <span class="p">{</span>
 	<span class="k">return</span> <span class="nx">v</span>
 <span class="p">}</span></code></pre></figure>
 
-<p><strong>for</strong>  <br />
-没有初始化语句和后置语句的 for 就是其他语言中的 while，这种情况下可以删除前后的分号</p>
+<h3 id="for">for</h3>
+<p>没有初始化语句和后置语句的 for 就是其他语言中的 while，这种情况下可以删除前后的分号</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="k">for</span> <span class="nx">x</span> <span class="p">&lt;</span> <span class="mi">1000</span> <span class="p">{</span>
 <span class="c1">//...</span>
 <span class="p">}</span></code></pre></figure>
 
-<p><strong>switch</strong>  <br />
-switch 只会执行符合的条件，不会一路 fallthrough 下去  <br />
+<h3 id="switch">switch</h3>
+<p>switch 只会执行符合的条件，不会一路 fallthrough 下去  <br />
 switch 还可以不带上判断条件，这样使用就等于if-else-else…</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="k">switch</span> <span class="p">{</span>
@@ -367,7 +420,7 @@ switch 还可以不带上判断条件，这样使用就等于if-else-else…</p>
 	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;Good evening.&quot;</span><span class="p">)</span>
 <span class="p">}</span></code></pre></figure>
 
-<p><strong>range</strong></p>
+<h3 id="range">range</h3>
 <ol>
   <li>range表达式只会在for语句开始执行时被求值一次，无论后边会有多少次迭代；</li>
   <li>range表达式的求值结果会被复制，也就是说，被迭代的对象是range表达式结果值的副本而不是原值。</li>
@@ -375,19 +428,19 @@ switch 还可以不带上判断条件，这样使用就等于if-else-else…</p>
 
 <h2 id="24-通道--信道-channel">2.4 通道 / 信道 channel</h2>
 
-<p><strong>通道缓存</strong>  <br />
-通道，make函数除了必须接收这样的类型字面量作为参数，还可以接收一个int类型的参数。后者是可选的，用于表示该通道的容量。所谓通道的容量，就是指通道最多可以缓存多少个元素值。</p>
+<h3 id="通道缓存">通道缓存</h3>
+<p>通道，make函数除了必须接收这样的类型字面量作为参数，还可以接收一个int类型的参数。后者是可选的，用于表示该通道的容量。所谓通道的容量，就是指通道最多可以缓存多少个元素值。</p>
 
-<p><strong>顺序</strong>  <br />
-一个通道相当于一个先进先出（FIFO）的队列。也就是说，通道中的各个元素值都是严格地按照发送的顺序排列的，先被发送通道的元素值一定会先被接收。</p>
+<h3 id="顺序">顺序</h3>
+<p>一个通道相当于一个先进先出（FIFO）的队列。也就是说，通道中的各个元素值都是严格地按照发送的顺序排列的，先被发送通道的元素值一定会先被接收。</p>
 
 <p>对于同一个通道，发送操作之间是互斥的，接收操作之间也是互斥的。在同一时刻，Go 语言的运行时系统（以下简称运行时系统）只会执行对同一个通道的任意个发送操作中的某一个。直到这个元素值被完全复制进该通道之后，其他针对该通道的发送操作才可能被执行。对于通道中的同一个元素值来说，发送操作和接收操作之间也是互斥的。</p>
 
-<p><strong>内存</strong>  <br />
-元素值从外界进入通道时会被<code>复制</code>。更具体地说，进入通道的并不是在接收操作符右边的那个元素值，而是它的副本。另一方面，元素值从通道进入外界时会被移动。这个移动操作实际上包含了两步，第一步是生成正在通道中的这个元素值的副本，并准备给到接收方，第二步是删除在通道中的这个元素值。</p>
+<h3 id="内存">内存</h3>
+<p>元素值从外界进入通道时会被<code>复制</code>。更具体地说，进入通道的并不是在接收操作符右边的那个元素值，而是它的副本。另一方面，元素值从通道进入外界时会被移动。这个移动操作实际上包含了两步，第一步是生成正在通道中的这个元素值的副本，并准备给到接收方，第二步是删除在通道中的这个元素值。</p>
 
-<p><strong>阻塞</strong>  <br />
-发送操作和接收操作中对元素值的处理都是不可分割的。例如，发送操作要么还没复制元素值，要么已经复制完毕，绝不会出现只复制了一部分的情况。</p>
+<h3 id="阻塞">阻塞</h3>
+<p>发送操作和接收操作中对元素值的处理都是不可分割的。例如，发送操作要么还没复制元素值，要么已经复制完毕，绝不会出现只复制了一部分的情况。</p>
 
 <p>发送操作在完全完成之前会被<code>阻塞</code>。接收操作也是如此。</p>
 
@@ -395,20 +448,20 @@ switch 还可以不带上判断条件，这样使用就等于if-else-else…</p>
 
 <p>对于<code>非缓冲通道</code>，情况要简单一些。无论是发送操作还是接收操作，一开始执行就会被阻塞，直到配对的操作也开始执行，才会继续传递。由此可见，非缓冲通道是在用同步的方式传递数据。也就是说，只有收发双方对接上了，数据才会被传递。并且，数据是直接从发送方复制到接收方的，中间并不会用非缓冲通道做中转。相比之下，缓冲通道则在用异步的方式传递数据。</p>
 
-<p><strong>select</strong>  <br />
-select语句只能与通道联用，它一般由若干个分支组成。每次执行这种语句的时候，一般只有一个分支中的代码会被运行。仅当select语句中的所有case表达式都被求值完毕后，它才会开始选择候选分支。</p>
+<h3 id="select">select</h3>
+<p>select语句只能与通道联用，它一般由若干个分支组成。每次执行这种语句的时候，一般只有一个分支中的代码会被运行。仅当select语句中的所有case表达式都被求值完毕后，它才会开始选择候选分支。</p>
 
-<p><strong>关闭</strong>  <br />
-只有发送者才能关闭信道，而接收者不能。向一个已经关闭的信道发送数据会引发程序恐慌（panic）。
+<h3 id="关闭">关闭</h3>
+<p>只有发送者才能关闭信道，而接收者不能。向一个已经关闭的信道发送数据会引发程序恐慌（panic）。
 信道与文件不同，通常情况下无需关闭它们。只有在必须告诉接收者不再有需要发送的值时才有必要关闭，例如终止一个 range 循环。</p>
 
 <h2 id="25-函数-func">2.5 函数 func</h2>
 
-<p><strong>参数</strong>  <br />
-传入函数的参数值：数组是值类型，所以每一次复制都会拷贝它，以及它的所有元素值。对于引用类型，比如：切片、字典、通道，像上面那样复制它们的值，只会拷贝它们本身而已，并不会拷贝它们引用的底层数据。也就是说，这时只是浅表复制，而不是深层复制。</p>
+<h3 id="参数">参数</h3>
+<p>传入函数的参数值：数组是值类型，所以每一次复制都会拷贝它，以及它的所有元素值。对于引用类型，比如：切片、字典、通道，像上面那样复制它们的值，只会拷贝它们本身而已，并不会拷贝它们引用的底层数据。也就是说，这时只是浅表复制，而不是深层复制。</p>
 
-<p><strong>官方闭包指引：</strong>  <br />
-Go 函数可以是一个闭包。闭包是一个函数值，它引用了其函数体之外的变量。该函数可以访问并赋予其引用的变量的值，换句话说，该函数被“绑定”在了这些变量上。</p>
+<h3 id="官方闭包tutorial">官方闭包tutorial</h3>
+<p>Go 函数可以是一个闭包。闭包是一个函数值，它引用了其函数体之外的变量。该函数可以访问并赋予其引用的变量的值，换句话说，该函数被“绑定”在了这些变量上。</p>
 
 <p>例如，函数 adder 返回一个闭包。每个闭包都被绑定在其各自的 sum 变量上。</p>
 
@@ -431,11 +484,11 @@ Go 函数可以是一个闭包。闭包是一个函数值，它引用了其函�
 
 <h2 id="26-类型-struct">2.6 类型 struct</h2>
 
-<p><strong>字符串转换函数</strong>  <br />
-在 Go 语言中，我们可以通过为一个类型编写名为String的方法，来自定义该类型的字符串表示形式。这个String方法不需要任何参数声明，但需要有一个string类型的结果声明。</p>
+<h3 id="字符串转换函数">字符串转换函数</h3>
+<p>在 Go 语言中，我们可以通过为一个类型编写名为String的方法，来自定义该类型的字符串表示形式。这个String方法不需要任何参数声明，但需要有一个string类型的结果声明。</p>
 
-<p><strong>嵌入字段 / 匿名字段</strong>  <br />
-Go 语言规范规定，如果一个字段的声明中只有字段的类型名而没有字段的名称，那么它就是一个嵌入字段，也可以被称为匿名字段。我们可以通过此类型变量的名称后跟“.”，再后跟嵌入字段类型的方式引用到该字段。也就是说，嵌入字段的类型既是类型也是名称。</p>
+<h3 id="嵌入字段--匿名字段">嵌入字段 / 匿名字段</h3>
+<p>Go 语言规范规定，如果一个字段的声明中只有字段的类型名而没有字段的名称，那么它就是一个嵌入字段，也可以被称为匿名字段。我们可以通过此类型变量的名称后跟“.”，再后跟嵌入字段类型的方式引用到该字段。也就是说，嵌入字段的类型既是类型也是名称。</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">Animal</span> <span class="kd">struct</span> <span class="p">{</span>
     <span class="nx">scientificName</span> <span class="kt">string</span> <span class="c1">// 学名。</span>
@@ -450,12 +503,12 @@ Go 语言规范规定，如果一个字段的声明中只有字段的类型名�
 
 <p>如果被嵌入的类型中有和嵌入者重名的方法，则被嵌入这的方法会覆盖掉嵌入者的方法。（这个可以理解为重载）</p>
 
-<p><strong>嵌入字段与继承区别</strong>  <br />
-<a href="https://golang.org/doc/faq#inheritance">Why is there no type inheritance?</a>  <br />
+<h3 id="嵌入字段与继承区别">嵌入字段与继承区别</h3>
+<p><a href="https://golang.org/doc/faq#inheritance">Why is there no type inheritance?</a>  <br />
 简单来说，面向对象编程中的继承，其实是通过牺牲一定的代码简洁性来换取可扩展性，而且这种可扩展性是通过侵入的方式来实现的。而Go语言类型之间的组合采用的是非声明的方式，我们不需要显式地声明某个类型实现了某个接口，或者一个类型继承了另一个类型。同时，类型组合也是非侵入式的，它不会破坏类型的封装或加重类型之间的耦合。</p>
 
-<p><strong>接收者类型</strong>  <br />
-类型的接收者类型：</p>
+<h3 id="接收者类型">接收者类型</h3>
+<p>类型的接收者类型：</p>
 
 <ul>
   <li><code>func (cat *Cat) SetName(name string)</code> 指针类型</li>
@@ -469,8 +522,8 @@ Go 语言规范规定，如果一个字段的声明中只有字段的类型名�
   <li>一个自定义数据类型的方法集合中仅会包含它的所有值方法，而该类型的指针类型的方法集合却囊括了前者的所有方法，包括所有值方法和所有指针方法。但是，Go 语言会适时地为我们进行自动地转译，使得我们在这样的值上也能调用到它的指针方法。</li>
 </ul>
 
-<p><strong>struct{}类型值</strong>  <br />
-struct{}类型值的表示法只有一个，即：struct{}{}。并且，它占用的内存空间是0字节。确切地说，这个值在整个 Go 程序中永远都只会存在一份。虽然我们可以无数次地使用这个值字面量，但是用到的却都是同一个值。</p>
+<h3 id="struct类型值">struct{}类型值</h3>
+<p>struct{}类型值的表示法只有一个，即：struct{}{}。并且，它占用的内存空间是0字节。确切地说，这个值在整个 Go 程序中永远都只会存在一份。虽然我们可以无数次地使用这个值字面量，但是用到的却都是同一个值。</p>
 
 <h2 id="27-接口-interface">2.7 接口 interface</h2>
 
@@ -503,14 +556,14 @@ struct{}类型值的表示法只有一个，即：struct{}{}。并且，它占�
 
 <h2 id="28-指针-pointer">2.8 指针 pointer</h2>
 
-<p><strong>操作符</strong></p>
+<h3 id="操作符">操作符</h3>
 <ul>
   <li><code>*</code>表示的是取值操作，传过来的是一个指针，通过在前面附带<code>*</code>，就获得了这个指针所指向的值。</li>
   <li><code>&amp;</code>表示的是寻址操作，传过来的是一个值，通过在前面附带<code>&amp;</code>，就获得了指向这个值的指针。</li>
 </ul>
 
-<p><strong>可否寻址</strong>  <br />
-下列表中的值都是不可寻址的：</p>
+<h3 id="可否寻址">可否寻址</h3>
+<p>下列表中的值都是不可寻址的：</p>
 
 <ul>
   <li>常量的值。</li>
@@ -534,13 +587,12 @@ struct{}类型值的表示法只有一个，即：struct{}{}。并且，它占�
   <li>若拿到某值的指针可能会破坏程序的一致性，那么就是<code>不安全的</code>，该值就不可寻址。由于字典的内部机制，对字典的索引结果值的取址操作都是不安全的。另外，获取由字面量或标识符代表的函数或方法的地址显然也是不安全的。</li>
 </ol>
 
-<p><strong>打印指针方法</strong></p>
+<h3 id="打印指针方法">打印指针方法</h3>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">a</span> <span class="o">:=</span> <span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="kt">int</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">}</span>
 <span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;%p\n&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">a</span><span class="p">)</span></code></pre></figure>
 
 <h2 id="29-go程-goroutine">2.9 Go程 goroutine</h2>
-
 <p>在sync/atomic包中声明了很多用于原子操作的函数。可以用在协程竞争的时候的线程安全。</p>
 
 <p>e.g</p>
@@ -549,8 +601,8 @@ struct{}类型值的表示法只有一个，即：struct{}{}。并且，它占�
 
 <h2 id="210-错误-error">2.10 错误 error</h2>
 
-<p><strong>错误判断</strong>  <br />
-对于具体错误的判断，Go 语言中都有哪些惯用法？</p>
+<h3 id="错误判断">错误判断</h3>
+<p>对于具体错误的判断，Go 语言中都有哪些惯用法？</p>
 
 <ol>
   <li>对于类型在已知范围内的一系列错误值，一般使用类型断言表达式或类型switch语句来判断；</li>
@@ -558,13 +610,13 @@ struct{}类型值的表示法只有一个，即：struct{}{}。并且，它占�
   <li>对于没有相应变量且类型未知的一系列错误值，只能使用其错误信息的字符串表示形式来做判断。</li>
 </ol>
 
-<p><strong>panic</strong>  <br />
-从 panic 被引发到程序终止运行的大致过程：建立panic，并从运行的代码开始按调用栈逐层返回，最终返回运行时系统，打印信息，程序崩溃。</p>
+<h3 id="panic">panic</h3>
+<p>从 panic 被引发到程序终止运行的大致过程：建立panic，并从运行的代码开始按调用栈逐层返回，最终返回运行时系统，打印信息，程序崩溃。</p>
 
 <p>error返回可以被忽略，因此一般应用在”不致命”的场景。内建函数panic可用于引发 panic，一般用在”致命”错误的场景。</p>
 
-<p><strong>defer</strong>  <br />
-defer是先进后出（FILO）的，相当于一个栈，需要注意：</p>
+<h3 id="defer">defer</h3>
+<p>defer是先进后出（FILO）的，相当于一个栈，需要注意：</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">func</span> <span class="nx">main</span><span class="p">()</span> <span class="p">{</span>
 	<span class="k">defer</span> <span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="s">&quot;first defer&quot;</span><span class="p">)</span>
