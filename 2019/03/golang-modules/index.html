@@ -340,7 +340,7 @@
   <li>require gopkg.in/yaml.v2 v2.2.2</li>
 </ul>
 
-<p>此外，在使用的时候（import）：<code>example.com/my/mod/mypkg</code>和<code>example.com/my/mod.v2/mypkg</code>被认为是两个不同的包，会分开下载安装，且不会影响最后的编译。</p>
+<p>此外，在使用的时候（import）：<code>example&amp;#46;com/my/mod/mypkg</code>和<code>example&amp;#46;com/my/mod.v2/mypkg</code>被认为是两个不同的包，会分开下载安装，且不会影响最后的编译。</p>
 
 <h2 id="如何更新依赖的版本">如何更新依赖的版本</h2>
 <p>日常中对依赖进行版本升级或降级，应该使用<code>go get</code>命令：</p>
@@ -396,13 +396,13 @@
 	...
 <span class="o">)</span>
 
-replace golang.org/x/net <span class="o">=</span>&gt; github.com/golang/net v0.0.0-20190301231341-16b79f2e4e95</code></pre></figure>
+replace golang<span class="p">&amp;</span><span class="c1">#46;org/x/net =&gt; github&amp;#46;com/golang/net v0.0.0-20190301231341-16b79f2e4e95</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kn">package</span> <span class="nx">main</span>
 
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&quot;fmt&quot;</span>
-	<span class="s">&quot;golang.org/x/net/html&quot;</span>
+	<span class="s">&quot;golang&amp;#46;org/x/net/html&quot;</span>
 	<span class="s">&quot;strings&quot;</span>
 <span class="p">)</span>
 
