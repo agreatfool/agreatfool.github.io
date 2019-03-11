@@ -216,11 +216,11 @@
 
 <ul>
   <li>使用go mod init创建模块定义文件</li>
-  <li>使用go get命令下载对应的包代码</li>
+  <li>使用go get命令下载对应的依赖（或是更新对应的依赖）</li>
   <li>使用go build / go install命令来进行编译</li>
 </ul>
 
-<p>和modules功能出来之前没有任何不同，所有的模块管理工作在go的一系列命令中已经默认完成了。</p>
+<p>和modules功能出来之前没有任何不同，所有的模块管理工作在go的一系列命令中已经默认完成了。比如说<code>go build</code>或<code>go test</code>，等等，在执行这些命令的时候会自动对代码进行分析，找到缺失的依赖下载并将信息写入到对应的go.mod文件中。</p>
 
 <h2 id="go111module">GO111MODULE</h2>
 <p>这个环境变量用来控制是否启用modules功能，还是按之前的套路来处理go的包管理。一般来说都用这个版本了，没什么理由不把这个打开（<code>export GO111MODULE=on</code>）。如果你的代码是放在GOPATH之外的，那么默认就是打开的，放在GOPATH里的，默认是关闭的（我试下来是如此）。</p>
