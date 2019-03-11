@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Ubuntu10.10给root设密码 | Xenojoshua</title>
+  <title>Golang Notes | Xenojoshua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://xenojoshua.com/js/jquery.min.js"></script>
   <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
   <script src="https://xenojoshua.com/js/header.js"></script>
   <script src="https://xenojoshua.com/js/toc.js"></script>
-  <link href="https://xenojoshua.com//2011/04/ubuntu10-10-e7-bb-99root-e8-ae-be-e5-af-86-e7-a0-81/" rel="canonical" />
+  <link href="https://xenojoshua.com//2019/02/golang-note/" rel="canonical" />
   <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
@@ -135,25 +135,86 @@
         <div class="col-md-8">
           <div class="article">
             <div class="well">
-              <h1><a href="https://xenojoshua.com/2011/04/ubuntu10-10-e7-bb-99root-e8-ae-be-e5-af-86-e7-a0-81/">Ubuntu10.10给root设密码</a></h1>
+              <h1><a href="https://xenojoshua.com/2019/02/golang-note/">Golang Notes</a></h1>
               <div class="post-meta">
                 <div class="post-time">
                   <i class="fa fa-calendar"></i>
-                  <time>28 Apr 2011</time>
+                  <time>25 Feb 2019</time>
                 </div>
                 <ul>
                   
-                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                    <li><a href="https://xenojoshua.com/tag/Golang">Golang</a></li>
                   
-                    <li><a href="https://xenojoshua.com/tag/Ubuntu">Ubuntu</a></li>
+                    <li><a href="https://xenojoshua.com/tag/Profile">Profile</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Performance">Performance</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Memory">Memory</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/CPU">CPU</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Monitor">Monitor</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Metrics">Metrics</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Keynote">Keynote</a></li>
                   
                 </ul>
               </div>
               <div class="post-content">
-                <p>Ubuntu10.10在安装的过程中只叫你自己创建了一个账号，并没有给你机会设置、修改root的密码。所以我们只能在系统起来之后设置密码。</p>
-<p>首先用自己账号进系统，然后 sudo su -</p>
-<p>passwd root</p>
-<p>OK，搞定。</p>
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-基础" id="markdown-toc-2-基础">2. 基础</a></li>
+  <li><a href="#3-版本历史" id="markdown-toc-3-版本历史">3. 版本历史</a></li>
+  <li><a href="#4-模块" id="markdown-toc-4-模块">4. 模块</a></li>
+  <li><a href="#5-内存" id="markdown-toc-5-内存">5. 内存</a></li>
+  <li><a href="#6-cpu" id="markdown-toc-6-cpu">6. CPU</a></li>
+  <li><a href="#7-go程" id="markdown-toc-7-go程">7. Go程</a></li>
+  <li><a href="#8-debug" id="markdown-toc-8-debug">8. Debug</a></li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>Go语言系列专题汇总文章。基本上会将Go语言的方方面面都梳理一遍。</p>
+
+<p>版本申明，所有原创的代码及实验都是基于以下版本：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ go version
+go version go1.12 darwin/amd64</code></pre></figure>
+
+<h1 id="2-基础">2. 基础</h1>
+<p><a href="/2019/03/golang-basic/" target="_blank">Golang Basic</a>介绍了Go语言的语法基础及特点。并列出了Go语言的官方命令行工具以及如何使用。基本上熟悉Go语言的读者可以直接忽略这块。</p>
+
+<p>官方有个常见问题列表，这里放一下，有需求可以检索下：<a href="https://golang.org/doc/faq" target="_blank">Frequently Asked Questions (FAQ)</a>。</p>
+
+<h1 id="3-版本历史">3. 版本历史</h1>
+<p>一门技术，其历史版本更新的跟进是非常重要的，这对于了解功能演进以及了解变化都是非常有意义的。NodeJs我一直有跟进：<a href="/2018/03/v8-blog-translation/" target="_blank">V8博客摘要翻译</a>。而Go语言于我来说是比较新的东西，历史的更新必然是没有跟进的。这里推荐<a href="https://tonybai.com/" target="_blank">Tony Bai</a>大神的Go博客，对我来说感觉算是Go语言类似布道者的角色了。</p>
+
+<ul>
+  <li><a href="https://tonybai.com/2019/03/02/some-changes-in-go-1-12/" target="_blank">Go 1.12中值得关注的几个变化</a></li>
+  <li><a href="https://tonybai.com/2018/11/19/some-changes-in-go-1-11/" target="_blank">Go 1.11中值得关注的几个变化</a></li>
+  <li><a href="https://tonybai.com/2018/02/17/some-changes-in-go-1-10/" target="_blank">Go 1.10中值得关注的几个变化</a></li>
+  <li><a href="https://tonybai.com/2017/07/14/some-changes-in-go-1-9/" target="_blank">Go 1.9中值得关注的几个变化</a></li>
+  <li><a href="https://tonybai.com/2017/02/03/some-changes-in-go-1-8/" target="_blank">Go 1.8中值得关注的几个变化</a></li>
+  <li><a href="https://tonybai.com/2016/06/21/some-changes-in-go-1-7/" target="_blank">Go 1.7中值得关注的几个变化</a></li>
+  <li><a href="https://tonybai.com/2016/02/21/some-changes-in-go-1-6/" target="_blank">Go 1.6中值得关注的几个变化</a></li>
+  <li><a href="https://tonybai.com/2015/07/10/some-changes-in-go-1-5/" target="_blank">Go 1.5中值得关注的几个变化</a></li>
+</ul>
+
+<h1 id="4-模块">4. 模块</h1>
+<p>深入1.11版本终于实装的官方Go语言模块系统：go modules（vgo），详见：<a href="/2019/03/golang-modules/" target="_blank">Golang Modules</a>。</p>
+
+<h1 id="5-内存">5. 内存</h1>
+
+<h1 id="6-cpu">6. CPU</h1>
+
+<h1 id="7-go程">7. Go程</h1>
+
+<h1 id="8-debug">8. Debug</h1>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
 
               </div>
               
@@ -261,7 +322,7 @@
 <script type="text/javascript">
   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
   var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
-  var disqus_identifier = "/2011/04/ubuntu10-10-e7-bb-99root-e8-ae-be-e5-af-86-e7-a0-81/";
+  var disqus_identifier = "/2019/02/golang-note/";
 
   /* * * DON'T EDIT BELOW THIS LINE * * */
   (function() {
