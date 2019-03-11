@@ -375,7 +375,7 @@
 
 <p>注意：exclude和replace指令只在主模块的go.mod文件中生效，在依赖中则会被忽略。</p>
 
-<p>比如说依赖库里用到了golang.org/x里的包，你因为网络关系，在你自己的go.mod将这个库replace掉了，但下载完成之后你会发现在cache里还是会有golang.org/x的代码文件，因为第三方依赖可能用到它们了。</p>
+<p>比如说依赖库里用到了 golang.org/x 里的包，你因为网络关系，在你自己的go.mod将这个库replace掉了，但下载完成之后你会发现在cache里还是会有golang.org/x的代码文件，因为第三方依赖可能用到它们了。</p>
 
 <h2 id="replace指令">replace指令</h2>
 <p>在go.mod文件中，用得比较频繁的指令一般就只有require和replace。require不用多说，非常简单，replace还是有点细节的。</p>
