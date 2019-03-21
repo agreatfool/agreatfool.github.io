@@ -194,6 +194,10 @@
 
 <p>后续<code>模块</code>相关技术文字内容主要参考自官方wiki说明：<a href="https://github.com/golang/go/wiki/Modules" target="_blank">Go 1.11 Modules</a>。强烈建议有时间的可以自己通读一遍，任何第三方的讲解都不可能比这篇原文更详细、更细节。这是我见过的最<code>啰嗦</code>的技术说明文章之一。</p>
 
+<p><strong>UPDATE 2019-03-21</strong></p>
+
+<p>官方博客3.19姗姗来迟了一篇模块博文，算是补足了正规渠道的引导：<a href="https://blog.golang.org/using-go-modules" target="_blank">The Go Blog &gt; Using Go Modules</a>。比起之前的wiki，这篇博客算是做了点总结，不像wiki那么啰嗦了。</p>
+
 <h1 id="2-历史--展望">2. 历史 &amp; 展望</h1>
 <p>Go语言的包管理可以说是黑历史了，1.5之前基本上没有解决方案，1.5开始出了个vendor<code>文件夹</code>，后面几个版本大部分的工具都围绕着这个文件夹做文章。最后终于到了1.11版本才出了个官方的modules解决方案（vgo），算是尘埃落定。估计一开始做语言设计的时候，大佬觉得包管理根本没必要，怎么随意怎么来。结果后面大厂们都开始用go语言构建大型系统和生态了，才慢慢暴露出问题，文件下载随便一扔的解决方案太过随意，有太多太多的不安定要素。</p>
 
@@ -364,7 +368,10 @@
 
 <p>此外，同样会对go.mod文件进行更改的一系列命令，比如：’go build’、’go test’，或者是’go list’，会自动添加新需要的依赖进入go.mod来满足依赖（更新go.mod文件，并下载对应的新依赖）。</p>
 
-<p>如果要查看所有可以使用的直接或间接依赖升级，请使用命令：<code>go list -u -m all</code>。</p>
+<ul>
+  <li>如果要查看所有可以使用的直接或间接依赖升级，请使用命令：<code>go list -u -m all</code></li>
+  <li>如果需要查看一个依赖的可用版本，请使用命令：<code>go list -m -versions $depname</code></li>
+</ul>
 
 <p>这部分，更详细的可以参见：<a href="https://github.com/golang/go/wiki/Modules#how-to-upgrade-and-downgrade-dependencies" target="_blank">How to Upgrade and Downgrade Dependencies</a></p>
 
