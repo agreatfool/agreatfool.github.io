@@ -169,6 +169,7 @@
   <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
   <li><a href="#2-gpm--原理" id="markdown-toc-2-gpm--原理">2. GPM &amp; 原理</a></li>
   <li><a href="#3-profiling" id="markdown-toc-3-profiling">3. Profiling</a></li>
+  <li><a href="#4-blocking" id="markdown-toc-4-blocking">4. Blocking</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a></li>
 </ul>
 
@@ -209,6 +210,9 @@ Saved profile in /Users/Jonathan/pprof/pprof.goroutine.001.pb.gz
 </ul>
 
 <p>测试代码这里就不帖了，写起来实在是太简单，做个循环，起一点goroutine就好。</p>
+
+<h1 id="4-blocking">4. Blocking</h1>
+<p>阻塞的事情在这里顺道提一笔，毕竟阻塞和goroutine还是有很深的关系的，很多时候我们的debug就是要找死循环或死锁的goroutine。如果需要查看程序当中的阻塞情况（主要是竞争锁），一样可以使用pprof，入口在：<code>go tool pprof http://127.0.0.1:8080/debug/pprof/block</code>。</p>
 
 <h1 id="资料">资料</h1>
 <ul>
