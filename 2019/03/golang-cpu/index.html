@@ -182,7 +182,7 @@
 <p>本文是Go语言系列文章<a href="/2019/02/golang-note/" target="_blank">Golang Notes</a>的其中一篇，完整的文章列表请去总章查看。</p>
 
 <h1 id="2-cpu">2. CPU</h1>
-<p>CPU这里基本上就没什么太多原理可以说了，只要知道几个知识就OK。</p>
+<p>CPU这里基本上就没什么太多原理可以说了，只要知道几个知识点就OK。</p>
 
 <h2 id="21-核心数量">2.1 核心数量</h2>
 <p>获取可用的核心数量：</p>
@@ -199,7 +199,7 @@
 <p>仍旧推荐使用WEB入口的方式来进行profiling，更容易进行实时追踪。获取采样的地址为：<code>http://localhost:8080/debug/pprof/profile</code>。</p>
 <pre><code>$ go tool pprof http://localhost:8080/debug/pprof/profile
 Fetching profile over HTTP from http://localhost:8080/debug/pprof/profile
-Saved profile in /Users/Jonathan/pprof/pprof.samples.cpu.001.pb.gz
+Saved profile in /Users/XXX/pprof/pprof.samples.cpu.001.pb.gz
 Type: cpu
 Time: Mar 26, 2019 at 1:41pm (CST)
 Duration: 30.15s, Total samples = 3.16s (10.48%)
@@ -212,7 +212,7 @@ Entering interactive mode (type "help" for commands, "o" for options)
 <p>e.g</p>
 <pre><code>$ go tool pprof http://localhost:8080/debug/pprof/profile?seconds=10
 Fetching profile over HTTP from http://localhost:8080/debug/pprof/profile?seconds=10
-Saved profile in /Users/Jonathan/pprof/pprof.samples.cpu.002.pb.gz
+Saved profile in /Users/XXX/pprof/pprof.samples.cpu.002.pb.gz
 Type: cpu
 Time: Mar 26, 2019 at 1:44pm (CST)
 Duration: 10.02s, Total samples = 1.06s (10.57%)
