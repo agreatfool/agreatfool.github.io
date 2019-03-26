@@ -256,15 +256,15 @@ SCHED 6041ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=
 <p>字段说明：</p>
 
 <ul>
-  <li>SCHED：标识该输出信息为goroutine scheduler的输出</li>
-  <li>5037ms：从程序启动到输出这行日志的时间</li>
-  <li>gomaxprocs：P的数量</li>
-  <li>idleprocs：idle状态的P的数量</li>
-  <li>threads：操作系统threads的数量，包含scheduler使用的m数量，加上runtime自用的类似sysmon这样的thread的数量</li>
-  <li>spinningthreads：处于自旋状态的操作系统thread数量</li>
-  <li>idlethread：处于idle状态的操作系统thread的数量</li>
-  <li>runqueue=22：go scheduler全局队列中G的数量</li>
-  <li>[3 3 3 0 3 2 3 3]：8个P的local queue中的G的数量</li>
+  <li><code>SCHED</code>：标识该输出信息为goroutine scheduler的输出</li>
+  <li><code>5037ms</code>：从程序启动到输出这行日志的时间</li>
+  <li><code>gomaxprocs</code>：P的数量</li>
+  <li><code>idleprocs</code>：idle状态的P的数量</li>
+  <li><code>threads</code>：操作系统threads的数量，包含scheduler使用的m数量，加上runtime自用的类似sysmon这样的thread的数量</li>
+  <li><code>spinningthreads</code>：处于自旋状态的操作系统thread数量</li>
+  <li><code>idlethread</code>：处于idle状态的操作系统thread的数量</li>
+  <li><code>runqueue=22</code>：go scheduler全局队列中G的数量</li>
+  <li><code>[3 3 3 0 3 2 3 3]</code>：8个P的local queue中的G的数量</li>
 </ul>
 
 <p>通过这个输出可以很清晰看到goroutine的整体状态，特别是调度的状态，到底有没有跑满CPU，到底有没有空闲的线程，任务调度整体是不是平滑的，等等。可以说是非常有用。</p>
