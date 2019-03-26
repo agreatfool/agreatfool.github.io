@@ -1364,7 +1364,7 @@ Saved profile in /Users/XXX/pprof/pprof.alloc_objects.alloc_space.inuse_objects.
     </ul>
   </li>
   <li>class：指定span的class id，具体的class id对应的内存大小可以查看：<a href="https://github.com/golang/go/blob/go1.12/src/runtime/sizeclasses.go" target="_blank">go/src/runtime/sizeclasses.go</a>。注意，这个参数只在<code>FIXED_SPAN</code>下生效</li>
-  <li>interval：每个goroutine每隔多久进行一次内存泄露，实际运行的时候会上下进行一些浮动，防止当量goroutine在同一时间点进行操作</li>
+  <li>interval：每个goroutine每隔多久进行一次内存泄露，实际运行的时候会上下进行一些浮动，防止大量goroutine在同一时间点进行操作</li>
   <li>goroutine：同时运行的gorountine数量，越多内存泄露越快</li>
   <li>size：每个goroutine每次tick泄露的内存量，虽然每次泄露的对象大小是一个span大小，但泄露的内存量是固定的 = span大小 * span数量</li>
   <li>edge：Go进程允许的泄露内存总量，超过这个量之后，脚本会释放对之前泄露对象的指针，内存就会被回收</li>
