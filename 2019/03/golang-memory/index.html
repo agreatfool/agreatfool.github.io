@@ -256,6 +256,7 @@
       <li><a href="#ID_APP_PPROF_HELP" id="markdown-toc-ID_APP_PPROF_HELP">(pprof) help@1.12</a></li>
       <li><a href="#ID_APP_TRACE_USAGE" id="markdown-toc-ID_APP_TRACE_USAGE">go tool trace usage@1.12</a></li>
       <li><a href="#ID_APP_GCTRACE_SAMPLE" id="markdown-toc-ID_APP_GCTRACE_SAMPLE">GODEBUG=gctrace=1 sample</a></li>
+      <li><a href="#ID_APP_MEMORY_SAMPLE" id="markdown-toc-ID_APP_MEMORY_SAMPLE">experiment/memory/memory.go</a></li>
     </ul>
   </li>
 </ul>
@@ -1340,7 +1341,35 @@ Saved profile in /Users/XXX/pprof/pprof.alloc_objects.alloc_space.inuse_objects.
 <p>pprof输出、保存下来的profile文件是一个protobuf二进制文件，其结构描述在：<a href="https://github.com/google/pprof/blob/master/proto/profile.proto" target="_blank">pprof/proto/profile.proto</a>。有兴趣的可以查阅下，可以更深入理解profile里保存了什么。</p>
 
 <h2 id="55-复杂范例实践">5.5 复杂范例实践</h2>
-<p>//TODO</p>
+<p>最新的代码放在github：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/experiment/memory/memory.go" target="_blank">experiment/memory/memory.go</a>。github上的代码可以看到最新的更新，不过需要打开新的页面稍微麻烦点。</p>
+
+<p>当前页面会放一份gist，方便直接查看：<a href="#ID_APP_MEMORY_SAMPLE">experiment/memory/memory.go</a>，但可能更新不及时。</p>
+
+<p>使用：</p>
+
+<ul>
+  <li>go run memory.go 参数…：运行内存泄露脚本，不带任何命令行输出</li>
+  <li>go run memory.go 参数… <code>-stats=true</code>：运行内存泄露脚本，在命令行输出<code>runtime.MemStats</code>的信息</li>
+  <li><code>GODEBUG=gctrace=1</code> go run memory.go 参数…：运行内存泄露脚本，在命令行输出gc统计信息</li>
+</ul>
+
+<p>参数说明：</p>
+
+<ul>
+  <li>mode：三种模式
+    <ul>
+      <li>FIXED_SPAN：泄露内存为固定长度的span</li>
+      <li>RANDOM_SPAN：泄露内存为随机浮动长度的span，但不会是大对象</li>
+      <li>LARGE_OBJ：泄露内存为1MB到2MB之间的大对象</li>
+    </ul>
+  </li>
+  <li>class：指定span的class id，具体的class id对应的内存大小可以查看：<a href="https://github.com/golang/go/blob/go1.12/src/runtime/sizeclasses.go" target="_blank">go/src/runtime/sizeclasses.go</a>。注意，这个参数只在<code>FIXED_SPAN</code>下生效</li>
+  <li>interval：每个goroutine每隔多久进行一次内存泄露，实际运行的时候会上下进行一些浮动，防止当量goroutine在同一时间点进行操作</li>
+  <li>goroutine：同时运行的gorountine数量，越多内存泄露越快</li>
+  <li>size：每个goroutine每次tick泄露的内存量，虽然每次泄露的对象大小是一个span大小，但泄露的内存量是固定的 = span大小 * span数量</li>
+  <li>edge：Go进程允许的泄露内存总量，超过这个量之后，脚本会释放对之前泄露对象的指针，内存就会被回收</li>
+  <li>stats：布尔值，附上true之后会在命令行里打印<code>runtime.MemStats</code>的信息</li>
+</ul>
 
 <h1 id="资料">资料</h1>
 <h2 id="ID_APP_LINKS">参考链接</h2>
@@ -2177,6 +2206,11 @@ gc 152 @7952.301s 0%: 0.011+0.18+0.004 ms clock, 0.091+0/0.20/0.46+0.033 ms cpu,
 scvg52: inuse: 19, idle: 43, sys: 63, released: 4, consumed: 59 (MB)
 gc 153 @8010.203s 0%: 0.043+0.32+0.006 ms clock, 0.34+0/0.34/0.67+0.053 ms cpu, 37-&gt;37-&gt;5 MB, 38 MB goal, 8 P
 </code></pre>
+
+<h2 id="ID_APP_MEMORY_SAMPLE">experiment/memory/memory.go</h2>
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js"> </script>
 
 <blockquote>
   <p>EOF</p>
