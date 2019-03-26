@@ -807,11 +807,14 @@
 
 <p>P.S</p>
 
-<p>推荐一篇综合Profiling经验博文：<a href="https://artem.krylysov.com/blog/2017/03/13/profiling-and-optimizing-go-web-applications/" target="_blank">Profiling and optimizing Go web applications</a>。写得很好，基本上该覆盖的面都有涉及，通读一遍对于如何检验性能问题，以及一般性的优化经验很有帮助。</p>
+<p>几篇推荐：</p>
 
-<p>阿里的一篇内存profiling &amp; debugging文章，也很有帮助作用，可以仔细阅读下：<a href="https://yq.aliyun.com/articles/573743" target="_blank">记一次Golang内存分析——基于go pprof</a>。</p>
-
-<p><a href="http://wudaijun.com/2018/04/go-pprof/" target="_blank">go pprof 性能分析</a>这篇则对于交互命令中的一些细节解释得比较清楚，也可以看看。</p>
+<ul>
+  <li>综合Profiling经验博文：<a href="https://artem.krylysov.com/blog/2017/03/13/profiling-and-optimizing-go-web-applications/" target="_blank">Profiling and optimizing Go web applications</a>。写得很好，基本上该覆盖的面都有涉及，通读一遍对于如何检验性能问题，以及一般性的优化经验很有帮助。</li>
+  <li>阿里的一篇内存profiling &amp; debugging文章，也很有帮助：<a href="https://yq.aliyun.com/articles/573743" target="_blank">记一次Golang内存分析——基于go pprof</a>。</li>
+  <li>对于交互命令中的一些细节解释得比较清楚：<a href="http://wudaijun.com/2018/04/go-pprof/" target="_blank">go pprof 性能分析</a></li>
+  <li>火焰图可以看下这篇：<a href="http://cizixs.com/2017/09/11/profiling-golang-program/" target="_blank">使用 pprof 和火焰图调试 golang 应用</a></li>
+</ul>
 
 <h2 id="51-metrics">5.1 Metrics</h2>
 <p>在使用接口<code>runtime.ReadMemStats</code>获得对应的内存统计状态的时候，我们会拿到对应的数据对象<code>MemStats</code>，对于这个数据对象的理解是必要的。</p>
@@ -1396,6 +1399,7 @@ Saved profile in /Users/XXX/pprof/pprof.alloc_objects.alloc_space.inuse_objects.
   <li><a href="https://github.com/google/pprof/issues/182" target="_blank">-help output does not mention all flags #182</a></li>
   <li><a href="https://github.com/google/pprof/pull/202/files/b27144b31b62977102786aa81d8786f8af5709ca" target="_blank">Add legacy options to command-line help #202</a></li>
   <li><a href="https://rakyll.org/pprof-ui/" target="_blank">pprof user interface</a></li>
+  <li><a href="http://cizixs.com/2017/09/11/profiling-golang-program/" target="_blank">使用 pprof 和火焰图调试 golang 应用</a></li>
 </ul>
 
 <h3 id="其他">其他</h3>
