@@ -3484,9 +3484,10 @@ go version go1.12 darwin/amd64&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;CPU部分相对来说比较简单，其关键知识点和Gorountine结合比较紧密，会在后面的篇章一起说明。此外，Profiling相关的知识点可以直接看Memory部分的内容，工具应该说是一致的，只是API及命令有部分不同。细节详见：&lt;a href=&quot;/2019/03/golang-cpu/&quot; target=&quot;_blank&quot;&gt;Golang CPU&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h1 id=&quot;7-go程&quot;&gt;7. Go程&lt;/h1&gt;
-&lt;p&gt;Go应用程序最为重要的设计，也是Go得以从那么多编程语言中脱颖而出的核心。详见：&lt;a href=&quot;/2019/03/golang-goroutine&quot; target=&quot;_blank&quot;&gt;Golang Goroutine&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Go应用程序最为重要的设计，也是Go得以从那么多编程语言中脱颖而出的核心。详见：&lt;a href=&quot;/2019/03/golang-goroutine/&quot; target=&quot;_blank&quot;&gt;Golang Goroutine&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h1 id=&quot;8-debug&quot;&gt;8. Debug&lt;/h1&gt;
+&lt;p&gt;Go程序Debug有点类似于C语言，拥有一款和GDB相似的工具Delve。详见：&lt;a href=&quot;/2019/03/golang-debug/&quot; target=&quot;_blank&quot;&gt;Golang Debug&lt;/a&gt;。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
