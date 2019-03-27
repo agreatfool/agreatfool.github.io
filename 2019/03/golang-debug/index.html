@@ -1,0 +1,516 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Golang Debug | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/03/golang-debug/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/03/golang-debug/">Golang Debug</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>27 Mar 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Golang">Golang</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Debug">Debug</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-安装" id="markdown-toc-2-安装">2. 安装</a></li>
+  <li><a href="#2-使用" id="markdown-toc-2-使用">2. 使用</a></li>
+  <li><a href="#3-cli" id="markdown-toc-3-cli">3. CLI</a></li>
+  <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
+      <li><a href="#ID_APP_HELP" id="markdown-toc-ID_APP_HELP">dlv help</a></li>
+      <li><a href="#ID_APP_DLV_HELP" id="markdown-toc-ID_APP_DLV_HELP">(dlv) help</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>本文是Go语言系列文章<a href="/2019/02/golang-note/" target="_blank">Golang Notes</a>的其中一篇，完整的文章列表请去总章查看。</p>
+
+<p>Go语言的Debug工具对于一直写高级语言的程序员来说有点陌生，而对于写C常年和GDB打交道的程序员来说，则非常熟悉。</p>
+
+<h1 id="2-安装">2. 安装</h1>
+<p>MAC下的官方安装教程：<a href="https://github.com/go-delve/delve/blob/master/Documentation/installation/osx/install.md" target="_blank">Installation on OSX</a>。</p>
+
+<p>环境完备的情况下只要直接使用go的下载命令即可：</p>
+<pre><code>$ go get -u github.com/go-delve/delve/cmd/dlv
+</code></pre>
+<p>如果没有设置过<code>$GOPATH</code>的话，软件包会安装在<code>~/go</code>下。然后需要把<code>~/go/bin</code>加入到<code>$PATH</code>里，就可以全局使用这个debug工具了。</p>
+
+<p>MAC下使用的时候可能遇到如下问题：</p>
+<pre><code>$ dlv debug goroutine.go
+could not launch process: debugserver or lldb-server not found: install XCode's command line tools or lldb-server
+</code></pre>
+
+<p>需要重新安装xcode的命令行工具：</p>
+<pre><code>$ xcode-select --install
+</code></pre>
+
+<p>完成后即可正常使用：</p>
+<pre><code>$ dlv debug goroutine.go
+Type 'help' for list of commands.
+(dlv)
+</code></pre>
+
+<h1 id="2-使用">2. 使用</h1>
+<p>dlv可以以两种模式进行运行：</p>
+
+<ul>
+  <li>API模式：
+    <ul>
+      <li>暴露API接口，提供给其他IDE等工具，提供协同Debug的能力</li>
+      <li>此外也可以使用这个模式进行远程debug</li>
+      <li>文档入口在：<a href="https://github.com/go-delve/delve/blob/master/Documentation/api/README.md" target="_blank">delve/Documentation/api/README.md</a></li>
+    </ul>
+  </li>
+  <li>CLI模式：
+    <ul>
+      <li>常规的命令行下直接进入交互界面，进行debug</li>
+      <li>文档入口在：<a href="https://github.com/go-delve/delve/blob/master/Documentation/cli/README.md" target="_blank">delve/Documentation/cli/README.md</a></li>
+      <li>通过交互命令界面的help是最直接也最贴合版本的文档获取方式：<a href="#ID_APP_DLV_HELP">(dlv) help</a>。</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="3-cli">3. CLI</h1>
+<p>命令行下使用dlv首先需要了解dlv这个命令本身的使用方法：<a href="#ID_APP_HELP">dlv help</a>：</p>
+
+<ul>
+  <li>attach：附到一个正在运行的线程上，这个在生产环境上比较常见</li>
+  <li>connect：把自己作为客户端，连接到远程debug进程上</li>
+  <li>core：检查一个核心导出文件（core dump）</li>
+  <li>debug：从源代码开编译，并debug</li>
+  <li>exec：运行并debug一个已经编译完成的二进制文件</li>
+  <li>test：编译一个test二进制文件，并进行debug</li>
+  <li>trace：编译并对程序进行trace</li>
+</ul>
+
+<p>在线的文档可以在github上看到：<a href="https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv.md" target="_blank">delve/Documentation/usage/dlv.md</a>。类似debug、exec等，在这个主页面里都可以看得到，不过打开也没什么细节，就是一些选项参数的说明，和<code>$ dlv connect ...</code>打印出来的没差别。</p>
+
+<p>经过上面的选择后，就可以进入到dlv的交互界面了，同样的，可以通过<a href="#ID_APP_DLV_HELP">(dlv) help</a>来查看交互命令选项。</p>
+
+<p>在调试过程中，有些时候你需要做一些细节观察行为，比如说打印出某些变量的值之类的。dlv提供了一些go语法的子集表达式，可以在交互界面直接使用：<a href="https://github.com/go-delve/delve/blob/master/Documentation/cli/expr.md" target="_blank">Expressions</a>。</p>
+
+<p>实际的debug范例可以看这篇：<a href="https://yq.aliyun.com/articles/57578" target="_blank">使用Delve进行Golang代码的调试</a>，算是讲解得很贴近日常工作使用了。</p>
+
+<h1 id="资料">资料</h1>
+<ul>
+  <li><a href="https://github.com/go-delve/delve/blob/master/Documentation/installation/osx/install.md" target="_blank">Installation on OSX</a></li>
+  <li><a href="https://github.com/go-delve/delve/blob/master/Documentation/api/README.md" target="_blank">delve/Documentation/api/README.md</a></li>
+  <li><a href="https://github.com/go-delve/delve/blob/master/Documentation/cli/README.md" target="_blank">delve/Documentation/cli/README.md</a></li>
+  <li><a href="https://github.com/go-delve/delve/blob/master/Documentation/usage/dlv.md">delve/Documentation/usage/dlv.md</a>{:target=”_blank”</li>
+  <li><a href="https://github.com/go-delve/delve/blob/master/Documentation/cli/expr.md" target="_blank">Expressions</a></li>
+  <li><a href="https://yq.aliyun.com/articles/57578" target="_blank">使用Delve进行Golang代码的调试</a></li>
+</ul>
+
+<h2 id="ID_APP_HELP">dlv help</h2>
+<pre><code>$ dlv help
+Delve is a source level debugger for Go programs.
+
+Delve enables you to interact with your program by controlling the execution of the process,
+evaluating variables, and providing information of thread / goroutine state, CPU register state and more.
+
+The goal of this tool is to provide a simple yet powerful interface for debugging Go programs.
+
+Pass flags to the program you are debugging using `--`, for example:
+
+`dlv exec ./hello -- server --config conf/config.toml`
+
+Usage:
+  dlv [command]
+
+Available Commands:
+  attach      Attach to running process and begin debugging.
+  connect     Connect to a headless debug server.
+  core        Examine a core dump.
+  debug       Compile and begin debugging main package in current directory, or the package specified.
+  exec        Execute a precompiled binary, and begin a debug session.
+  help        Help about any command
+  run         Deprecated command. Use 'debug' instead.
+  test        Compile test binary and begin debugging program.
+  trace       Compile and begin tracing program.
+  version     Prints version.
+
+Flags:
+      --accept-multiclient   Allows a headless server to accept multiple client connections. Note that the server API is not reentrant and clients will have to coordinate.
+      --api-version int      Selects API version when headless. (default 1)
+      --backend string       Backend selection:
+	default		Uses lldb on macOS, native everywhere else.
+	native		Native backend.
+	lldb		Uses lldb-server or debugserver.
+	rr		Uses mozilla rr (https://github.com/mozilla/rr).
+ (default "default")
+      --build-flags string   Build flags, to be passed to the compiler.
+      --headless             Run debug server only, in headless mode.
+      --init string          Init file, executed by the terminal client.
+  -l, --listen string        Debugging server listen address. (default "localhost:0")
+      --log                  Enable debugging server logging.
+      --log-output string    Comma separated list of components that should produce debug output, possible values:
+	debugger	Log debugger commands
+	gdbwire		Log connection to gdbserial backend
+	lldbout		Copy output from debugserver/lldb to standard output
+	debuglineerr	Log recoverable errors reading .debug_line
+	rpc		Log all RPC messages
+	fncall		Log function call protocol
+	minidump	Log minidump loading
+Defaults to "debugger" when logging is enabled with --log.
+      --wd string            Working directory for running the program. (default ".")
+
+Use "dlv [command] --help" for more information about a command.
+</code></pre>
+
+<h2 id="ID_APP_DLV_HELP">(dlv) help</h2>
+<pre><code>(dlv) help
+The following commands are available:
+    args ------------------------ Print function arguments.
+    break (alias: b) ------------ Sets a breakpoint.
+    breakpoints (alias: bp) ----- Print out info for active breakpoints.
+    call ------------------------ Resumes process, injecting a function call (EXPERIMENTAL!!!)
+    clear ----------------------- Deletes breakpoint.
+    clearall -------------------- Deletes multiple breakpoints.
+    condition (alias: cond) ----- Set breakpoint condition.
+    config ---------------------- Changes configuration parameters.
+    continue (alias: c) --------- Run until breakpoint or program termination.
+    deferred -------------------- Executes command in the context of a deferred call.
+    disassemble (alias: disass) - Disassembler.
+    down ------------------------ Move the current frame down.
+    edit (alias: ed) ------------ Open where you are in $DELVE_EDITOR or $EDITOR
+    exit (alias: quit | q) ------ Exit the debugger.
+    frame ----------------------- Set the current frame, or execute command on a different frame.
+    funcs ----------------------- Print list of functions.
+    goroutine ------------------- Shows or changes current goroutine
+    goroutines ------------------ List program goroutines.
+    help (alias: h) ------------- Prints the help message.
+    list (alias: ls | l) -------- Show source code.
+    locals ---------------------- Print local variables.
+    next (alias: n) ------------- Step over to next source line.
+    on -------------------------- Executes a command when a breakpoint is hit.
+    print (alias: p) ------------ Evaluate an expression.
+    regs ------------------------ Print contents of CPU registers.
+    restart (alias: r) ---------- Restart process.
+    set ------------------------- Changes the value of a variable.
+    source ---------------------- Executes a file containing a list of delve commands
+    sources --------------------- Print list of source files.
+    stack (alias: bt) ----------- Print stack trace.
+    step (alias: s) ------------- Single step through program.
+    step-instruction (alias: si)  Single step a single cpu instruction.
+    stepout --------------------- Step out of the current function.
+    thread (alias: tr) ---------- Switch to the specified thread.
+    threads --------------------- Print out info for every traced thread.
+    trace (alias: t) ------------ Set tracepoint.
+    types ----------------------- Print list of types
+    up -------------------------- Move the current frame up.
+    vars ------------------------ Print package variables.
+    whatis ---------------------- Prints type of an expression.
+Type help followed by a command for full documentation.
+</code></pre>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/03/golang-debug/">Golang Debug</a></li>
+    
+    <li><a href="/2019/03/golang-goroutine/">Golang Goroutine</a></li>
+    
+    <li><a href="/2019/03/golang-cpu/">Golang CPU</a></li>
+    
+    <li><a href="/2019/03/golang-memory/">Golang Memory</a></li>
+    
+    <li><a href="/2019/03/golang-modules/">Golang Modules</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/03/golang-debug/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
