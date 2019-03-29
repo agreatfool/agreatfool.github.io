@@ -217,9 +217,8 @@
     </ul>
   </li>
   <li><a href="#5-dockerfile" id="markdown-toc-5-dockerfile">5. Dockerfile</a>    <ul>
-      <li><a href="#51-env" id="markdown-toc-51-env">5.1 ENV</a></li>
-      <li><a href="#ID_DOCKERFILE_RUN" id="markdown-toc-ID_DOCKERFILE_RUN">5.2 RUN</a></li>
-      <li><a href="#53-cmd--entrypoint" id="markdown-toc-53-cmd--entrypoint">5.3 CMD &amp; ENTRYPOINT</a></li>
+      <li><a href="#ID_DOCKERFILE_RUN" id="markdown-toc-ID_DOCKERFILE_RUN">5.1 RUN</a></li>
+      <li><a href="#52-cmd--entrypoint" id="markdown-toc-52-cmd--entrypoint">5.2 CMD &amp; ENTRYPOINT</a></li>
     </ul>
   </li>
   <li><a href="#6-image" id="markdown-toc-6-image">6. Image</a></li>
@@ -232,6 +231,7 @@
       <li><a href="#94-监控--metrics" id="markdown-toc-94-监控--metrics">9.4 监控 &amp; Metrics</a></li>
       <li><a href="#95-安全" id="markdown-toc-95-安全">9.5 安全</a></li>
       <li><a href="#96-其他" id="markdown-toc-96-其他">9.6 其他</a>        <ul>
+          <li><a href="#停止容器" id="markdown-toc-停止容器">停止容器</a></li>
           <li><a href="#记一次kubernetesdocker网络排障" id="markdown-toc-记一次kubernetesdocker网络排障">记一次KUBERNETES/DOCKER网络排障</a></li>
         </ul>
       </li>
@@ -579,7 +579,7 @@ $
 <p>资料：</p>
 
 <ul>
-  <li><a href="https://stackoverflow.com/a/19689048" target="_blank">How do you attach and detach from Docker’s process?</a>。</li>
+  <li><a href="https://stackoverflow.com/a/19689048" target="_blank">How do you attach and detach from Docker’s process?</a></li>
 </ul>
 
 <h2 id="48-docker-exec">4.8 docker exec</h2>
@@ -618,17 +618,7 @@ $
   <li><a href="https://docs.docker.com/engine/reference/builder/#dockerignore-file" target="_blank">.dockerignore file</a></li>
 </ul>
 
-<h2 id="51-env">5.1 ENV</h2>
-<p>环境变量相关的设置：<a href="https://docs.docker.com/engine/reference/builder/#environment-replacement" target="_blank">Dockerfile &gt; Environment replacement</a>。</p>
-
-<pre><code>FROM busybox
-ENV foo /bar
-WORKDIR ${foo}   # WORKDIR /bar
-ADD . $foo       # ADD . /bar
-COPY \$foo /quux # COPY $foo /quux
-</code></pre>
-
-<h2 id="ID_DOCKERFILE_RUN">5.2 RUN</h2>
+<h2 id="ID_DOCKERFILE_RUN">5.1 RUN</h2>
 <p>运行指令，有两种语法模式：</p>
 
 <ul>
@@ -636,23 +626,60 @@ COPY \$foo /quux # COPY $foo /quux
   <li>RUN [“executable”, “param1”, “param2”] (exec form)</li>
 </ul>
 
-<p>这里需要注意<code>exec form</code>并不是在shell里运行的：</p>
+<p>这里需要注意<code>exec模式</code>并不是在shell里运行的：</p>
 
 <blockquote>
   <p>Note: Unlike the shell form, the exec form does not invoke a command shell. This means that normal shell processing does not happen. For example, RUN [ “echo”, “$HOME” ] will not do variable substitution on $HOME. If you want shell processing then either use the shell form or execute a shell directly, for example: RUN [ “sh”, “-c”, “echo $HOME” ]. When using the exec form and executing a shell directly, as in the case for the shell form, it is the shell that is doing the environment variable expansion, not docker.</p>
 </blockquote>
 
-<h2 id="53-cmd--entrypoint">5.3 CMD &amp; ENTRYPOINT</h2>
-<p>这两个东西可以放在一起说，因为他们做的事情基本上是类似的。两者都是在容器启动之后执行一个命令。区别在于：</p>
+<p>建议是使用<code>exec模式</code>，细节可以看下面一个小节。</p>
+
+<h2 id="52-cmd--entrypoint">5.2 CMD &amp; ENTRYPOINT</h2>
+<p>这两个东西可以放在一起说，因为他们做的事情基本上是类似的。两者都是在容器启动之后执行一个命令，CMD提供的是在镜像启动后会默认执行的一个命令，而ENTRYPOINT则是在镜像启动后提供一个程序入口。</p>
+
+<p>区别在于：</p>
 
 <ul>
-  <li>CMD：提供的默认执行命令可以在<code>docker run $imagename $command</code>后面接命令进行覆盖，这样的话写在Dockerfile CMD里的命令就不会执行了，被替代了</li>
-  <li>ENTRYPOINT：提供的是镜像默认的<code>功能入口</code>，不会被<code>docker run $imagename $command</code>中的命令替换掉，除非指定<code>--entrypoint=...</code>进行替换</li>
+  <li>CMD：提供的默认执行命令可以在<code>docker run $imagename $command</code>后面接命令进行覆盖，这样操作的话写在Dockerfile CMD里的命令就不会执行了，被替代了；CMD在一个Dockerfile里只能有一个生效，如果编写了多个则只有最后的那个会被执行</li>
+  <li>ENTRYPOINT：提供的是镜像的<code>功能入口</code>，不会被<code>docker run $imagename $command</code>中的命令替换掉，除非指定<code>--entrypoint=...</code>进行替换；当然ENTRYPOINT也只允许有一个</li>
 </ul>
 
-<p>一般来说</p>
+<p>一般来说通常的做法是：ENTRYPOINT提供容器运行之后程序入口，而CMD则提供供给给程序入口的参数，方便后续在docker run的时候进行替换。这两者以这样的方式进行协同工作。</p>
 
-<p>这两个指令和<a href="#ID_DOCKERFILE_RUN">5.2 RUN</a></p>
+<p>官方文档里也有这部分内容：<a href="https://docs.docker.com/engine/reference/builder/#understand-how-cmd-and-entrypoint-interact" target="_blank">Understand how CMD and ENTRYPOINT interact</a>。</p>
+
+<ul>
+  <li>Dockerfile should specify at least one of <code>CMD</code> or <code>ENTRYPOINT</code> commands.</li>
+  <li><code>ENTRYPOINT</code> should be defined when using the container as an executable.</li>
+  <li><code>CMD</code> should be used as a way of defining default arguments for an <code>ENTRYPOINT</code> command or for executing an ad-hoc command in a container.</li>
+  <li><code>CMD</code> will be overridden when running the container with alternative arguments.</li>
+</ul>
+
+<p>这两个指令和<a href="#ID_DOCKERFILE_RUN">5.2 RUN</a>一样，都有多种模式可以选择，一般来说最常使用的是直接写命令的<code>shell模式</code>以及使用JSON格式编写的<code>exec模式</code>。最佳实践是：在所有的情况下都使用<code>exec模式</code>。原因如下：</p>
+
+<ul>
+  <li>shell模式的PID 1进程是<code>/bin/sh</code>，后续的信号不能很好传递到真正执行的命令上</li>
+  <li>shell模式依赖<code>/bin/sh</code>，但某些微型镜像不一定有</li>
+</ul>
+
+<p>CMD指令还多一种模式：<code>CMD ["param1","param2"] (as default parameters to ENTRYPOINT)</code>，这也是刚才提到的参数提供者角色的做法。</p>
+
+<p>e.g</p>
+
+<pre><code>FROM ubuntu:trusty
+ENTRYPOINT ["/bin/ping","-c","3"]
+CMD ["localhost"]
+
+$ docker run ping
+PING localhost (127.0.0.1) 56(84) bytes of data.
+64 bytes from localhost (127.0.0.1): icmp_seq=1 ttl=64 time=0.025 ms
+...
+
+$ docker run ping docker.io
+PING docker.io (162.242.195.84) 56(84) bytes of data.
+64 bytes from 162.242.195.84: icmp_seq=1 ttl=61 time=76.7 ms
+...
+</code></pre>
 
 <p>资料：</p>
 
@@ -660,6 +687,8 @@ COPY \$foo /quux # COPY $foo /quux
   <li><a href="https://zhuanlan.zhihu.com/p/30555962" target="_blank">Dockerfile: ENTRYPOINT和CMD的区别</a></li>
   <li><a href="https://medium.freecodecamp.org/docker-entrypoint-cmd-dockerfile-best-practices-abc591c30e21" target="_blank">Docker ENTRYPOINT &amp; CMD: Dockerfile best practices</a></li>
 </ul>
+
+<p>有时间的话，官方的ENTRYPOINT文档可以读一下：<a href="https://docs.docker.com/engine/reference/builder/#entrypoint" target="_blank">Dockerfile &gt; ENTRYPOINT</a>。</p>
 
 <h1 id="6-image">6. Image</h1>
 <p>// TODO
@@ -718,7 +747,9 @@ COPY \$foo /quux # COPY $foo /quux
 <a href="https://docs.docker.com/engine/security/security/" target="_blank">Docker security</a></p>
 
 <h2 id="96-其他">9.6 其他</h2>
-<p>// TODO</p>
+<h3 id="停止容器">停止容器</h3>
+<p><a href="https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/" target="_blank">Gracefully Stopping Docker Containers</a>
+// TODO</p>
 <h3 id="记一次kubernetesdocker网络排障">记一次KUBERNETES/DOCKER网络排障</h3>
 <p>// TODO
 <a href="https://coolshell.cn/articles/18654.html" target="_blank">记一次KUBERNETES/DOCKER网络排障</a></p>
