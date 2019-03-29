@@ -611,7 +611,6 @@ $
 <ul>
   <li><a href="https://docs.docker.com/engine/reference/builder/" target="_blank">Dockerfile reference</a></li>
   <li><a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/" target="_blank">Best practices for writing Dockerfiles</a></li>
-  <li>因为在build命令执行之前，当前指定PATH的context会被发送给docker daemon，因此文件夹越小执行越效率</li>
 </ul>
 
 <p>下面行文不会过于注重Dockerfile如何编写的语法，因为这东西你看看手册和几个例子也就会了。主要还是关注在几个比较麻烦的概念上。</p>
@@ -621,6 +620,7 @@ $
 <ul>
   <li>Dockerfile里类似<code>COPY</code>、<code>EXPOSE</code>之类的，都被称为指令（instruction），这个单词可以了解下</li>
   <li><a href="https://docs.docker.com/engine/reference/builder/#dockerignore-file" target="_blank">.dockerignore file</a></li>
+  <li>因为在build命令执行之前，当前指定PATH的context会被发送给docker daemon，因此文件夹越小执行越效率</li>
 </ul>
 
 <h2 id="ID_DOCKERFILE_RUN">5.1 RUN</h2>
