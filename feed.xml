@@ -250,7 +250,7 @@ Type help followed by a command for full documentation.
 &lt;ul&gt;
   &lt;li&gt;G是任务，全局有一个队列，每个P还有自己的队列&lt;/li&gt;
   &lt;li&gt;P是逻辑处理器，由P来处理G&lt;/li&gt;
-  &lt;li&gt;M是物理处理器（实际上是Go应用程序里的进程），P会和M绑定，得到执行的实体&lt;/li&gt;
+  &lt;li&gt;M是物理处理器（实际上是Go应用程序里的&lt;code&gt;线程&lt;/code&gt;），P会和M绑定，得到执行的实体&lt;/li&gt;
   &lt;li&gt;M最终会通过操作系统调度，在CPU上得到运行&lt;/li&gt;
 &lt;/ul&gt;
 
