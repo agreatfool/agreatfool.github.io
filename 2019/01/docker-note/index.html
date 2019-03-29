@@ -219,6 +219,10 @@
   <li><a href="#5-dockerfile" id="markdown-toc-5-dockerfile">5. Dockerfile</a>    <ul>
       <li><a href="#ID_DOCKERFILE_RUN" id="markdown-toc-ID_DOCKERFILE_RUN">5.1 RUN</a></li>
       <li><a href="#52-cmd--entrypoint" id="markdown-toc-52-cmd--entrypoint">5.2 CMD &amp; ENTRYPOINT</a></li>
+      <li><a href="#53-volume" id="markdown-toc-53-volume">5.3 VOLUME</a></li>
+      <li><a href="#54-arg" id="markdown-toc-54-arg">5.4 ARG</a></li>
+      <li><a href="#55-healthcheck" id="markdown-toc-55-healthcheck">5.5 HEALTHCHECK</a></li>
+      <li><a href="#56-其他指令" id="markdown-toc-56-其他指令">5.6 其他指令</a></li>
     </ul>
   </li>
   <li><a href="#6-image" id="markdown-toc-6-image">6. Image</a></li>
@@ -226,11 +230,12 @@
   <li><a href="#8-docker-machine" id="markdown-toc-8-docker-machine">8. Docker Machine</a></li>
   <li><a href="#9-原理" id="markdown-toc-9-原理">9. 原理</a>    <ul>
       <li><a href="#91-网络" id="markdown-toc-91-网络">9.1 网络</a></li>
-      <li><a href="#92-存储" id="markdown-toc-92-存储">9.2 存储</a></li>
+      <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">9.2 存储</a></li>
       <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">9.3 资源限制</a></li>
       <li><a href="#94-监控--metrics" id="markdown-toc-94-监控--metrics">9.4 监控 &amp; Metrics</a></li>
       <li><a href="#95-安全" id="markdown-toc-95-安全">9.5 安全</a></li>
-      <li><a href="#96-其他" id="markdown-toc-96-其他">9.6 其他</a>        <ul>
+      <li><a href="#96-docker-inspect" id="markdown-toc-96-docker-inspect">9.6 docker inspect</a></li>
+      <li><a href="#97-其他" id="markdown-toc-97-其他">9.7 其他</a>        <ul>
           <li><a href="#停止容器" id="markdown-toc-停止容器">停止容器</a></li>
           <li><a href="#记一次kubernetesdocker网络排障" id="markdown-toc-记一次kubernetesdocker网络排障">记一次KUBERNETES/DOCKER网络排障</a></li>
         </ul>
@@ -619,6 +624,8 @@ $
 </ul>
 
 <h2 id="ID_DOCKERFILE_RUN">5.1 RUN</h2>
+<p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#run" target="_blank">RUN</a>。</p>
+
 <p>运行指令，有两种语法模式：</p>
 
 <ul>
@@ -635,6 +642,13 @@ $
 <p>建议是使用<code>exec模式</code>，细节可以看下面一个小节。</p>
 
 <h2 id="52-cmd--entrypoint">5.2 CMD &amp; ENTRYPOINT</h2>
+<p>官方文档：</p>
+
+<ul>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#run" target="_blank">CMD</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#entrypoint" target="_blank">ENTRYPOINT</a></li>
+</ul>
+
 <p>这两个东西可以放在一起说，因为他们做的事情基本上是类似的。两者都是在容器启动之后执行一个命令，CMD提供的是在镜像启动后会默认执行的一个命令，而ENTRYPOINT则是在镜像启动后提供一个程序入口。</p>
 
 <p>区别在于：</p>
@@ -688,7 +702,87 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
   <li><a href="https://medium.freecodecamp.org/docker-entrypoint-cmd-dockerfile-best-practices-abc591c30e21" target="_blank">Docker ENTRYPOINT &amp; CMD: Dockerfile best practices</a></li>
 </ul>
 
-<p>有时间的话，官方的ENTRYPOINT文档可以读一下：<a href="https://docs.docker.com/engine/reference/builder/#entrypoint" target="_blank">Dockerfile &gt; ENTRYPOINT</a>。</p>
+<p>有时间的话，官方的ENTRYPOINT文档可以通读一下：<a href="https://docs.docker.com/engine/reference/builder/#entrypoint" target="_blank">Dockerfile &gt; ENTRYPOINT</a>，里面信息量不小。</p>
+
+<h2 id="53-volume">5.3 VOLUME</h2>
+<p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#volume" target="_blank">VOLUME</a>。</p>
+
+<p>卷加载相关在docker里是一个比较麻烦的概念，这里不作展开，只列出文档里提到的注意点：</p>
+
+<ul>
+  <li><code>Changing the volume from within the Dockerfile</code>: If any build steps change the data within the volume after it has been declared, those changes will be discarded.</li>
+  <li><code>The host directory is declared at container run-time</code>: The host directory (the mountpoint) is, by its nature, host-dependent. This is to preserve image portability, since a given host directory can’t be guaranteed to be available on all hosts. For this reason, you can’t mount a host directory from within the Dockerfile. The <code>VOLUME</code> instruction does not support specifying a <code>host-dir</code> parameter. You must specify the mountpoint when you create or run the container.</li>
+</ul>
+
+<p>更多的深入理解可以查看：<a href="#ID_PRINCIPLE_STORAGE">9.2 存储</a>。</p>
+
+<h2 id="54-arg">5.4 ARG</h2>
+<p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#arg" target="_blank">ARG</a>。</p>
+
+<p>除了用户定义的变量之外，docker还有一部分预定义的变量，可以通过<code>docker build --build-arg name=value</code>来加入：<a href="https://docs.docker.com/engine/reference/builder/#predefined-args" target="_blank">Predefined ARGs</a>。</p>
+
+<ul>
+  <li>HTTP_PROXY</li>
+  <li>http_proxy</li>
+  <li>HTTPS_PROXY</li>
+  <li>https_proxy</li>
+  <li>FTP_PROXY</li>
+  <li>ftp_proxy</li>
+  <li>NO_PROXY</li>
+  <li>no_proxy</li>
+</ul>
+
+<h2 id="55-healthcheck">5.5 HEALTHCHECK</h2>
+<p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#healthcheck" target="_blank">HEALTHCHECK</a>。</p>
+
+<p>类似于客户端服务器保持连接的心跳检查的概念，这个指令是用来检查当前的容器其提供的服务是否正常的。</p>
+
+<p>用法：<code>HEALTHCHECK [OPTIONS] CMD command</code>。CMD之前的选项有：</p>
+
+<ul>
+  <li>–interval=DURATION (default: 30s)</li>
+  <li>–timeout=DURATION (default: 30s)</li>
+  <li>–start-period=DURATION (default: 0s)</li>
+  <li>–retries=N (default: 3)</li>
+</ul>
+
+<p>范例，每5分钟检查一次WEB服务器是否正常工作（3秒内能响应请求）：</p>
+<pre><code>HEALTHCHECK --interval=5m --timeout=3s \\
+  CMD curl -f http://localhost/ \|\| exit 1
+</code></pre>
+
+<p>退出代码：</p>
+
+<ul>
+  <li>0: success - the container is healthy and ready for use</li>
+  <li>1: unhealthy - the container is not working correctly</li>
+  <li>2: reserved - do not use this exit code</li>
+</ul>
+
+<p>同样细节比较多，可以仔细阅读下官方文档：<a href="https://docs.docker.com/engine/reference/builder/#healthcheck" target="_blank">Dockerfile &gt; HEALTHCHECK</a>。</p>
+
+<p>资料：</p>
+
+<ul>
+  <li><a href="https://howchoo.com/g/zwjhogrkywe/how-to-add-a-health-check-to-your-docker-container" target="_blank">How to add a health check to your Docker container</a></li>
+</ul>
+
+<h2 id="56-其他指令">5.6 其他指令</h2>
+<p>有相当多的指令在本文中并没有展开，可以查看其官方文档：</p>
+
+<ul>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#from" target="_blank">FROM</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#label" target="_blank">LABEL</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#expose" target="_blank">EXPOSE</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#env" target="_blank">ENV</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#add" target="_blank">ADD</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#copy" target="_blank">COPY</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#user" target="_blank">USER</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#workdir" target="_blank">WORKDIR</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#onbuild" target="_blank">ONBUILD</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#stopsignal" target="_blank">STOPSIGNAL</a></li>
+  <li><a href="https://docs.docker.com/engine/reference/builder/#shell" target="_blank">SHELL</a></li>
+</ul>
 
 <h1 id="6-image">6. Image</h1>
 <p>// TODO
@@ -714,14 +808,17 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
 <a href="https://docs.docker.com/network/" target="_blank">docker network overview</a>
 <a href="http://dockone.io/article/1261" target="_blank">Docker网络模式 2016-05-02</a></p>
 
-<h2 id="92-存储">9.2 存储</h2>
+<h2 id="ID_PRINCIPLE_STORAGE">9.2 存储</h2>
 <p>// TODO
 <a href="https://docs.docker.com/storage/" target="_blank">docker storage</a>
+<a href="https://docs.docker.com/storage/volumes/" target="_blank">Use volumes</a>
+<a href="https://stackoverflow.com/questions/40163036/difference-between-volume-declaration-in-dockerfile-and-v-as-docker-run-paramet" target="_blank">Difference between VOLUME declaration in Dockerfile and -v as docker run parameter</a>
 <a href="https://docs.docker.com/storage/storagedriver/aufs-driver/" target="_blank">Use the AUFS storage driver</a>
 <a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/" target="_blank">Use the OverlayFS storage driver</a>
 <a href="https://docs.docker.com/storage/storagedriver/device-mapper-driver/" target="_blank">Use the Device Mapper storage driver</a>
 <a href="https://coolshell.cn/articles/17061.html" target="_blank">DOCKER基础技术：AUFS</a>
-<a href="https://coolshell.cn/articles/17200.html" target="_blank">DOCKER基础技术：DEVICEMAPPER</a></p>
+<a href="https://coolshell.cn/articles/17200.html" target="_blank">DOCKER基础技术：DEVICEMAPPER</a>
+<a href="https://container-solutions.com/understanding-volumes-docker/" target="_blank">Understanding Volumes in Docker</a></p>
 
 <h2 id="ID_PRINCIPLE_RESOURCE">9.3 资源限制</h2>
 <p>// TODO
@@ -746,7 +843,10 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
 <p>// TODO
 <a href="https://docs.docker.com/engine/security/security/" target="_blank">Docker security</a></p>
 
-<h2 id="96-其他">9.6 其他</h2>
+<h2 id="96-docker-inspect">9.6 docker inspect</h2>
+<p>// TODO</p>
+
+<h2 id="97-其他">9.7 其他</h2>
 <h3 id="停止容器">停止容器</h3>
 <p><a href="https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/" target="_blank">Gracefully Stopping Docker Containers</a>
 // TODO</p>
@@ -800,6 +900,9 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
   <li><a href="https://www.jianshu.com/p/ea4a00c6c21c" target="_blank">Docker run 命令参数及使用</a></li>
   <li><a href="https://www.centos.bz/2017/01/docker-run-uts-ipc/" target="_blank">Docker run参考(5) – UTS(–uts)和IPC (–ipc)设置</a></li>
   <li><a href="https://stackoverflow.com/a/19689048" target="_blank">How do you attach and detach from Docker’s process?</a></li>
+  <li><a href="https://zhuanlan.zhihu.com/p/30555962" target="_blank">Dockerfile: ENTRYPOINT和CMD的区别</a></li>
+  <li><a href="https://medium.freecodecamp.org/docker-entrypoint-cmd-dockerfile-best-practices-abc591c30e21" target="_blank">Docker ENTRYPOINT &amp; CMD: Dockerfile best practices</a></li>
+  <li><a href="https://howchoo.com/g/zwjhogrkywe/how-to-add-a-health-check-to-your-docker-container" target="_blank">How to add a health check to your Docker container</a></li>
 </ul>
 
 <h2 id="镜像相关">镜像相关</h2>
@@ -818,8 +921,6 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
 <ul>
   <li><a href="https://forums.docker.com/t/clarify-what-is-the-host/29640/2" target="_blank">Clarify what is the host</a></li>
   <li><a href="https://github.com/grpc/grpc-node/issues/604" target="_blank">grpc/grpc-node#604</a></li>
-  <li><a href="https://zhuanlan.zhihu.com/p/30555962" target="_blank">Dockerfile: ENTRYPOINT和CMD的区别</a></li>
-  <li><a href="https://medium.freecodecamp.org/docker-entrypoint-cmd-dockerfile-best-practices-abc591c30e21" target="_blank">Docker ENTRYPOINT &amp; CMD: Dockerfile best practices</a></li>
 </ul>
 
 <h2 id="ID_APP_DOCKER_INFO">docker info</h2>
