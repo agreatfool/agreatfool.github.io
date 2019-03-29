@@ -747,8 +747,8 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
 </ul>
 
 <p>范例，每5分钟检查一次WEB服务器是否正常工作（3秒内能响应请求）：</p>
-<pre><code>HEALTHCHECK --interval=5m --timeout=3s \\
-  CMD curl -f http://localhost/ \|\| exit 1
+<pre><code>HEALTHCHECK --interval=5m --timeout=3s \
+  CMD curl -f http://localhost/ || exit 1
 </code></pre>
 
 <p>退出代码：</p>
