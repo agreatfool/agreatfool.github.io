@@ -216,13 +216,23 @@
       <li><a href="#49-tips" id="markdown-toc-49-tips">4.9 tips</a></li>
     </ul>
   </li>
-  <li><a href="#5-dockerfile" id="markdown-toc-5-dockerfile">5. Dockerfile</a>    <ul>
-      <li><a href="#ID_DOCKERFILE_RUN" id="markdown-toc-ID_DOCKERFILE_RUN">5.1 RUN</a></li>
-      <li><a href="#52-cmd--entrypoint" id="markdown-toc-52-cmd--entrypoint">5.2 CMD &amp; ENTRYPOINT</a></li>
-      <li><a href="#53-volume" id="markdown-toc-53-volume">5.3 VOLUME</a></li>
-      <li><a href="#54-arg" id="markdown-toc-54-arg">5.4 ARG</a></li>
-      <li><a href="#55-healthcheck" id="markdown-toc-55-healthcheck">5.5 HEALTHCHECK</a></li>
-      <li><a href="#56-其他指令" id="markdown-toc-56-其他指令">5.6 其他指令</a></li>
+  <li><a href="#ID_DOCKERFILE" id="markdown-toc-ID_DOCKERFILE">5. Dockerfile</a>    <ul>
+      <li><a href="#51-dockerfile指令" id="markdown-toc-51-dockerfile指令">5.1 Dockerfile指令</a>        <ul>
+          <li><a href="#ID_DOCKERFILE_RUN" id="markdown-toc-ID_DOCKERFILE_RUN">5.1.1 RUN</a></li>
+          <li><a href="#512-cmd--entrypoint" id="markdown-toc-512-cmd--entrypoint">5.1.2 CMD &amp; ENTRYPOINT</a></li>
+          <li><a href="#513-volume" id="markdown-toc-513-volume">5.1.3 VOLUME</a></li>
+          <li><a href="#514-arg" id="markdown-toc-514-arg">5.1.4 ARG</a></li>
+          <li><a href="#515-healthcheck" id="markdown-toc-515-healthcheck">5.1.5 HEALTHCHECK</a></li>
+          <li><a href="#516-其他指令" id="markdown-toc-516-其他指令">5.1.6 其他指令</a></li>
+        </ul>
+      </li>
+      <li><a href="#52-最佳实践" id="markdown-toc-52-最佳实践">5.2 最佳实践</a>        <ul>
+          <li><a href="#521-缩小镜像构建的context" id="markdown-toc-521-缩小镜像构建的context">5.2.1 缩小镜像构建的Context</a></li>
+          <li><a href="#522-使用多阶段构建" id="markdown-toc-522-使用多阶段构建">5.2.2 使用多阶段构建</a></li>
+          <li><a href="#523-构建的缓存" id="markdown-toc-523-构建的缓存">5.2.3 构建的缓存</a></li>
+          <li><a href="#524-镜像层的创建" id="markdown-toc-524-镜像层的创建">5.2.4 镜像层的创建</a></li>
+        </ul>
+      </li>
     </ul>
   </li>
   <li><a href="#6-image" id="markdown-toc-6-image">6. Image</a></li>
@@ -368,6 +378,8 @@ ubuntu              18.10               b977ae81df17        2 weeks ago         
 <p>从一个Dockerfile构建一个镜像，一般都会进入到Dockerfile同一层目录进行构建：<code>docker build [OPTIONS] .</code>，这里的<code>.</code>就是Dockerfile的路径。全选项参数可以通过：<code>docker build --help</code>来获得，这里就不贴了。</p>
 
 <p>细节相当多，有需要的可以看下官方文档：<a href="https://docs.docker.com/engine/reference/commandline/build/" target="_blank">docker build</a>。</p>
+
+<p>此外，docker build命令与Dockerfile息息相关，部分优化相关内容描述在Dockerfile内，请去此处查看：<a href="#ID_DOCKERFILE">5. Dockerfile</a>。</p>
 
 <h3 id="451-镜像命名及tag">4.5.1 镜像命名及tag</h3>
 <p>通过<code>-t</code>在构建的时候对镜像进行命名，并打上标签。一般来说这是必须的，方便后续进行镜像查找和仓库内巨量镜像的维护。</p>
@@ -603,7 +615,7 @@ $
   <li>node.js docker里的npm安装记得要加上<code>--unsafe-perm</code>，具体可以看：<a href="https://github.com/grpc/grpc-node/issues/604" target="_blank">grpc/grpc-node#604</a></li>
 </ul>
 
-<h1 id="5-dockerfile">5. Dockerfile</h1>
+<h1 id="ID_DOCKERFILE">5. Dockerfile</h1>
 <p>Dockerfile是用来进行镜像构建的文本文件，也是docker能将构建整个过程转化为文本固定下来的关键，可以说是docker能如此风靡的核心功能点也不为过。</p>
 
 <p>官方的文档：</p>
@@ -623,7 +635,8 @@ $
   <li>因为在build命令执行之前，当前指定PATH的context会被发送给docker daemon，因此文件夹越小执行越效率</li>
 </ul>
 
-<h2 id="ID_DOCKERFILE_RUN">5.1 RUN</h2>
+<h2 id="51-dockerfile指令">5.1 Dockerfile指令</h2>
+<h3 id="ID_DOCKERFILE_RUN">5.1.1 RUN</h3>
 <p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#run" target="_blank">RUN</a>。</p>
 
 <p>运行指令，有两种语法模式：</p>
@@ -641,7 +654,7 @@ $
 
 <p>建议是使用<code>exec模式</code>，细节可以看下面一个小节。</p>
 
-<h2 id="52-cmd--entrypoint">5.2 CMD &amp; ENTRYPOINT</h2>
+<h3 id="512-cmd--entrypoint">5.1.2 CMD &amp; ENTRYPOINT</h3>
 <p>官方文档：</p>
 
 <ul>
@@ -676,6 +689,13 @@ $
   <li>shell模式依赖<code>/bin/sh</code>，但某些微型镜像不一定有</li>
 </ul>
 
+<p><a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#entrypoint" target="_blank">Best practices for writing Dockerfiles &gt; ENTRYPOINT</a>：</p>
+<blockquote>
+  <p>Configure app as PID 1</p>
+
+  <p>This script uses the exec Bash command so that the final running application becomes the container’s PID 1. This allows the application to receive any Unix signals sent to the container. For more, see the ENTRYPOINT reference.</p>
+</blockquote>
+
 <p>CMD指令还多一种模式：<code>CMD ["param1","param2"] (as default parameters to ENTRYPOINT)</code>，这也是刚才提到的参数提供者角色的做法。</p>
 
 <p>e.g</p>
@@ -704,7 +724,7 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
 
 <p>有时间的话，官方的ENTRYPOINT文档可以通读一下：<a href="https://docs.docker.com/engine/reference/builder/#entrypoint" target="_blank">Dockerfile &gt; ENTRYPOINT</a>，里面信息量不小。</p>
 
-<h2 id="53-volume">5.3 VOLUME</h2>
+<h3 id="513-volume">5.1.3 VOLUME</h3>
 <p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#volume" target="_blank">VOLUME</a>。</p>
 
 <p>卷加载相关在docker里是一个比较麻烦的概念，这里不作展开，只列出文档里提到的注意点：</p>
@@ -716,7 +736,7 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
 
 <p>更多的深入理解可以查看：<a href="#ID_PRINCIPLE_STORAGE">9.2 存储</a>。</p>
 
-<h2 id="54-arg">5.4 ARG</h2>
+<h3 id="514-arg">5.1.4 ARG</h3>
 <p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#arg" target="_blank">ARG</a>。</p>
 
 <p>除了用户定义的变量之外，docker还有一部分预定义的变量，可以通过<code>docker build --build-arg name=value</code>来加入：<a href="https://docs.docker.com/engine/reference/builder/#predefined-args" target="_blank">Predefined ARGs</a>。</p>
@@ -732,7 +752,7 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
   <li>no_proxy</li>
 </ul>
 
-<h2 id="55-healthcheck">5.5 HEALTHCHECK</h2>
+<h3 id="515-healthcheck">5.1.5 HEALTHCHECK</h3>
 <p>官方文档：<a href="https://docs.docker.com/engine/reference/builder/#healthcheck" target="_blank">HEALTHCHECK</a>。</p>
 
 <p>类似于客户端服务器保持连接的心跳检查的概念，这个指令是用来检查当前的容器其提供的服务是否正常的。</p>
@@ -767,7 +787,7 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
   <li><a href="https://howchoo.com/g/zwjhogrkywe/how-to-add-a-health-check-to-your-docker-container" target="_blank">How to add a health check to your Docker container</a></li>
 </ul>
 
-<h2 id="56-其他指令">5.6 其他指令</h2>
+<h3 id="516-其他指令">5.1.6 其他指令</h3>
 <p>有相当多的指令在本文中并没有展开，可以查看其官方文档：</p>
 
 <ul>
@@ -783,6 +803,78 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
   <li><a href="https://docs.docker.com/engine/reference/builder/#stopsignal" target="_blank">STOPSIGNAL</a></li>
   <li><a href="https://docs.docker.com/engine/reference/builder/#shell" target="_blank">SHELL</a></li>
 </ul>
+
+<h2 id="52-最佳实践">5.2 最佳实践</h2>
+<h3 id="521-缩小镜像构建的context">5.2.1 缩小镜像构建的Context</h3>
+<p>官方文档：<a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#understand-build-context" target="_blank">Understand build context</a>。</p>
+
+<p>简单理解就是保证运行<code>docker build</code>命令的根工作文件夹里的内容尽量少，最好只保有构建镜像必须的文件，能显著加速镜像构建的速度（减少Context传送需要花费的时间）。</p>
+
+<p>举个例子：</p>
+
+<figure class="highlight"><pre><code class="language-dockerfile" data-lang="dockerfile"><span></span><span class="k">FROM</span><span class="s"> alpine:3.9.2</span>
+<span class="k">ENTRYPOINT</span><span class="s"> [&quot;/bin/sh&quot;]</span></code></pre></figure>
+
+<pre><code>$ mkdir ~/Downloads/docker &amp;&amp; cd ~/Downloads/docker
+$ docker build -f Dockerfile -t empty_img:0.0.1 .
+
+Sending build context to Docker daemon  2.048kB
+Step 1/2 : FROM alpine:3.9.2
+ ---&gt; 5cb3aa00f899
+Step 2/2 : ENTRYPOINT ["/bin/sh"]
+ ---&gt; Running in 6190582d6894
+Removing intermediate container 6190582d6894
+ ---&gt; bd0e931e4706
+Successfully built bd0e931e4706
+Successfully tagged empty_img:0.0.1
+</code></pre>
+
+<p>然后拷贝点垃圾文件到<code>~/Downloads/docker</code>，再执行一次：</p>
+
+<pre><code>$ docker build -f Dockerfile --no-cache -t dummy_img:0.0.1 .
+
+Sending build context to Docker daemon  630.1MB
+Step 1/2 : FROM alpine:3.9.2
+ ---&gt; 5cb3aa00f899
+Step 2/2 : ENTRYPOINT ["/bin/sh"]
+ ---&gt; Running in 0b6ebe8953ca
+Removing intermediate container 0b6ebe8953ca
+ ---&gt; 681e135d49b6
+Successfully built 681e135d49b6
+Successfully tagged dummy_img:0.0.1
+</code></pre>
+
+<p><code>Sending build context to Docker daemon  630.1MB</code>这一步花了很长时间（因为我拷贝过去的是630MB很零碎的小文件）。如果Context再大点，到百千GB级别的话，那影响更大。</p>
+
+<p>对于构建出来的镜像大小是没有任何影响的：</p>
+
+<pre><code>$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+dummy_img           0.0.1               681e135d49b6        40 seconds ago      5.53MB
+empty_img           0.0.1               bd0e931e4706        8 minutes ago       5.53MB
+alpine              3.9.2               5cb3aa00f899        3 weeks ago         5.53MB
+</code></pre>
+
+<h3 id="522-使用多阶段构建">5.2.2 使用多阶段构建</h3>
+<p>官方文档：<a href="https://docs.docker.com/develop/develop-images/multistage-build/" target="_blank">Use multi-stage builds</a>。</p>
+
+<p>一般来说总是希望镜像的体积越小越好，有利于传输也有利于减小容器的资源占用。而在镜像构建的时候，总会有很多中间产物。以go语言来举例，go语言最后编译产生的可执行文件是自包含的，对于外部的类库等都是不作要求的，而在go源码构建成可执行文件的过程中，则会有很多SDK等的环境需求。这就对<code>构建</code>和<code>生产</code>两个环境做了不同的定义及隔离要求。而<code>多阶段构建</code>这个功能，就是为了这种需求而服务的。</p>
+
+<p>简单来说就是在同一个Dockerfile里有<code>多个</code><code>FROM指令</code>，每个FROM指令可以使用<code>as ...</code>这样的语法进行命名，这样的一行语句就定义了一个<code>阶段</code>。后面的阶段可以随意利用之前阶段里产生任何资源。通常的用法就是定义两个FROM即两个阶段，构建阶段和生产阶段。将所有的环境设置等都定义在构建阶段，然后将构建阶段编译产生的二进制文件拷贝到生产环境，这样生产环境就能够做到最小化了。</p>
+
+<p>详细的例子可以直接查看官方文档，里面有一份非常详细的范例，正好就是按go制作的范例。</p>
+
+<h3 id="523-构建的缓存">5.2.3 构建的缓存</h3>
+<p>官方文档：<a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#leverage-build-cache" target="_blank">Leverage build cache</a>。</p>
+
+<p>这部分建议通读后理解，因为在<code>docker build</code>的时候，只要不添加<code>--no-cache</code>选项的话，构建就会检查并使用缓存。除非在工作中每次都放弃使用cache（在某些情况下会大大增加构建的时间消耗），否则对于缓存的命中还是有理解的必要。</p>
+
+<h3 id="524-镜像层的创建">5.2.4 镜像层的创建</h3>
+<blockquote>
+  <p>Only the instructions RUN, COPY, ADD create layers. Other instructions create temporary intermediate images, and do not increase the size of the build.</p>
+</blockquote>
+
+<p>因此对于<code>RUN</code>、<code>COPY</code>以及<code>ADD</code>指令的使用需要非常小心，特别是RUN指令，尽量使用<code>&amp;&amp;</code>将其串起来。</p>
 
 <h1 id="6-image">6. Image</h1>
 <p>// TODO
@@ -811,6 +903,7 @@ PING docker.io (162.242.195.84) 56(84) bytes of data.
 <h2 id="ID_PRINCIPLE_STORAGE">9.2 存储</h2>
 <p>// TODO
 <a href="https://docs.docker.com/storage/" target="_blank">docker storage</a>
+<a href="https://docs.docker.com/storage/storagedriver/" target="_blank">About storage drivers</a>
 <a href="https://docs.docker.com/storage/volumes/" target="_blank">Use volumes</a>
 <a href="https://stackoverflow.com/questions/40163036/difference-between-volume-declaration-in-dockerfile-and-v-as-docker-run-paramet" target="_blank">Difference between VOLUME declaration in Dockerfile and -v as docker run parameter</a>
 <a href="https://docs.docker.com/storage/storagedriver/aufs-driver/" target="_blank">Use the AUFS storage driver</a>
