@@ -236,31 +236,30 @@
     </ul>
   </li>
   <li><a href="#6-image" id="markdown-toc-6-image">6. Image</a></li>
-  <li><a href="#7-multi-stage-builds" id="markdown-toc-7-multi-stage-builds">7. Multi Stage builds</a></li>
-  <li><a href="#8-docker-machine" id="markdown-toc-8-docker-machine">8. Docker Machine</a></li>
-  <li><a href="#9-原理" id="markdown-toc-9-原理">9. 原理</a>    <ul>
-      <li><a href="#91-网络" id="markdown-toc-91-网络">9.1 网络</a></li>
-      <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">9.2 存储</a></li>
-      <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">9.3 资源限制</a></li>
-      <li><a href="#94-监控--metrics" id="markdown-toc-94-监控--metrics">9.4 监控 &amp; Metrics</a></li>
-      <li><a href="#95-安全" id="markdown-toc-95-安全">9.5 安全</a></li>
-      <li><a href="#96-docker-inspect" id="markdown-toc-96-docker-inspect">9.6 docker inspect</a></li>
-      <li><a href="#97-其他" id="markdown-toc-97-其他">9.7 其他</a>        <ul>
+  <li><a href="#7-docker-machine" id="markdown-toc-7-docker-machine">7. Docker Machine</a></li>
+  <li><a href="#8-原理" id="markdown-toc-8-原理">8. 原理</a>    <ul>
+      <li><a href="#81-网络" id="markdown-toc-81-网络">8.1 网络</a></li>
+      <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">8.2 存储</a></li>
+      <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">8.3 资源限制</a></li>
+      <li><a href="#84-监控--metrics" id="markdown-toc-84-监控--metrics">8.4 监控 &amp; Metrics</a></li>
+      <li><a href="#85-安全" id="markdown-toc-85-安全">8.5 安全</a></li>
+      <li><a href="#86-docker-inspect" id="markdown-toc-86-docker-inspect">8.6 docker inspect</a></li>
+      <li><a href="#87-其他" id="markdown-toc-87-其他">8.7 其他</a>        <ul>
           <li><a href="#停止容器" id="markdown-toc-停止容器">停止容器</a></li>
           <li><a href="#记一次kubernetesdocker网络排障" id="markdown-toc-记一次kubernetesdocker网络排障">记一次KUBERNETES/DOCKER网络排障</a></li>
         </ul>
       </li>
     </ul>
   </li>
-  <li><a href="#10-os镜像选择" id="markdown-toc-10-os镜像选择">10. OS镜像选择</a>    <ul>
-      <li><a href="#101-alpine" id="markdown-toc-101-alpine">10.1 Alpine</a>        <ul>
+  <li><a href="#9-os镜像选择" id="markdown-toc-9-os镜像选择">9. OS镜像选择</a>    <ul>
+      <li><a href="#91-alpine" id="markdown-toc-91-alpine">9.1 Alpine</a>        <ul>
           <li><a href="#dns-issue" id="markdown-toc-dns-issue">DNS issue</a></li>
         </ul>
       </li>
     </ul>
   </li>
-  <li><a href="#11-其他" id="markdown-toc-11-其他">11. 其他</a>    <ul>
-      <li><a href="#111-什么是docker-host" id="markdown-toc-111-什么是docker-host">11.1 什么是docker host</a></li>
+  <li><a href="#10-其他" id="markdown-toc-10-其他">10. 其他</a>    <ul>
+      <li><a href="#101-什么是docker-host" id="markdown-toc-101-什么是docker-host">10.1 什么是docker host</a></li>
     </ul>
   </li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
@@ -887,24 +886,27 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
   <li><a href="https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612" target="_blank">Digging into Docker layers</a></li>
 </ul>
 
-<h1 id="7-multi-stage-builds">7. Multi Stage builds</h1>
-<p>// TODO
-将多个docker镜像组装成一个：<a href="https://docs.docker.com/develop/develop-images/multistage-build/" target="_blank">Use multi-stage builds</a></p>
+<h1 id="7-docker-machine">7. Docker Machine</h1>
+<p>官方文档：<a href="https://docs.docker.com/machine/overview/" target="_blank">Docker Machine Overview</a>。</p>
 
-<h1 id="8-docker-machine">8. Docker Machine</h1>
-<p>// TODO
-<a href="https://juejin.im/entry/5b3df2b4f265da0f6e5156de" target="_blank">docker-machine</a></p>
+<p>Docker machine是用来辅助Ops对大批量机器进行docker部署时使用的工具。现如今规模化使用容器一般都会使用类似K8S这样的工具，所以这东西了解下就好。</p>
 
-<h1 id="9-原理">9. 原理</h1>
+<p>资料：</p>
+
+<ul>
+  <li><a href="https://juejin.im/entry/5b3df2b4f265da0f6e5156de" target="_blank">docker-machine</a></li>
+</ul>
+
+<h1 id="8-原理">8. 原理</h1>
 <p>// TODO
 <a href="https://docs.docker.com/engine/docker-overview/" target="_blank">docker overview</a></p>
 
-<h2 id="91-网络">9.1 网络</h2>
+<h2 id="81-网络">8.1 网络</h2>
 <p>// TODO
 <a href="https://docs.docker.com/network/" target="_blank">docker network overview</a>
 <a href="http://dockone.io/article/1261" target="_blank">Docker网络模式 2016-05-02</a></p>
 
-<h2 id="ID_PRINCIPLE_STORAGE">9.2 存储</h2>
+<h2 id="ID_PRINCIPLE_STORAGE">8.2 存储</h2>
 <p>// TODO
 <a href="https://docs.docker.com/storage/" target="_blank">docker storage</a>
 <a href="https://docs.docker.com/storage/storagedriver/" target="_blank">About storage drivers</a>
@@ -917,7 +919,7 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 <a href="https://coolshell.cn/articles/17200.html" target="_blank">DOCKER基础技术：DEVICEMAPPER</a>
 <a href="https://container-solutions.com/understanding-volumes-docker/" target="_blank">Understanding Volumes in Docker</a></p>
 
-<h2 id="ID_PRINCIPLE_RESOURCE">9.3 资源限制</h2>
+<h2 id="ID_PRINCIPLE_RESOURCE">8.3 资源限制</h2>
 <p>// TODO
 <a href="https://docs.docker.com/engine/reference/run/#runtime-constraints-on-resources" target="_blank">docker run &gt; Runtime constraints on resources</a>
 <a href="https://docs.docker.com/config/containers/resource_constraints/" target="_blank">Limit a container’s resources</a>
@@ -932,18 +934,18 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 <a href="https://coolshell.cn/articles/17049.html" target="_blank">DOCKER基础技术：LINUX CGROUP</a>
 <a href="https://rk700.github.io/2016/10/26/linux-capabilities/" target="_blank">Linux的capabilities机制</a></p>
 
-<h2 id="94-监控--metrics">9.4 监控 &amp; Metrics</h2>
+<h2 id="84-监控--metrics">8.4 监控 &amp; Metrics</h2>
 <p>// TODO
 <a href="https://docs.docker.com/config/containers/runmetrics/" target="_blank">Runtime metrics</a></p>
 
-<h2 id="95-安全">9.5 安全</h2>
+<h2 id="85-安全">8.5 安全</h2>
 <p>// TODO
 <a href="https://docs.docker.com/engine/security/security/" target="_blank">Docker security</a></p>
 
-<h2 id="96-docker-inspect">9.6 docker inspect</h2>
+<h2 id="86-docker-inspect">8.6 docker inspect</h2>
 <p>// TODO</p>
 
-<h2 id="97-其他">9.7 其他</h2>
+<h2 id="87-其他">8.7 其他</h2>
 <h3 id="停止容器">停止容器</h3>
 <p><a href="https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/" target="_blank">Gracefully Stopping Docker Containers</a>
 // TODO</p>
@@ -951,8 +953,8 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 <p>// TODO
 <a href="https://coolshell.cn/articles/18654.html" target="_blank">记一次KUBERNETES/DOCKER网络排障</a></p>
 
-<h1 id="10-os镜像选择">10. OS镜像选择</h1>
-<h2 id="101-alpine">10.1 Alpine</h2>
+<h1 id="9-os镜像选择">9. OS镜像选择</h1>
+<h2 id="91-alpine">9.1 Alpine</h2>
 <p>技术过硬的话，Alpine应该说是制作生产环境产品镜像的首选了，毕竟体积摆在那边，只有几兆的基本镜像可真的没几个好选的。</p>
 
 <ul>
@@ -972,8 +974,8 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 <h3 id="dns-issue">DNS issue</h3>
 <p>DNS问题算是Alpine被诟病得比较多的一点，可以看一个issue：<a href="https://github.com/gliderlabs/docker-alpine/issues/255" target="_blank">DNS Issue #255</a>。官方在github的文档上也给了说明，可以看下：<a href="https://github.com/gliderlabs/docker-alpine/blob/master/docs/caveats.md#dns" target="_blank">caveats.md » DNS</a>，当然具体是否有这个情况以及如何解决，就要看实践了。</p>
 
-<h1 id="11-其他">11. 其他</h1>
-<h2 id="111-什么是docker-host">11.1 什么是docker host</h2>
+<h1 id="10-其他">10. 其他</h1>
+<h2 id="101-什么是docker-host">10.1 什么是docker host</h2>
 <p>在很多docker的文档里都提到了<code>docker host</code>这个概念。至于什么是docker host，可以参见链接：<a href="https://forums.docker.com/t/clarify-what-is-the-host/29640/2" target="_blank">Clarify what is the host</a>。</p>
 
 <blockquote>
@@ -1022,6 +1024,7 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 <ul>
   <li><a href="https://forums.docker.com/t/clarify-what-is-the-host/29640/2" target="_blank">Clarify what is the host</a></li>
   <li><a href="https://github.com/grpc/grpc-node/issues/604" target="_blank">grpc/grpc-node#604</a></li>
+  <li><a href="https://juejin.im/entry/5b3df2b4f265da0f6e5156de" target="_blank">docker-machine</a></li>
 </ul>
 
 <h2 id="ID_APP_DOCKER_INFO">docker info</h2>
