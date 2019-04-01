@@ -173,7 +173,7 @@
       <li><a href="#42-docker-rmi" id="markdown-toc-42-docker-rmi">4.2 docker rmi</a></li>
       <li><a href="#43-docker-ps--a" id="markdown-toc-43-docker-ps--a">4.3 docker ps -a</a></li>
       <li><a href="#44-docker-rm" id="markdown-toc-44-docker-rm">4.4 docker rm</a></li>
-      <li><a href="#45-docker-build" id="markdown-toc-45-docker-build">4.5 docker build</a>        <ul>
+      <li><a href="#ID_DOCKER_BUILD" id="markdown-toc-ID_DOCKER_BUILD">4.5 docker build</a>        <ul>
           <li><a href="#451-镜像命名及tag" id="markdown-toc-451-镜像命名及tag">4.5.1 镜像命名及tag</a></li>
           <li><a href="#452-指定dockerfile" id="markdown-toc-452-指定dockerfile">4.5.2 指定Dockerfile</a></li>
           <li><a href="#453-指定全局变量" id="markdown-toc-453-指定全局变量">4.5.3 指定全局变量</a></li>
@@ -374,7 +374,7 @@ ubuntu              18.10               b977ae81df17        2 weeks ago         
 <pre><code>$ docker rm containername containerid ...
 </code></pre>
 
-<h2 id="45-docker-build">4.5 docker build</h2>
+<h2 id="ID_DOCKER_BUILD">4.5 docker build</h2>
 <p>从一个Dockerfile构建一个镜像，一般都会进入到Dockerfile同一层目录进行构建：<code>docker build [OPTIONS] .</code>，这里的<code>.</code>就是Dockerfile的路径。全选项参数可以通过：<code>docker build --help</code>来获得，这里就不贴了。</p>
 
 <p>细节相当多，有需要的可以看下官方文档：<a href="https://docs.docker.com/engine/reference/commandline/build/" target="_blank">docker build</a>。</p>
@@ -877,11 +877,15 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 <p>因此对于<code>RUN</code>、<code>COPY</code>以及<code>ADD</code>指令的使用需要非常小心，特别是RUN指令，尽量使用<code>&amp;&amp;</code>将其串起来。</p>
 
 <h1 id="6-image">6. Image</h1>
-<p>// TODO
-<a href="https://cameronlonsdale.com/2018/11/26/whats-in-a-docker-image/" target="_blank">What’s in a Docker image?</a>
-<a href="https://stackoverflow.com/questions/31222377/what-are-docker-image-layers" target="_blank">What are Docker image “layers”?</a>
-<a href="https://forums.docker.com/t/do-number-of-layers-in-an-image-affect-the-runtime-performance/43119" target="_blank">Do number of layers (in an image) affect the runtime performance?</a>
-<a href="https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612" target="_blank">Digging into Docker layers</a></p>
+<p>镜像文件的很多细节在之前的<a href="#ID_DOCKER_BUILD">4.5 docker build</a>以及<a href="#ID_DOCKERFILE">5. Dockerfile</a>都有提到了，所以讲到这里其实已经没什么很有价值的内容可以讲了。关于Image，有一篇非常不错的文章，只要过了一遍基本上Image本身就没什么神秘的了，可以看下：<a href="https://cameronlonsdale.com/2018/11/26/whats-in-a-docker-image/" target="_blank">What’s in a Docker image?</a>。</p>
+
+<p>一些额外的资料：</p>
+
+<ul>
+  <li><a href="https://stackoverflow.com/questions/31222377/what-are-docker-image-layers" target="_blank">What are Docker image “layers”?</a></li>
+  <li><a href="https://forums.docker.com/t/do-number-of-layers-in-an-image-affect-the-runtime-performance/43119" target="_blank">Do number of layers (in an image) affect the runtime performance?</a></li>
+  <li><a href="https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612" target="_blank">Digging into Docker layers</a></li>
+</ul>
 
 <h1 id="7-multi-stage-builds">7. Multi Stage builds</h1>
 <p>// TODO
@@ -1008,6 +1012,10 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
   <li><a href="https://thenewstack.io/alpine-linux-heart-docker/" target="_blank">Meet Alpine Linux, Docker’s Distribution of Choice for Containers</a></li>
   <li><a href="https://github.com/gliderlabs/docker-alpine/issues/255" target="_blank">DNS Issue #255</a></li>
   <li><a href="https://github.com/gliderlabs/docker-alpine/blob/master/docs/caveats.md#dns" target="_blank">caveats.md » DNS</a></li>
+  <li><a href="https://cameronlonsdale.com/2018/11/26/whats-in-a-docker-image/" target="_blank">What’s in a Docker image?</a>。</li>
+  <li><a href="https://stackoverflow.com/questions/31222377/what-are-docker-image-layers" target="_blank">What are Docker image “layers”?</a></li>
+  <li><a href="https://forums.docker.com/t/do-number-of-layers-in-an-image-affect-the-runtime-performance/43119" target="_blank">Do number of layers (in an image) affect the runtime performance?</a></li>
+  <li><a href="https://medium.com/@jessgreb01/digging-into-docker-layers-c22f948ed612" target="_blank">Digging into Docker layers</a></li>
 </ul>
 
 <h2 id="其他">其他</h2>
