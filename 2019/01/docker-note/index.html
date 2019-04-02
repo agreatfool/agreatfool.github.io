@@ -238,7 +238,10 @@
   <li><a href="#6-image" id="markdown-toc-6-image">6. Image</a></li>
   <li><a href="#7-docker-machine" id="markdown-toc-7-docker-machine">7. Docker Machine</a></li>
   <li><a href="#8-原理" id="markdown-toc-8-原理">8. 原理</a>    <ul>
-      <li><a href="#81-网络" id="markdown-toc-81-网络">8.1 网络</a></li>
+      <li><a href="#81-网络" id="markdown-toc-81-网络">8.1 网络</a>        <ul>
+          <li><a href="#821-bridge" id="markdown-toc-821-bridge">8.2.1 bridge</a></li>
+        </ul>
+      </li>
       <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">8.2 存储</a></li>
       <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">8.3 资源限制</a></li>
       <li><a href="#84-监控--metrics" id="markdown-toc-84-监控--metrics">8.4 监控 &amp; Metrics</a></li>
@@ -898,13 +901,68 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 </ul>
 
 <h1 id="8-原理">8. 原理</h1>
-<p>// TODO
-<a href="https://docs.docker.com/engine/docker-overview/" target="_blank">docker overview</a></p>
+<p>上面的文章基本上把docker的命令以及一些日常使用的细节都过了一遍，也包含了类似镜像体积等优化内容。后面就会进入一些docker底层的原理了，类似于docker的网络模式、docker的磁盘模式等。</p>
 
 <h2 id="81-网络">8.1 网络</h2>
-<p>// TODO
-<a href="https://docs.docker.com/network/" target="_blank">docker network overview</a>
-<a href="http://dockone.io/article/1261" target="_blank">Docker网络模式 2016-05-02</a></p>
+<p>官方文档：<a href="https://docs.docker.com/network/" target="_blank">docker network overview</a></p>
+
+<p>docker的网络子系统是可插拔式设计，其中可选的有：</p>
+
+<ul>
+  <li><code>bridge</code>：默认的网络驱动。如果不指定一个驱动的话，默认就是bridge模式。bridge模式通常应用在独立运行的容器相互之间需要通讯的应用场景</li>
+  <li><code>host</code>：移除独立容器和Docker主机之间的网络隔离，并直接使用主机的网络。host模式仅针对高于Docker 17.06版本的swarm services可用</li>
+  <li><code>overlay</code>：Overlay模式将多个Docker daemon连接起来，并启用swarm service来互通。你也可以使用overlay模式促进swarm service和独立容器之间的沟通，或是两个分别归属于不同Docker daemon的容器。这个策略简化了容器之间的互通，不再依赖于OS级别的路由</li>
+  <li><code>macvlan</code>：Macvlan模式允许将一个MAC地址交付给一个容器，使得这个容器在你的网络中以一个硬件设备的身份出现。Docker daemon通过MAC地址将通讯路由到容器。macvlan模式通常用来处理需要直接连接到物理网络的遗留应用，而不需要路经Docker主机的网络栈</li>
+  <li><code>none</code>：将某个容器禁用网络。通常与自定义的网络驱动结合使用。none驱动对swarm service不可用</li>
+  <li><code>Third-party network plugins</code>：第三方网络插件，可自由安装使用。可以通过Docker Hub来安装，或通过第三方vendor安装</li>
+</ul>
+
+<p>选择建议：</p>
+
+<ul>
+  <li><code>User-defined bridge networks</code>：当相同Docker主机内的多个容器需要相互通讯的时候，这是最优解</li>
+  <li><code>Host networks</code>：当容器的网络不应该与Docker主机隔离，且容器的其他方面应该与Docker主机隔离的情况下，这是最优解</li>
+  <li><code>Overlay networks</code>：当需要运行在不同的Docker主机上的容器相互之间进行通讯，或当多个容器需要使用swarm service进行协同工作的时候，这是最优解</li>
+  <li><code>Macvlan networks</code>：当从VM环境迁移到Docker环境或需要让容器看起来像物理主机的时候（每个容器都拥有一个唯一的MAC地址），这是最优解</li>
+  <li><code>Third-party network plugins</code>：允许你将Docker整合到特殊的网络栈中</li>
+</ul>
+
+<p>通篇过一下之后会发现，基本上常用的场景，只要有bridge驱动就够了。后面会主要看下bridge驱动，其他的可以查看官方文档。</p>
+
+<p>此外，有一篇比较老的文章，用中文举了点例子进行网络模式的说明，可以一读：<a href="http://dockone.io/article/1261" target="_blank">Docker网络模式</a>。</p>
+
+<h3 id="821-bridge">8.2.1 bridge</h3>
+<p>如果在创建容器的时候不指定网络设置的话，容器会使用默认的bridge驱动。而如果用户进行自定义bridge设置的话，使用的网络驱动就是稍微有点不同：<code>User-defined bridge networks</code>。这里还是有不少区别的：<a href="https://docs.docker.com/network/bridge/#differences-between-user-defined-bridges-and-the-default-bridge" target="_blank">Differences between user-defined bridges and the default bridge</a>：</p>
+
+<ul>
+  <li>User-defined bridges provide better isolation and interoperability between containerized applications.</li>
+  <li>User-defined bridges provide automatic DNS resolution between containers.</li>
+  <li>Containers can be attached and detached from user-defined networks on the fly.</li>
+  <li>Each user-defined network creates a configurable bridge.</li>
+  <li>Linked containers on the default bridge network share environment variables.</li>
+</ul>
+
+<p>自定义bridge驱动使用：</p>
+
+<pre><code>$ docker network create my-net
+$ docker network rm my-net
+
+$ docker create --name my-nginx \
+  --network my-net \
+  --publish 8080:80 \
+  nginx:latest
+
+$ docker network connect my-net my-nginx
+$ docker network disconnect my-net my-nginx
+</code></pre>
+
+<p>官方文档里写清楚了，默认的bridge驱动已经属于遗留功能，不建议在生产环境上使用。</p>
+
+<blockquote>
+  <p>The default bridge network is considered a legacy detail of Docker and is not recommended for production use.</p>
+</blockquote>
+
+<p>见文档：<a href="https://docs.docker.com/network/bridge/#use-the-default-bridge-network" target="_blank">Use the default bridge network</a>。</p>
 
 <h2 id="ID_PRINCIPLE_STORAGE">8.2 存储</h2>
 <p>// TODO
@@ -1025,6 +1083,7 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
   <li><a href="https://forums.docker.com/t/clarify-what-is-the-host/29640/2" target="_blank">Clarify what is the host</a></li>
   <li><a href="https://github.com/grpc/grpc-node/issues/604" target="_blank">grpc/grpc-node#604</a></li>
   <li><a href="https://juejin.im/entry/5b3df2b4f265da0f6e5156de" target="_blank">docker-machine</a></li>
+  <li><a href="http://dockone.io/article/1261" target="_blank">Docker网络模式</a></li>
 </ul>
 
 <h2 id="ID_APP_DOCKER_INFO">docker info</h2>
