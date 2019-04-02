@@ -239,8 +239,8 @@
   <li><a href="#7-docker-machine" id="markdown-toc-7-docker-machine">7. Docker Machine</a></li>
   <li><a href="#8-原理" id="markdown-toc-8-原理">8. 原理</a>    <ul>
       <li><a href="#81-网络" id="markdown-toc-81-网络">8.1 网络</a>        <ul>
-          <li><a href="#821-bridge" id="markdown-toc-821-bridge">8.2.1 bridge</a></li>
-          <li><a href="#822-其他" id="markdown-toc-822-其他">8.2.2 其他</a></li>
+          <li><a href="#811-bridge" id="markdown-toc-811-bridge">8.1.1 bridge</a></li>
+          <li><a href="#812-其他" id="markdown-toc-812-其他">8.1.2 其他</a></li>
         </ul>
       </li>
       <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">8.2 存储</a></li>
@@ -932,7 +932,7 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
 
 <p>此外，有一篇比较老的文章，用中文举了点例子进行网络模式的说明，可以一读：<a href="http://dockone.io/article/1261" target="_blank">Docker网络模式</a>。</p>
 
-<h3 id="821-bridge">8.2.1 bridge</h3>
+<h3 id="811-bridge">8.1.1 bridge</h3>
 <p>如果在创建容器的时候不指定网络设置的话，容器会使用默认的bridge驱动。而如果用户进行自定义bridge设置的话，使用的网络驱动就是稍微有点不同：<code>User-defined bridge networks</code>。这里还是有不少区别的：<a href="https://docs.docker.com/network/bridge/#differences-between-user-defined-bridges-and-the-default-bridge" target="_blank">Differences between user-defined bridges and the default bridge</a>：</p>
 
 <ul>
@@ -965,7 +965,7 @@ $ docker network disconnect my-net my-nginx
 
 <p>见文档：<a href="https://docs.docker.com/network/bridge/#use-the-default-bridge-network" target="_blank">Use the default bridge network</a>。</p>
 
-<h3 id="822-其他">8.2.2 其他</h3>
+<h3 id="812-其他">8.1.2 其他</h3>
 <p>后面几种总的来说应用面都不大，在结合K8S使用的情况下（应该是大部分应用场景），只需要K8S即可。这里都可以略过。</p>
 
 <h2 id="ID_PRINCIPLE_STORAGE">8.2 存储</h2>
