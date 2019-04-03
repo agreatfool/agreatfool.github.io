@@ -259,12 +259,7 @@
       </li>
       <li><a href="#84-监控--metrics" id="markdown-toc-84-监控--metrics">8.4 监控 &amp; Metrics</a></li>
       <li><a href="#85-安全" id="markdown-toc-85-安全">8.5 安全</a></li>
-      <li><a href="#86-docker-inspect" id="markdown-toc-86-docker-inspect">8.6 docker inspect</a></li>
-      <li><a href="#87-其他" id="markdown-toc-87-其他">8.7 其他</a>        <ul>
-          <li><a href="#停止容器" id="markdown-toc-停止容器">停止容器</a></li>
-          <li><a href="#记一次kubernetesdocker网络排障" id="markdown-toc-记一次kubernetesdocker网络排障">记一次KUBERNETES/DOCKER网络排障</a></li>
-        </ul>
-      </li>
+      <li><a href="#87-其他" id="markdown-toc-87-其他">8.7 其他</a></li>
     </ul>
   </li>
   <li><a href="#9-os镜像选择" id="markdown-toc-9-os镜像选择">9. OS镜像选择</a>    <ul>
@@ -1205,23 +1200,31 @@ changed
 </ul>
 
 <h2 id="84-监控--metrics">8.4 监控 &amp; Metrics</h2>
-<p>// TODO
-<a href="https://docs.docker.com/config/containers/runmetrics/" target="_blank">Runtime metrics</a></p>
+<p>这块和上面的内容类似也比较鸡肋，一般来说不会直接裸用Docker，如果有K8S之类的，那监控也不会从Docker来了。所以这里就给点资料即可，有需要的可以深入下官方文档：</p>
+
+<ul>
+  <li><a href="https://docs.docker.com/config/containers/runmetrics/" target="_blank">Runtime metrics</a>
+    <ul>
+      <li><code>docker stats</code>是类似top的工具，可以对整体运行的容器有一个overall的把握</li>
+      <li>docker对于性能指标的监控仍旧依赖于Linux的cgroup</li>
+      <li><a href="https://docs.docker.com/config/containers/runmetrics/#metrics-from-cgroups-memory-cpu-block-io" target="_blank">Metrics from cgroups: memory, CPU, block I/O</a></li>
+      <li><a href="https://docs.docker.com/config/containers/runmetrics/#cpu-metrics-cpuacctstat" target="_blank">CPU metrics: cpuacct.stat</a></li>
+      <li><a href="https://docs.docker.com/config/containers/runmetrics/#network-metrics" target="_blank">Network metrics</a></li>
+    </ul>
+  </li>
+  <li><a href="https://docs.docker.com/config/thirdparty/prometheus/" target="_blank">Collect Docker metrics with Prometheus</a></li>
+</ul>
 
 <h2 id="85-安全">8.5 安全</h2>
-<p>// TODO
-<a href="https://docs.docker.com/engine/security/security/" target="_blank">Docker security</a></p>
+<p>官方文档：<a href="https://docs.docker.com/engine/security/security/" target="_blank">Docker security</a>。</p>
 
-<h2 id="86-docker-inspect">8.6 docker inspect</h2>
-<p>// TODO</p>
+<p>老话重提，里面的知识点仍旧是上面提到过的Linux cgroup、capabilities等几个知识点。</p>
 
 <h2 id="87-其他">8.7 其他</h2>
-<h3 id="停止容器">停止容器</h3>
-<p><a href="https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/" target="_blank">Gracefully Stopping Docker Containers</a>
-// TODO</p>
-<h3 id="记一次kubernetesdocker网络排障">记一次KUBERNETES/DOCKER网络排障</h3>
-<p>// TODO
-<a href="https://coolshell.cn/articles/18654.html" target="_blank">记一次KUBERNETES/DOCKER网络排障</a></p>
+<ul>
+  <li>停止容器：<a href="https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/" target="_blank">Gracefully Stopping Docker Containers</a></li>
+  <li><a href="https://coolshell.cn/articles/18654.html" target="_blank">记一次KUBERNETES/DOCKER网络排障</a></li>
+</ul>
 
 <h1 id="9-os镜像选择">9. OS镜像选择</h1>
 <h2 id="91-alpine">9.1 Alpine</h2>
@@ -1308,6 +1311,8 @@ changed
   <li><a href="https://medium.com/@kasunmaduraeng/docker-namespace-and-cgroups-dece27c209c7" target="_blank">Docker Namespace and Cgroups</a></li>
   <li><a href="https://my.oschina.net/HardySimpson/blog/868186" target="_blank">cgroup, docker,和kubernetes</a></li>
   <li><a href="https://www.cnblogs.com/sammyliu/p/5886833.html" target="_blank">理解Docker（4）：Docker 容器使用 cgroups 限制资源使用</a></li>
+  <li><a href="https://www.ctl.io/developers/blog/post/gracefully-stopping-docker-containers/" target="_blank">Gracefully Stopping Docker Containers</a></li>
+  <li><a href="https://coolshell.cn/articles/18654.html" target="_blank">记一次KUBERNETES/DOCKER网络排障</a></li>
 </ul>
 
 <h2 id="ID_APP_DOCKER_INFO">docker info</h2>
