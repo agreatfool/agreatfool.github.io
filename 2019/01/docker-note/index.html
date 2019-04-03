@@ -237,7 +237,7 @@
   </li>
   <li><a href="#6-image" id="markdown-toc-6-image">6. Image</a></li>
   <li><a href="#7-docker-machine" id="markdown-toc-7-docker-machine">7. Docker Machine</a></li>
-  <li><a href="#8-原理" id="markdown-toc-8-原理">8. 原理</a>    <ul>
+  <li><a href="#8-深入" id="markdown-toc-8-深入">8. 深入</a>    <ul>
       <li><a href="#81-网络" id="markdown-toc-81-网络">8.1 网络</a>        <ul>
           <li><a href="#811-bridge" id="markdown-toc-811-bridge">8.1.1 bridge</a></li>
           <li><a href="#812-其他" id="markdown-toc-812-其他">8.1.2 其他</a></li>
@@ -245,7 +245,10 @@
       </li>
       <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">8.2 存储</a>        <ul>
           <li><a href="#821-几种类型的mount" id="markdown-toc-821-几种类型的mount">8.2.1 几种类型的mount</a></li>
-          <li><a href="#822-volumes" id="markdown-toc-822-volumes">8.2.2 Volumes</a></li>
+          <li><a href="#822-日常使用命令" id="markdown-toc-822-日常使用命令">8.2.2 日常使用命令</a></li>
+          <li><a href="#823-volumes" id="markdown-toc-823-volumes">8.2.3 Volumes</a></li>
+          <li><a href="#824-bind-mounts" id="markdown-toc-824-bind-mounts">8.2.4 Bind mounts</a></li>
+          <li><a href="#825-storage-drivers" id="markdown-toc-825-storage-drivers">8.2.5 Storage drivers</a></li>
         </ul>
       </li>
       <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">8.3 资源限制</a></li>
@@ -905,8 +908,8 @@ alpine              3.9.2               5cb3aa00f899        3 weeks ago         
   <li><a href="https://juejin.im/entry/5b3df2b4f265da0f6e5156de" target="_blank">docker-machine</a></li>
 </ul>
 
-<h1 id="8-原理">8. 原理</h1>
-<p>上面的文章基本上把docker的命令以及一些日常使用的细节都过了一遍，也包含了类似镜像体积等优化内容。后面就会进入一些docker底层的原理了，类似于docker的网络模式、docker的磁盘模式等。</p>
+<h1 id="8-深入">8. 深入</h1>
+<p>上面的文章基本上把docker的命令以及一些日常使用的细节都过了一遍，也包含了类似镜像体积等优化内容。后面就会进入一些docker比较底层的东西了，类似于docker的网络模式、docker的磁盘模式等。</p>
 
 <h2 id="81-网络">8.1 网络</h2>
 <p>官方文档：<a href="https://docs.docker.com/network/" target="_blank">docker network overview</a></p>
@@ -1041,7 +1044,15 @@ $ docker network disconnect my-net my-nginx
   <li>bind mounts可以用在<code>其他进程有直接访问文件需求</code>的场景。volumes是docker进程自组织的，对外就是一个block文件，无法看到细节，其实不太友好，在docker之外的进程也需要对文件进行访问的时候就很不方便了，这种场景就需要bind mounts</li>
 </ul>
 
-<h3 id="822-volumes">8.2.2 Volumes</h3>
+<h3 id="822-日常使用命令">8.2.2 日常使用命令</h3>
+<pre><code>$ docker volume create my-vol
+$ docker volume ls
+$ docker volume inspect my-vol
+$ docker volume rm my-vol # delete volume
+$ docker volume prune # delete all
+</code></pre>
+
+<h3 id="823-volumes">8.2.3 Volumes</h3>
 <p>官方文档：<a href="https://docs.docker.com/storage/volumes/" target="_blank">Use volumes</a>。</p>
 
 <p>优势：</p>
@@ -1055,16 +1066,49 @@ $ docker network disconnect my-net my-nginx
   <li>New volumes can have their content pre-populated by a container.</li>
 </ul>
 
-<hr />
+<p>可以使用<code>--volume</code>或<code>--mount</code>来指定容器运行时需要mount的卷，使用上有点些微的不同：</p>
+
+<pre><code>$ docker run --volume \
+    $volume_name:$path_mounted_in_container:$option1,$option2,...
+
+$ docker run --mount \
+    type=volume,source|src=$volume_name,destination|dst|target=$path_mounted_in_container,readonly,volume-opt=$key1=$val1,volume-opt=$key2=$val2,...
+</code></pre>
+
+<p>几点不常用但可能用得到的点：</p>
+
+<ul>
+  <li><a href="https://docs.docker.com/storage/volumes/#use-a-volume-driver" target="_blank">Use a volume driver</a></li>
+  <li><a href="https://docs.docker.com/storage/volumes/#backup-restore-or-migrate-data-volumes" target="_blank">Backup, restore, or migrate data volumes</a></li>
+</ul>
+
+<h3 id="824-bind-mounts">8.2.4 Bind mounts</h3>
+<p>官方文档：<a href="https://docs.docker.com/storage/bind-mounts/" target="_blank">Use bind mounts</a>。</p>
+
+<p>可以使用<code>--volume</code>或<code>--mount</code>来指定容器运行时需要mount的卷，使用上有点些微的不同：</p>
+
+<pre><code>$ docker run --volume \
+    $path_on_host_tobe_bound:$path_mounted_in_container:$option1,$option2,...
+
+$ docker run --mount \
+    type=bind,source|src=$path_on_host_tobe_bound,destination|dst|target=$path_mounted_in_container,readonly,bind-propagation=rprivate|private|rshared|shared|rslave|slave
+</code></pre>
+
+<p>对bind mounts来说<code>--volume</code>和<code>--mount</code>在使用上是有区别的：</p>
+
+<ul>
+  <li><code>--volume</code>：指定的主机位置不存在的话，会主动创建出来（总是创建成文件夹）</li>
+  <li><code>--mount</code>：指定的主机位置不存在的话，不会主动创建，而是报错</li>
+</ul>
+
+<p>举个简单的例子：</p>
 
 <pre><code>$ cd /Users/XXX &amp;&amp; mkdir ./docker &amp;&amp; cd ./docker &amp;&amp; touch ./dummy.txt &amp;&amp; echo dummy &gt; ./dummy.txt
-$ docker run -it -d --rm -v /Users/XXX/Downloads/docker/:/dirinc --name mount ubuntu:18.10
+$ docker run -it -d --rm -v /Users/XXX/Downloads/docker/:/dirinc --name bind_mount_test ubuntu:18.10
 $ docker attach 8d11c4aad023
 
 root@8d11c4aad023:/# ll /dirinc
-total 8
-drwxr-xr-x 3 root root   96 Apr  3 02:23 ./
-drwxr-xr-x 1 root root 4096 Apr  3 02:15 ../
+...
 -rw-r--r-- 1 root root    8 Apr  3 02:23 dummy.txt
 root@8d11c4aad023:/# echo changed &gt; /dirinc/dummy.txt
 
@@ -1072,18 +1116,53 @@ $ cat /Users/XXX/docker/dummy.txt
 changed
 </code></pre>
 
-<hr />
+<p>几点不常用但可能用得到的点：</p>
 
-<p>// TODO
-<a href="https://docs.docker.com/storage/storagedriver/" target="_blank">About storage drivers</a>
-<a href="https://docs.docker.com/storage/volumes/" target="_blank">Use volumes</a>
-<a href="https://stackoverflow.com/questions/40163036/difference-between-volume-declaration-in-dockerfile-and-v-as-docker-run-paramet" target="_blank">Difference between VOLUME declaration in Dockerfile and -v as docker run parameter</a>
-<a href="https://docs.docker.com/storage/storagedriver/aufs-driver/" target="_blank">Use the AUFS storage driver</a>
-<a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/" target="_blank">Use the OverlayFS storage driver</a>
-<a href="https://docs.docker.com/storage/storagedriver/device-mapper-driver/" target="_blank">Use the Device Mapper storage driver</a>
-<a href="https://coolshell.cn/articles/17061.html" target="_blank">DOCKER基础技术：AUFS</a>
-<a href="https://coolshell.cn/articles/17200.html" target="_blank">DOCKER基础技术：DEVICEMAPPER</a>
-<a href="https://container-solutions.com/understanding-volumes-docker/" target="_blank">Understanding Volumes in Docker</a></p>
+<ul>
+  <li><a href="https://docs.docker.com/storage/bind-mounts/#configure-bind-propagation" target="_blank">Configure bind propagation</a></li>
+  <li><a href="https://docs.docker.com/storage/bind-mounts/#configure-the-selinux-label" target="_blank">Configure the selinux label</a></li>
+</ul>
+
+<h3 id="825-storage-drivers">8.2.5 Storage drivers</h3>
+<p>官方文档：<a href="https://docs.docker.com/storage/storagedriver/select-storage-driver/" target="_blank">Docker storage drivers</a>。</p>
+
+<p>这部分里会讲到的<code>storage drivers</code>和之前的volumes是不同的东西，所谓的<code>storage drivers</code>是指docker从镜像生成容器之后，在容器的最上面创建出来的那一层可写入层里，使用的文件处理策略（驱动）。</p>
+
+<p>这部分不会太过展开，主要是因为：</p>
+
+<ul>
+  <li>会在容器的可写层里大量产生数据的应用场景一般不会存在，如果存在那一般也是有问题的</li>
+  <li>在真的需要容器对存储设备进行大量写入操作的情况，需要考虑是否使用volumes，而不是直接在容器的可写入层里进行写操作（两者在性能上也有差距）</li>
+</ul>
+
+<p>因此实际上这块的实用性并不高。后面主要以认识<code>storage drivers</code>为主。</p>
+
+<p>Docker支持的storage drivers：</p>
+
+<ul>
+  <li><code>overlay2</code>：首选的驱动，对现行的所有Linux发行版本可用，且无需额外的配置</li>
+  <li><code>aufs</code>：对 Docker 18.06 及更老旧的版本来说是首选驱动，或 Ubuntu 14.04 kernel 3.13 不支持 overlay2 的环境</li>
+  <li><code>devicemapper</code>：受到支持，但在生产环境需要<code>direct-lvm</code>，是因为<code>loopback-lvm</code>虽然无需配置，但性能不是很好</li>
+  <li>The <code>btrfs</code> and <code>zfs</code> storage drivers are used if they are the backing filesystem (the filesystem of the host on which Docker is installed). These filesystems allow for advanced options, such as creating “snapshots”, but require more maintenance and setup. Each of these relies on the backing filesystem being configured correctly.</li>
+  <li>The <code>vfs</code> storage driver is intended for testing purposes, and for situations where no copy-on-write filesystem can be used. Performance of this storage driver is poor, and is not generally recommended for production use.</li>
+</ul>
+
+<p>要查看各Linux发行版本支持的驱动，可以查看：<a href="https://docs.docker.com/storage/storagedriver/select-storage-driver/#supported-storage-drivers-per-linux-distribution" target="_blank">Supported storage drivers per Linux distribution</a>。</p>
+
+<p>要查看各文件系统支持的驱动，可以查看：<a href="https://docs.docker.com/storage/storagedriver/select-storage-driver/#supported-backing-filesystems" target="_blank">Supported backing filesystems</a>。</p>
+
+<p>后面还有很多各种驱动的细节，这里就不展开了，给出一些资料：</p>
+
+<ul>
+  <li><a href="https://docs.docker.com/storage/storagedriver/aufs-driver/" target="_blank">Use the AUFS storage driver</a></li>
+  <li><a href="https://docs.docker.com/storage/storagedriver/btrfs-driver/" target="_blank">Use the BTRFS storage driver</a></li>
+  <li><a href="https://docs.docker.com/storage/storagedriver/device-mapper-driver/" target="_blank">Use the Device Mapper storage driver</a></li>
+  <li><a href="https://docs.docker.com/storage/storagedriver/overlayfs-driver/" target="_blank">Use the OverlayFS storage driver</a></li>
+  <li><a href="https://docs.docker.com/storage/storagedriver/zfs-driver/" target="_blank">Use the ZFS storage driver</a></li>
+  <li><a href="https://docs.docker.com/storage/storagedriver/vfs-driver/" target="_blank">Use the VFS storage driver</a></li>
+  <li><a href="https://coolshell.cn/articles/17061.html" target="_blank">DOCKER基础技术：AUFS</a></li>
+  <li><a href="https://coolshell.cn/articles/17200.html" target="_blank">DOCKER基础技术：DEVICEMAPPER</a></li>
+</ul>
 
 <h2 id="ID_PRINCIPLE_RESOURCE">8.3 资源限制</h2>
 <p>// TODO
