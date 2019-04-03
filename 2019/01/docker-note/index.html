@@ -243,7 +243,11 @@
           <li><a href="#812-其他" id="markdown-toc-812-其他">8.1.2 其他</a></li>
         </ul>
       </li>
-      <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">8.2 存储</a></li>
+      <li><a href="#ID_PRINCIPLE_STORAGE" id="markdown-toc-ID_PRINCIPLE_STORAGE">8.2 存储</a>        <ul>
+          <li><a href="#821-几种类型的mount" id="markdown-toc-821-几种类型的mount">8.2.1 几种类型的mount</a></li>
+          <li><a href="#822-volumes" id="markdown-toc-822-volumes">8.2.2 Volumes</a></li>
+        </ul>
+      </li>
       <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">8.3 资源限制</a></li>
       <li><a href="#84-监控--metrics" id="markdown-toc-84-监控--metrics">8.4 监控 &amp; Metrics</a></li>
       <li><a href="#85-安全" id="markdown-toc-85-安全">8.5 安全</a></li>
@@ -969,8 +973,108 @@ $ docker network disconnect my-net my-nginx
 <p>后面几种总的来说应用面都不大，在结合K8S使用的情况下（应该是大部分应用场景），只需要K8S即可。这里都可以略过。</p>
 
 <h2 id="ID_PRINCIPLE_STORAGE">8.2 存储</h2>
+<p>官方文档：<a href="https://docs.docker.com/storage/" target="_blank">Manage data in Docker</a>。</p>
+
+<p>任何在容器内创建的文件都会存储在容器的可写层内。这意味着：</p>
+
+<ul>
+  <li>当容器消失的时候这些数据会丢失，且当其他进程需要共享这些数据的时候很难获取到这些数据</li>
+  <li>容器的可写层是和物理主机紧密关联的，很难轻易移动到其他机器上</li>
+  <li>向容器的可写层写入数据要求一个存储驱动来管理文件系统。存储驱动是一个洋葱式的文件系统，使用Linux内核。这额外的抽象会降低性能，和直接使用<code>data volumn</code>相比，后者直接向主机的文件系统写入数据</li>
+</ul>
+
+<p>Docker提供了选项来让容器在物理主机上存储文件，这样才能保证容器在停止之后文件仍旧存在：</p>
+
+<ul>
+  <li>volumes</li>
+  <li>bind mounts</li>
+  <li>tmpfs mount（仅限Linux）</li>
+</ul>
+
+<h3 id="821-几种类型的mount">8.2.1 几种类型的mount</h3>
+<ul>
+  <li><code>Volumes</code>：会将数据写入到主机磁盘上的<code>Docker指定</code>地点（/var/lib/docker/volumes/ on Linux），且这些文件是由Docker进程进行管理的，其他任何进程都不应该直接修改这些文件。Volumes是在Docker内存储数据的最佳选择</li>
+  <li><code>Bind mounts</code>：可将数据写入到主机磁盘上的<code>任何</code>地点，甚至可以是重要的系统文件，或文件夹。非Docker进程及Docker容器都可以在任何时候修改这些文件</li>
+  <li><code>tmpfs mounts</code>：仅将数据保存在内存中，并永远不会存储到磁盘上</li>
+</ul>
+
+<p>更进一步的各种mount类型细节可以查阅官方文档：<a href="https://docs.docker.com/storage/#more-details-about-mount-types" target="_blank">More details about mount types</a>。这里做一下整理：</p>
+
+<p><strong>Volumns</strong></p>
+
+<ul>
+  <li>一个volume可以被多个容器共享</li>
+  <li>volume在容器都停止之后不会被删除，除非手动操作：<code>docker volume prune</code></li>
+  <li>volume是可命名的，如果没有被命名，则会被自动附加一个唯一串作为名字</li>
+  <li>volume还可以加载volume drivers，为其提供更丰富的存储功能</li>
+</ul>
+
+<p><strong>Bind mounts</strong></p>
+
+<ul>
+  <li>使用bind mounts的时候，一个主机上的文件或文件夹被加载到容器中</li>
+  <li>文件或文件夹需要完整路径</li>
+  <li>文件或文件夹不需要已经存在</li>
+  <li>docker cli命令无法直接操作bind mounts资料</li>
+  <li>官方更推荐命名化的volumes，而不是使用bind mounts</li>
+</ul>
+
+<p>官方还给了最佳使用范例：</p>
+
+<ul>
+  <li><a href="https://docs.docker.com/storage/#good-use-cases-for-volumes" target="_blank">Good use cases for volumes</a></li>
+  <li><a href="https://docs.docker.com/storage/#good-use-cases-for-bind-mounts" target="_blank">Good use cases for bind mounts</a></li>
+  <li><a href="https://docs.docker.com/storage/#good-use-cases-for-tmpfs-mounts" target="_blank">Good use cases for tmpfs mounts</a></li>
+</ul>
+
+<p>几点tips：</p>
+
+<ul>
+  <li>如果把一个空的volume（使用docker create创建出来的）绑定到运行中容器的某个已经存在的文件夹上，会导致已经存在文件夹内的资料被拷贝到volume内</li>
+  <li>如果把一个bind mount或已经有内容的volume绑定到某个运行中容器的某个已经存在的文件夹上，则容器内重合文件夹内的资料会被屏蔽（不会被删除），volume内的资料则可访问</li>
+</ul>
+
+<p>在我看来：</p>
+
+<ul>
+  <li>volumes应该是最先选择，如果没有特殊需求的话，类似于web服务器这种无状态可以很快横向扩展的就很适合使用volumes</li>
+  <li>bind mounts可以用在<code>其他进程有直接访问文件需求</code>的场景。volumes是docker进程自组织的，对外就是一个block文件，无法看到细节，其实不太友好，在docker之外的进程也需要对文件进行访问的时候就很不方便了，这种场景就需要bind mounts</li>
+</ul>
+
+<h3 id="822-volumes">8.2.2 Volumes</h3>
+<p>官方文档：<a href="https://docs.docker.com/storage/volumes/" target="_blank">Use volumes</a>。</p>
+
+<p>优势：</p>
+
+<ul>
+  <li>Volumes are easier to back up or migrate than bind mounts.</li>
+  <li>You can manage volumes using Docker CLI commands or the Docker API.</li>
+  <li>Volumes work on both Linux and Windows containers.</li>
+  <li>Volumes can be more safely shared among multiple containers.</li>
+  <li>Volume drivers let you store volumes on remote hosts or cloud providers, to encrypt the contents of volumes, or to add other functionality.</li>
+  <li>New volumes can have their content pre-populated by a container.</li>
+</ul>
+
+<hr />
+
+<pre><code>$ cd /Users/XXX &amp;&amp; mkdir ./docker &amp;&amp; cd ./docker &amp;&amp; touch ./dummy.txt &amp;&amp; echo dummy &gt; ./dummy.txt
+$ docker run -it -d --rm -v /Users/XXX/Downloads/docker/:/dirinc --name mount ubuntu:18.10
+$ docker attach 8d11c4aad023
+
+root@8d11c4aad023:/# ll /dirinc
+total 8
+drwxr-xr-x 3 root root   96 Apr  3 02:23 ./
+drwxr-xr-x 1 root root 4096 Apr  3 02:15 ../
+-rw-r--r-- 1 root root    8 Apr  3 02:23 dummy.txt
+root@8d11c4aad023:/# echo changed &gt; /dirinc/dummy.txt
+
+$ cat /Users/XXX/docker/dummy.txt
+changed
+</code></pre>
+
+<hr />
+
 <p>// TODO
-<a href="https://docs.docker.com/storage/" target="_blank">docker storage</a>
 <a href="https://docs.docker.com/storage/storagedriver/" target="_blank">About storage drivers</a>
 <a href="https://docs.docker.com/storage/volumes/" target="_blank">Use volumes</a>
 <a href="https://stackoverflow.com/questions/40163036/difference-between-volume-declaration-in-dockerfile-and-v-as-docker-run-paramet" target="_blank">Difference between VOLUME declaration in Dockerfile and -v as docker run parameter</a>

@@ -462,9 +462,7 @@ Entering interactive mode (type &quot;help&quot; for commands, &quot;o&quot; for
 
 &lt;h1 id=&quot;4-资料&quot;&gt;4. 资料&lt;/h1&gt;
 &lt;h2 id=&quot;ID_APP_CPU_SAMPLE&quot;&gt;experiment/cpu/cpu.go&lt;/h2&gt;
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/24a00ddbdb04c68d6fd2792ba8808ce6.js&quot;&gt; &lt;/script&gt;
+&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/24a00ddbdb04c68d6fd2792ba8808ce6.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
@@ -2519,9 +2517,7 @@ gc 153 @8010.203s 0%: 0.043+0.32+0.006 ms clock, 0.34+0/0.34/0.67+0.053 ms cpu, 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&quot;ID_APP_MEMORY_SAMPLE&quot;&gt;experiment/memory/memory.go&lt;/h2&gt;
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;
+&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
