@@ -251,7 +251,12 @@
           <li><a href="#825-storage-drivers" id="markdown-toc-825-storage-drivers">8.2.5 Storage drivers</a></li>
         </ul>
       </li>
-      <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">8.3 资源限制</a></li>
+      <li><a href="#ID_PRINCIPLE_RESOURCE" id="markdown-toc-ID_PRINCIPLE_RESOURCE">8.3 资源限制</a>        <ul>
+          <li><a href="#831-linux" id="markdown-toc-831-linux">8.3.1 Linux</a></li>
+          <li><a href="#832-docker" id="markdown-toc-832-docker">8.3.2 Docker</a></li>
+          <li><a href="#833-其他" id="markdown-toc-833-其他">8.3.3 其他</a></li>
+        </ul>
+      </li>
       <li><a href="#84-监控--metrics" id="markdown-toc-84-监控--metrics">8.4 监控 &amp; Metrics</a></li>
       <li><a href="#85-安全" id="markdown-toc-85-安全">8.5 安全</a></li>
       <li><a href="#86-docker-inspect" id="markdown-toc-86-docker-inspect">8.6 docker inspect</a></li>
@@ -1165,19 +1170,39 @@ changed
 </ul>
 
 <h2 id="ID_PRINCIPLE_RESOURCE">8.3 资源限制</h2>
-<p>// TODO
-<a href="https://docs.docker.com/engine/reference/run/#runtime-constraints-on-resources" target="_blank">docker run &gt; Runtime constraints on resources</a>
-<a href="https://docs.docker.com/config/containers/resource_constraints/" target="_blank">Limit a container’s resources</a>
-<a href="http://cizixs.com/2017/08/25/linux-cgroup/" target="_blank">docker 容器基础技术：linux cgroup 简介</a>
-<a href="https://infoq.cn/article/docker-kernel-knowledge-cgroups-resource-isolation" target="_blank">Docker 背后的内核知识——cgroups 资源限制</a>
-<a href="https://medium.com/@asishrs/docker-limit-resource-utilization-using-cgroup-parent-72a646651f9d" target="_blank">Docker limit resource utilization using cgroup-parent</a>
-<a href="https://medium.com/@kasunmaduraeng/docker-namespace-and-cgroups-dece27c209c7" target="_blank">Docker Namespace and Cgroups</a>
-<a href="https://my.oschina.net/HardySimpson/blog/868186" target="_blank">cgroup, docker,和kubernetes</a>
-<a href="https://www.cnblogs.com/sammyliu/p/5886833.html" target="_blank">理解Docker（4）：Docker 容器使用 cgroups 限制资源使用</a>
-<a href="https://coolshell.cn/articles/17010.html" target="_blank">DOCKER基础技术：LINUX NAMESPACE（上）</a>
-<a href="https://coolshell.cn/articles/17029.html" target="_blank">DOCKER基础技术：LINUX NAMESPACE（下）</a>
-<a href="https://coolshell.cn/articles/17049.html" target="_blank">DOCKER基础技术：LINUX CGROUP</a>
-<a href="https://rk700.github.io/2016/10/26/linux-capabilities/" target="_blank">Linux的capabilities机制</a></p>
+<p>这块的话题有点大，本质上来说，Docker的资源限制利用的还是Linux本身的机制。即便撇开Docker，这些知识点也是值得一看的，但鉴于主题，这里就不多展开了。后续这个章节的主要目标是将Docker的一些限制手段以及后面的Linux原理相关的思路整理出来，并附上资料，不会过于深入。</p>
+
+<p>实际上在真实场景使用的时候一般也会使用类似K8S这样的系统来进行集群管理，不太会直接在Docker这一层工具上对资源限制这块过多设置。</p>
+
+<h3 id="831-linux">8.3.1 Linux</h3>
+<p>Linux中的namespace、cgroup、capabilities等核心概念，可以看下面几篇：</p>
+
+<ul>
+  <li><a href="https://coolshell.cn/articles/17010.html" target="_blank">DOCKER基础技术：LINUX NAMESPACE（上）</a></li>
+  <li><a href="https://coolshell.cn/articles/17029.html" target="_blank">DOCKER基础技术：LINUX NAMESPACE（下）</a></li>
+  <li><a href="https://coolshell.cn/articles/17049.html" target="_blank">DOCKER基础技术：LINUX CGROUP</a></li>
+  <li><a href="https://rk700.github.io/2016/10/26/linux-capabilities/" target="_blank">Linux的capabilities机制</a></li>
+</ul>
+
+<h3 id="832-docker">8.3.2 Docker</h3>
+<p>Docker官方对于资源限制也有不小的篇幅进行解说，在使用上有需要的时候可以查看：</p>
+
+<ul>
+  <li><a href="https://docs.docker.com/engine/reference/run/#runtime-constraints-on-resources" target="_blank">docker run &gt; Runtime constraints on resources</a></li>
+  <li><a href="https://docs.docker.com/config/containers/resource_constraints/" target="_blank">Limit a container’s resources</a></li>
+</ul>
+
+<h3 id="833-其他">8.3.3 其他</h3>
+<p>其他资料：</p>
+
+<ul>
+  <li><a href="http://cizixs.com/2017/08/25/linux-cgroup/" target="_blank">docker 容器基础技术：linux cgroup 简介</a></li>
+  <li><a href="https://infoq.cn/article/docker-kernel-knowledge-cgroups-resource-isolation" target="_blank">Docker 背后的内核知识——cgroups 资源限制</a></li>
+  <li><a href="https://medium.com/@asishrs/docker-limit-resource-utilization-using-cgroup-parent-72a646651f9d" target="_blank">Docker limit resource utilization using cgroup-parent</a></li>
+  <li><a href="https://medium.com/@kasunmaduraeng/docker-namespace-and-cgroups-dece27c209c7" target="_blank">Docker Namespace and Cgroups</a></li>
+  <li><a href="https://my.oschina.net/HardySimpson/blog/868186" target="_blank">cgroup, docker,和kubernetes</a></li>
+  <li><a href="https://www.cnblogs.com/sammyliu/p/5886833.html" target="_blank">理解Docker（4）：Docker 容器使用 cgroups 限制资源使用</a></li>
+</ul>
 
 <h2 id="84-监控--metrics">8.4 监控 &amp; Metrics</h2>
 <p>// TODO
@@ -1271,6 +1296,18 @@ changed
   <li><a href="https://github.com/grpc/grpc-node/issues/604" target="_blank">grpc/grpc-node#604</a></li>
   <li><a href="https://juejin.im/entry/5b3df2b4f265da0f6e5156de" target="_blank">docker-machine</a></li>
   <li><a href="http://dockone.io/article/1261" target="_blank">Docker网络模式</a></li>
+  <li><a href="https://coolshell.cn/articles/17061.html" target="_blank">DOCKER基础技术：AUFS</a></li>
+  <li><a href="https://coolshell.cn/articles/17200.html" target="_blank">DOCKER基础技术：DEVICEMAPPER</a></li>
+  <li><a href="https://coolshell.cn/articles/17010.html" target="_blank">DOCKER基础技术：LINUX NAMESPACE（上）</a></li>
+  <li><a href="https://coolshell.cn/articles/17029.html" target="_blank">DOCKER基础技术：LINUX NAMESPACE（下）</a></li>
+  <li><a href="https://coolshell.cn/articles/17049.html" target="_blank">DOCKER基础技术：LINUX CGROUP</a></li>
+  <li><a href="https://rk700.github.io/2016/10/26/linux-capabilities/" target="_blank">Linux的capabilities机制</a></li>
+  <li><a href="http://cizixs.com/2017/08/25/linux-cgroup/" target="_blank">docker 容器基础技术：linux cgroup 简介</a></li>
+  <li><a href="https://infoq.cn/article/docker-kernel-knowledge-cgroups-resource-isolation" target="_blank">Docker 背后的内核知识——cgroups 资源限制</a></li>
+  <li><a href="https://medium.com/@asishrs/docker-limit-resource-utilization-using-cgroup-parent-72a646651f9d" target="_blank">Docker limit resource utilization using cgroup-parent</a></li>
+  <li><a href="https://medium.com/@kasunmaduraeng/docker-namespace-and-cgroups-dece27c209c7" target="_blank">Docker Namespace and Cgroups</a></li>
+  <li><a href="https://my.oschina.net/HardySimpson/blog/868186" target="_blank">cgroup, docker,和kubernetes</a></li>
+  <li><a href="https://www.cnblogs.com/sammyliu/p/5886833.html" target="_blank">理解Docker（4）：Docker 容器使用 cgroups 限制资源使用</a></li>
 </ul>
 
 <h2 id="ID_APP_DOCKER_INFO">docker info</h2>
