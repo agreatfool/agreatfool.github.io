@@ -31,7 +31,7 @@
 
 &lt;p&gt;此外还有很多很多。&lt;/p&gt;
 
-&lt;p&gt;这也是常说的死读书和能做事两种人的区别。我常和下属说，不要轻视你平时在做的工作，能把CRUD工作到完善都不是一个普通程序员能轻易做到的。同样做一个简单的业务逻辑模块，有的人可以做好编码规范、写好注释、做好文档、编写测试脚本，做到与之对接的其他协作者感叹其尽善尽美；而有的人就可以做到一团糟糕什么都出错，让后续交接的人一头雾水。&lt;/p&gt;
+&lt;p&gt;这也是常说的死读书和能做事两种人的区别。我常和下属说，不要轻视你平时在做的工作，能把CRUD工作做到完善都不是一个普通程序员能轻易做到的。同样做一个简单的业务逻辑模块，有的人可以做好编码规范、写好注释、做好文档、编写测试脚本，做到与之对接的其他协作者感叹其尽善尽美；而有的人就可以做到一团糟糕什么都出错，让后续交接的人一头雾水。&lt;/p&gt;
 
 &lt;p&gt;大部分的程序员并不懂这一点。我以前有一个下属，也算是名校毕业，计算机技术和算法等基础都很扎实，但工作上的很多细节点还是做的不够好，平时code review之类的，我也经常对他进行指导。后来有一天他提出离职，想回家学几个月的人工智能算法，以后争取做这方面的工作。我说，你有这样的志向我觉得很好，祝愿你今后能在人工智能这块学到知识，进入大厂做出成绩。但是，我还是建议你在这个团队继续锻炼下，至少做到你平时的工作让我没有话说。如果你今后在做事的细节方面仍旧和现在一样的话，即便你算法方面多出色，你做出来的东西，仍旧是不能让人放心的。读几个月书，看懂所有算法，就能把事情做好做对了？这还是没理解什么是&lt;code&gt;知识&lt;/code&gt;什么是&lt;code&gt;能力&lt;/code&gt;。&lt;/p&gt;
 
@@ -2575,9 +2575,7 @@ gc 153 @8010.203s 0%: 0.043+0.32+0.006 ms clock, 0.34+0/0.34/0.67+0.053 ms cpu, 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&quot;ID_APP_MEMORY_SAMPLE&quot;&gt;experiment/memory/memory.go&lt;/h2&gt;
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;
+&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
