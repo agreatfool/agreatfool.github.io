@@ -381,7 +381,7 @@ http_request_total{status="200", method="POST"}@1434417561287 =&gt; 4785
 
 <ul>
   <li><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors" target="_blank">Instant vector selectors</a></li>
-  <li><a href="https://www.robustperception.io/whats-in-a-__name__" target="_blank">What’s in a <strong>name</strong>?</a></li>
+  <li><a href="https://www.robustperception.io/whats-in-a-__name__" target="_blank">What’s in a __name__?</a></li>
 </ul>
 
 <h2 id="33-metrics-type">3.3 Metrics Type</h2>
@@ -433,7 +433,7 @@ prometheus_tsdb_wal_fsync_duration_seconds_count 216
 
 <p>这里需要注意的点是：<code>信息的过滤</code>。</p>
 
-<p>Prometheus的特性是，只要你在配置文件中将某个Exporter设定为Prometheus定时抓取的对象，Prometheus就会将这个Exporter吐出的所有数据都定期采集起来，保存到时序数据库中。而实际情况则是，某个Exporter吐出来的数据中有很大一部分其实是我们并不关心的。</p>
+<p>Prometheus的特性是，只要你在配置文件中将某个Exporter设定为Prometheus定时抓取的对象，Prometheus就会将这个Exporter吐出的<code>所有数据</code>都定期采集起来，保存到时序数据库中。而实际情况则是，某个Exporter吐出来的数据中有很大一部分其实是我们并不关心的。</p>
 
 <p>举个例子，Go语言的Exporter会吐出GC、内存、CPU、Goroutine等等一系列数据，而我们可能只关心GC、内存，其他都不关心。这个时候如果还是按默认的行为来进行采集的话，时序数据库里就会有很多无意义（我们不关心）的数据。为了防止这样的情况发生，有两种做法：</p>
 
@@ -462,7 +462,7 @@ INFO[0000]  - time                                       source="node_exporter.g
 <p>这样的设计模式其实是有问题的，在使用的时候需要大量设置，用起来过于复杂：<a href="https://github.com/prometheus/node_exporter/issues/735" target="_blank">Question: Disable all collectors?</a>。</p>
 
 <h3 id="342-metric_relabel_configs-过滤">3.4.2 metric_relabel_configs 过滤</h3>
-<p>官方文档在：[<metric_relabel_configs>](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs){:target="_blank"}。讲解可以看一篇英语的：[Prometheus relabeling tricks](https://medium.com/quiq-blog/prometheus-relabeling-tricks-6ae62c56cbda){:target="_blank"}。</metric_relabel_configs></p>
+<p>官方文档在：<a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs" target="_blank">&lt;metric_relabel_configs&gt;</a>。讲解可以看一篇英语的：<a href="https://medium.com/quiq-blog/prometheus-relabeling-tricks-6ae62c56cbda" target="_blank">Prometheus relabeling tricks</a>。</p>
 
 <p>这个配置项的作用主要有几点：</p>
 
@@ -484,7 +484,9 @@ INFO[0000]  - time                                       source="node_exporter.g
     <span class="s">)&quot;</span>
     <span class="l l-Scalar l-Scalar-Plain">action</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">drop</span></code></pre></figure>
 
-<p>上面的例子里使用了字符串换行，这里需要注意的是需要换行的字符串一定要使用双引号<code>"</code>，双引号里的字符是不会被转译的，换行符<code>\</code>也就不会失效了。不换行的话，写法是：<code>regex: "(filtered1|filtered2|filtered3)"</code>。</p>
+<p>上面的例子里使用了字符串换行，这里需要注意的是需要换行的字符串一定要使用双引号<code>"</code>，双引号里的字符是不会被转译的，换行符<code>\</code>也就不会失效了。不换行的话，写法是：</p>
+
+<p><code>regex: "(filtered1|filtered2|filtered3)"</code></p>
 
 <p>总而言之，在数据过滤方面，Prometheus做的真的不好，无论是在Exporter端做过滤还是在配置文件里做过滤，都需要写不少过滤条目，蛮麻烦的。</p>
 
@@ -582,7 +584,7 @@ INFO[0000]  - time                                       source="node_exporter.g
   <li>上级Prometheus必须在配置文件里指定<code>params:'match[]':- '{__name__=~"node_.*"}'</code>这样的采集规则才能真正采集到数据，这方面的行为模式和Prometheus的默认模式是不一样的；默认情况下Prometheus会将暴露出来的所有数据都采集起来，但联邦集群的时候如果上级节点不指定采集的过滤参数的话，默认是什么都不采集（可能考虑到量级会有问题），因此必须手动在配置文件里进行指标名（可以组合标签）的过滤</li>
 </ul>
 
-<p>说穿了其实所谓的联邦集群也没什么内容，无非就是在启动的Prometheus节点上默认开了个<code>/federate</code>endpoint，允许其他Prometheus从它这里拉取数据。至于联邦集群怎么组件，能玩出什么花来，Prometheus就不管了，让搭建者自己发挥。</p>
+<p>说穿了其实所谓的联邦集群也没什么内容，无非就是在启动的Prometheus节点上默认开了个<code>/federate</code>endpoint，允许其他Prometheus从它这里拉取数据。至于联邦集群怎么组建，能玩出什么花来，Prometheus就不管了，让搭建者自己发挥。</p>
 
 <h2 id="44-高可用">4.4 高可用</h2>
 <p>简单的结论是：Prometheus<code>并不存在高可用</code>的解决方案。</p>
@@ -608,7 +610,7 @@ INFO[0000]  - time                                       source="node_exporter.g
 <ul>
   <li><a href="https://yunlzheng.gitbook.io/prometheus-book/" target="_blank">prometheus-book</a></li>
   <li><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors" target="_blank">Instant vector selectors</a></li>
-  <li><a href="https://www.robustperception.io/whats-in-a-__name__" target="_blank">What’s in a <strong>name</strong>?</a></li>
+  <li><a href="https://www.robustperception.io/whats-in-a-__name__" target="_blank">What’s in a __name__?</a></li>
   <li><a href="https://github.com/prometheus/node_exporter/issues/735" target="_blank">Question: Disable all collectors?</a></li>
   <li><a href="https://medium.com/quiq-blog/prometheus-relabeling-tricks-6ae62c56cbda" target="_blank">Prometheus relabeling tricks</a></li>
   <li><a href="https://www.jianshu.com/p/bedd169676b6" target="_blank">Prometheus的安装和配置</a></li>
