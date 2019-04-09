@@ -1,0 +1,1539 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Prometheus Notes | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/04/prometheus-note/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/04/prometheus-note/">Prometheus Notes</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>09 Apr 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Prometheus">Prometheus</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Monitor">Monitor</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Metrics">Metrics</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DevOps">DevOps</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/TimeSeriesDB">TimeSeriesDB</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Keynote">Keynote</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-竞品比较" id="markdown-toc-2-竞品比较">2. 竞品比较</a>    <ul>
+      <li><a href="#21-comparison-to-alternatives-小结" id="markdown-toc-21-comparison-to-alternatives-小结">2.1 COMPARISON TO ALTERNATIVES 小结</a></li>
+      <li><a href="#22-优势" id="markdown-toc-22-优势">2.2 优势</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-基础--日常使用" id="markdown-toc-3-基础--日常使用">3. 基础 &amp; 日常使用</a>    <ul>
+      <li><a href="#31-资源--安装" id="markdown-toc-31-资源--安装">3.1 资源 &amp; 安装</a></li>
+      <li><a href="#32-概念" id="markdown-toc-32-概念">3.2 概念</a></li>
+      <li><a href="#33-metrics-type" id="markdown-toc-33-metrics-type">3.3 Metrics Type</a></li>
+      <li><a href="#34-exporter" id="markdown-toc-34-exporter">3.4 Exporter</a>        <ul>
+          <li><a href="#341-exporter-过滤" id="markdown-toc-341-exporter-过滤">3.4.1 Exporter 过滤</a></li>
+          <li><a href="#342-metric_relabel_configs-过滤" id="markdown-toc-342-metric_relabel_configs-过滤">3.4.2 metric_relabel_configs 过滤</a></li>
+        </ul>
+      </li>
+      <li><a href="#35-配置文件" id="markdown-toc-35-配置文件">3.5 配置文件</a></li>
+      <li><a href="#36-promql" id="markdown-toc-36-promql">3.6 PromQL</a></li>
+      <li><a href="#37-告警" id="markdown-toc-37-告警">3.7 告警</a></li>
+      <li><a href="#38-graph" id="markdown-toc-38-graph">3.8 Graph</a>        <ul>
+          <li><a href="#381-console-template" id="markdown-toc-381-console-template">3.8.1 Console Template</a></li>
+          <li><a href="#382-grafana" id="markdown-toc-382-grafana">3.8.2 Grafana</a></li>
+        </ul>
+      </li>
+      <li><a href="#39-存储" id="markdown-toc-39-存储">3.9 存储</a>        <ul>
+          <li><a href="#391-本地存储" id="markdown-toc-391-本地存储">3.9.1 本地存储</a></li>
+          <li><a href="#392-远程存储" id="markdown-toc-392-远程存储">3.9.2 远程存储</a></li>
+        </ul>
+      </li>
+      <li><a href="#310-重复的metrics-name" id="markdown-toc-310-重复的metrics-name">3.10 重复的Metrics name</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-架构设计" id="markdown-toc-4-架构设计">4. 架构设计</a>    <ul>
+      <li><a href="#41-架构图" id="markdown-toc-41-架构图">4.1 架构图</a></li>
+      <li><a href="#42-集群化" id="markdown-toc-42-集群化">4.2 集群化</a></li>
+      <li><a href="#43-联邦集群-federation" id="markdown-toc-43-联邦集群-federation">4.3 联邦集群 federation</a></li>
+      <li><a href="#44-高可用" id="markdown-toc-44-高可用">4.4 高可用</a></li>
+    </ul>
+  </li>
+  <li><a href="#5-prometheus监控指标" id="markdown-toc-5-prometheus监控指标">5. Prometheus监控指标</a></li>
+  <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
+      <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
+      <li><a href="#ID_APP_SELF_METRICS" id="markdown-toc-ID_APP_SELF_METRICS">prometheus/metrics</a></li>
+      <li><a href="#ID_APP_PROMETHEUS_HELP" id="markdown-toc-ID_APP_PROMETHEUS_HELP">prometheus -h</a></li>
+      <li><a href="#ID_APP_CTA" id="markdown-toc-ID_APP_CTA">COMPARISON TO ALTERNATIVES</a>        <ul>
+          <li><a href="#prometheus-vs-graphite" id="markdown-toc-prometheus-vs-graphite">Prometheus vs. Graphite</a>            <ul>
+              <li><a href="#scope" id="markdown-toc-scope">Scope</a></li>
+              <li><a href="#data-model" id="markdown-toc-data-model">Data model</a></li>
+              <li><a href="#storage" id="markdown-toc-storage">Storage</a></li>
+              <li><a href="#summary" id="markdown-toc-summary">Summary</a></li>
+            </ul>
+          </li>
+          <li><a href="#prometheus-vs-influxdb" id="markdown-toc-prometheus-vs-influxdb">Prometheus vs. InfluxDB</a>            <ul>
+              <li><a href="#scope-1" id="markdown-toc-scope-1">Scope</a></li>
+              <li><a href="#data-model--storage" id="markdown-toc-data-model--storage">Data model / storage</a></li>
+              <li><a href="#architecture" id="markdown-toc-architecture">Architecture</a></li>
+              <li><a href="#summary-1" id="markdown-toc-summary-1">Summary</a></li>
+            </ul>
+          </li>
+          <li><a href="#prometheus-vs-opentsdb" id="markdown-toc-prometheus-vs-opentsdb">Prometheus vs. OpenTSDB</a>            <ul>
+              <li><a href="#scope-2" id="markdown-toc-scope-2">Scope</a></li>
+              <li><a href="#data-model-1" id="markdown-toc-data-model-1">Data model</a></li>
+              <li><a href="#storage-1" id="markdown-toc-storage-1">Storage</a></li>
+              <li><a href="#summary-2" id="markdown-toc-summary-2">Summary</a></li>
+            </ul>
+          </li>
+          <li><a href="#prometheus-vs-nagios" id="markdown-toc-prometheus-vs-nagios">Prometheus vs. Nagios</a>            <ul>
+              <li><a href="#scope-3" id="markdown-toc-scope-3">Scope</a></li>
+              <li><a href="#data-model-2" id="markdown-toc-data-model-2">Data model</a></li>
+              <li><a href="#storage-2" id="markdown-toc-storage-2">Storage</a></li>
+              <li><a href="#architecture-1" id="markdown-toc-architecture-1">Architecture</a></li>
+              <li><a href="#summary-3" id="markdown-toc-summary-3">Summary</a></li>
+            </ul>
+          </li>
+          <li><a href="#prometheus-vs-sensu" id="markdown-toc-prometheus-vs-sensu">Prometheus vs. Sensu</a>            <ul>
+              <li><a href="#scope-4" id="markdown-toc-scope-4">Scope</a></li>
+              <li><a href="#data-model-3" id="markdown-toc-data-model-3">Data model</a></li>
+              <li><a href="#storage-3" id="markdown-toc-storage-3">Storage</a></li>
+              <li><a href="#architecture-2" id="markdown-toc-architecture-2">Architecture</a></li>
+              <li><a href="#summary-4" id="markdown-toc-summary-4">Summary</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>对于分布式系统来说，监控是非常重要的，少了精密的监控应用程序的状况就无法得知了，也很难查找问题。而在云原生的年代，监控系统（或者说分布式系统的所有组件）最好是使用Go语言编写的，这样才能做到最小的镜像、最高的性能、最佳的CPU利用。所以监控系统的选择其实也不是那么的难，直接用CNCF的Prometheus就可以了。虽然说是这么说，实际使用之前对于工具的理解还是有必要的，因此有了此文。</p>
+
+<p>此外，这里简单讲下，官方的文档，怎么说呢，只能说是一个”手册”。假设，Prometheus的作者（这里假设是一个自然人）花了100个小时编完了Prometheus的代码，那么这个官方文档估计也就只花了30分钟，内容完全就是一堆细节的堆砌，完全没动脑子。所以，如果你是一名初学者，建议直接忽略官方的文档，去找第三方的书来看。这份文档只对需要跟着最新版本走的工程师，或者需要查找下一些Prometheus知识点或使用方法的工程师有点用。</p>
+
+<p>这里推荐一本中文的gitbook：<a href="https://yunlzheng.gitbook.io/prometheus-book/" target="_blank">prometheus-book</a>。从起始的安装和使用例子，到后面的集群管理以及exporter等等，都做了非常详实的解说，最可贵的是，作者写的内容是基于思考、组织之后的，明确地是为了读者服务的，而不像官方文档，仅仅只是一堆细节的罗列。</p>
+
+<p>版本申明，后续的所有行文内容都基于Prometheus<code>v2.8.1</code>：</p>
+
+<pre><code>$ prometheus --version
+prometheus, version 2.8.1 (branch: HEAD, revision: 4d60eb36dcbed725fcac5b27018574118f12fffb)
+  build user:       root@bfdd6a22a683
+  build date:       20190328-18:09:49
+  go version:       go1.11.6
+</code></pre>
+
+<h1 id="2-竞品比较">2. 竞品比较</h1>
+<p>作为一个领域的后来者，最聪明的做法就是在自己的手册里与各位竞品前辈大佬进行一下横向比较，甚至附上性能的benchmark，这样才能取得新使用者的信任。而Prometheus在官方文档的最开始，就有一篇：<a href="https://prometheus.io/docs/introduction/comparison/" target="_blank">COMPARISON TO ALTERNATIVES</a>（这其实也是了解监控相关软件功能的很好的普及文）。</p>
+
+<p>文中主要提到了5个工具进行横向比较：<code>Graphite</code>、<code>InfluxDB</code>、<code>OpenTSDB</code>、<code>Nagios</code>、<code>Sensu</code>。</p>
+
+<p>翻译放在最后的<a href="#ID_APP_CTA">资料</a>部分（继续喷下官方文档，这篇比较也写得不怎么样，看完没get到优势或者劣势的点）。</p>
+
+<h2 id="21-comparison-to-alternatives-小结">2.1 COMPARISON TO ALTERNATIVES 小结</h2>
+<p>简单过一下的话：</p>
+
+<ul>
+  <li>Nagios和Sensu基本上可以直接忽略</li>
+  <li>OpenTSDB是基于Hadoop/HBase的，扩展性应该说不错，但过重，且对于Ops的要求比较高</li>
+  <li>InfluxDB相当不错，但其杀手锏功能类似于集群化之类的，都是付费版本才有的，且其维护基于单一的商业公司（言下之意，如果你不用商业版，其实InfluxDB也没什么特别大的优势，而且还是单一公司维护有风险）</li>
+  <li>Graphite和Prometheus比起来，Prometheus的功能更丰富更强大</li>
+</ul>
+
+<h2 id="22-优势">2.2 优势</h2>
+<p>在docker hub的<a href="https://hub.docker.com/r/prom/prometheus/" target="_blank">介绍页面</a>上，有一段优势描述：</p>
+
+<ul>
+  <li><code>多维度</code>的数据模型（由metric名字定义的时序，以及一系列键值对的维度）</li>
+  <li><code>灵活的查询语言</code>来利用这些维度</li>
+  <li>无依赖的分布式存储；<code>自治的单个服务器节点</code></li>
+  <li>时序数据采集使用基于HTTP的<code>拉模式</code></li>
+  <li>利用中间网关来支持<code>推送</code>时序数据</li>
+  <li>监控目标的发现是通过<code>服务发现</code>或<code>静态配置</code></li>
+  <li>多种模式的<code>图像及报表支持</code></li>
+  <li>支持分层和水平的<code>联邦集群（federation）</code></li>
+</ul>
+
+<h1 id="3-基础--日常使用">3. 基础 &amp; 日常使用</h1>
+<h2 id="31-资源--安装">3.1 资源 &amp; 安装</h2>
+<p>Prometheus的官方网站：<a href="https://prometheus.io/" target="_blank">https://prometheus.io/</a>。</p>
+
+<p>安装一般可以直接根据平台下载，Go应用程序的好处就显示出来了，只要一个可执行文件就能运行：<a href="https://prometheus.io/download/" target="_blank">https://prometheus.io/download/</a>。</p>
+
+<p>一般来说入门只需要：</p>
+
+<ul>
+  <li>prometheus：本体</li>
+  <li>node_exporter：最基本的exporter</li>
+</ul>
+
+<p>使用help放在附录：<a href="#ID_APP_PROMETHEUS_HELP">prometheus -h</a>。</p>
+
+<h2 id="32-概念">3.2 概念</h2>
+<p>Prometheus的基本概念不算多，但如果不了解的话，看后面的东西会有障碍，因此建议先把概念了解清楚。</p>
+
+<p>这里先给出一个简单的exporter吐出来的数据范例：</p>
+
+<pre><code># HELP node_cpu Seconds the cpus spent in each mode.
+# TYPE node_cpu counter
+node_cpu{cpu="cpu0",mode="idle"} 362812.7890625
+# HELP node_load1 1m load average.
+# TYPE node_load1 gauge
+node_load1 3.0703125
+</code></pre>
+
+<p>Prometheus是一个<code>时序数据库</code>，何谓时序数据库，所有保存在Prometheus里的数据都是按时间戳和值的序列顺序存放的，这被称为<code>Vector（向量）</code>。</p>
+
+<p>Prometheus的数据采集，每一个<code>Metrics（指标）</code>都会有两行以<code>#</code>字符起始的文本作为开头：</p>
+
+<ul>
+  <li>其中第一行是<code>注释</code>：<code># HELP ...</code>，主要用来说明该指标是什么</li>
+  <li>第二行是<code>定义</code>：<code># TYPE ...</code>，对当前的指标进行<code>命名</code>：<code>node_load1</code>，及<code>类型</code>的定义：<code>gauge</code></li>
+</ul>
+
+<p>除了名字之外，每一个指标都可以有一系列的<code>Labels（标签）</code>来描述更细致的维度：<code>{cpu="cpu0",mode="idle"}</code>。</p>
+
+<p>每一次数据采集获得到的即一个<code>Sample（样本）</code>，其由三部分组成：</p>
+
+<ul>
+  <li>Metrics（指标）：包含了Metrics name以及Labels</li>
+  <li>Timestamp（时间戳）：当前采样的时间，精度到毫秒</li>
+  <li>Value（采样值）：其类型为float64浮点数</li>
+</ul>
+
+<p>e.g</p>
+
+<pre><code>&lt;--------------- metric ---------------------&gt;&lt;-timestamp -&gt;&lt;-value-&gt;
+http_request_total{status="200", method="GET"}@1434417560938 =&gt; 94355
+http_request_total{status="200", method="GET"}@1434417561287 =&gt; 94334
+
+http_request_total{status="404", method="GET"}@1434417560938 =&gt; 38473
+http_request_total{status="404", method="GET"}@1434417561287 =&gt; 38544
+
+http_request_total{status="200", method="POST"}@1434417560938 =&gt; 4748
+http_request_total{status="200", method="POST"}@1434417561287 =&gt; 4785
+</code></pre>
+
+<p>在Prometheus内部有一个预定义的变量<code>__name__</code>用来表达<code>Metrics name</code>（这里注意，该值只是名字，不含Label），在后续编程及配置文件处理的时候会用得到：</p>
+
+<pre><code>api_http_requests_total{method="POST", handler="/messages"}
+=
+{__name__="api_http_requests_total"，method="POST", handler="/messages"}
+</code></pre>
+
+<p>Prometheus服务器启动的时候，可以设置从很多端点（endpoint）进行数据采集。比如说：我们有一个主机，主机上运行了3个Go程序，一个Java程序，以及一个数据库。那么我们采集的时候就需要运行6个工作：主机采集、Go采集*3、Java采集、数据库采集。这6个工作，每一个我们都称之为：<code>Job</code>。Job可以自由设置采集的IP、端口以及endpoint，因此其自由度相当高，可以采集同服务器的不同服务，也可以采集不同的服务器上的数据，最终都汇总到一台Prometheus服务器上。</p>
+
+<p>资料：</p>
+
+<ul>
+  <li><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors" target="_blank">Instant vector selectors</a></li>
+  <li><a href="https://www.robustperception.io/whats-in-a-__name__" target="_blank">What’s in a <strong>name</strong>?</a></li>
+</ul>
+
+<h2 id="33-metrics-type">3.3 Metrics Type</h2>
+<p>Prometheus定义了4中不同的Metrics Type（指标类型）：</p>
+
+<ul>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-metrics-types#counter-zhi-zeng-bu-jian-de-ji-shu-qi" target="_blank">Counter（计数器）</a>：只增不减的计数器</li>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-metrics-types#gauge-ke-zeng-ke-jian-de-yi-biao-pan" target="_blank">Gauge（仪表盘）</a>：可增可减的仪表盘</li>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-metrics-types#shi-yong-histogram-he-summary-fen-xi-shu-ju-fen-bu-qing-kuang" target="_blank">Histogram（直方图）</a>：数据分布情况</li>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-metrics-types#shi-yong-histogram-he-summary-fen-xi-shu-ju-fen-bu-qing-kuang" target="_blank">Summary（摘要）</a>：数据分布情况</li>
+</ul>
+
+<p>最后的两个有点类似，区别在于Histogram描述的是绝对值，而Summary描述的是百分比。</p>
+
+<p>e.g</p>
+
+<pre><code># HELP prometheus_tsdb_compaction_chunk_range Final time range of chunks on their first compaction
+# TYPE prometheus_tsdb_compaction_chunk_range histogram
+prometheus_tsdb_compaction_chunk_range_bucket{le="100"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="400"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="1600"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="6400"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="25600"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="102400"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="409600"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="1.6384e+06"} 260
+prometheus_tsdb_compaction_chunk_range_bucket{le="6.5536e+06"} 780
+prometheus_tsdb_compaction_chunk_range_bucket{le="2.62144e+07"} 780
+prometheus_tsdb_compaction_chunk_range_bucket{le="+Inf"} 780
+prometheus_tsdb_compaction_chunk_range_sum 1.1540798e+09
+prometheus_tsdb_compaction_chunk_range_count 780
+</code></pre>
+
+<pre><code># HELP prometheus_tsdb_wal_fsync_duration_seconds Duration of WAL fsync.
+# TYPE prometheus_tsdb_wal_fsync_duration_seconds summary
+prometheus_tsdb_wal_fsync_duration_seconds{quantile="0.5"} 0.012352463
+prometheus_tsdb_wal_fsync_duration_seconds{quantile="0.9"} 0.014458005
+prometheus_tsdb_wal_fsync_duration_seconds{quantile="0.99"} 0.017316173
+prometheus_tsdb_wal_fsync_duration_seconds_sum 2.888716127000002
+prometheus_tsdb_wal_fsync_duration_seconds_count 216
+</code></pre>
+
+<h2 id="34-exporter">3.4 Exporter</h2>
+<p>官方文档：<a href="https://prometheus.io/docs/instrumenting/exporters/" target="_blank">EXPORTERS AND INTEGRATIONS</a>。以及中文：<a href="https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/exporter" target="_blank">第4章 Exporter详解</a>。</p>
+
+<p>Prometheus的设计是Prometheus服务器进行<code>拉</code>操作，而受监控对象则将时序数据吐出来给服务器。为了不影响受监控的应用程序本身，一般是用Sidecar设计，在应用程序之外进行数据的吐出，也就是<code>Exporter</code>这个角色（应用程序）。当然，如果需要直接在当前应用程序中进行数据暴露也是可以的，直接使用一些类库引入到应用程序中即可。</p>
+
+<p>Prometheus流行起来之后，主流的应用程序一般都有对应的Exporter，直接下载使用即可。这里要提一下node_exporter，因为它是针对主机进行监控，因此不建议运行在容器里。容器本身就是和主机进行隔离的，运行在容器之中的话node_exporter无法很好工作。</p>
+
+<p>这里需要注意的点是：<code>信息的过滤</code>。</p>
+
+<p>Prometheus的特性是，只要你在配置文件中将某个Exporter设定为Prometheus定时抓取的对象，Prometheus就会将这个Exporter吐出的所有数据都定期采集起来，保存到时序数据库中。而实际情况则是，某个Exporter吐出来的数据中有很大一部分其实是我们并不关心的。</p>
+
+<p>举个例子，Go语言的Exporter会吐出GC、内存、CPU、Goroutine等等一系列数据，而我们可能只关心GC、内存，其他都不关心。这个时候如果还是按默认的行为来进行采集的话，时序数据库里就会有很多无意义（我们不关心）的数据。为了防止这样的情况发生，有两种做法：</p>
+
+<ul>
+  <li>在启动Exporter的时候将部分指标过滤掉，直接不吐出来</li>
+  <li>在Prometheus配置文件中针对采集的Job进行</li>
+</ul>
+
+<h3 id="341-exporter-过滤">3.4.1 Exporter 过滤</h3>
+<p>举个例子，node_exporter在MAC上启动，默认会吐出如下数据：</p>
+
+<pre><code>INFO[0000] Enabled collectors:                           source="node_exporter.go:90"
+INFO[0000]  - boottime                                   source="node_exporter.go:97"
+INFO[0000]  - cpu                                        source="node_exporter.go:97"
+INFO[0000]  - diskstats                                  source="node_exporter.go:97"
+INFO[0000]  - filesystem                                 source="node_exporter.go:97"
+INFO[0000]  - loadavg                                    source="node_exporter.go:97"
+INFO[0000]  - meminfo                                    source="node_exporter.go:97"
+INFO[0000]  - netdev                                     source="node_exporter.go:97"
+INFO[0000]  - textfile                                   source="node_exporter.go:97"
+INFO[0000]  - time                                       source="node_exporter.go:97"
+</code></pre>
+
+<p>我们就可以在启动的时候附加：<code>--no-collector.time</code>option（time可置换成其他的），让其不再吐出，当然也可以添加option（–collector.xxx）吐出某些我们需要但默认不开启的数据。不同的Exporter设置可能会有些微不同，建议使用的时候仔细查看其手册。</p>
+
+<p>这样的设计模式其实是有问题的，在使用的时候需要大量设置，用起来过于复杂：<a href="https://github.com/prometheus/node_exporter/issues/735" target="_blank">Question: Disable all collectors?</a>。</p>
+
+<h3 id="342-metric_relabel_configs-过滤">3.4.2 metric_relabel_configs 过滤</h3>
+<p>官方文档在：[<metric_relabel_configs>](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#metric_relabel_configs){:target="_blank"}。讲解可以看一篇英语的：[Prometheus relabeling tricks](https://medium.com/quiq-blog/prometheus-relabeling-tricks-6ae62c56cbda){:target="_blank"}。</metric_relabel_configs></p>
+
+<p>这个配置项的作用主要有几点：</p>
+
+<ul>
+  <li>在入库之前去掉不需要的指标</li>
+  <li>将入库的某些指标重新命名（这点很有用，后面会说到）</li>
+</ul>
+
+<p>该配置项的效果会在数据入库之前生效，因此非常有用，可以显著减少入库的数据量，减少磁盘的容量占用，加快数据查询。</p>
+
+<p>e.g</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">metric_relabel_configs</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">source_labels</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">__name__</span><span class="p p-Indicator">]</span>
+    <span class="l l-Scalar l-Scalar-Plain">regex</span><span class="p p-Indicator">:</span> <span class="s">&quot;(\</span>
+      <span class="s">go_gc_duration_seconds|\</span>
+      <span class="s">...|\</span>
+      <span class="s">node_memory_wired_bytes\</span>
+    <span class="s">)&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">action</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">drop</span></code></pre></figure>
+
+<p>上面的例子里使用了字符串换行，这里需要注意的是需要换行的字符串一定要使用双引号<code>"</code>，双引号里的字符是不会被转译的，换行符<code>\</code>也就不会失效了。不换行的话，写法是：<code>regex: "(filtered1|filtered2|filtered3)"</code>。</p>
+
+<p>总而言之，在数据过滤方面，Prometheus做的真的不好，无论是在Exporter端做过滤还是在配置文件里做过滤，都需要写不少过滤条目，蛮麻烦的。</p>
+
+<h2 id="35-配置文件">3.5 配置文件</h2>
+<p>官方文档：<a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" target="_blank">CONFIGURATION</a>。有一篇中文的译文不错，但不是太全：<a href="https://www.jianshu.com/p/bedd169676b6" target="_blank">Prometheus的安装和配置</a>。</p>
+
+<p>配置文件这块，官方的文档细节肯定是最全的，有很多不常用的选项之类的，估计一般也只有官方文档里才找得到。不过官方文档就像我一开始说的，讲解得实在是，光有细节没有脑子。因此建议看一些范例，对配置文件有一个大概的了解之后再去官方文档里查细节会比较好。</p>
+
+<p>主要的配置大项有：</p>
+
+<ul>
+  <li>抓取配置 <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config" target="_blank">scrape_configs</a></li>
+  <li>规则配置 <a href="https://prometheus.io/docs/prometheus/latest/configuration/recording_rules/" target="_blank">recording_rules</a> <a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/alert/prometheus-recoding-rules#ding-yi-recoding-rules" target="_blank">中文</a></li>
+  <li>告警配置 <a href="https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/" target="_blank">alerting_rules</a></li>
+</ul>
+
+<h2 id="36-promql">3.6 PromQL</h2>
+<p>Prometheus这块的设计应该说还算是比较可读的，可以看下中文book里的内容：</p>
+
+<ul>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-query-language" target="_blank">初识PromQL</a></li>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-promql-operators-v2" target="_blank">PromQL操作符</a></li>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-aggr-ops" target="_blank">PromQL聚合操作</a></li>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-promql-functions" target="_blank">PromQL内置函数</a></li>
+</ul>
+
+<h2 id="37-告警">3.7 告警</h2>
+<p>Prometheus里的告警功能做得非常强大，按规则的组合可以轻松对告警进行规则定义、分组，并可以使用Altermanager进行对应的告警行为。当然使用上就有点复杂，需要花点时间梳理下。具体的细节可以查看：<a href="https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/alert" target="_blank">第3章 Prometheus告警处理</a>。</p>
+
+<h2 id="38-graph">3.8 Graph</h2>
+<h3 id="381-console-template">3.8.1 Console Template</h3>
+<p>Prometheus的服务器有提供集成的图像化解决方案，这被称为：<code>Console Template</code>，其实无非就是一个模板引擎然后向其中填充数据。上手还是需要花点时间稍微摸索下，具体的细节可以查看：<a href="https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/grafana/use-console-template" target="_blank">使用Console Template</a>。</p>
+
+<h3 id="382-grafana">3.8.2 Grafana</h3>
+<p>现在比较主流的图像化做法是数据采集和存储由Prometheus来，然后图像化输出则由Grafana来处理。这块后面会在Grafana的专题里进行讲解。</p>
+
+<h2 id="39-存储">3.9 存储</h2>
+<h3 id="391-本地存储">3.9.1 本地存储</h3>
+<p>Prometheus的时序数据库默认是存储在本地磁盘的，以2小时时间长度为分段，将数据存储到一个Block（块）中。具体的细节可以查看：<a href="https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/readmd/prometheus-local-storage" target="_blank">本地存储</a>。</p>
+
+<h3 id="392-远程存储">3.9.2 远程存储</h3>
+<p>本地存储在可用性及高效性上有先天优势，但也有很多问题，最主要的就是本地磁盘的容量问题，本地磁盘容量不足就不能够保存长期数据。因此Prometheus也提供了远程写和远程读的设置，允许开发者将时序数据库的数据存储在远程介质中。具体的细节可以查看：<a href="https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/readmd/prometheus-remote-storage" target="_blank">远程存储</a>。</p>
+
+<h2 id="310-重复的metrics-name">3.10 重复的Metrics name</h2>
+<p>有一个比较常见的麻烦问题是：在同一个Prometheus服务器节点上，可能会采集到大量重名的指标。</p>
+
+<p>这里举个例子来说：同一台Linux服务器节点上，有3个Go应用程序在运行，而我们需要把这三个应用程序的Go相关指标都监控起来。这时候你会发现采集上来的3份Go指标数据，其指标名都是重复的。这很正常，因为采集的指标都是同样的东西，只不过吐出数据的应用程序不同而已。</p>
+
+<p>这时候我们就需要用到之前提到过的：<code>metric_relabel_configs</code>。每个Go应用程序肯定是在Prometheus服务器上设置成单独的<code>Jobs</code>，而这些不同的Jobs就需要设置各自的metric_relabel_configs，将获取到的同名指标重命名成和应用程序相关的指标，当然指标名的意义需要保持不变。</p>
+
+<p>e.g</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">job_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">cadvisor</span>
+  <span class="l l-Scalar l-Scalar-Plain">...</span>
+  <span class="l l-Scalar l-Scalar-Plain">metric_relabel_configs</span><span class="p p-Indicator">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">source_labels</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">image</span><span class="p p-Indicator">]</span>
+    <span class="l l-Scalar l-Scalar-Plain">regex</span><span class="p p-Indicator">:</span> <span class="s">&#39;.*/(.*)&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">replacement</span><span class="p p-Indicator">:</span> <span class="s">&#39;$1&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">target_label</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">id</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">source_labels</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">service</span><span class="p p-Indicator">]</span>
+    <span class="l l-Scalar l-Scalar-Plain">regex</span><span class="p p-Indicator">:</span> <span class="s">&#39;ecs-.*:ecs-([a-z]+-*[a-z]*).*:[0-9]+&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">replacement</span><span class="p p-Indicator">:</span> <span class="s">&#39;$1&#39;</span>
+    <span class="l l-Scalar l-Scalar-Plain">target_label</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">service</span></code></pre></figure>
+
+<h1 id="4-架构设计">4. 架构设计</h1>
+<h2 id="41-架构图">4.1 架构图</h2>
+<p><img src="/resources/2019/04/prometheus-notes/architecture.png" alt="Architecture" target="_blank" /></p>
+
+<p>Prometheus的设计理念就是保证单节点的性能、功能完整性以及单节点的使用便利性。在这个理念下，Prometheus的使用是一件很简单的事情，稍微做点配置调整就可以使用了，而且这个节点上的所有数据都是存储在其本身的物理磁盘上的（有选项可以远程存储，这里按下不表），保证了不会有跨物理节点的各种问题。</p>
+
+<h2 id="42-集群化">4.2 集群化</h2>
+<p>Prometheus将单个节点做到极致的设计理念无疑是非常出色的，但万事都没有银弹。</p>
+
+<ul>
+  <li>整体的集群庞大到一定程度之后（全局的监控需求）</li>
+  <li>单个服务的集群扩展到一定程度（单服务的监控需求）</li>
+  <li>跨机房监控需求（单个机房单个Prometheus服务器，但需要有一个跳脱实例机房的节点进行overview）</li>
+</ul>
+
+<p>在这些情况下，单个节点的Prometheus可能就无法胜任了。这时候必然就需要进行水平扩展或引入分布式集群的概念。</p>
+
+<h2 id="43-联邦集群-federation">4.3 联邦集群 federation</h2>
+<p>联邦集群是官方提供的Prometheus唯一的集群解决方案。这个名词听上去有点玄乎，其实简单来说：</p>
+
+<ul>
+  <li>联邦集群中的Prometheus节点是分层级的</li>
+  <li>下级的Prometheus节点采集应用数据</li>
+  <li>上级的Prometheus节点从下级的Prometheus节点上采集数据</li>
+</ul>
+
+<p>有几点需要注意：</p>
+
+<ul>
+  <li>下级Prometheus默认在<code>/federate</code>endpoint暴露联邦集群的数据采集点，不需要配置</li>
+  <li>上级Prometheus必须在配置文件里指定<code>params:'match[]':- '{__name__=~"node_.*"}'</code>这样的采集规则才能真正采集到数据，这方面的行为模式和Prometheus的默认模式是不一样的；默认情况下Prometheus会将暴露出来的所有数据都采集起来，但联邦集群的时候如果上级节点不指定采集的过滤参数的话，默认是什么都不采集（可能考虑到量级会有问题），因此必须手动在配置文件里进行指标名（可以组合标签）的过滤</li>
+</ul>
+
+<p>说穿了其实所谓的联邦集群也没什么内容，无非就是在启动的Prometheus节点上默认开了个<code>/federate</code>endpoint，允许其他Prometheus从它这里拉取数据。至于联邦集群怎么组件，能玩出什么花来，Prometheus就不管了，让搭建者自己发挥。</p>
+
+<h2 id="44-高可用">4.4 高可用</h2>
+<p>简单的结论是：Prometheus<code>并不存在高可用</code>的解决方案。</p>
+
+<p>官方现在的设计是将单节点的Prometheus做好，并提供联邦集群这个解决方案让用户自己去组建自己的监控拓扑网络。这在规模比较小的时候还算能对付，但在真正规模大起来之后就很容易出错了，维护者必须很清楚联邦集群里每一个节点负责的业务内容是什么，然后各层级节点如何对应汇集数据，这非常考验整个拓扑结构的搭建者的功力，以及维护的流程和工具。</p>
+
+<p>Prometheus当前的集群设计给我的感觉有点类似于：3.0版本之前的redis的第三方集群解决方案 与 3.0版本之后redis官方提供的集群解决方案 之间的关系。你不能说第三方做的集群解决方案不能用，但和3.0之后官方集群方案提供的高可用相比之下，不得不说就不是一个档次上的了。</p>
+
+<p>希望今后的Prometheus能在这方面发力。当然可能在组合了K8S之后，联邦集群也够用了，这方面我还没尝试过，就不做判断了。</p>
+
+<p>这篇可以好好看下：<a href="https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/readmd/prometheus-and-high-availability" target="_blank">Prometheus高可用</a>。</p>
+
+<h1 id="5-prometheus监控指标">5. Prometheus监控指标</h1>
+<p>Prometheus对自身的指标也有直接暴露，默认是放在：http://url_of_prometheus_server/metrics。</p>
+
+<p>附录里我放了一份指标，可以研究下：<a href="#ID_APP_SELF_METRICS">prometheus/metrics</a>。对于Prometheus自身的监控也是必要的。</p>
+
+<h1 id="资料">资料</h1>
+<h2 id="链接">链接</h2>
+<ul>
+  <li><a href="https://yunlzheng.gitbook.io/prometheus-book/" target="_blank">prometheus-book</a></li>
+  <li><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/#instant-vector-selectors" target="_blank">Instant vector selectors</a></li>
+  <li><a href="https://www.robustperception.io/whats-in-a-__name__" target="_blank">What’s in a <strong>name</strong>?</a></li>
+  <li><a href="https://github.com/prometheus/node_exporter/issues/735" target="_blank">Question: Disable all collectors?</a></li>
+  <li><a href="https://medium.com/quiq-blog/prometheus-relabeling-tricks-6ae62c56cbda" target="_blank">Prometheus relabeling tricks</a></li>
+  <li><a href="https://www.jianshu.com/p/bedd169676b6" target="_blank">Prometheus的安装和配置</a></li>
+</ul>
+
+<h2 id="ID_APP_SELF_METRICS">prometheus/metrics</h2>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1"># HELP net_conntrack_dialer_conn_attempted_total Total number of connections attempted by the given dialer a given name.</span>
+<span class="c1"># TYPE net_conntrack_dialer_conn_attempted_total counter</span>
+net_conntrack_dialer_conn_attempted_total<span class="o">{</span><span class="nv">dialer_name</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span><span class="o">}</span> <span class="m">3</span> <span class="c1"># 这里的dialer_name其实就是job名字</span>
+<span class="c1"># HELP net_conntrack_dialer_conn_closed_total Total number of connections closed which originated from the dialer of a given name.</span>
+<span class="c1"># TYPE net_conntrack_dialer_conn_closed_total counter</span>
+...
+<span class="c1"># HELP net_conntrack_dialer_conn_established_total Total number of connections successfully established by the given dialer a given name.</span>
+<span class="c1"># TYPE net_conntrack_dialer_conn_established_total counter</span>
+...
+<span class="c1"># HELP net_conntrack_dialer_conn_failed_total Total number of connections failed to dial by the dialer a given name.</span>
+<span class="c1"># TYPE net_conntrack_dialer_conn_failed_total counter</span>
+... <span class="c1"># 这里的label：{dialer_name=&quot;federate&quot;,reason=&quot;refused|resolution|timeout|unknown&quot;}</span>
+<span class="c1"># HELP net_conntrack_listener_conn_accepted_total Total number of connections opened to the listener of a given name.</span>
+<span class="c1"># TYPE net_conntrack_listener_conn_accepted_total counter</span>
+net_conntrack_listener_conn_accepted_total<span class="o">{</span><span class="nv">listener_name</span><span class="o">=</span><span class="s2">&quot;http&quot;</span><span class="o">}</span> <span class="m">124</span>
+<span class="c1"># HELP net_conntrack_listener_conn_closed_total Total number of connections closed that were made to the listener of a given name.</span>
+<span class="c1"># TYPE net_conntrack_listener_conn_closed_total counter</span>
+net_conntrack_listener_conn_closed_total<span class="o">{</span><span class="nv">listener_name</span><span class="o">=</span><span class="s2">&quot;http&quot;</span><span class="o">}</span> <span class="m">122</span>
+<span class="c1"># HELP prometheus_api_remote_read_queries The current number of remote read queries being executed or waiting.</span>
+<span class="c1"># TYPE prometheus_api_remote_read_queries gauge</span>
+prometheus_api_remote_read_queries <span class="m">0</span>
+<span class="c1"># HELP prometheus_build_info A metric with a constant &#39;1&#39; value labeled by version, revision, branch, and goversion from which prometheus was built.</span>
+<span class="c1"># TYPE prometheus_build_info gauge</span>
+prometheus_build_info<span class="o">{</span><span class="nv">branch</span><span class="o">=</span><span class="s2">&quot;HEAD&quot;</span>,goversion<span class="o">=</span><span class="s2">&quot;go1.11.6&quot;</span>,revision<span class="o">=</span><span class="s2">&quot;4d60eb36dcbed725fcac5b27018574118f12fffb&quot;</span>,version<span class="o">=</span><span class="s2">&quot;2.8.1&quot;</span><span class="o">}</span> <span class="m">1</span>
+<span class="c1"># HELP prometheus_config_last_reload_success_timestamp_seconds Timestamp of the last successful configuration reload.</span>
+<span class="c1"># TYPE prometheus_config_last_reload_success_timestamp_seconds gauge</span>
+prometheus_config_last_reload_success_timestamp_seconds <span class="m">1</span>.5547790627954009e+09
+<span class="c1"># HELP prometheus_config_last_reload_successful Whether the last configuration reload attempt was successful.</span>
+<span class="c1"># TYPE prometheus_config_last_reload_successful gauge</span>
+prometheus_config_last_reload_successful <span class="m">1</span>
+<span class="c1"># HELP prometheus_engine_queries The current number of queries being executed or waiting.</span>
+<span class="c1"># TYPE prometheus_engine_queries gauge</span>
+prometheus_engine_queries <span class="m">0</span>
+<span class="c1"># HELP prometheus_engine_queries_concurrent_max The max number of concurrent queries.</span>
+<span class="c1"># TYPE prometheus_engine_queries_concurrent_max gauge</span>
+prometheus_engine_queries_concurrent_max <span class="m">20</span>
+<span class="c1"># HELP prometheus_engine_query_duration_seconds Query timings</span>
+<span class="c1"># TYPE prometheus_engine_query_duration_seconds summary</span>
+prometheus_engine_query_duration_seconds<span class="o">{</span><span class="nv">slice</span><span class="o">=</span><span class="s2">&quot;inner_eval&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_engine_query_duration_seconds<span class="o">{</span><span class="nv">slice</span><span class="o">=</span><span class="s2">&quot;inner_eval&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_engine_query_duration_seconds<span class="o">{</span><span class="nv">slice</span><span class="o">=</span><span class="s2">&quot;inner_eval&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_engine_query_duration_seconds_sum<span class="o">{</span><span class="nv">slice</span><span class="o">=</span><span class="s2">&quot;inner_eval&quot;</span><span class="o">}</span> <span class="m">2</span>.2003e-05
+... prepare_time <span class="p">|</span> queue_time <span class="p">|</span> result_sort
+<span class="c1"># HELP prometheus_http_request_duration_seconds Histogram of latencies for HTTP requests.</span>
+<span class="c1"># TYPE prometheus_http_request_duration_seconds histogram</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;0.1&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;0.2&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;0.4&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;3&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;8&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;20&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;60&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;120&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;+Inf&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_request_duration_seconds_sum<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span><span class="o">}</span> <span class="m">0</span>.000778872
+prometheus_http_request_duration_seconds_count<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span><span class="o">}</span> <span class="m">1</span>
+... /api/v1/query <span class="p">|</span> /graph <span class="p">|</span> /static/*filepath <span class="p">|</span> /targets
+<span class="c1"># HELP prometheus_http_response_size_bytes Histogram of response size for HTTP requests.</span>
+<span class="c1"># TYPE prometheus_http_response_size_bytes histogram</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;100&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;1000&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;10000&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;100000&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;1e+06&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;1e+07&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;1e+08&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;1e+09&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_bucket<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span>,le<span class="o">=</span><span class="s2">&quot;+Inf&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_http_response_size_bytes_sum<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span><span class="o">}</span> <span class="m">293</span>
+prometheus_http_response_size_bytes_count<span class="o">{</span><span class="nv">handler</span><span class="o">=</span><span class="s2">&quot;/api/v1/label/:name/values&quot;</span><span class="o">}</span> <span class="m">1</span>
+... /api/v1/query <span class="p">|</span> /graph <span class="p">|</span> /static/*filepath <span class="p">|</span> /targets
+<span class="c1"># HELP prometheus_notifications_alertmanagers_discovered The number of alertmanagers discovered and active.</span>
+<span class="c1"># TYPE prometheus_notifications_alertmanagers_discovered gauge</span>
+prometheus_notifications_alertmanagers_discovered <span class="m">0</span>
+<span class="c1"># HELP prometheus_notifications_dropped_total Total number of alerts dropped due to errors when sending to Alertmanager.</span>
+<span class="c1"># TYPE prometheus_notifications_dropped_total counter</span>
+prometheus_notifications_dropped_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_notifications_queue_capacity The capacity of the alert notifications queue.</span>
+<span class="c1"># TYPE prometheus_notifications_queue_capacity gauge</span>
+prometheus_notifications_queue_capacity <span class="m">10000</span>
+<span class="c1"># HELP prometheus_notifications_queue_length The number of alert notifications in the queue.</span>
+<span class="c1"># TYPE prometheus_notifications_queue_length gauge</span>
+prometheus_notifications_queue_length <span class="m">0</span>
+<span class="c1"># HELP prometheus_remote_storage_highest_timestamp_in_seconds Highest timestamp that has come into the remote storage via the Appender interface, in seconds since epoch.</span>
+<span class="c1"># TYPE prometheus_remote_storage_highest_timestamp_in_seconds gauge</span>
+prometheus_remote_storage_highest_timestamp_in_seconds <span class="m">1</span>.554792751e+09
+<span class="c1"># HELP prometheus_remote_storage_samples_in_total Samples in to remote storage, compare to samples out for queue managers.</span>
+<span class="c1"># TYPE prometheus_remote_storage_samples_in_total counter</span>
+prometheus_remote_storage_samples_in_total <span class="m">123185</span>
+<span class="c1"># HELP prometheus_rule_evaluation_duration_seconds The duration for a rule to execute.</span>
+<span class="c1"># TYPE prometheus_rule_evaluation_duration_seconds summary</span>
+prometheus_rule_evaluation_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_rule_evaluation_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_rule_evaluation_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_rule_evaluation_duration_seconds_sum <span class="m">0</span>
+prometheus_rule_evaluation_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_rule_evaluation_failures_total The total number of rule evaluation failures.</span>
+<span class="c1"># TYPE prometheus_rule_evaluation_failures_total counter</span>
+prometheus_rule_evaluation_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_rule_evaluations_total The total number of rule evaluations.</span>
+<span class="c1"># TYPE prometheus_rule_evaluations_total counter</span>
+prometheus_rule_evaluations_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_rule_group_duration_seconds The duration of rule group evaluations.</span>
+<span class="c1"># TYPE prometheus_rule_group_duration_seconds summary</span>
+prometheus_rule_group_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.01&quot;</span><span class="o">}</span> NaN
+prometheus_rule_group_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.05&quot;</span><span class="o">}</span> NaN
+prometheus_rule_group_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_rule_group_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_rule_group_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_rule_group_duration_seconds_sum <span class="m">0</span>
+prometheus_rule_group_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_rule_group_iterations_missed_total The total number of rule group evaluations missed due to slow rule group evaluation.</span>
+<span class="c1"># TYPE prometheus_rule_group_iterations_missed_total counter</span>
+prometheus_rule_group_iterations_missed_total <span class="m">1</span>
+<span class="c1"># HELP prometheus_rule_group_iterations_total The total number of scheduled rule group evaluations, whether executed or missed.</span>
+<span class="c1"># TYPE prometheus_rule_group_iterations_total counter</span>
+prometheus_rule_group_iterations_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_azure_refresh_duration_seconds The duration of a Azure-SD refresh in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_azure_refresh_duration_seconds summary</span>
+prometheus_sd_azure_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_azure_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_azure_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_azure_refresh_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_azure_refresh_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_azure_refresh_failures_total Number of Azure-SD refresh failures.</span>
+<span class="c1"># TYPE prometheus_sd_azure_refresh_failures_total counter</span>
+prometheus_sd_azure_refresh_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_consul_rpc_duration_seconds The duration of a Consul RPC call in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_consul_rpc_duration_seconds summary</span>
+prometheus_sd_consul_rpc_duration_seconds<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;service&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_consul_rpc_duration_seconds<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;service&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_consul_rpc_duration_seconds<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;service&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_consul_rpc_duration_seconds_sum<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;service&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_consul_rpc_duration_seconds_count<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;service&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_consul_rpc_duration_seconds<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;services&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_consul_rpc_duration_seconds<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;services&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_consul_rpc_duration_seconds<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;services&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_consul_rpc_duration_seconds_sum<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;services&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_consul_rpc_duration_seconds_count<span class="o">{</span><span class="nv">call</span><span class="o">=</span><span class="s2">&quot;services&quot;</span>,endpoint<span class="o">=</span><span class="s2">&quot;catalog&quot;</span><span class="o">}</span> <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_consul_rpc_failures_total The number of Consul RPC call failures.</span>
+<span class="c1"># TYPE prometheus_sd_consul_rpc_failures_total counter</span>
+prometheus_sd_consul_rpc_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_discovered_targets Current number of discovered targets.</span>
+<span class="c1"># TYPE prometheus_sd_discovered_targets gauge</span>
+prometheus_sd_discovered_targets<span class="o">{</span><span class="nv">config</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span>,name<span class="o">=</span><span class="s2">&quot;scrape&quot;</span><span class="o">}</span> <span class="m">3</span>
+<span class="c1"># HELP prometheus_sd_dns_lookup_failures_total The number of DNS-SD lookup failures.</span>
+<span class="c1"># TYPE prometheus_sd_dns_lookup_failures_total counter</span>
+prometheus_sd_dns_lookup_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_dns_lookups_total The number of DNS-SD lookups.</span>
+<span class="c1"># TYPE prometheus_sd_dns_lookups_total counter</span>
+prometheus_sd_dns_lookups_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_ec2_refresh_duration_seconds The duration of a EC2-SD refresh in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_ec2_refresh_duration_seconds summary</span>
+prometheus_sd_ec2_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_ec2_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_ec2_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_ec2_refresh_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_ec2_refresh_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_ec2_refresh_failures_total The number of EC2-SD scrape failures.</span>
+<span class="c1"># TYPE prometheus_sd_ec2_refresh_failures_total counter</span>
+prometheus_sd_ec2_refresh_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_file_read_errors_total The number of File-SD read errors.</span>
+<span class="c1"># TYPE prometheus_sd_file_read_errors_total counter</span>
+prometheus_sd_file_read_errors_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_file_scan_duration_seconds The duration of the File-SD scan in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_file_scan_duration_seconds summary</span>
+prometheus_sd_file_scan_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_file_scan_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_file_scan_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_file_scan_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_file_scan_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_gce_refresh_duration The duration of a GCE-SD refresh in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_gce_refresh_duration summary</span>
+prometheus_sd_gce_refresh_duration<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_gce_refresh_duration<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_gce_refresh_duration<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_gce_refresh_duration_sum <span class="m">0</span>
+prometheus_sd_gce_refresh_duration_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_gce_refresh_failures_total The number of GCE-SD refresh failures.</span>
+<span class="c1"># TYPE prometheus_sd_gce_refresh_failures_total counter</span>
+prometheus_sd_gce_refresh_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_last_resource_version Last resource version from the Kubernetes API.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_last_resource_version gauge</span>
+prometheus_sd_kubernetes_cache_last_resource_version <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_list_duration_seconds Duration of a Kubernetes API call in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_list_duration_seconds summary</span>
+prometheus_sd_kubernetes_cache_list_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_kubernetes_cache_list_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_list_items Count of items in a list from the Kubernetes API.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_list_items summary</span>
+prometheus_sd_kubernetes_cache_list_items_sum <span class="m">0</span>
+prometheus_sd_kubernetes_cache_list_items_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_list_total Total number of list operations.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_list_total counter</span>
+prometheus_sd_kubernetes_cache_list_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_short_watches_total Total number of short watch operations.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_short_watches_total counter</span>
+prometheus_sd_kubernetes_cache_short_watches_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_watch_duration_seconds Duration of watches on the Kubernetes API.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_watch_duration_seconds summary</span>
+prometheus_sd_kubernetes_cache_watch_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_kubernetes_cache_watch_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_watch_events Number of items in watches on the Kubernetes API.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_watch_events summary</span>
+prometheus_sd_kubernetes_cache_watch_events_sum <span class="m">0</span>
+prometheus_sd_kubernetes_cache_watch_events_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_cache_watches_total Total number of watch operations.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_cache_watches_total counter</span>
+prometheus_sd_kubernetes_cache_watches_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_kubernetes_events_total The number of Kubernetes events handled.</span>
+<span class="c1"># TYPE prometheus_sd_kubernetes_events_total counter</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;add&quot;</span>,role<span class="o">=</span><span class="s2">&quot;endpoints&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;add&quot;</span>,role<span class="o">=</span><span class="s2">&quot;ingress&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;add&quot;</span>,role<span class="o">=</span><span class="s2">&quot;node&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;add&quot;</span>,role<span class="o">=</span><span class="s2">&quot;pod&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;add&quot;</span>,role<span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span>,role<span class="o">=</span><span class="s2">&quot;endpoints&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span>,role<span class="o">=</span><span class="s2">&quot;ingress&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span>,role<span class="o">=</span><span class="s2">&quot;node&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span>,role<span class="o">=</span><span class="s2">&quot;pod&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;delete&quot;</span>,role<span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;update&quot;</span>,role<span class="o">=</span><span class="s2">&quot;endpoints&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;update&quot;</span>,role<span class="o">=</span><span class="s2">&quot;ingress&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;update&quot;</span>,role<span class="o">=</span><span class="s2">&quot;node&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;update&quot;</span>,role<span class="o">=</span><span class="s2">&quot;pod&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_sd_kubernetes_events_total<span class="o">{</span><span class="nv">event</span><span class="o">=</span><span class="s2">&quot;update&quot;</span>,role<span class="o">=</span><span class="s2">&quot;service&quot;</span><span class="o">}</span> <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_marathon_refresh_duration_seconds The duration of a Marathon-SD refresh in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_marathon_refresh_duration_seconds summary</span>
+prometheus_sd_marathon_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_marathon_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_marathon_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_marathon_refresh_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_marathon_refresh_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_marathon_refresh_failures_total The number of Marathon-SD refresh failures.</span>
+<span class="c1"># TYPE prometheus_sd_marathon_refresh_failures_total counter</span>
+prometheus_sd_marathon_refresh_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_openstack_refresh_duration_seconds The duration of an OpenStack-SD refresh in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_openstack_refresh_duration_seconds summary</span>
+prometheus_sd_openstack_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_openstack_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_openstack_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_openstack_refresh_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_openstack_refresh_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_openstack_refresh_failures_total The number of OpenStack-SD scrape failures.</span>
+<span class="c1"># TYPE prometheus_sd_openstack_refresh_failures_total counter</span>
+prometheus_sd_openstack_refresh_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_received_updates_total Total number of update events received from the SD providers.</span>
+<span class="c1"># TYPE prometheus_sd_received_updates_total counter</span>
+prometheus_sd_received_updates_total<span class="o">{</span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;scrape&quot;</span><span class="o">}</span> <span class="m">2</span>
+<span class="c1"># HELP prometheus_sd_triton_refresh_duration_seconds The duration of a Triton-SD refresh in seconds.</span>
+<span class="c1"># TYPE prometheus_sd_triton_refresh_duration_seconds summary</span>
+prometheus_sd_triton_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_sd_triton_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_sd_triton_refresh_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_sd_triton_refresh_duration_seconds_sum <span class="m">0</span>
+prometheus_sd_triton_refresh_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_triton_refresh_failures_total The number of Triton-SD scrape failures.</span>
+<span class="c1"># TYPE prometheus_sd_triton_refresh_failures_total counter</span>
+prometheus_sd_triton_refresh_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_sd_updates_total Total number of update events sent to the SD consumers.</span>
+<span class="c1"># TYPE prometheus_sd_updates_total counter</span>
+prometheus_sd_updates_total<span class="o">{</span><span class="nv">name</span><span class="o">=</span><span class="s2">&quot;scrape&quot;</span><span class="o">}</span> <span class="m">1</span>
+<span class="c1"># HELP prometheus_target_interval_length_seconds Actual intervals between scrapes.</span>
+<span class="c1"># TYPE prometheus_target_interval_length_seconds summary</span>
+prometheus_target_interval_length_seconds<span class="o">{</span><span class="nv">interval</span><span class="o">=</span><span class="s2">&quot;15s&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.01&quot;</span><span class="o">}</span> <span class="m">14</span>.995180776
+prometheus_target_interval_length_seconds<span class="o">{</span><span class="nv">interval</span><span class="o">=</span><span class="s2">&quot;15s&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.05&quot;</span><span class="o">}</span> <span class="m">14</span>.996111038
+prometheus_target_interval_length_seconds<span class="o">{</span><span class="nv">interval</span><span class="o">=</span><span class="s2">&quot;15s&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> <span class="m">15</span>.000072502
+prometheus_target_interval_length_seconds<span class="o">{</span><span class="nv">interval</span><span class="o">=</span><span class="s2">&quot;15s&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> <span class="m">15</span>.00274162
+prometheus_target_interval_length_seconds<span class="o">{</span><span class="nv">interval</span><span class="o">=</span><span class="s2">&quot;15s&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> <span class="m">15</span>.004418161
+prometheus_target_interval_length_seconds_sum<span class="o">{</span><span class="nv">interval</span><span class="o">=</span><span class="s2">&quot;15s&quot;</span><span class="o">}</span> <span class="m">41010</span>.099564205055
+prometheus_target_interval_length_seconds_count<span class="o">{</span><span class="nv">interval</span><span class="o">=</span><span class="s2">&quot;15s&quot;</span><span class="o">}</span> <span class="m">2734</span>
+<span class="c1"># HELP prometheus_target_scrape_pool_reloads_failed_total Total number of failed scrape loop reloads.</span>
+<span class="c1"># TYPE prometheus_target_scrape_pool_reloads_failed_total counter</span>
+prometheus_target_scrape_pool_reloads_failed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_target_scrape_pool_reloads_total Total number of scrape loop reloads.</span>
+<span class="c1"># TYPE prometheus_target_scrape_pool_reloads_total counter</span>
+prometheus_target_scrape_pool_reloads_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_target_scrape_pool_sync_total Total number of syncs that were executed on a scrape pool.</span>
+<span class="c1"># TYPE prometheus_target_scrape_pool_sync_total counter</span>
+prometheus_target_scrape_pool_sync_total<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span><span class="o">}</span> <span class="m">1</span>
+<span class="c1"># HELP prometheus_target_scrape_pools_failed_total Total number of scrape pool creations that failed.</span>
+<span class="c1"># TYPE prometheus_target_scrape_pools_failed_total counter</span>
+prometheus_target_scrape_pools_failed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_target_scrape_pools_total Total number of scrape pool creation atttempts.</span>
+<span class="c1"># TYPE prometheus_target_scrape_pools_total counter</span>
+prometheus_target_scrape_pools_total <span class="m">1</span>
+<span class="c1"># HELP prometheus_target_scrapes_exceeded_sample_limit_total Total number of scrapes that hit the sample limit and were rejected.</span>
+<span class="c1"># TYPE prometheus_target_scrapes_exceeded_sample_limit_total counter</span>
+prometheus_target_scrapes_exceeded_sample_limit_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_target_scrapes_sample_duplicate_timestamp_total Total number of samples rejected due to duplicate timestamps but different values</span>
+<span class="c1"># TYPE prometheus_target_scrapes_sample_duplicate_timestamp_total counter</span>
+prometheus_target_scrapes_sample_duplicate_timestamp_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_target_scrapes_sample_out_of_bounds_total Total number of samples rejected due to timestamp falling outside of the time bounds</span>
+<span class="c1"># TYPE prometheus_target_scrapes_sample_out_of_bounds_total counter</span>
+prometheus_target_scrapes_sample_out_of_bounds_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_target_scrapes_sample_out_of_order_total Total number of samples rejected due to not being out of the expected order</span>
+<span class="c1"># TYPE prometheus_target_scrapes_sample_out_of_order_total counter</span>
+prometheus_target_scrapes_sample_out_of_order_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_target_sync_length_seconds Actual interval to sync the scrape pool.</span>
+<span class="c1"># TYPE prometheus_target_sync_length_seconds summary</span>
+prometheus_target_sync_length_seconds<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.01&quot;</span><span class="o">}</span> NaN
+prometheus_target_sync_length_seconds<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.05&quot;</span><span class="o">}</span> NaN
+prometheus_target_sync_length_seconds<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_target_sync_length_seconds<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_target_sync_length_seconds<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span>,quantile<span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_target_sync_length_seconds_sum<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span><span class="o">}</span> <span class="m">0</span>.000219783
+prometheus_target_sync_length_seconds_count<span class="o">{</span><span class="nv">scrape_job</span><span class="o">=</span><span class="s2">&quot;federate&quot;</span><span class="o">}</span> <span class="m">1</span>
+<span class="c1"># HELP prometheus_template_text_expansion_failures_total The total number of template text expansion failures.</span>
+<span class="c1"># TYPE prometheus_template_text_expansion_failures_total counter</span>
+prometheus_template_text_expansion_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_template_text_expansions_total The total number of template text expansions.</span>
+<span class="c1"># TYPE prometheus_template_text_expansions_total counter</span>
+prometheus_template_text_expansions_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_treecache_watcher_goroutines The current number of watcher goroutines.</span>
+<span class="c1"># TYPE prometheus_treecache_watcher_goroutines gauge</span>
+prometheus_treecache_watcher_goroutines <span class="m">0</span>
+<span class="c1"># HELP prometheus_treecache_zookeeper_failures_total The total number of ZooKeeper failures.</span>
+<span class="c1"># TYPE prometheus_treecache_zookeeper_failures_total counter</span>
+prometheus_treecache_zookeeper_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_blocks_loaded Number of currently loaded data blocks</span>
+<span class="c1"># TYPE prometheus_tsdb_blocks_loaded gauge</span>
+prometheus_tsdb_blocks_loaded <span class="m">1</span>
+<span class="c1"># HELP prometheus_tsdb_checkpoint_creations_failed_total Total number of checkpoint creations that failed.</span>
+<span class="c1"># TYPE prometheus_tsdb_checkpoint_creations_failed_total counter</span>
+prometheus_tsdb_checkpoint_creations_failed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_checkpoint_creations_total Total number of checkpoint creations attempted.</span>
+<span class="c1"># TYPE prometheus_tsdb_checkpoint_creations_total counter</span>
+prometheus_tsdb_checkpoint_creations_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_checkpoint_deletions_failed_total Total number of checkpoint deletions that failed.</span>
+<span class="c1"># TYPE prometheus_tsdb_checkpoint_deletions_failed_total counter</span>
+prometheus_tsdb_checkpoint_deletions_failed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_checkpoint_deletions_total Total number of checkpoint deletions attempted.</span>
+<span class="c1"># TYPE prometheus_tsdb_checkpoint_deletions_total counter</span>
+prometheus_tsdb_checkpoint_deletions_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_compaction_chunk_range_seconds Final time range of chunks on their first compaction</span>
+<span class="c1"># TYPE prometheus_tsdb_compaction_chunk_range_seconds histogram</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;100&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;400&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;1600&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;6400&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;25600&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;102400&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;409600&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;1.6384e+06&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;6.5536e+06&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;2.62144e+07&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_range_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;+Inf&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_range_seconds_sum <span class="m">4</span>.53475943e+08
+prometheus_tsdb_compaction_chunk_range_seconds_count <span class="m">147</span>
+<span class="c1"># HELP prometheus_tsdb_compaction_chunk_samples Final number of samples on their first compaction</span>
+<span class="c1"># TYPE prometheus_tsdb_compaction_chunk_samples histogram</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;4&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;6&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;9&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;13.5&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;20.25&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;30.375&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;45.5625&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;68.34375&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;102.515625&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;153.7734375&quot;</span><span class="o">}</span> <span class="m">24</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;230.66015625&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;345.990234375&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_samples_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;+Inf&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_samples_sum <span class="m">30343</span>
+prometheus_tsdb_compaction_chunk_samples_count <span class="m">147</span>
+<span class="c1"># HELP prometheus_tsdb_compaction_chunk_size_bytes Final size of chunks on their first compaction</span>
+<span class="c1"># TYPE prometheus_tsdb_compaction_chunk_size_bytes histogram</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;32&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;48&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;72&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;108&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;162&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;243&quot;</span><span class="o">}</span> <span class="m">3</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;364.5&quot;</span><span class="o">}</span> <span class="m">18</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;546.75&quot;</span><span class="o">}</span> <span class="m">18</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;820.125&quot;</span><span class="o">}</span> <span class="m">80</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;1230.1875&quot;</span><span class="o">}</span> <span class="m">103</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;1845.28125&quot;</span><span class="o">}</span> <span class="m">106</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;2767.921875&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_size_bytes_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;+Inf&quot;</span><span class="o">}</span> <span class="m">147</span>
+prometheus_tsdb_compaction_chunk_size_bytes_sum <span class="m">152382</span>
+prometheus_tsdb_compaction_chunk_size_bytes_count <span class="m">147</span>
+<span class="c1"># HELP prometheus_tsdb_compaction_duration_seconds Duration of compaction runs</span>
+<span class="c1"># TYPE prometheus_tsdb_compaction_duration_seconds histogram</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;4&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;8&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;16&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;32&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;64&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;128&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;256&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;512&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;+Inf&quot;</span><span class="o">}</span> <span class="m">1</span>
+prometheus_tsdb_compaction_duration_seconds_sum <span class="m">1</span>.250883887
+prometheus_tsdb_compaction_duration_seconds_count <span class="m">1</span>
+<span class="c1"># HELP prometheus_tsdb_compaction_populating_block Set to 1 when a block is currently being written to the disk.</span>
+<span class="c1"># TYPE prometheus_tsdb_compaction_populating_block gauge</span>
+prometheus_tsdb_compaction_populating_block <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_compactions_failed_total Total number of compactions that failed for the partition.</span>
+<span class="c1"># TYPE prometheus_tsdb_compactions_failed_total counter</span>
+prometheus_tsdb_compactions_failed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_compactions_total Total number of compactions that were executed for the partition.</span>
+<span class="c1"># TYPE prometheus_tsdb_compactions_total counter</span>
+prometheus_tsdb_compactions_total <span class="m">1</span>
+<span class="c1"># HELP prometheus_tsdb_compactions_triggered_total Total number of triggered compactions for the partition.</span>
+<span class="c1"># TYPE prometheus_tsdb_compactions_triggered_total counter</span>
+prometheus_tsdb_compactions_triggered_total <span class="m">228</span>
+<span class="c1"># HELP prometheus_tsdb_head_active_appenders Number of currently active appender transactions</span>
+<span class="c1"># TYPE prometheus_tsdb_head_active_appenders gauge</span>
+prometheus_tsdb_head_active_appenders <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_head_chunks Total number of chunks in the head block.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_chunks gauge</span>
+prometheus_tsdb_head_chunks <span class="m">810</span>
+<span class="c1"># HELP prometheus_tsdb_head_chunks_created_total Total number of chunks created in the head</span>
+<span class="c1"># TYPE prometheus_tsdb_head_chunks_created_total counter</span>
+prometheus_tsdb_head_chunks_created_total <span class="m">957</span>
+<span class="c1"># HELP prometheus_tsdb_head_chunks_removed_total Total number of chunks removed in the head</span>
+<span class="c1"># TYPE prometheus_tsdb_head_chunks_removed_total counter</span>
+prometheus_tsdb_head_chunks_removed_total <span class="m">147</span>
+<span class="c1"># HELP prometheus_tsdb_head_gc_duration_seconds Runtime of garbage collection in the head block.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_gc_duration_seconds summary</span>
+prometheus_tsdb_head_gc_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_head_gc_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_head_gc_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_head_gc_duration_seconds_sum <span class="m">0</span>.001884575
+prometheus_tsdb_head_gc_duration_seconds_count <span class="m">1</span>
+<span class="c1"># HELP prometheus_tsdb_head_max_time Maximum timestamp of the head block. The unit is decided by the library consumer.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_max_time gauge</span>
+prometheus_tsdb_head_max_time <span class="m">1</span>.554792751194e+12
+<span class="c1"># HELP prometheus_tsdb_head_max_time_seconds Maximum timestamp of the head block.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_max_time_seconds gauge</span>
+prometheus_tsdb_head_max_time_seconds <span class="m">1</span>.554792751194e+09
+<span class="c1"># HELP prometheus_tsdb_head_min_time Minimum time bound of the head block. The unit is decided by the library consumer.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_min_time gauge</span>
+prometheus_tsdb_head_min_time <span class="m">1</span>.5547824e+12
+<span class="c1"># HELP prometheus_tsdb_head_min_time_seconds Minimum time bound of the head block.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_min_time_seconds gauge</span>
+prometheus_tsdb_head_min_time_seconds <span class="m">1</span>.5547824e+09
+<span class="c1"># HELP prometheus_tsdb_head_samples_appended_total Total number of appended samples.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_samples_appended_total counter</span>
+prometheus_tsdb_head_samples_appended_total <span class="m">123185</span>
+<span class="c1"># HELP prometheus_tsdb_head_series Total number of series in the head block.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_series gauge</span>
+prometheus_tsdb_head_series <span class="m">135</span>
+<span class="c1"># HELP prometheus_tsdb_head_series_created_total Total number of series created in the head</span>
+<span class="c1"># TYPE prometheus_tsdb_head_series_created_total counter</span>
+prometheus_tsdb_head_series_created_total <span class="m">135</span>
+<span class="c1"># HELP prometheus_tsdb_head_series_not_found_total Total number of requests for series that were not found.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_series_not_found_total counter</span>
+prometheus_tsdb_head_series_not_found_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_head_series_removed_total Total number of series removed in the head</span>
+<span class="c1"># TYPE prometheus_tsdb_head_series_removed_total counter</span>
+prometheus_tsdb_head_series_removed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_head_truncations_failed_total Total number of head truncations that failed.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_truncations_failed_total counter</span>
+prometheus_tsdb_head_truncations_failed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_head_truncations_total Total number of head truncations attempted.</span>
+<span class="c1"># TYPE prometheus_tsdb_head_truncations_total counter</span>
+prometheus_tsdb_head_truncations_total <span class="m">1</span>
+<span class="c1"># HELP prometheus_tsdb_lowest_timestamp Lowest timestamp value stored in the database. The unit is decided by the library consumer.</span>
+<span class="c1"># TYPE prometheus_tsdb_lowest_timestamp gauge</span>
+prometheus_tsdb_lowest_timestamp <span class="m">1</span>.55477867699e+12
+<span class="c1"># HELP prometheus_tsdb_lowest_timestamp_seconds Lowest timestamp value stored in the database.</span>
+<span class="c1"># TYPE prometheus_tsdb_lowest_timestamp_seconds gauge</span>
+prometheus_tsdb_lowest_timestamp_seconds <span class="m">1</span>.55477867699e+09
+<span class="c1"># HELP prometheus_tsdb_reloads_failures_total Number of times the database failed to reload block data from disk.</span>
+<span class="c1"># TYPE prometheus_tsdb_reloads_failures_total counter</span>
+prometheus_tsdb_reloads_failures_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_reloads_total Number of times the database reloaded block data from disk.</span>
+<span class="c1"># TYPE prometheus_tsdb_reloads_total counter</span>
+prometheus_tsdb_reloads_total <span class="m">2</span>
+<span class="c1"># HELP prometheus_tsdb_size_retentions_total The number of times that blocks were deleted because the maximum number of bytes was exceeded.</span>
+<span class="c1"># TYPE prometheus_tsdb_size_retentions_total counter</span>
+prometheus_tsdb_size_retentions_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_storage_blocks_bytes The number of bytes that are currently used for local storage by all blocks.</span>
+<span class="c1"># TYPE prometheus_tsdb_storage_blocks_bytes gauge</span>
+prometheus_tsdb_storage_blocks_bytes <span class="m">165474</span>
+<span class="c1"># HELP prometheus_tsdb_symbol_table_size_bytes Size of symbol table on disk (in bytes)</span>
+<span class="c1"># TYPE prometheus_tsdb_symbol_table_size_bytes gauge</span>
+prometheus_tsdb_symbol_table_size_bytes <span class="m">1807</span>
+<span class="c1"># HELP prometheus_tsdb_time_retentions_total The number of times that blocks were deleted because the maximum time limit was exceeded.</span>
+<span class="c1"># TYPE prometheus_tsdb_time_retentions_total counter</span>
+prometheus_tsdb_time_retentions_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_tombstone_cleanup_seconds The time taken to recompact blocks to remove tombstones.</span>
+<span class="c1"># TYPE prometheus_tsdb_tombstone_cleanup_seconds histogram</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;0.005&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;0.01&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;0.025&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;0.05&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;0.1&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;0.25&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;1&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;2.5&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;5&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;10&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_bucket<span class="o">{</span><span class="nv">le</span><span class="o">=</span><span class="s2">&quot;+Inf&quot;</span><span class="o">}</span> <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_sum <span class="m">0</span>
+prometheus_tsdb_tombstone_cleanup_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_vertical_compactions_total Total number of compactions done on overlapping blocks.</span>
+<span class="c1"># TYPE prometheus_tsdb_vertical_compactions_total counter</span>
+prometheus_tsdb_vertical_compactions_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_wal_completed_pages_total Total number of completed pages.</span>
+<span class="c1"># TYPE prometheus_tsdb_wal_completed_pages_total counter</span>
+prometheus_tsdb_wal_completed_pages_total <span class="m">42</span>
+<span class="c1"># HELP prometheus_tsdb_wal_corruptions_total Total number of WAL corruptions.</span>
+<span class="c1"># TYPE prometheus_tsdb_wal_corruptions_total counter</span>
+prometheus_tsdb_wal_corruptions_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_wal_fsync_duration_seconds Duration of WAL fsync.</span>
+<span class="c1"># TYPE prometheus_tsdb_wal_fsync_duration_seconds summary</span>
+prometheus_tsdb_wal_fsync_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_wal_fsync_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_wal_fsync_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_wal_fsync_duration_seconds_sum <span class="m">0</span>
+prometheus_tsdb_wal_fsync_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_wal_page_flushes_total Total number of page flushes.</span>
+<span class="c1"># TYPE prometheus_tsdb_wal_page_flushes_total counter</span>
+prometheus_tsdb_wal_page_flushes_total <span class="m">5519</span>
+<span class="c1"># HELP prometheus_tsdb_wal_truncate_duration_seconds Duration of WAL truncation.</span>
+<span class="c1"># TYPE prometheus_tsdb_wal_truncate_duration_seconds summary</span>
+prometheus_tsdb_wal_truncate_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_wal_truncate_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_wal_truncate_duration_seconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+prometheus_tsdb_wal_truncate_duration_seconds_sum <span class="m">0</span>
+prometheus_tsdb_wal_truncate_duration_seconds_count <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_wal_truncations_failed_total Total number of WAL truncations that failed.</span>
+<span class="c1"># TYPE prometheus_tsdb_wal_truncations_failed_total counter</span>
+prometheus_tsdb_wal_truncations_failed_total <span class="m">0</span>
+<span class="c1"># HELP prometheus_tsdb_wal_truncations_total Total number of WAL truncations attempted.</span>
+<span class="c1"># TYPE prometheus_tsdb_wal_truncations_total counter</span>
+prometheus_tsdb_wal_truncations_total <span class="m">0</span>
+<span class="c1"># HELP promhttp_metric_handler_requests_in_flight Current number of scrapes being served.</span>
+<span class="c1"># TYPE promhttp_metric_handler_requests_in_flight gauge</span>
+promhttp_metric_handler_requests_in_flight <span class="m">1</span>
+<span class="c1"># HELP promhttp_metric_handler_requests_total Total number of scrapes by HTTP status code.</span>
+<span class="c1"># TYPE promhttp_metric_handler_requests_total counter</span>
+promhttp_metric_handler_requests_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;200&quot;</span><span class="o">}</span> <span class="m">0</span>
+promhttp_metric_handler_requests_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;500&quot;</span><span class="o">}</span> <span class="m">0</span>
+promhttp_metric_handler_requests_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;503&quot;</span><span class="o">}</span> <span class="m">0</span></code></pre></figure>
+
+<h2 id="ID_APP_PROMETHEUS_HELP">prometheus -h</h2>
+<pre><code>prometheus -h
+usage: prometheus [&lt;flags&gt;]
+
+The Prometheus monitoring server
+
+Flags:
+  -h, --help                     Show context-sensitive help (also try --help-long and --help-man).
+      --version                  Show application version.
+      --config.file="prometheus.yml"
+                                 Prometheus configuration file path.
+      --web.listen-address="0.0.0.0:9090"
+                                 Address to listen on for UI, API, and telemetry.
+      --web.read-timeout=5m      Maximum duration before timing out read of the request, and closing idle connections.
+      --web.max-connections=512  Maximum number of simultaneous connections.
+      --web.external-url=&lt;URL&gt;   The URL under which Prometheus is externally reachable (for example, if Prometheus is served via a reverse proxy). Used for generating
+                                 relative and absolute links back to Prometheus itself. If the URL has a path portion, it will be used to prefix all HTTP endpoints
+                                 served by Prometheus. If omitted, relevant URL components will be derived automatically.
+      --web.route-prefix=&lt;path&gt;  Prefix for the internal routes of web endpoints. Defaults to path of --web.external-url.
+      --web.user-assets=&lt;path&gt;   Path to static asset directory, available at /user.
+      --web.enable-lifecycle     Enable shutdown and reload via HTTP request.
+      --web.enable-admin-api     Enable API endpoints for admin control actions.
+      --web.console.templates="consoles"
+                                 Path to the console template directory, available at /consoles.
+      --web.console.libraries="console_libraries"
+                                 Path to the console library directory.
+      --web.page-title="Prometheus Time Series Collection and Processing Server"
+                                 Document title of Prometheus instance.
+      --storage.tsdb.path="data/"
+                                 Base path for metrics storage.
+      --storage.tsdb.retention=STORAGE.TSDB.RETENTION
+                                 [DEPRECATED] How long to retain samples in storage. This flag has been deprecated, use "storage.tsdb.retention.time" instead
+      --storage.tsdb.retention.time=STORAGE.TSDB.RETENTION.TIME
+                                 How long to retain samples in storage. When this flag is set it overrides "storage.tsdb.retention". If neither this flag nor
+                                 "storage.tsdb.retention" nor "storage.tsdb.retention.size" is set, the retention time defaults to 15d.
+      --storage.tsdb.retention.size=STORAGE.TSDB.RETENTION.SIZE
+                                 [EXPERIMENTAL] Maximum number of bytes that can be stored for blocks. Units supported: KB, MB, GB, TB, PB. This flag is experimental and
+                                 can be changed in future releases.
+      --storage.tsdb.no-lockfile
+                                 Do not create lockfile in data directory.
+      --storage.tsdb.allow-overlapping-blocks
+                                 [EXPERIMENTAL] Allow overlapping blocks which in-turn enables vertical compaction and vertical query merge.
+      --storage.remote.flush-deadline=&lt;duration&gt;
+                                 How long to wait flushing sample on shutdown or config reload.
+      --storage.remote.read-sample-limit=5e7
+                                 Maximum overall number of samples to return via the remote read interface, in a single query. 0 means no limit.
+      --storage.remote.read-concurrent-limit=10
+                                 Maximum number of concurrent remote read calls. 0 means no limit.
+      --rules.alert.for-outage-tolerance=1h
+                                 Max time to tolerate prometheus outage for restoring 'for' state of alert.
+      --rules.alert.for-grace-period=10m
+                                 Minimum duration between alert and restored 'for' state. This is maintained only for alerts with configured 'for' time greater than
+                                 grace period.
+      --rules.alert.resend-delay=1m
+                                 Minimum amount of time to wait before resending an alert to Alertmanager.
+      --alertmanager.notification-queue-capacity=10000
+                                 The capacity of the queue for pending Alertmanager notifications.
+      --alertmanager.timeout=10s
+                                 Timeout for sending alerts to Alertmanager.
+      --query.lookback-delta=5m  The delta difference allowed for retrieving metrics during expression evaluations.
+      --query.timeout=2m         Maximum time a query may take before being aborted.
+      --query.max-concurrency=20
+                                 Maximum number of queries executed concurrently.
+      --query.max-samples=50000000
+                                 Maximum number of samples a single query can load into memory. Note that queries will fail if they would load more samples than this
+                                 into memory, so this also limits the number of samples a query can return.
+      --web.cors.origin=".*"     Regex for CORS origin. It is fully anchored. Eg. 'https?://(domain1|domain2)\.com'
+      --log.level=info           Only log messages with the given severity or above. One of: [debug, info, warn, error]
+      --log.format=logfmt        Output format of log messages. One of: [logfmt, json]
+</code></pre>
+
+<h2 id="ID_APP_CTA">COMPARISON TO ALTERNATIVES</h2>
+<h3 id="prometheus-vs-graphite">Prometheus vs. Graphite</h3>
+<h4 id="scope">Scope</h4>
+<p>Graphite专注于被动的时序数据库加上查询语言加上展示界面功能。任何其他的功能点都由外部组件提供。</p>
+
+<p>Prometheus是一个全面的监控和趋势追踪系统，包含了基于时序数据库的内建的主动式获取、存储、查询、图像化以及报警功能。在Prometheus中定义了何谓正确的行为（哪些终端应该存在，哪些时序模式意味着错误，等等），并能够主动查找错误。</p>
+
+<h4 id="data-model">Data model</h4>
+<p>Graphite在命名的时序字段内存储数字化的采样值，这和Prometheus类似。然而，Prometheus的metadata模型更丰富：Graphite的metric由<code>.</code>分隔的组件组成，并隐式编码维度，而Prometheus则显示地将维度编码为键值对，这被称为labels，并附加在metric上。这使得使用labels进行过滤、分组、匹配更为简单。</p>
+
+<p>更进一步，特别当Graphite与StatsD结合使用的时候，通常会仅存储所有被监控实例的聚合数据，而不是将实例作为一个维度进行保存，并能够深入挖掘单独的有问题实例。</p>
+
+<p>举例来说，存储响应码为<code>500</code>、方法为<code>POST</code>、发送到API服务器上<code>/tracks</code>端点的HTTP请求数量，一般在Graphite/StatsD会存储为：</p>
+<pre><code>stats.api-server.tracks.post.500 -&gt; 93
+</code></pre>
+
+<p>在Prometheus中，相同的数据则会被编码为（假设有三个API服务器实例）：</p>
+<pre><code>api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="&lt;sample1&gt;"} -&gt; 34
+api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="&lt;sample2&gt;"} -&gt; 28
+api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="&lt;sample3&gt;"} -&gt; 31
+</code></pre>
+
+<h4 id="storage">Storage</h4>
+<p>Graphite将时序数据以Whisper格式存储在本地磁盘上，这是一个RDD-style的数据库，要求采样数据以固定间隔存储进入。每个时序数据被存储为单独的文件，而每隔一段固定时长，新的采样数据则会覆盖旧的数据。</p>
+
+<p>Prometheus也会在本地磁盘按照每个时序数据创建一个本地文件，但允许采样数据按随机的时间间隔进行存储，只要采样行为和规则评估行为发生。由于新的数据会被简单附加在后面，旧的数据会被保存不定时长。Prometheus在处理短存活周期、频繁变动的时序数据时也能很好工作。</p>
+
+<h4 id="summary">Summary</h4>
+<p>Prometheus提供了更丰富的数据模型和查询语言，此外还更容易运行并整合进你的环境。但如果你希望一个集群化的解决方案，并希望能长期保存历史数据，那么Graphite会是一个更好的选择。</p>
+
+<h3 id="prometheus-vs-influxdb">Prometheus vs. InfluxDB</h3>
+<p>InfluxDB是一个开源的时序数据库，并有一个可扩展和可集群化的商业选项。InfluxDB项目是在Prometheus的研发开始之后一年才被release出来的，因此我们之前无法将其作为一个竞品进行考虑。当然，Prometheus和InfluxDB之间还是有显著区别的，并且双方系统都是朝着不同的用例进行设计实施的。</p>
+
+<h4 id="scope-1">Scope</h4>
+<p>为了公平起见，我们还必须将Kapacitor和InfluxDB一起考虑，将这两者组合起来之后，他们解决的是和Prometheus以及Alertmanager相同的问题领域。</p>
+
+<p>在scope方面，InfluxDB和Graphite对Prometheus的差异是类似的。除此之外，InfluxDB提供了连续查询（continuous queries），和Prometheus的记录规则（recording rules）是等价的。</p>
+
+<p>Kapacitor的领域则是Prometheus记录规则（recording rules）、报警规则（alerting rules）以及Alertmanager的通知功能的综合。Prometheus提供了相对来说更强大的查询语言与图像化、报警功能。Prometheus Alertmanager额外提供了分组、去重以及静默功能。</p>
+
+<h4 id="data-model--storage">Data model / storage</h4>
+<p>和Prometheus类似，InfluxDB数据模型也使用键值对作为labels，在InfluxDB中这被称为tags。此外，InfluxDB拥有一个二级labels被称为fields，这个fields在使用上更受限。InfluxDB支持纳秒级别的timestamps，以及float64、int64、bool、字符串，这几种数据类型。Prometheus，根据约定，支持float64数据类型以及支持受限的字符串，以及毫秒级别的timestamps。</p>
+
+<p>INfulxDB使用带有预写日志的多样的 log-structured merge tree 来进行存储。这比Prometheus的每种时间序列仅追加的文件方案更加适合进行事件日志。</p>
+
+<p>日志和Metrics以及图，描述了事件日志和Metrics记录之间的区别。</p>
+
+<h4 id="architecture">Architecture</h4>
+<p>Prometheus服务器每一个都是单独运行的，与其他服务器分离，并仅依赖它们的本地存储来进行核心功能服务：抓取数据、规则处理，以及警告。开源版本的InfluxDB也是类似的。</p>
+
+<p>商业版的InfluxDB提供了，按设计所述，一个分布式存储集群，同时有许多集群节点处理存储和查询。</p>
+
+<p>这意味着商业版的InfluxDB更容易水平扩展，但这也意味着必须一开始就处理一个复杂的分布式存储系统。Prometheus更容易使用，但在某个时间点将必须手动地根据扩展边界来拓展服务器，比如说根据产品、服务、数据中心，或类似的概念。单独的服务器（可以平行运作）也可以给你更好的可靠性以及错误隔离。</p>
+
+<p>Kapacitor的开源release并没有内建的针对规则、警告、通知的分布式/冗余选项。开源版本可以通过用户手动分割的方式进行扩展，类似于Prometheus。Influx提供了企业版本的Kapacitor，支持高可用/冗余的告警系统。</p>
+
+<p>Prometheus以及Alertmanager按约定提供了一个完全开源的冗余选项，通过运行冗余的Prometheus复制（replicas），以及使用Alertmanager的高可用模式。</p>
+
+<h4 id="summary-1">Summary</h4>
+<p>Prometheus和InfluxDB系统有诸多相似之处。都具有labels（在InfluxDB里被称为tags）来支持高效的多维度metrics。都使用相同的数据压缩算法。都有扩展集成。都有钩子允许你拓展它们的功能，比如说在统计工具中分析数据或进行自动化处理等。</p>
+
+<p>InfluxDB做的更好的地方：</p>
+
+<ul>
+  <li>使用InfluxDB系统进行事件日志处理</li>
+  <li>商业版本提供了系统集群化，对长期的数据存储来说也是更好的选择</li>
+  <li>在多个复制之间保持数据的最终一致性</li>
+</ul>
+
+<p>Prometheus做的更好的地方：</p>
+
+<ul>
+  <li>使用Prometheus系统来进行metrics监控</li>
+  <li>更强大的查询语言、报警以及通知功能</li>
+  <li>高可用以及图像化的运行时长以及报警</li>
+</ul>
+
+<p>InfluxDB是由单一商业公司维护的，其模式为：核心功能开源，提供会员功能比如说闭源的集群功能、托管功能以及支持。Prometheus是一个完全开源且独立的项目，由一系列公司及独立个体进行维护，部分其中的成员也提供商业服务及支持。</p>
+
+<h3 id="prometheus-vs-opentsdb">Prometheus vs. OpenTSDB</h3>
+<p>OpenTSDB是一个分布式的时序数据库，基于Hadoop以及HBase。</p>
+
+<h4 id="scope-2">Scope</h4>
+<p>在scope方面，其与Prometheus的差别和Graphite一样。</p>
+
+<h4 id="data-model-1">Data model</h4>
+<p>OpenTSDB的数据模型基本上和Prometheus是一致的：时序由一系列任意的键值对进行识别（OpenTSDB中的tags就是Prometheus中的labels）。针对一个metrics的数据是存储在一起的，限制metrics的基数。也有些微的不同：Prometheus允许label值中存在任意的字符，而OpenTSDB则更具有限制性。OpenTSDB也缺乏一个查询语言，仅允许通过API进行简单的聚合以及数学查询。</p>
+
+<h4 id="storage-1">Storage</h4>
+<p>OpenTSDB的存储是基于Hadoop以及HBase进行实现的。这意味着对OpenTSDB进行水平扩展是容易的，但你必须接受从一开始就运作一个Hadoop/HBase集群的复杂性。</p>
+
+<p>Prometheus作为初始是非常容易直接开始运作的，但当单节点已经无法承载的时候则需要手动进行进行分片。</p>
+
+<h4 id="summary-2">Summary</h4>
+<p>Prometheus提供了更丰富的查询语言，能处理更高的metrics技术，并胜任一个完整的监控系统。如果你已经有运行中的Hadoop集群，且希望拥有一个长期的数据存储更胜于之前所述的优点，那OpenTSDB就是更好的选择。</p>
+
+<h3 id="prometheus-vs-nagios">Prometheus vs. Nagios</h3>
+<p>Nagios是由NetSaint公司自1990年代开始发起的一个监控系统。</p>
+
+<h4 id="scope-3">Scope</h4>
+<p>Nagios是一个主要基于已经存在的脚本代码进行告警的系统。这些被称为<code>checks</code>。可以针对单独的告警进行静默处理，然而并没有分组、路由以及去重。</p>
+
+<p>Nagios拥有大量的插件。举例来说，使用几K的perfData插件就能允许向一个时序数据库（例如Graphite）输出数据或者使用NRPE就可以在远程机器上运行checks。</p>
+
+<h4 id="data-model-2">Data model</h4>
+<p>Nagios是基于主机的。每个主机可以有一个或多个服务，然后每个服务可以运行一个check。</p>
+
+<p>并不存在labels的概念或一个查询语言。</p>
+
+<h4 id="storage-2">Storage</h4>
+<p>Nagios并没有存储，只有状态check。有插件可以存储数据来进行图形化。</p>
+
+<h4 id="architecture-1">Architecture</h4>
+<p>Nagios服务器是独立运作的。所有的checks都是通过配置文件来进行管理的。</p>
+
+<h4 id="summary-3">Summary</h4>
+<p>Nagios适合小型的静态的系统的基本监控（基本上是黑盒状态）。</p>
+
+<p>如果你希望拥有可调整的白盒监控，或拥有一个动态的基于云的环境，那么Prometheus是更好的选择。</p>
+
+<h3 id="prometheus-vs-sensu">Prometheus vs. Sensu</h3>
+<p>Sensu是一个可编组的监控管线，可以复用已经存在的Nagios checks。</p>
+
+<h4 id="scope-4">Scope</h4>
+<p>在scope方面其和Nagios是一致的。</p>
+
+<p>由客户端socket来支持将临时的check结果推送到Sensu。</p>
+
+<h4 id="data-model-3">Data model</h4>
+<p>Sensu的数据模型和Nagios一致。</p>
+
+<h4 id="storage-3">Storage</h4>
+<p>Sensu使用Redis来持久化监控数据，包括了Sensu的客户端注册，check结果，check执行历史，以及当前的事件数据。</p>
+
+<h4 id="architecture-2">Architecture</h4>
+<p>Sensu有一系列的组件。它使用RabbitMQ来传输数据，Redis来处理当前状态，以及一个单独的服务器来处理访问请求。</p>
+
+<p>一个Sensu部署的所有组件（RabbitMQ、Redis以及Sensu 服务器/API）可以做成集群化来支持高可用、冗余配置。</p>
+
+<h4 id="summary-4">Summary</h4>
+<p>如果你手头有一个存在的Nagios，且你希望扩展它，或者希望利用Sensu的自动化注册功能，那么Sensu是一个好选择。</p>
+
+<p>如果你希望进行白盒监控，或希望有动态的基于云的环境，那么Prometheus是一个好的选择。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/04/prometheus-note/">Prometheus Notes</a></li>
+    
+    <li><a href="/2019/04/996/">也谈996</a></li>
+    
+    <li><a href="/2019/03/golang-debug/">Golang Debug</a></li>
+    
+    <li><a href="/2019/03/golang-goroutine/">Golang Goroutine</a></li>
+    
+    <li><a href="/2019/03/golang-cpu/">Golang CPU</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/04/prometheus-note/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
