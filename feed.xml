@@ -29,6 +29,7 @@
   &lt;li&gt;&lt;a href=&quot;#6-todo&quot; id=&quot;markdown-toc-6-todo&quot;&gt;6. TODO&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#7-写在最后&quot; id=&quot;markdown-toc-7-写在最后&quot;&gt;7. 写在最后&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID_APP_GRAFANA_HELP&quot; id=&quot;markdown-toc-ID_APP_GRAFANA_HELP&quot;&gt;grafana -h&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID_APP_SELF_METRICS&quot; id=&quot;markdown-toc-ID_APP_SELF_METRICS&quot;&gt;grafana/metrics&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -259,6 +260,14 @@ tools               # 忽略
 &lt;p&gt;和写代码一样，优秀的工程师花的更多的时间是在思考和设计上，而不是实际的编写代码。如果不理解这点，那就永远只能是二流。&lt;/p&gt;
 
 &lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
+&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grafana/grafana/issues/9877&quot; target=&quot;_blank&quot;&gt;How to create new user roles? #9877&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://elkguide.elasticsearch.cn/elasticsearch/other/grafana.html&quot; target=&quot;_blank&quot;&gt;ELKstack 中文指南 &amp;gt; Grafana&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://kiswo.com/article/1021&quot; target=&quot;_blank&quot;&gt;Grafana使用&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://yunlzheng.gitbook.io/prometheus-book/part-ii-prometheus-jin-jie/grafana/grafana-panels&quot; target=&quot;_blank&quot;&gt;Grafana与数据可视化&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h2 id=&quot;ID_APP_GRAFANA_HELP&quot;&gt;grafana -h&lt;/h2&gt;
 &lt;pre&gt;&lt;code&gt;$ ./bin/grafana-server -h
 Usage of ./bin/grafana-server:
@@ -4256,7 +4265,9 @@ gc 153 @8010.203s 0%: 0.043+0.32+0.006 ms clock, 0.34+0/0.34/0.67+0.053 ms cpu, 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&quot;ID_APP_MEMORY_SAMPLE&quot;&gt;experiment/memory/memory.go&lt;/h2&gt;
-&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
