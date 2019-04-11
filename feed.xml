@@ -66,7 +66,7 @@ tar -zxvf grafana-6.1.2.darwin-amd64.tar.gz
 
 &lt;pre&gt;&lt;code&gt;bin                 # grafana-server &amp;amp; grafana-cli
 conf                # 配置文件夹
-data \              # 运行时产生的文件，刚解压出来还不存在
+data \              # 运行时产生的文件，刚解压出来时还不存在
      | log          # 日志输出
      | plugins      # 安装的第三方插件等
      | png
@@ -164,7 +164,7 @@ tools               # 忽略
   &lt;p&gt;Default configuration from $WORKING_DIR/conf/defaults.ini&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;也就是：&lt;code&gt;${--homepath}/conf/defaults.ini&lt;/code&gt;，才正常工作起来，哎。&lt;/p&gt;
+&lt;p&gt;也就是在默认的配置文件位置上放上文件：&lt;code&gt;${--homepath}/conf/defaults.ini&lt;/code&gt;，才正常工作起来，哎。&lt;/p&gt;
 
 &lt;h2 id=&quot;25-cli&quot;&gt;2.5 CLI&lt;/h2&gt;
 &lt;p&gt;官方文档：&lt;a href=&quot;https://grafana.com/docs/administration/cli/&quot; target=&quot;_blank&quot;&gt;Grafana CLI&lt;/a&gt;。&lt;/p&gt;
@@ -504,6 +504,7 @@ grafana_stat_totals_dashboard &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#5-prometheus监控指标&quot; id=&quot;markdown-toc-5-prometheus监控指标&quot;&gt;5. Prometheus监控指标&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#6-范例&quot; id=&quot;markdown-toc-6-范例&quot;&gt;6. 范例&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-todo&quot; id=&quot;markdown-toc-7-todo&quot;&gt;7. TODO&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID_APP_SELF_METRICS&quot; id=&quot;markdown-toc-ID_APP_SELF_METRICS&quot;&gt;prometheus/metrics&lt;/a&gt;&lt;/li&gt;
@@ -895,6 +896,17 @@ INFO[0000]  - time                                       source=&quot;node_expor
 
 &lt;h1 id=&quot;6-范例&quot;&gt;6. 范例&lt;/h1&gt;
 &lt;p&gt;实际的可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/prometheus/federation&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/prometheus/federation/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;7-todo&quot;&gt;7. TODO&lt;/h1&gt;
+&lt;p&gt;囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Prometheus自身的Metrics深入研究，以便将Prometheus自身也纳入监控&lt;/li&gt;
+  &lt;li&gt;PromQL深入理解&lt;/li&gt;
+  &lt;li&gt;聚合操作：&lt;a href=&quot;https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-aggr-ops&quot; target=&quot;_blank&quot;&gt;PromQL聚合操作&lt;/a&gt; &amp;amp; &lt;a href=&quot;https://prometheus.io/docs/prometheus/latest/querying/operators/&quot; target=&quot;_blank&quot;&gt;OPERATORS&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;内置函数：&lt;a href=&quot;https://yunlzheng.gitbook.io/prometheus-book/parti-prometheus-ji-chu/promql/prometheus-promql-functions&quot; target=&quot;_blank&quot;&gt;PromQL内置函数&lt;/a&gt; &amp;amp; &lt;a href=&quot;https://prometheus.io/docs/prometheus/latest/querying/functions/&quot; target=&quot;_blank&quot;&gt;FUNCTIONS&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;常用Exporter及其指标含义 及 实际可用的指标公式换算&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
 &lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
@@ -2189,9 +2201,7 @@ Entering interactive mode (type &quot;help&quot; for commands, &quot;o&quot; for
 
 &lt;h1 id=&quot;4-资料&quot;&gt;4. 资料&lt;/h1&gt;
 &lt;h2 id=&quot;ID_APP_CPU_SAMPLE&quot;&gt;experiment/cpu/cpu.go&lt;/h2&gt;
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/24a00ddbdb04c68d6fd2792ba8808ce6.js&quot;&gt; &lt;/script&gt;
+&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/24a00ddbdb04c68d6fd2792ba8808ce6.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
@@ -4246,9 +4256,7 @@ gc 153 @8010.203s 0%: 0.043+0.32+0.006 ms clock, 0.34+0/0.34/0.67+0.053 ms cpu, 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&quot;ID_APP_MEMORY_SAMPLE&quot;&gt;experiment/memory/memory.go&lt;/h2&gt;
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;
+&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;

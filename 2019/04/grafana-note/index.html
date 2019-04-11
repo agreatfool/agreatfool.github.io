@@ -227,7 +227,7 @@ tar -zxvf grafana-6.1.2.darwin-amd64.tar.gz
 
 <pre><code>bin                 # grafana-server &amp; grafana-cli
 conf                # 配置文件夹
-data \              # 运行时产生的文件，刚解压出来还不存在
+data \              # 运行时产生的文件，刚解压出来时还不存在
      | log          # 日志输出
      | plugins      # 安装的第三方插件等
      | png
@@ -325,7 +325,7 @@ tools               # 忽略
   <p>Default configuration from $WORKING_DIR/conf/defaults.ini</p>
 </blockquote>
 
-<p>也就是：<code>${--homepath}/conf/defaults.ini</code>，才正常工作起来，哎。</p>
+<p>也就是在默认的配置文件位置上放上文件：<code>${--homepath}/conf/defaults.ini</code>，才正常工作起来，哎。</p>
 
 <h2 id="25-cli">2.5 CLI</h2>
 <p>官方文档：<a href="https://grafana.com/docs/administration/cli/" target="_blank">Grafana CLI</a>。</p>
