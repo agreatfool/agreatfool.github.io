@@ -1,0 +1,782 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Grafana Notes | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/04/grafana-note/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/04/grafana-note/">Grafana Notes</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>11 Apr 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Grafana">Grafana</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Monitor">Monitor</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Metrics">Metrics</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DevOps">DevOps</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Keynote">Keynote</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-安装--文件位置--启动" id="markdown-toc-2-安装--文件位置--启动">2. 安装 &amp; 文件位置 &amp; 启动</a>    <ul>
+      <li><a href="#21-安装" id="markdown-toc-21-安装">2.1 安装</a></li>
+      <li><a href="#22-文件位置" id="markdown-toc-22-文件位置">2.2 文件位置</a></li>
+      <li><a href="#23-配置文件" id="markdown-toc-23-配置文件">2.3 配置文件</a></li>
+      <li><a href="#24-启动" id="markdown-toc-24-启动">2.4 启动</a></li>
+      <li><a href="#25-cli" id="markdown-toc-25-cli">2.5 CLI</a></li>
+      <li><a href="#26-登录--访问" id="markdown-toc-26-登录--访问">2.6 登录 &amp; 访问</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-概念" id="markdown-toc-3-概念">3. 概念</a></li>
+  <li><a href="#4-使用简介" id="markdown-toc-4-使用简介">4. 使用简介</a></li>
+  <li><a href="#41-日常使用" id="markdown-toc-41-日常使用">4.1 日常使用</a></li>
+  <li><a href="#42-数据保存--导出" id="markdown-toc-42-数据保存--导出">4.2 数据保存 &amp; 导出</a></li>
+  <li><a href="#43-数据源" id="markdown-toc-43-数据源">4.3 数据源</a></li>
+  <li><a href="#5-监控指标" id="markdown-toc-5-监控指标">5. 监控指标</a></li>
+  <li><a href="#6-todo" id="markdown-toc-6-todo">6. TODO</a></li>
+  <li><a href="#7-写在最后" id="markdown-toc-7-写在最后">7. 写在最后</a></li>
+  <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
+      <li><a href="#ID_APP_GRAFANA_HELP" id="markdown-toc-ID_APP_GRAFANA_HELP">grafana -h</a></li>
+      <li><a href="#ID_APP_SELF_METRICS" id="markdown-toc-ID_APP_SELF_METRICS">grafana/metrics</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>Grafana常被用作数据展示界面，虽然实际上它还有很多其他相关的功能，但一般都不会使用。在CNCF的项目中，一般Grafana都和Prometheus结合使用。Grafana的最大优势在于其灵活性，它作为数据界面可以利用相当多种类的后台数据源。在我构想中的系统里，ELK也是相当重要的一个组成部分，而Grafana也可以作为ElasticSearch的前台界面，这就相当好用。</p>
+
+<p>由于其相当于仅只是一个UI，所以本文中架构之类的内容基本上会很少，主要是概念介绍和使用细节方面的。</p>
+
+<p>下文所有内容都基于版本：<code>v6.1.2</code>。</p>
+
+<pre><code>$ ./bin/grafana-server -v
+Version 6.1.2 (commit: de8f6ac, branch: HEAD)
+</code></pre>
+
+<h1 id="2-安装--文件位置--启动">2. 安装 &amp; 文件位置 &amp; 启动</h1>
+<h2 id="21-安装">2.1 安装</h2>
+<p>官方文档：<a href="https://grafana.com/grafana/download" target="_blank">Download Grafana</a>。</p>
+
+<p>官方站点做得很好，直接按指示操作即可。MAC安装很方便，使用brew装是最佳选择，另外也可以wget下载tar包，解压即用。Go应用程序就这点，真的太赞了。</p>
+
+<pre><code>brew update 
+brew install grafana
+
+or
+
+wget https://dl.grafana.com/oss/release/grafana-6.1.2.darwin-amd64.tar.gz 
+tar -zxvf grafana-6.1.2.darwin-amd64.tar.gz
+</code></pre>
+
+<h2 id="22-文件位置">2.2 文件位置</h2>
+<p>解压出来的Grafana文件夹可以简单看一下，基本上运行的文件位置就是按这个安排的：</p>
+
+<pre><code>bin                 # grafana-server &amp; grafana-cli
+conf                # 配置文件夹
+data \              # 运行时产生的文件，刚解压出来还不存在
+     | log          # 日志输出
+     | plugins      # 安装的第三方插件等
+     | png
+     | grafana.db   # sqlite3数据库
+public              # 展示相关的内容，HTML、CSS等
+scripts             # bash脚本，忽略
+tools               # 忽略
+</code></pre>
+
+<p>上面的<code>data</code>文件夹及里面的内容等，都是默认的配置文件的设定，如果没有特殊需求，一般直接这样运行就可以了。</p>
+
+<p>如果将Grafana的运行文件夹指定在某个位置的话，一些文件夹是可能需要调整（配置文件中）：</p>
+
+<figure class="highlight"><pre><code class="language-ini" data-lang="ini"><span></span><span class="c1"># Path to where grafana can store temp files, sessions, and the sqlite3 db (if that is used)</span>
+<span class="na">data</span> <span class="o">=</span> <span class="s">data/grafana</span>
+<span class="c1"># Directory where grafana can store logs</span>
+<span class="na">logs</span> <span class="o">=</span> <span class="s">log</span>
+<span class="c1"># Directory where grafana will automatically scan and look for plugins</span>
+<span class="na">plugins</span> <span class="o">=</span> <span class="s">data/grafana/plugins</span>
+<span class="c1"># folder that contains provisioning config files that grafana will apply on startup and while running.</span>
+<span class="na">provisioning</span> <span class="o">=</span> <span class="s">conf/provisioning</span>
+<span class="c1"># the path relative working path</span>
+<span class="na">static_root_path</span> <span class="o">=</span> <span class="s">data/grafana/public</span></code></pre></figure>
+
+<p>上面的所有文件夹实际上都是相对路径，相对于Grafana启动时候指定的工作路径：<code>--homepath</code>。</p>
+
+<h2 id="23-配置文件">2.3 配置文件</h2>
+<p>官方文档：<a href="https://grafana.com/docs/installation/configuration/" target="_blank">Configuration</a>。</p>
+
+<p>配置文件中的选项基本上和运行时和监控关系不大，都是一些设置向的内容，配置过一次之后就不需要变动了。一些可能需要关心的选项：</p>
+
+<figure class="highlight"><pre><code class="language-ini" data-lang="ini"><span></span><span class="c1"># Protocol (http, https, socket)</span>
+<span class="na">protocol</span> <span class="o">=</span> <span class="s">http</span>
+<span class="c1"># The ip address to bind to, empty will bind to all interfaces</span>
+<span class="na">http_addr</span> <span class="o">=</span> <span class="s">127.0.0.1</span>
+<span class="c1"># The http port to use</span>
+<span class="na">http_port</span> <span class="o">=</span> <span class="s">3000</span>
+<span class="c1"># The public facing domain name used to access grafana from a browser</span>
+<span class="na">domain</span> <span class="o">=</span> <span class="s">localhost</span>
+<span class="c1"># Either &quot;mysql&quot;, &quot;postgres&quot; or &quot;sqlite3&quot;, it&#39;s your choice</span>
+<span class="na">type</span> <span class="o">=</span> <span class="s">sqlite3</span>
+<span class="c1"># Server reporting, sends usage counters to stats.grafana.org every 24 hours.</span>
+<span class="c1"># No ip addresses are being tracked, only simple counters to track</span>
+<span class="c1"># running instances, dashboard and error counts. It is very helpful to us.</span>
+<span class="c1"># Change this option to false to disable reporting.</span>
+<span class="na">reporting_enabled</span> <span class="o">=</span> <span class="s">false</span>
+<span class="c1"># Set to false to disable all checks to https://grafana.com</span>
+<span class="c1"># for new versions (grafana itself and plugins), check is used</span>
+<span class="c1"># in some UI views to notify that grafana or plugin update exists</span>
+<span class="c1"># This option does not cause any auto updates, nor send any information</span>
+<span class="c1"># only a GET request to https://grafana.com to get latest versions</span>
+<span class="na">check_for_updates</span> <span class="o">=</span> <span class="s">false</span>
+<span class="c1"># disable user signup / registration</span>
+<span class="na">allow_sign_up</span> <span class="o">=</span> <span class="s">false</span>
+<span class="c1"># Allow non admin users to create organizations</span>
+<span class="na">allow_org_create</span> <span class="o">=</span> <span class="s">false</span></code></pre></figure>
+
+<h2 id="24-启动">2.4 启动</h2>
+<p>启动这块就有个让人很头疼的事情，真的让我始料未及。</p>
+
+<p>让Grafana作为一个WEB应用启动，需要用到的是<code>bin/grafana-server</code>这个命令，其帮助可以在<a href="#ID_APP_GRAFANA_HELP">资料</a>查看。</p>
+
+<p>有用的参数只有两个：</p>
+
+<ul>
+  <li><code>--config</code>：指定配置文件位置</li>
+  <li><code>--homepath</code>：指定Grafana工作的根目录</li>
+</ul>
+
+<p>如果是将下载下来的Grafana直接解包运行，不更改路径的话，那就不需要任何启动参数，直接运行即可。但如果需要更改运行根目录的话，就需要使用<code>--homepath</code>这个选项：</p>
+
+<pre><code>$ ./bin/grafana-server --homepath "/Users/XXX/.../"
+</code></pre>
+
+<p>而我遇到的问题是<code>--config</code>这个选项，无论我指定任何内容：</p>
+
+<ul>
+  <li>相对于<code>--homepath</code>的相对文件位置：<code>config/grafana/grafana.ini</code></li>
+  <li>相对于<code>--homepath</code>的相对文件夹：<code>config/grafana/</code></li>
+  <li>绝对文件路径：<code>/Users/XXX/.../config/grafana/grafana.ini</code></li>
+  <li>绝对文件夹：<code>/Users/XXX/.../config/grafana/</code></li>
+</ul>
+
+<p>它都不能正常工作，只会返回给我错误：</p>
+
+<blockquote>
+  <p>Grafana-server Init Failed: Could not find config defaults, make sure homepath command line parameter is set or working directory is homepath</p>
+</blockquote>
+
+<p>真的让人相当恼火，官方文档里还有这块的解说，但说了根本就和没说一个样：<a href="https://grafana.com/docs/installation/configuration/#config-file-locations" target="_blank">Config file locations</a>。</p>
+
+<p>最后只能使用：</p>
+
+<blockquote>
+  <p>Default configuration from $WORKING_DIR/conf/defaults.ini</p>
+</blockquote>
+
+<p>也就是：<code>${--homepath}/conf/defaults.ini</code>，才正常工作起来，哎。</p>
+
+<h2 id="25-cli">2.5 CLI</h2>
+<p>官方文档：<a href="https://grafana.com/docs/administration/cli/" target="_blank">Grafana CLI</a>。</p>
+
+<p>Grafana还提供了一个命令行工具来辅助admin平时的操作：<code>bin/grafana-cli</code>，使用可以看：</p>
+
+<pre><code>$ ./bin/grafana-cli -h
+</code></pre>
+
+<h2 id="26-登录--访问">2.6 登录 &amp; 访问</h2>
+<p>默认第一次使用的用户名和密码是：<code>admin:admin</code>，第一次登录进去之后系统就会要求更改admin密码。访问地址在配置文件里是可以更改的，默认为：<code>http://localhost:3000</code>。</p>
+
+<h1 id="3-概念">3. 概念</h1>
+<ul>
+  <li><code>DataSource</code>：数据源，Grafana仅只是一个UI，真正保存数据的是数据源，根据版本不同支持的数据源可能不尽相同，有需要可以查看官方文档：<a href="https://grafana.com/docs/features/datasources/" target="_blank">Data Source Overview</a></li>
+  <li>用户 &amp; 权限：
+    <ul>
+      <li><code>Organization</code>：组织，用在多个组织部门使用同一个Grafana的情况，可以根据组织的不同区分可访问的面板</li>
+      <li><code>User</code>：用户</li>
+      <li><code>Role</code>：角色，目前暂时只支持固定的角色：Admin、Editor、Read Only Editor、Viewer，相关：<a href="https://github.com/grafana/grafana/issues/9877" target="_blank">How to create new user roles? #9877</a></li>
+    </ul>
+  </li>
+  <li><code>Panel</code>：面板，Grafana的核心，实际上负责进行图形展示的单元，类型非常多，有需要可以查看官方文档：<a href="https://grafana.com/docs/features/panels/graph/" target="_blank">Graph Panel</a></li>
+  <li><code>Row</code>：行，Dashboard的下级逻辑分隔概念，一个Row里可以放入很多Panel，而且这里需要理解Row并不是物理上的<code>行</code>（实际上一个Row可以容纳很多行Panel）</li>
+  <li><code>Dashboard</code>：仪表盘，由大量Panel组成的集合，一般来说Dashboard是按某个目标进行设计的，比如说：机房的当前状况，某个应用的服务状况等</li>
+  <li><code>Plugins</code>：插件，提供更多的额外功能集成，官方商店在：<a href="https://grafana.com/plugins" target="_blank">Plugins</a></li>
+  <li><code>Playlist</code>：举例来说就是某些大公司在门口做的数据滚动播放展示，类似那样的功能，官方文档：<a href="https://grafana.com/docs/reference/playlist/" target="_blank">Playlist</a></li>
+  <li><code>Provisioning</code>：通过配置文件的方式对DataSource及Dashboard进行设置，这是Grafana在使用API进行相关设置之外的另一种方法，且其不要求Grafana首先启动，使用上更为便利</li>
+  <li><code>Templating</code>：模板，对某些共性的Panel或Dashboard进行抽象，以便后续进行复用</li>
+</ul>
+
+<p>Provisioning官方文档：<a href="https://grafana.com/docs/administration/provisioning/" target="_blank">Provisioning Grafana</a></p>
+
+<blockquote>
+  <p>在以前的Grafana版本中，你只能使用API来配置数据源和仪表盘，但是，这需要在开始创建仪表板之前运行服务，并且还需要为HTTP API设置证书。在v5.0中，我们决定通过添加使用配置文件的新的活动Provisioning系统来改善这种体验，这将使GitOps更加自然，因为可以通过可以进行版本控制的文件来定义数据源和仪表盘，我们希望扩展此系统以便稍后添加对用户，组织和警报的支持。</p>
+</blockquote>
+
+<h1 id="4-使用简介">4. 使用简介</h1>
+<h1 id="41-日常使用">4.1 日常使用</h1>
+<p>理解了上面的概念之后，日常功能无非就是以下几项：</p>
+
+<ul>
+  <li>创建User</li>
+  <li>创建organization</li>
+  <li>管理User和Organization以及Roles</li>
+  <li>创建Dashboard，需要根据实际应用场景进行规划</li>
+  <li>创建Rows，如果有必要的话</li>
+  <li>在Dashboard上创建Panel</li>
+  <li>将Panel及Dashboard做成Templating复用，如果有必要的话</li>
+</ul>
+
+<h1 id="42-数据保存--导出">4.2 数据保存 &amp; 导出</h1>
+<p>Dashboard在面板上面的工具栏里有<code>Settings</code>选项，进入之后有一项<code>JSON Model</code>，这就是当前Dashboard的所有内容了，都做成了JSON文本进行描述。如果你查看过Grafana的数据库的话，你也可以看到Dashboard表只有一列，是用来存储这个数据的，其他任何地方都没有和Dashboard的内容相关的字段。只要复制了这个字段，也就完成了当前Dashboard的备份，当然也可以将这个JSON字符串做成*.json文件进行备份。</p>
+
+<p>Panel也有类似的功能，在Panel的Title进行点击，会有下拉菜单，然后<code>More &gt; Panel Json</code>就是了。</p>
+
+<h1 id="43-数据源">4.3 数据源</h1>
+<p>Grafana支持多种数据源，根据不同数据源有不同的一些细微的功能差别以及配置差别，可以查看官方文档：</p>
+
+<ul>
+  <li><a href="https://grafana.com/docs/features/datasources/prometheus/" target="_blank">Using Prometheus in Grafana</a></li>
+  <li><a href="https://grafana.com/docs/features/datasources/elasticsearch/" target="_blank">Using Elasticsearch in Grafana</a></li>
+</ul>
+
+<p>这里面最有可能会用得到的就是<code>Templating</code>相关内容，在制作数据模板的时候很有用。</p>
+
+<p>Grafana和ELK相整合的文章可以看这篇：<a href="https://elkguide.elasticsearch.cn/elasticsearch/other/grafana.html" target="_blank">ELKstack 中文指南 &gt; Grafana</a>。</p>
+
+<h1 id="5-监控指标">5. 监控指标</h1>
+<p>Grafana做的好就好在其和其他监控系统的集成相当好，Grafana自身的相关监控指标也可以和Prometheus一样暴露出来，使用的格式也是Prometheus的格式，默认是在：<code>http://localhost:3000/metrics</code>。</p>
+
+<p>我在本文中也留了一份，有必要可以研究下里面的内容：<a href="#ID_APP_SELF_METRICS">grafana/metrics</a>。</p>
+
+<h1 id="6-todo">6. TODO</h1>
+<p>囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：</p>
+
+<ul>
+  <li>Grafana本身的性能，应该如何衡量</li>
+  <li>Grafana暴露出来的<a href="#ID_APP_SELF_METRICS">Metrics</a>需要仔细研究下</li>
+  <li>所有的图表全部尝试一遍</li>
+  <li>热力图的应用范围及实际使用范例</li>
+  <li>常用 &amp; 有用的插件列表整理</li>
+  <li>ELK整合使用必要性调研，Kibana是否够用，是否有必要使用Grafana作为ELK的前台UI</li>
+  <li>ELK结合使用范例</li>
+</ul>
+
+<h1 id="7-写在最后">7. 写在最后</h1>
+<p>了解Metrics的含义才是最关键的，就像我在写Prometheus Notes说的，很多exporter会吐出巨量的Metrics数据，你都了解这些Metrics代表的意义吗？如果不了解的话，那些数据即便采集进去了，你又会去用了？说到底Prometheus和Grafana不过就是个工具，关键还是在于工程师想要了解什么，对自己的系统的监控需求是什么。</p>
+
+<p>监控相关工作的第一步是梳理当前系统的组成组件，将每一个都列出来，将它们负责的职责明确清楚，然后将需要监控的Metrics都枚举出来，将这些Metrics需要做成的表类型都想清楚，最后才是使用Prometheus采集数据，使用Grafana制图。</p>
+
+<p>和写代码一样，优秀的工程师花的更多的时间是在思考和设计上，而不是实际的编写代码。如果不理解这点，那就永远只能是二流。</p>
+
+<h1 id="资料">资料</h1>
+<h2 id="ID_APP_GRAFANA_HELP">grafana -h</h2>
+<pre><code>$ ./bin/grafana-server -h
+Usage of ./bin/grafana-server:
+  -config string
+    	path to config file
+  -homepath string
+    	path to grafana install/home path, defaults to working directory
+  -packaging string
+    	describes the way Grafana was installed (default "unknown")
+  -pidfile string
+    	path to pid file
+  -profile
+    	Turn on pprof profiling
+  -profile-port int
+    	Define custom port for profiling (default 6060)
+  -test.bench regexp
+    	run only benchmarks matching regexp
+  -test.benchmem
+    	print memory allocations for benchmarks
+  -test.benchtime d
+    	run each benchmark for duration d (default 1s)
+  -test.blockprofile file
+    	write a goroutine blocking profile to file
+  -test.blockprofilerate rate
+    	set blocking profile rate (see runtime.SetBlockProfileRate) (default 1)
+  -test.count n
+    	run tests and benchmarks n times (default 1)
+  -test.coverprofile file
+    	write a coverage profile to file
+  -test.cpu list
+    	comma-separated list of cpu counts to run each test with
+  -test.cpuprofile file
+    	write a cpu profile to file
+  -test.failfast
+    	do not start new tests after the first test failure
+  -test.list regexp
+    	list tests, examples, and benchmarks matching regexp then exit
+  -test.memprofile file
+    	write an allocation profile to file
+  -test.memprofilerate rate
+    	set memory allocation profiling rate (see runtime.MemProfileRate)
+  -test.mutexprofile string
+    	write a mutex contention profile to the named file after execution
+  -test.mutexprofilefraction int
+    	if &gt;= 0, calls runtime.SetMutexProfileFraction() (default 1)
+  -test.outputdir dir
+    	write profiles to dir
+  -test.parallel n
+    	run at most n tests in parallel (default 8)
+  -test.run regexp
+    	run only tests and examples matching regexp
+  -test.short
+    	run smaller test suite to save time
+  -test.testlogfile file
+    	write test action log to file (for use only by cmd/go)
+  -test.timeout d
+    	panic test binary after duration d (default 0, timeout disabled)
+  -test.trace file
+    	write an execution trace to file
+  -test.v
+    	verbose: print additional output
+  -v	prints current version and exits
+</code></pre>
+
+<h2 id="ID_APP_SELF_METRICS">grafana/metrics</h2>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1"># HELP grafana_alerting_active_alerts amount of active alerts</span>
+<span class="c1"># TYPE grafana_alerting_active_alerts gauge</span>
+grafana_alerting_active_alerts <span class="m">0</span>
+<span class="c1"># HELP grafana_alerting_execution_time_milliseconds summary of alert exeuction duration</span>
+<span class="c1"># TYPE grafana_alerting_execution_time_milliseconds summary</span>
+grafana_alerting_execution_time_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+grafana_alerting_execution_time_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+grafana_alerting_execution_time_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+grafana_alerting_execution_time_milliseconds_sum <span class="m">0</span>
+grafana_alerting_execution_time_milliseconds_count <span class="m">0</span>
+<span class="c1"># HELP grafana_api_admin_user_created_total api admin user created counter</span>
+<span class="c1"># TYPE grafana_api_admin_user_created_total counter</span>
+grafana_api_admin_user_created_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_dashboard_get_milliseconds summary for dashboard get duration</span>
+<span class="c1"># TYPE grafana_api_dashboard_get_milliseconds summary</span>
+grafana_api_dashboard_get_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_get_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_get_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_get_milliseconds_sum <span class="m">0</span>
+grafana_api_dashboard_get_milliseconds_count <span class="m">0</span>
+<span class="c1"># HELP grafana_api_dashboard_save_milliseconds summary for dashboard save duration</span>
+<span class="c1"># TYPE grafana_api_dashboard_save_milliseconds summary</span>
+grafana_api_dashboard_save_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_save_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_save_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_save_milliseconds_sum <span class="m">0</span>
+grafana_api_dashboard_save_milliseconds_count <span class="m">0</span>
+<span class="c1"># HELP grafana_api_dashboard_search_milliseconds summary for dashboard search duration</span>
+<span class="c1"># TYPE grafana_api_dashboard_search_milliseconds summary</span>
+grafana_api_dashboard_search_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_search_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_search_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+grafana_api_dashboard_search_milliseconds_sum <span class="m">0</span>
+grafana_api_dashboard_search_milliseconds_count <span class="m">0</span>
+<span class="c1"># HELP grafana_api_dashboard_snapshot_create_total dashboard snapshots created</span>
+<span class="c1"># TYPE grafana_api_dashboard_snapshot_create_total counter</span>
+grafana_api_dashboard_snapshot_create_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_dashboard_snapshot_external_total external dashboard snapshots created</span>
+<span class="c1"># TYPE grafana_api_dashboard_snapshot_external_total counter</span>
+grafana_api_dashboard_snapshot_external_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_dashboard_snapshot_get_total loaded dashboards</span>
+<span class="c1"># TYPE grafana_api_dashboard_snapshot_get_total counter</span>
+grafana_api_dashboard_snapshot_get_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_dataproxy_request_all_milliseconds summary for dataproxy request duration</span>
+<span class="c1"># TYPE grafana_api_dataproxy_request_all_milliseconds summary</span>
+grafana_api_dataproxy_request_all_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.5&quot;</span><span class="o">}</span> NaN
+grafana_api_dataproxy_request_all_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="o">}</span> NaN
+grafana_api_dataproxy_request_all_milliseconds<span class="o">{</span><span class="nv">quantile</span><span class="o">=</span><span class="s2">&quot;0.99&quot;</span><span class="o">}</span> NaN
+grafana_api_dataproxy_request_all_milliseconds_sum <span class="m">0</span>
+grafana_api_dataproxy_request_all_milliseconds_count <span class="m">0</span>
+<span class="c1"># HELP grafana_api_login_oauth_total api login oauth counter</span>
+<span class="c1"># TYPE grafana_api_login_oauth_total counter</span>
+grafana_api_login_oauth_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_login_post_total api login post counter</span>
+<span class="c1"># TYPE grafana_api_login_post_total counter</span>
+grafana_api_login_post_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_models_dashboard_insert_total dashboards inserted </span>
+<span class="c1"># TYPE grafana_api_models_dashboard_insert_total counter</span>
+grafana_api_models_dashboard_insert_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_org_create_total api org created counter</span>
+<span class="c1"># TYPE grafana_api_org_create_total counter</span>
+grafana_api_org_create_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_response_status_total api http response status</span>
+<span class="c1"># TYPE grafana_api_response_status_total counter</span>
+grafana_api_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;200&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_api_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;404&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_api_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;500&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_api_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="o">}</span> <span class="m">0</span>
+<span class="c1"># HELP grafana_api_user_signup_completed_total amount of users who completed the signup flow</span>
+<span class="c1"># TYPE grafana_api_user_signup_completed_total counter</span>
+grafana_api_user_signup_completed_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_user_signup_invite_total amount of users who have been invited</span>
+<span class="c1"># TYPE grafana_api_user_signup_invite_total counter</span>
+grafana_api_user_signup_invite_total <span class="m">0</span>
+<span class="c1"># HELP grafana_api_user_signup_started_total amount of users who started the signup flow</span>
+<span class="c1"># TYPE grafana_api_user_signup_started_total counter</span>
+grafana_api_user_signup_started_total <span class="m">0</span>
+<span class="c1"># HELP grafana_aws_cloudwatch_get_metric_data_total counter for getting metric data time series from aws</span>
+<span class="c1"># TYPE grafana_aws_cloudwatch_get_metric_data_total counter</span>
+grafana_aws_cloudwatch_get_metric_data_total <span class="m">0</span>
+<span class="c1"># HELP grafana_aws_cloudwatch_get_metric_statistics_total counter for getting metric statistics from aws</span>
+<span class="c1"># TYPE grafana_aws_cloudwatch_get_metric_statistics_total counter</span>
+grafana_aws_cloudwatch_get_metric_statistics_total <span class="m">0</span>
+<span class="c1"># HELP grafana_aws_cloudwatch_list_metrics_total counter for getting list of metrics from aws</span>
+<span class="c1"># TYPE grafana_aws_cloudwatch_list_metrics_total counter</span>
+grafana_aws_cloudwatch_list_metrics_total <span class="m">0</span>
+<span class="c1"># HELP grafana_build_info A metric with a constant &#39;1&#39; value labeled by version, revision, branch, and goversion from which Grafana was built.</span>
+<span class="c1"># TYPE grafana_build_info gauge</span>
+grafana_build_info<span class="o">{</span><span class="nv">branch</span><span class="o">=</span><span class="s2">&quot;HEAD&quot;</span>,edition<span class="o">=</span><span class="s2">&quot;oss&quot;</span>,goversion<span class="o">=</span><span class="s2">&quot;go1.11.5&quot;</span>,revision<span class="o">=</span><span class="s2">&quot;de8f6ac&quot;</span>,version<span class="o">=</span><span class="s2">&quot;6.1.2&quot;</span><span class="o">}</span> <span class="m">1</span>
+<span class="c1"># HELP grafana_db_datasource_query_by_id_total counter for getting datasource by id</span>
+<span class="c1"># TYPE grafana_db_datasource_query_by_id_total counter</span>
+grafana_db_datasource_query_by_id_total <span class="m">0</span>
+<span class="c1"># HELP grafana_info Information about the Grafana. This metric is deprecated. please use `grafana_build_info`</span>
+<span class="c1"># TYPE grafana_info gauge</span>
+grafana_info<span class="o">{</span><span class="nv">version</span><span class="o">=</span><span class="s2">&quot;6.1.2&quot;</span><span class="o">}</span> <span class="m">1</span>
+<span class="c1"># HELP grafana_instance_start_total counter for started instances</span>
+<span class="c1"># TYPE grafana_instance_start_total counter</span>
+grafana_instance_start_total <span class="m">1</span>
+<span class="c1"># HELP grafana_page_response_status_total page http response status</span>
+<span class="c1"># TYPE grafana_page_response_status_total counter</span>
+grafana_page_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;200&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_page_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;404&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_page_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;500&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_page_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="o">}</span> <span class="m">0</span>
+<span class="c1"># HELP grafana_proxy_response_status_total proxy http response status</span>
+<span class="c1"># TYPE grafana_proxy_response_status_total counter</span>
+grafana_proxy_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;200&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_proxy_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;404&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_proxy_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;500&quot;</span><span class="o">}</span> <span class="m">0</span>
+grafana_proxy_response_status_total<span class="o">{</span><span class="nv">code</span><span class="o">=</span><span class="s2">&quot;unknown&quot;</span><span class="o">}</span> <span class="m">0</span>
+<span class="c1"># HELP grafana_stat_active_users number of active users</span>
+<span class="c1"># TYPE grafana_stat_active_users gauge</span>
+grafana_stat_active_users <span class="m">1</span>
+<span class="c1"># HELP grafana_stat_total_orgs total amount of orgs</span>
+<span class="c1"># TYPE grafana_stat_total_orgs gauge</span>
+grafana_stat_total_orgs <span class="m">1</span>
+<span class="c1"># HELP grafana_stat_total_playlists total amount of playlists</span>
+<span class="c1"># TYPE grafana_stat_total_playlists gauge</span>
+grafana_stat_total_playlists <span class="m">0</span>
+<span class="c1"># HELP grafana_stat_total_users total amount of users</span>
+<span class="c1"># TYPE grafana_stat_total_users gauge</span>
+grafana_stat_total_users <span class="m">1</span>
+<span class="c1"># HELP grafana_stat_totals_dashboard total amount of dashboards</span>
+<span class="c1"># TYPE grafana_stat_totals_dashboard gauge</span>
+grafana_stat_totals_dashboard <span class="m">0</span></code></pre></figure>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/04/grafana-note/">Grafana Notes</a></li>
+    
+    <li><a href="/2019/04/prometheus-note/">Prometheus Notes</a></li>
+    
+    <li><a href="/2019/04/996/">也谈996</a></li>
+    
+    <li><a href="/2019/03/golang-debug/">Golang Debug</a></li>
+    
+    <li><a href="/2019/03/golang-goroutine/">Golang Goroutine</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/04/grafana-note/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
