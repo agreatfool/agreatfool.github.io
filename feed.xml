@@ -7,6 +7,77 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Compare: Monitoring | Tracing | Logging</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-monitoring--tracing--logging&quot; id=&quot;markdown-toc-1-monitoring--tracing--logging&quot;&gt;1. Monitoring &amp;amp; Tracing &amp;amp; Logging&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-monitoring&quot; id=&quot;markdown-toc-2-monitoring&quot;&gt;2. Monitoring&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-tracing&quot; id=&quot;markdown-toc-3-tracing&quot;&gt;3. Tracing&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-logging&quot; id=&quot;markdown-toc-4-logging&quot;&gt;4. Logging&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-总结&quot; id=&quot;markdown-toc-5-总结&quot;&gt;5. 总结&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-monitoring--tracing--logging&quot;&gt;1. Monitoring &amp;amp; Tracing &amp;amp; Logging&lt;/h1&gt;
+&lt;p&gt;对于一个系统来说，标题中提到的这三者需求都是必然存在的，而有的时候我们会搞不清楚这三者相互之间是什么关系。我之前在做系统设计的时候也考虑过，是不是有必要引入那么多组件，毕竟如果这三者完全分开每一个一项的话，就有三个组件了（事实上就是：Prometheus+Grafana、Jaeger、ELK）。&lt;/p&gt;
+
+&lt;p&gt;因此想做个笔记尝试举例来梳理下。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-monitoring&quot;&gt;2. Monitoring&lt;/h1&gt;
+&lt;p&gt;Monitoring（监控）举例来说就是：&lt;code&gt;定期体检&lt;/code&gt;。使用监控系统把需要关注的指标采集起来，形成报告，并对需要关注的异常数据进行分析形成告警。&lt;/p&gt;
+
+&lt;p&gt;特点是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;低频&lt;/li&gt;
+  &lt;li&gt;定期&lt;/li&gt;
+  &lt;li&gt;定量&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这也是Prometheus的架构做得非常简单的原因，Monitoring的需求并没有包含非常高的并发量和通讯量。反过来说：高并发、大数据量的需求并不适用于Monitoring这个点。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-tracing&quot;&gt;3. Tracing&lt;/h1&gt;
+&lt;p&gt;Tracing（链路追踪）举例来说就是：&lt;code&gt;对某一项工作的定期汇报&lt;/code&gt;。某个工作开始做了A，制作A事件的报告，收集起来，然后这个工作还有B、C、D等条目，一个个处理，然后都汇总进报告，最终的结果就是一个Tracing。&lt;/p&gt;
+
+&lt;p&gt;特点是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;高频&lt;/li&gt;
+  &lt;li&gt;巨量&lt;/li&gt;
+  &lt;li&gt;有固定格式&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因为Tracing是针对某一个事件（一般来说就是一个API），而这个API可能会和很多组件进行沟通，后续的所有的组件沟通无论是内部还是外部的IO，都算作这个API调用的Tracing的一部分。可以想见在一个业务繁忙的系统中，API调用的数量已经是天文数字，而其衍生出来的Tracing记录更是不得了的量。其特点就是高频、巨量，一个API会衍生出大量的子调用。&lt;/p&gt;
+
+&lt;p&gt;也因此适合用来做Monitoring的系统就不一定适合做Tracing了，用Prometheus这样的系统来做Tracing肯定完蛋（Prometheus只有拉模式，全部都是HTTP请求，高并发直接挂掉）。一般来说Tracing系统都会在本地磁盘IO上做日志（最高效、也是最低的Cost），然后再通过本地Agent慢慢把文本日志数据发送到聚合服务器上，甚至可能在聚合服务器和本地的Agent之间还需要做消息队列，让聚合服务器慢慢消化巨量的消息。&lt;/p&gt;
+
+&lt;p&gt;Tracing在现在的业界是有标准的：&lt;code&gt;OpenTracing&lt;/code&gt;，因此它不是很随意的日志/事件聚合，而是有格式要求的日志/事件聚合，这就是Tracing和Logging最大的不同。&lt;/p&gt;
+
+&lt;h1 id=&quot;4-logging&quot;&gt;4. Logging&lt;/h1&gt;
+&lt;p&gt;Logging（日志）举例来说就是：&lt;code&gt;废品回收站&lt;/code&gt;。各种各样的物品都会汇总进入到配品回收站里，然后经过分门别类归纳整理，成为各种可回收资源分别回收到商家那里。一般来说我们在大型系统中提到Logging说的都不是简单的&lt;code&gt;日志&lt;/code&gt;，而是&lt;code&gt;日志聚合系统&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;从本质上来说，Monitoring和Tracing都是Logging，Logging是这三者中覆盖面最大的超集，而前两者则是其一部分的子集。Logging最麻烦的是，开发者也不会完全知道最后记录进入到日志系统里的一共会有哪些东西，只有在使用（检索）的时候才可能需要汇总查询总量中的一部分。&lt;/p&gt;
+
+&lt;p&gt;要在一般的Loggin系统中进行Monitoring也是可以的，直接把聚合进来的日志数据提取出来，定期形成数据报告，就是监控了。Tracing也是一样，只要聚合进了Logging系统，有了原始数据，后面要做都是可以做的。因此Logging系统最为通用，其特点和Tracing基本一致，也是需要处理高频并发和巨大的数据量。&lt;/p&gt;
+
+&lt;h1 id=&quot;5-总结&quot;&gt;5. 总结&lt;/h1&gt;
+&lt;p&gt;这样一看就很清楚了，每个组件都有其存在的必要性：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Monitoring系统（Prometheus）从根本的需求和基本设计上就不可能支持Tracing和Logging：低频 vs 高频、低量 vs 高量，其从设计到实现就只为了监控服务&lt;/li&gt;
+  &lt;li&gt;Tracing系统（Jaeger）对提供的数据有格式要求，且处理方式和一般的Logging也不同，有更限定的应用范围&lt;/li&gt;
+  &lt;li&gt;Logging系统（ELK）可以处理前两者的需求，但前两者的领域有更专业的工具就不推荐直接使用普通的日志聚合系统了；Logging系统一般用来处理大型系统的日志聚合以及检索查询&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Fri, 12 Apr 2019 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2019/04/monitoring-tracing-logging/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2019/04/monitoring-tracing-logging/</guid>
+			</item>
+		
+			<item>
 				<title>Grafana Notes</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -2210,7 +2281,9 @@ Entering interactive mode (type &quot;help&quot; for commands, &quot;o&quot; for
 
 &lt;h1 id=&quot;4-资料&quot;&gt;4. 资料&lt;/h1&gt;
 &lt;h2 id=&quot;ID_APP_CPU_SAMPLE&quot;&gt;experiment/cpu/cpu.go&lt;/h2&gt;
-&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/24a00ddbdb04c68d6fd2792ba8808ce6.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
+&lt;noscript&gt;&lt;pre&gt;400: Invalid request
+&lt;/pre&gt;&lt;/noscript&gt;
+&lt;script src=&quot;https://gist.github.com/24a00ddbdb04c68d6fd2792ba8808ce6.js&quot;&gt; &lt;/script&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
@@ -5177,71 +5250,6 @@ google手册：&lt;a href=&quot;https://github.com/google/pprof/tree/master/doc&
 				<pubDate>Mon, 04 Mar 2019 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/03/golang-basic/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/03/golang-basic/</guid>
-			</item>
-		
-			<item>
-				<title>Golang Notes</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-基础&quot; id=&quot;markdown-toc-2-基础&quot;&gt;2. 基础&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-版本历史&quot; id=&quot;markdown-toc-3-版本历史&quot;&gt;3. 版本历史&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-模块&quot; id=&quot;markdown-toc-4-模块&quot;&gt;4. 模块&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-内存&quot; id=&quot;markdown-toc-5-内存&quot;&gt;5. 内存&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-cpu&quot; id=&quot;markdown-toc-6-cpu&quot;&gt;6. CPU&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-go程&quot; id=&quot;markdown-toc-7-go程&quot;&gt;7. Go程&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#8-debug&quot; id=&quot;markdown-toc-8-debug&quot;&gt;8. Debug&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;Go语言系列专题汇总文章。基本上会将Go语言的方方面面都梳理一遍。&lt;/p&gt;
-
-&lt;p&gt;版本申明，所有原创的代码及实验都是基于以下版本：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ go version
-go version go1.12 darwin/amd64&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;2-基础&quot;&gt;2. 基础&lt;/h1&gt;
-&lt;p&gt;&lt;a href=&quot;/2019/03/golang-basic/&quot; target=&quot;_blank&quot;&gt;Golang Basic&lt;/a&gt;介绍了Go语言的语法基础及特点。并列出了Go语言的官方命令行工具以及如何使用。基本上熟悉Go语言的读者可以直接忽略这块。&lt;/p&gt;
-
-&lt;p&gt;官方有个常见问题列表，这里放一下，有需求可以检索下：&lt;a href=&quot;https://golang.org/doc/faq&quot; target=&quot;_blank&quot;&gt;Frequently Asked Questions (FAQ)&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;3-版本历史&quot;&gt;3. 版本历史&lt;/h1&gt;
-&lt;p&gt;一门技术，其历史版本更新的跟进是非常重要的，这对于了解功能演进以及了解变化都是非常有意义的。NodeJs我一直有跟进：&lt;a href=&quot;/2018/03/v8-blog-translation/&quot; target=&quot;_blank&quot;&gt;V8博客摘要翻译&lt;/a&gt;。而Go语言于我来说是比较新的东西，历史的更新必然是没有跟进的。这里推荐&lt;a href=&quot;https://tonybai.com/&quot; target=&quot;_blank&quot;&gt;Tony Bai&lt;/a&gt;大神的Go博客，对我来说感觉算是Go语言类似布道者的角色了。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2019/03/02/some-changes-in-go-1-12/&quot; target=&quot;_blank&quot;&gt;Go 1.12中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2018/11/19/some-changes-in-go-1-11/&quot; target=&quot;_blank&quot;&gt;Go 1.11中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2018/02/17/some-changes-in-go-1-10/&quot; target=&quot;_blank&quot;&gt;Go 1.10中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2017/07/14/some-changes-in-go-1-9/&quot; target=&quot;_blank&quot;&gt;Go 1.9中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2017/02/03/some-changes-in-go-1-8/&quot; target=&quot;_blank&quot;&gt;Go 1.8中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2016/06/21/some-changes-in-go-1-7/&quot; target=&quot;_blank&quot;&gt;Go 1.7中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2016/02/21/some-changes-in-go-1-6/&quot; target=&quot;_blank&quot;&gt;Go 1.6中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2015/07/10/some-changes-in-go-1-5/&quot; target=&quot;_blank&quot;&gt;Go 1.5中值得关注的几个变化&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;4-模块&quot;&gt;4. 模块&lt;/h1&gt;
-&lt;p&gt;深入1.11版本终于实装的官方Go语言模块系统：go modules（vgo），详见：&lt;a href=&quot;/2019/03/golang-modules/&quot; target=&quot;_blank&quot;&gt;Golang Modules&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;5-内存&quot;&gt;5. 内存&lt;/h1&gt;
-&lt;p&gt;从Go内存的分配，到内存回收，到Profiling工具，全方面的Go内存知识点分析，详见：&lt;a href=&quot;/2019/03/golang-memory/&quot; target=&quot;_blank&quot;&gt;Golang Memory&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;6-cpu&quot;&gt;6. CPU&lt;/h1&gt;
-&lt;p&gt;CPU部分相对来说比较简单，其关键知识点和Gorountine结合比较紧密，会在后面的篇章一起说明。此外，Profiling相关的知识点可以直接看Memory部分的内容，工具应该说是一致的，只是API及命令有部分不同。细节详见：&lt;a href=&quot;/2019/03/golang-cpu/&quot; target=&quot;_blank&quot;&gt;Golang CPU&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;7-go程&quot;&gt;7. Go程&lt;/h1&gt;
-&lt;p&gt;Go应用程序最为重要的设计，也是Go得以从那么多编程语言中脱颖而出的核心。详见：&lt;a href=&quot;/2019/03/golang-goroutine/&quot; target=&quot;_blank&quot;&gt;Golang Goroutine&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;8-debug&quot;&gt;8. Debug&lt;/h1&gt;
-&lt;p&gt;Go程序Debug有点类似于C语言，拥有一款和GDB相似的工具Delve。详见：&lt;a href=&quot;/2019/03/golang-debug/&quot; target=&quot;_blank&quot;&gt;Golang Debug&lt;/a&gt;。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Mon, 25 Feb 2019 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/02/golang-note/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/02/golang-note/</guid>
 			</item>
 		
 	</channel>

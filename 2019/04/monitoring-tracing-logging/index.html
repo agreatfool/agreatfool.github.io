@@ -1,0 +1,399 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Compare: Monitoring | Tracing | Logging | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/04/monitoring-tracing-logging/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/04/monitoring-tracing-logging/">Compare: Monitoring | Tracing | Logging</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>12 Apr 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Monitor">Monitor</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Tracing">Tracing</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Logging">Logging</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DevOps">DevOps</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-monitoring--tracing--logging" id="markdown-toc-1-monitoring--tracing--logging">1. Monitoring &amp; Tracing &amp; Logging</a></li>
+  <li><a href="#2-monitoring" id="markdown-toc-2-monitoring">2. Monitoring</a></li>
+  <li><a href="#3-tracing" id="markdown-toc-3-tracing">3. Tracing</a></li>
+  <li><a href="#4-logging" id="markdown-toc-4-logging">4. Logging</a></li>
+  <li><a href="#5-总结" id="markdown-toc-5-总结">5. 总结</a></li>
+</ul>
+
+<h1 id="1-monitoring--tracing--logging">1. Monitoring &amp; Tracing &amp; Logging</h1>
+<p>对于一个系统来说，标题中提到的这三者需求都是必然存在的，而有的时候我们会搞不清楚这三者相互之间是什么关系。我之前在做系统设计的时候也考虑过，是不是有必要引入那么多组件，毕竟如果这三者完全分开每一个一项的话，就有三个组件了（事实上就是：Prometheus+Grafana、Jaeger、ELK）。</p>
+
+<p>因此想做个笔记尝试举例来梳理下。</p>
+
+<h1 id="2-monitoring">2. Monitoring</h1>
+<p>Monitoring（监控）举例来说就是：<code>定期体检</code>。使用监控系统把需要关注的指标采集起来，形成报告，并对需要关注的异常数据进行分析形成告警。</p>
+
+<p>特点是：</p>
+
+<ul>
+  <li>低频</li>
+  <li>定期</li>
+  <li>定量</li>
+</ul>
+
+<p>这也是Prometheus的架构做得非常简单的原因，Monitoring的需求并没有包含非常高的并发量和通讯量。反过来说：高并发、大数据量的需求并不适用于Monitoring这个点。</p>
+
+<h1 id="3-tracing">3. Tracing</h1>
+<p>Tracing（链路追踪）举例来说就是：<code>对某一项工作的定期汇报</code>。某个工作开始做了A，制作A事件的报告，收集起来，然后这个工作还有B、C、D等条目，一个个处理，然后都汇总进报告，最终的结果就是一个Tracing。</p>
+
+<p>特点是：</p>
+
+<ul>
+  <li>高频</li>
+  <li>巨量</li>
+  <li>有固定格式</li>
+</ul>
+
+<p>因为Tracing是针对某一个事件（一般来说就是一个API），而这个API可能会和很多组件进行沟通，后续的所有的组件沟通无论是内部还是外部的IO，都算作这个API调用的Tracing的一部分。可以想见在一个业务繁忙的系统中，API调用的数量已经是天文数字，而其衍生出来的Tracing记录更是不得了的量。其特点就是高频、巨量，一个API会衍生出大量的子调用。</p>
+
+<p>也因此适合用来做Monitoring的系统就不一定适合做Tracing了，用Prometheus这样的系统来做Tracing肯定完蛋（Prometheus只有拉模式，全部都是HTTP请求，高并发直接挂掉）。一般来说Tracing系统都会在本地磁盘IO上做日志（最高效、也是最低的Cost），然后再通过本地Agent慢慢把文本日志数据发送到聚合服务器上，甚至可能在聚合服务器和本地的Agent之间还需要做消息队列，让聚合服务器慢慢消化巨量的消息。</p>
+
+<p>Tracing在现在的业界是有标准的：<code>OpenTracing</code>，因此它不是很随意的日志/事件聚合，而是有格式要求的日志/事件聚合，这就是Tracing和Logging最大的不同。</p>
+
+<h1 id="4-logging">4. Logging</h1>
+<p>Logging（日志）举例来说就是：<code>废品回收站</code>。各种各样的物品都会汇总进入到配品回收站里，然后经过分门别类归纳整理，成为各种可回收资源分别回收到商家那里。一般来说我们在大型系统中提到Logging说的都不是简单的<code>日志</code>，而是<code>日志聚合系统</code>。</p>
+
+<p>从本质上来说，Monitoring和Tracing都是Logging，Logging是这三者中覆盖面最大的超集，而前两者则是其一部分的子集。Logging最麻烦的是，开发者也不会完全知道最后记录进入到日志系统里的一共会有哪些东西，只有在使用（检索）的时候才可能需要汇总查询总量中的一部分。</p>
+
+<p>要在一般的Loggin系统中进行Monitoring也是可以的，直接把聚合进来的日志数据提取出来，定期形成数据报告，就是监控了。Tracing也是一样，只要聚合进了Logging系统，有了原始数据，后面要做都是可以做的。因此Logging系统最为通用，其特点和Tracing基本一致，也是需要处理高频并发和巨大的数据量。</p>
+
+<h1 id="5-总结">5. 总结</h1>
+<p>这样一看就很清楚了，每个组件都有其存在的必要性：</p>
+
+<ul>
+  <li>Monitoring系统（Prometheus）从根本的需求和基本设计上就不可能支持Tracing和Logging：低频 vs 高频、低量 vs 高量，其从设计到实现就只为了监控服务</li>
+  <li>Tracing系统（Jaeger）对提供的数据有格式要求，且处理方式和一般的Logging也不同，有更限定的应用范围</li>
+  <li>Logging系统（ELK）可以处理前两者的需求，但前两者的领域有更专业的工具就不推荐直接使用普通的日志聚合系统了；Logging系统一般用来处理大型系统的日志聚合以及检索查询</li>
+</ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/04/monitoring-tracing-logging/">Compare: Monitoring | Tracing | Logging</a></li>
+    
+    <li><a href="/2019/04/grafana-note/">Grafana Notes</a></li>
+    
+    <li><a href="/2019/04/prometheus-note/">Prometheus Notes</a></li>
+    
+    <li><a href="/2019/04/996/">也谈996</a></li>
+    
+    <li><a href="/2019/03/golang-debug/">Golang Debug</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/04/monitoring-tracing-logging/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
