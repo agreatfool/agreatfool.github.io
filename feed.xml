@@ -925,7 +925,7 @@ INFO[0000]  - time                                       source=&quot;node_expor
 
 &lt;h1 id=&quot;4-架构设计&quot;&gt;4. 架构设计&lt;/h1&gt;
 &lt;h2 id=&quot;41-架构图&quot;&gt;4.1 架构图&lt;/h2&gt;
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/prometheus-notes/architecture.png&quot; alt=&quot;Architecture&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/prometheus-note/architecture.png&quot; alt=&quot;Architecture&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Prometheus的设计理念就是保证单节点的性能、功能完整性以及单节点的使用便利性。在这个理念下，Prometheus的使用是一件很简单的事情，稍微做点配置调整就可以使用了，而且这个节点上的所有数据都是存储在其本身的物理磁盘上的（有选项可以远程存储，这里按下不表），保证了不会有跨物理节点的各种问题。&lt;/p&gt;
 
