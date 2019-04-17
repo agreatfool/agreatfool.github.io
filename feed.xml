@@ -29,6 +29,7 @@
       &lt;li&gt;&lt;a href=&quot;#34-data-store&quot; id=&quot;markdown-toc-34-data-store&quot;&gt;3.4 Data Store&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#35-jaeger-query&quot; id=&quot;markdown-toc-35-jaeger-query&quot;&gt;3.5 Jaeger Query&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#36-jaeger-ingester&quot; id=&quot;markdown-toc-36-jaeger-ingester&quot;&gt;3.6 Jaeger Ingester&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#日志模式&quot; id=&quot;markdown-toc-日志模式&quot;&gt;日志模式&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#4-jaeger使用&quot; id=&quot;markdown-toc-4-jaeger使用&quot;&gt;4. Jaeger使用&lt;/a&gt;    &lt;ul&gt;
@@ -262,6 +263,27 @@ Span context: Trace information that accompanies the distributed transaction, in
 &lt;/blockquote&gt;
 
 &lt;p&gt;感觉应该是一个解决吞吐量的中间件。&lt;/p&gt;
+
+&lt;h2 id=&quot;日志模式&quot;&gt;日志模式&lt;/h2&gt;
+&lt;p&gt;按照Jaeger当前的设计，Client和Agent之间是使用UDP进行通讯，必须是实时连接的，这就对Agent的健壮性提出了要求，如果当前Agent已挂，Client就基本上不可用了。而日志文件化的好处就是将Client和Agent彻底解耦，使用操作系统的磁盘IO来解决Tracing生成的问题，而这方面，官方&lt;code&gt;并没有计划&lt;/code&gt;要这么做，没有任何关于这方面的设计讨论（至少我没找到）。&lt;/p&gt;
+
+&lt;p&gt;而官方倒是有讨论：如果有一个外部存储已经存放了Tracing相关数据，能不能直接使用Query连接上去进行Tracing数据的展示和分析。见：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/649&quot; target=&quot;_blank&quot;&gt;Integration with external logs storage when displaying traces #649&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果这个实现的话，实际上就完全绕过了Jaeger的整个生命周期：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;不再需要在应用程序中嵌入Jaeger的Client（直接使用日志组件将Tracing打成日志）&lt;/li&gt;
+  &lt;li&gt;不再需要在边车中放置Jaeger的Agent（只要有日志聚合的Agent即可：Logstash、Filebeat）&lt;/li&gt;
+  &lt;li&gt;不再需要启动Collector集群（直接由日志聚合Agent发送到Elaticsearch）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;只需要直接沿用（如果在用的话）ELK系列日志聚合系统，然后用Jaeger的Query直接连接到Elasticsearch上进行Tracing对应的日志分析就可以了。这样即减少了系统的整体复杂度（不需要Jaeger的一整套东西了），又降低了系统整体负载（磁盘IO永远是最便宜的东西）。&lt;/p&gt;
+
+&lt;p&gt;就看今后发展了。不过如果这真的实现了，Jaeger项目还有必要存在么。。。&lt;/p&gt;
 
 &lt;h1 id=&quot;4-jaeger使用&quot;&gt;4. Jaeger使用&lt;/h1&gt;
 &lt;p&gt;初步入门可以查看官方文档：&lt;a href=&quot;https://www.jaegertracing.io/docs/1.11/getting-started/&quot; target=&quot;_blank&quot;&gt;Getting started&lt;/a&gt;。实际生产环境的安装和部署，需要仔细阅读官方文档：&lt;a href=&quot;https://www.jaegertracing.io/docs/1.11/deployment/&quot; target=&quot;_blank&quot;&gt;Deployment&lt;/a&gt;。&lt;/p&gt;
@@ -640,6 +662,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/1430&quot; target=&quot;_blank&quot;&gt;Jaeger Agent does not buffer spans when the Collector is unavailable #1430&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/365&quot; target=&quot;_blank&quot;&gt;Adaptive Sampling #365&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/832&quot; target=&quot;_blank&quot;&gt;How sampler.type=remote works #832&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/649&quot; target=&quot;_blank&quot;&gt;Integration with external logs storage when displaying traces #649&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;help&quot;&gt;Help&lt;/h2&gt;
@@ -5650,9 +5673,7 @@ gc 153 @8010.203s 0%: 0.043+0.32+0.006 ms clock, 0.34+0/0.34/0.67+0.053 ms cpu, 
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;h2 id=&quot;ID_APP_MEMORY_SAMPLE&quot;&gt;experiment/memory/memory.go&lt;/h2&gt;
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;
+&lt;p&gt;true&lt;script src=&quot;https://gist.github.com/83764ceff16a8b512da22a9d3a337fea.js&quot;&gt; &lt;/script&gt;&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;

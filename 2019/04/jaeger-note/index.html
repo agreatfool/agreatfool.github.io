@@ -192,6 +192,7 @@
       <li><a href="#34-data-store" id="markdown-toc-34-data-store">3.4 Data Store</a></li>
       <li><a href="#35-jaeger-query" id="markdown-toc-35-jaeger-query">3.5 Jaeger Query</a></li>
       <li><a href="#36-jaeger-ingester" id="markdown-toc-36-jaeger-ingester">3.6 Jaeger Ingester</a></li>
+      <li><a href="#日志模式" id="markdown-toc-日志模式">日志模式</a></li>
     </ul>
   </li>
   <li><a href="#4-jaeger使用" id="markdown-toc-4-jaeger使用">4. Jaeger使用</a>    <ul>
@@ -425,6 +426,27 @@ Span context: Trace information that accompanies the distributed transaction, in
 </blockquote>
 
 <p>感觉应该是一个解决吞吐量的中间件。</p>
+
+<h2 id="日志模式">日志模式</h2>
+<p>按照Jaeger当前的设计，Client和Agent之间是使用UDP进行通讯，必须是实时连接的，这就对Agent的健壮性提出了要求，如果当前Agent已挂，Client就基本上不可用了。而日志文件化的好处就是将Client和Agent彻底解耦，使用操作系统的磁盘IO来解决Tracing生成的问题，而这方面，官方<code>并没有计划</code>要这么做，没有任何关于这方面的设计讨论（至少我没找到）。</p>
+
+<p>而官方倒是有讨论：如果有一个外部存储已经存放了Tracing相关数据，能不能直接使用Query连接上去进行Tracing数据的展示和分析。见：</p>
+
+<ul>
+  <li><a href="https://github.com/jaegertracing/jaeger/issues/649" target="_blank">Integration with external logs storage when displaying traces #649</a></li>
+</ul>
+
+<p>如果这个实现的话，实际上就完全绕过了Jaeger的整个生命周期：</p>
+
+<ul>
+  <li>不再需要在应用程序中嵌入Jaeger的Client（直接使用日志组件将Tracing打成日志）</li>
+  <li>不再需要在边车中放置Jaeger的Agent（只要有日志聚合的Agent即可：Logstash、Filebeat）</li>
+  <li>不再需要启动Collector集群（直接由日志聚合Agent发送到Elaticsearch）</li>
+</ul>
+
+<p>只需要直接沿用（如果在用的话）ELK系列日志聚合系统，然后用Jaeger的Query直接连接到Elasticsearch上进行Tracing对应的日志分析就可以了。这样即减少了系统的整体复杂度（不需要Jaeger的一整套东西了），又降低了系统整体负载（磁盘IO永远是最便宜的东西）。</p>
+
+<p>就看今后发展了。不过如果这真的实现了，Jaeger项目还有必要存在么。。。</p>
 
 <h1 id="4-jaeger使用">4. Jaeger使用</h1>
 <p>初步入门可以查看官方文档：<a href="https://www.jaegertracing.io/docs/1.11/getting-started/" target="_blank">Getting started</a>。实际生产环境的安装和部署，需要仔细阅读官方文档：<a href="https://www.jaegertracing.io/docs/1.11/deployment/" target="_blank">Deployment</a>。</p>
@@ -803,6 +825,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   <li><a href="https://github.com/jaegertracing/jaeger/issues/1430" target="_blank">Jaeger Agent does not buffer spans when the Collector is unavailable #1430</a></li>
   <li><a href="https://github.com/jaegertracing/jaeger/issues/365" target="_blank">Adaptive Sampling #365</a></li>
   <li><a href="https://github.com/jaegertracing/jaeger/issues/832" target="_blank">How sampler.type=remote works #832</a></li>
+  <li><a href="https://github.com/jaegertracing/jaeger/issues/649" target="_blank">Integration with external logs storage when displaying traces #649</a></li>
 </ul>
 
 <h2 id="help">Help</h2>
