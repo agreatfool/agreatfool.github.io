@@ -170,7 +170,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 &lt;p&gt;Span Tag 范例：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;db.instance:”jdbc:mysql://127.0.0.1:3306/customers&lt;/li&gt;
+  &lt;li&gt;db.instance:”jdbc:mysql://127.0.0.1:3306/customers”&lt;/li&gt;
   &lt;li&gt;db.statement:”SELECT * FROM mytable WHERE foo=’bar’;”&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -227,7 +227,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 &lt;p&gt;Jaeger Client可以直接向Collector发送Trace信息，也可以结合本地的Agent协同工作，降低性能开销。实际上这部分的性能开销不会很大。&lt;/p&gt;
 
 &lt;h2 id=&quot;32-jaeger-agent&quot;&gt;3.2 Jaeger Agent&lt;/h2&gt;
-&lt;p&gt;Jaeger Agent是和目标应用程序并行部署的一个组件，可以理解为边车设计中的边车的组成部分之一。它是一个长期启动的守护进程，通过监听UDP网络接收Client发送过来的Trace信息，并批量向Collector发送。在设计上，Agent可以将路由和服务发现相关的业务从Client里解耦出来。&lt;/p&gt;
+&lt;p&gt;Jaeger Agent是和目标应用程序并行部署的一个组件，可以理解为边车设计中的&lt;code&gt;边车&lt;/code&gt;的组成部分之一。它是一个长期启动的守护进程，通过监听UDP网络接收Client发送过来的Trace信息，并批量向Collector发送。在设计上，Agent可以将路由和服务发现相关的业务从Client里解耦出来。&lt;/p&gt;
 
 &lt;h2 id=&quot;33-jaeger-collector&quot;&gt;3.3 Jaeger Collector&lt;/h2&gt;
 &lt;p&gt;Jaeger Collector可以说是Jaeger的&lt;code&gt;服务器&lt;/code&gt;，接收从Agent发送过来的Trace信息，并对其进行验证、索引、转换，并最终将其存储起来。&lt;/p&gt;
@@ -282,84 +282,20 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;p&gt;这里主要要了解下一堆端口：&lt;/p&gt;
 
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Port&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Protocol&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Component&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Function&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;5775&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;UDP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;accept zipkin.thrift over compact thrift protocol (deprecated, used by legacy clients only)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;6831&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;UDP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;accept jaeger.thrift over compact thrift protocol&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;6832&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;UDP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;accept jaeger.thrift over binary thrift protocol&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;5778&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;serve configs&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;16686&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;query&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;serve frontend&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;16687&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;query&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;The http port for the health check service&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;14267&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;TChannel&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;The TChannel port for the collector service&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;14268&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;accept jaeger.thrift directly from clients&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;14269&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;The http port for the health check service&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;14250&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;gRPC&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;accept model.proto&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;9411&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;Zipkin compatible endpoint (optional)&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;| Port | Protocol | Component | Function |
+| :— | :— | :— | :— |
+| 5775 | UDP | agent | accept zipkin.thrift over compact thrift protocol (deprecated, used by legacy clients only) |
+| 6831 | UDP | agent | accept jaeger.thrift over compact thrift protocol |
+| 6832 | UDP | agent | accept jaeger.thrift over binary thrift protocol |
+| 5778 | HTTP | agent | serve configs |
+| 16686 | HTTP | query | serve frontend |
+| 16687 | HTTP | query | The http port for the health check service |
+| 14267 | TChannel | collector | The TChannel port for the collector service |
+| 14268 | HTTP | collector | accept jaeger.thrift directly from clients |
+| 14269 | HTTP | collector | The http port for the health check service |
+| 14250 | gRPC | collector | accept model.proto |
+| 9411 | HTTP | collector | Zipkin compatible endpoint (optional) |
+&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;部分补充：&lt;/strong&gt;&lt;/p&gt;
 
@@ -435,32 +371,13 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;p&gt;此外，几个端口需要了解下：&lt;/p&gt;
 
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Component&lt;/th&gt;
-      &lt;th style=&quot;text-align: left&quot;&gt;Port&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-agent&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;5778&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-collector&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;14268&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-query&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;16686&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-ingester&lt;/td&gt;
-      &lt;td style=&quot;text-align: left&quot;&gt;14271&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;| Component | Port |
+| :— | :— |
+| jaeger-agent | 5778 |
+| jaeger-collector | 14268 |
+| jaeger-query | 16686 |
+| jaeger-ingester | 14271 |
+&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;范例都在本文下面的资料部分：&lt;/p&gt;
 
@@ -468,7 +385,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   &lt;li&gt;&lt;a href=&quot;#ID_APP_AGENT_METRICS&quot;&gt;jaeger-agent&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#ID_APP_COLLECTOR_METRICS&quot;&gt;jaeger-collector&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#ID_APP_QUERY_METRICS&quot;&gt;jaeger-query&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#ID_APP_INGESTER_METRICS&quot;&gt;jaeger-ingester&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;jaeger-ingester（这块启动需要的依赖太重，暂时没做尝试）&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;52-components&quot;&gt;5.2 Components&lt;/h2&gt;
@@ -494,7 +411,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;p&gt;这和我一开始的理解有点不同。我之前认为对同个Trace的多个子Span的识别和清洗过滤等行为是在Collector这个环节处理的，但既然官方文档都说明Collector是无状态的了，那就不是了。Collector应该只负责简单的Validation然后就直接存储到后台的Data Store里了。&lt;/p&gt;
 
-&lt;p&gt;如果对Agent配置了以&lt;code&gt;,&lt;/code&gt;分隔的多台无状态Collectors，而其中某台Down了会发生什么，后面需要做测试，按现在项目对错误处理和可用性的支持来看，估计就是直接丢数据了。&lt;/p&gt;
+&lt;p&gt;如果对Agent配置了以&lt;code&gt;,&lt;/code&gt;分隔的多台无状态Collectors，而其中某台Down了会发生什么，后面需要做测试，按现在Jaeger对错误处理和可用性的支持来看，估计就是直接丢数据了。&lt;/p&gt;
 
 &lt;p&gt;同个Trace的多个组成部分Span是否都到达，是否缺失了一部分，看来是没有任何处理和保证的。这也就是说：可能会有部分Trace在UI中可以查到，但其中组成部分的Spans是不完整的，部分缺失的。说实在的，这还蛮致命的。&lt;/p&gt;
 
@@ -519,7 +436,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 &lt;h2 id=&quot;61-client配置&quot;&gt;6.1 Client配置&lt;/h2&gt;
 &lt;p&gt;最基础的策略，采样是按&lt;code&gt;Client&lt;/code&gt;的配置进行执行的，记住，这种情况下采样是在客户端做的，而不是服务器，而且每个客户端都可以做不同的策略。&lt;/p&gt;
 
-&lt;p&gt;此外，文档可能有歧义，参见issue：&lt;/p&gt;
+&lt;p&gt;此外，光阅读文档可能会理解不全，可以查看issue来加深理解：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/832&quot; target=&quot;_blank&quot;&gt;How sampler.type=remote works #832&lt;/a&gt;&lt;/li&gt;
@@ -543,7 +460,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;ul&gt;
   &lt;li&gt;类型：&lt;code&gt;sampler.type=probabilistic&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;值：&lt;code&gt;sampler.param=0.1&lt;/code&gt;表示采样 1/10&lt;/li&gt;
+  &lt;li&gt;值：&lt;code&gt;sampler.param=0.1&lt;/code&gt;表示 采样 1/10&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;613-rate-limiting&quot;&gt;6.1.3 Rate Limiting&lt;/h3&gt;
@@ -551,7 +468,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;ul&gt;
   &lt;li&gt;类型：&lt;code&gt;sampler.type=ratelimiting&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;值：&lt;code&gt;sampler.param=2.0&lt;/code&gt;表示 每秒采样2次&lt;/li&gt;
+  &lt;li&gt;值：&lt;code&gt;sampler.param=2.0&lt;/code&gt;表示 每秒 采样2次&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;614-remote&quot;&gt;6.1.4 Remote&lt;/h3&gt;
@@ -561,7 +478,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   &lt;li&gt;类型：&lt;code&gt;sampler.type=remote&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;这种情况下，Client会把请求发到Agent，而Agent则会进行判断是否进行采样。实际的配置是放在：Collector上，参见下面的&lt;code&gt;6.2&lt;/code&gt;。&lt;/p&gt;
+&lt;p&gt;这种情况下，Client会把请求发到Agent，而Agent则会进行判断是否进行采样。实际的配置则是放在Collector上，参见下面的&lt;code&gt;6.2&lt;/code&gt;。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;sampler consults Jaeger agent for the appropriate sampling strategy to use in the current service.&lt;/p&gt;
