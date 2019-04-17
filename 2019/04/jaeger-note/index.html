@@ -445,20 +445,86 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 <p>这里主要要了解下一堆端口：</p>
 
-<p>| Port | Protocol | Component | Function |
-| :— | :— | :— | :— |
-| 5775 | UDP | agent | accept zipkin.thrift over compact thrift protocol (deprecated, used by legacy clients only) |
-| 6831 | UDP | agent | accept jaeger.thrift over compact thrift protocol |
-| 6832 | UDP | agent | accept jaeger.thrift over binary thrift protocol |
-| 5778 | HTTP | agent | serve configs |
-| 16686 | HTTP | query | serve frontend |
-| 16687 | HTTP | query | The http port for the health check service |
-| 14267 | TChannel | collector | The TChannel port for the collector service |
-| 14268 | HTTP | collector | accept jaeger.thrift directly from clients |
-| 14269 | HTTP | collector | The http port for the health check service |
-| 14250 | gRPC | collector | accept model.proto |
-| 9411 | HTTP | collector | Zipkin compatible endpoint (optional) |
-<br /></p>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Port</th>
+      <th style="text-align: left">Protocol</th>
+      <th style="text-align: left">Component</th>
+      <th style="text-align: left">Function</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">5775</td>
+      <td style="text-align: left">UDP</td>
+      <td style="text-align: left">agent</td>
+      <td style="text-align: left">accept zipkin.thrift over compact thrift protocol (deprecated, used by legacy clients only)</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">6831</td>
+      <td style="text-align: left">UDP</td>
+      <td style="text-align: left">agent</td>
+      <td style="text-align: left">accept jaeger.thrift over compact thrift protocol</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">6832</td>
+      <td style="text-align: left">UDP</td>
+      <td style="text-align: left">agent</td>
+      <td style="text-align: left">accept jaeger.thrift over binary thrift protocol</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">5778</td>
+      <td style="text-align: left">HTTP</td>
+      <td style="text-align: left">agent</td>
+      <td style="text-align: left">serve configs</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">16686</td>
+      <td style="text-align: left">HTTP</td>
+      <td style="text-align: left">query</td>
+      <td style="text-align: left">serve frontend</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">16687</td>
+      <td style="text-align: left">HTTP</td>
+      <td style="text-align: left">query</td>
+      <td style="text-align: left">The http port for the health check service</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">14267</td>
+      <td style="text-align: left">TChannel</td>
+      <td style="text-align: left">collector</td>
+      <td style="text-align: left">The TChannel port for the collector service</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">14268</td>
+      <td style="text-align: left">HTTP</td>
+      <td style="text-align: left">collector</td>
+      <td style="text-align: left">accept jaeger.thrift directly from clients</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">14269</td>
+      <td style="text-align: left">HTTP</td>
+      <td style="text-align: left">collector</td>
+      <td style="text-align: left">The http port for the health check service</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">14250</td>
+      <td style="text-align: left">gRPC</td>
+      <td style="text-align: left">collector</td>
+      <td style="text-align: left">accept model.proto</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">9411</td>
+      <td style="text-align: left">HTTP</td>
+      <td style="text-align: left">collector</td>
+      <td style="text-align: left">Zipkin compatible endpoint (optional)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
 
 <p><strong>部分补充：</strong></p>
 
@@ -534,13 +600,34 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 <p>此外，几个端口需要了解下：</p>
 
-<p>| Component | Port |
-| :— | :— |
-| jaeger-agent | 5778 |
-| jaeger-collector | 14268 |
-| jaeger-query | 16686 |
-| jaeger-ingester | 14271 |
-<br /></p>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">Component</th>
+      <th style="text-align: left">Port</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">jaeger-agent</td>
+      <td style="text-align: left">5778</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">jaeger-collector</td>
+      <td style="text-align: left">14268</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">jaeger-query</td>
+      <td style="text-align: left">16686</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">jaeger-ingester</td>
+      <td style="text-align: left">14271</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><br /></p>
 
 <p>范例都在本文下面的资料部分：</p>
 

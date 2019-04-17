@@ -282,20 +282,86 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;p&gt;这里主要要了解下一堆端口：&lt;/p&gt;
 
-&lt;p&gt;| Port | Protocol | Component | Function |
-| :— | :— | :— | :— |
-| 5775 | UDP | agent | accept zipkin.thrift over compact thrift protocol (deprecated, used by legacy clients only) |
-| 6831 | UDP | agent | accept jaeger.thrift over compact thrift protocol |
-| 6832 | UDP | agent | accept jaeger.thrift over binary thrift protocol |
-| 5778 | HTTP | agent | serve configs |
-| 16686 | HTTP | query | serve frontend |
-| 16687 | HTTP | query | The http port for the health check service |
-| 14267 | TChannel | collector | The TChannel port for the collector service |
-| 14268 | HTTP | collector | accept jaeger.thrift directly from clients |
-| 14269 | HTTP | collector | The http port for the health check service |
-| 14250 | gRPC | collector | accept model.proto |
-| 9411 | HTTP | collector | Zipkin compatible endpoint (optional) |
-&lt;br /&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;Port&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;Protocol&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;Component&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;Function&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;5775&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;UDP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;accept zipkin.thrift over compact thrift protocol (deprecated, used by legacy clients only)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;6831&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;UDP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;accept jaeger.thrift over compact thrift protocol&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;6832&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;UDP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;accept jaeger.thrift over binary thrift protocol&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;5778&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;agent&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;serve configs&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;16686&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;query&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;serve frontend&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;16687&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;query&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;The http port for the health check service&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;14267&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;TChannel&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;The TChannel port for the collector service&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;14268&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;accept jaeger.thrift directly from clients&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;14269&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;The http port for the health check service&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;14250&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;gRPC&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;accept model.proto&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;9411&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;HTTP&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;collector&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;Zipkin compatible endpoint (optional)&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;部分补充：&lt;/strong&gt;&lt;/p&gt;
 
@@ -371,13 +437,34 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;p&gt;此外，几个端口需要了解下：&lt;/p&gt;
 
-&lt;p&gt;| Component | Port |
-| :— | :— |
-| jaeger-agent | 5778 |
-| jaeger-collector | 14268 |
-| jaeger-query | 16686 |
-| jaeger-ingester | 14271 |
-&lt;br /&gt;&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;Component&lt;/th&gt;
+      &lt;th style=&quot;text-align: left&quot;&gt;Port&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-agent&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;5778&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-collector&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;14268&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-query&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;16686&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;jaeger-ingester&lt;/td&gt;
+      &lt;td style=&quot;text-align: left&quot;&gt;14271&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;br /&gt;&lt;/p&gt;
 
 &lt;p&gt;范例都在本文下面的资料部分：&lt;/p&gt;
 
