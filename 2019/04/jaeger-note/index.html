@@ -287,8 +287,9 @@
 Span context: Trace information that accompanies the distributed transaction, including when it passes the service to service over the network or through a message bus. The span context contains the trace identifier, span identifier, and any other data that the tracing system needs to propagate to the downstream service.</p>
 </blockquote>
 
-<p>Span：一个被命名、被计时，代表着一段工作流的操作。Spans实例接受键值对的tags，以及含有细节的、计时的、结构化的日志内容。
-Span context：伴随着分布式事务产生的Trace相关的信息，包含了该事务通过网络或消息总线在服务之间传递的时间。此外还包含了：trace标识符、span标识符，以及其他任何tracing系统需要用来衍生下游服务所需要的数据。</p>
+<p>Span：一个被命名、被计时，代表着一段工作流的操作。Spans实例接受键值对的tags，以及含有细节的、计时的、结构化的日志内容。</p>
+
+<p>Span context：伴随着分布式事务产生的Trace相关的信息，包含了该事务通过网络或消息总线在服务之间传递的时间。此外还包含了：trace标识符、span标识符，以及其他任何tracing系统需要用来衍生下游服务所需要的数据。</p>
 
 <h3 id="221-trace与span关系">2.2.1 Trace与Span关系</h3>
 <p><img src="/resources/2019/04/jaeger-note/spans-traces.png" alt="Relationship" target="_blank" /></p>
