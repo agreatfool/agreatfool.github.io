@@ -171,6 +171,7 @@
       <li><a href="#31-创建镜像仓库" id="markdown-toc-31-创建镜像仓库">3.1 创建镜像仓库</a></li>
       <li><a href="#32-login" id="markdown-toc-32-login">3.2 login</a></li>
       <li><a href="#33-push--pull" id="markdown-toc-33-push--pull">3.3 push &amp; pull</a></li>
+      <li><a href="#34-list-tags" id="markdown-toc-34-list-tags">3.4 list tags</a></li>
     </ul>
   </li>
   <li><a href="#4-日常使用" id="markdown-toc-4-日常使用">4. 日常使用</a>    <ul>
@@ -364,6 +365,17 @@ Options:
 
 <pre><code>docker push localhost:5000/imagename:major.minor.patch
 docker pull localhost:5000/imagename:major.minor.patch
+</code></pre>
+
+<h2 id="34-list-tags">3.4 list tags</h2>
+<p>docker的命令行工具没有提供查询一个镜像所有tags的命令（ridiculous），可以使用以下方法来查询：</p>
+
+<pre><code># require tool jq
+brew update --verbose
+brew install jq --verbose
+
+curl -s https://registry.hub.docker.com/v2/repositories/${repo_name}/tags/?page_size=1024 | jq .
+# sample repo_name: elastic/filebeat
 </code></pre>
 
 <h1 id="4-日常使用">4. 日常使用</h1>
