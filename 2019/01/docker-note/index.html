@@ -632,9 +632,16 @@ $
 <p>一般来说，如果是有连续工作的话，还是会使用<code>docker attach</code>附上去之后再操作。但如果仅只是一两句命令，或自动化的脚本，就需要使用到<code>docker exec</code>了。这里需要注意，exec只能用在running的容器上，如果没有容器且需要执行命令测试的话，也可以使用<code>docker run</code>命令，直接附带上需要执行的命令即可。</p>
 
 <p>也有有趣的用法：</p>
-<pre><code>docker exec -it e8c541f9fb33 /bin/bash
+<pre><code>$ docker exec -it e8c541f9fb33 /bin/bash
 </code></pre>
 <p>这条语句的效果和<code>docker attach</code>是一致的。</p>
+
+<p>在某些不能以<code>/bin/bash</code>作为命令启动的镜像（默认入口已经在Dockerfile里指定了，这种情况还蛮多的，稍微复杂点的镜像一般都会把入口设置掉)，比如说Elasticsearch、nginx，等等。在这种情况下，如果需要attach到这个运行中的镜像，就必须使用exec了：</p>
+
+<pre><code>$ docker exec -it e8c541f9fb33 /bin/sh
+</code></pre>
+
+<p>此外，以Alpine镜像为基础的镜像，默认是<code>没有/bin/bash</code>的，这种时候就需要换成<code>/bin/sh</code>。</p>
 
 <h2 id="49-tips">4.9 tips</h2>
 <ul>
