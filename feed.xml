@@ -7,6 +7,465 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Elasticsearch Notes</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-log-shipper&quot; id=&quot;markdown-toc-2-log-shipper&quot;&gt;2. Log Shipper&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-横向比较--选择&quot; id=&quot;markdown-toc-21-横向比较--选择&quot;&gt;2.1 横向比较 &amp;amp; 选择&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-架构设计&quot; id=&quot;markdown-toc-22-架构设计&quot;&gt;2.2 架构设计&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-filebeat&quot; id=&quot;markdown-toc-3-filebeat&quot;&gt;3. Filebeat&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-设计--基础概念&quot; id=&quot;markdown-toc-31-设计--基础概念&quot;&gt;3.1 设计 &amp;amp; 基础概念&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#32-使用&quot; id=&quot;markdown-toc-32-使用&quot;&gt;3.2 使用&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-模块&quot; id=&quot;markdown-toc-33-模块&quot;&gt;3.3 模块&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#34-过滤和丰富&quot; id=&quot;markdown-toc-34-过滤和丰富&quot;&gt;3.4 过滤和丰富&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#35-文件状态记录--投递保证&quot; id=&quot;markdown-toc-35-文件状态记录--投递保证&quot;&gt;3.5 文件状态记录 &amp;amp; 投递保证&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-elasticsearch&quot; id=&quot;markdown-toc-4-elasticsearch&quot;&gt;4. Elasticsearch&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-知识点&quot; id=&quot;markdown-toc-41-知识点&quot;&gt;4.1 知识点&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#411-基础概念&quot; id=&quot;markdown-toc-411-基础概念&quot;&gt;4.1.1 基础概念&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#412-安装--配置&quot; id=&quot;markdown-toc-412-安装--配置&quot;&gt;4.1.2 安装 &amp;amp; 配置&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#413-api&quot; id=&quot;markdown-toc-413-api&quot;&gt;4.1.3 API&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#414-query-dsl&quot; id=&quot;markdown-toc-414-query-dsl&quot;&gt;4.1.4 Query DSL&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#415-sql&quot; id=&quot;markdown-toc-415-sql&quot;&gt;4.1.5 SQL&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#416-ingest节点&quot; id=&quot;markdown-toc-416-ingest节点&quot;&gt;4.1.6 Ingest节点&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_INDEX&quot; id=&quot;markdown-toc-ID_INDEX&quot;&gt;4.2 文档数据库 &amp;amp; 索引&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_STORAGE&quot; id=&quot;markdown-toc-ID_STORAGE&quot;&gt;4.3 存储&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_ARC_CLUSTER&quot; id=&quot;markdown-toc-ID_ARC_CLUSTER&quot;&gt;4.4 集群&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#45-监控--高可用&quot; id=&quot;markdown-toc-45-监控--高可用&quot;&gt;4.5 监控 &amp;amp; 高可用&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#451-监控&quot; id=&quot;markdown-toc-451-监控&quot;&gt;4.5.1 监控&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#452-高可用&quot; id=&quot;markdown-toc-452-高可用&quot;&gt;4.5.2 高可用&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#46-性能调优&quot; id=&quot;markdown-toc-46-性能调优&quot;&gt;4.6 性能调优&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-ui&quot; id=&quot;markdown-toc-5-ui&quot;&gt;5. UI&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#6-实践范例&quot; id=&quot;markdown-toc-6-实践范例&quot;&gt;6. 实践范例&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-todo&quot; id=&quot;markdown-toc-7-todo&quot;&gt;7. TODO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;之前做了Prometheus和Jaeger相关的调研工作，这两者虽然也涉及到日志聚合相关的技术或是类似的技术，但毕竟不是通用的日志聚合系统。通用的日志聚合系统需要能接受任何类型的日志，并将其索引入库以备后续的查询。市面上这方面的产品现在基本上是Elasticsearch为主要选择，已经可以说是很成熟了。所以这块需求我这里也是以ELK为第一备选进行相关的调研。&lt;/p&gt;
+
+&lt;p&gt;后续的调研内容版本如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;elasticsearch 7.0.0
+elastic/filebeat 7.0.0
+kibana 7.0.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;在提到Elasticsearch的时候我们一般不会只说Elasticsearch本身，而是会提到&lt;code&gt;ELK&lt;/code&gt;这个词，这里说的其实就是从日志采集、清洗、转换、分发、到最后入库的整个流程，以及查询用的面板包含在内的一整套生态。因此下面行文会从：日志采集、日志存储、日志查询三方面着手。&lt;/p&gt;
+
+&lt;p&gt;官方文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/index.html&quot; target=&quot;_blank&quot;&gt;Elastic Stack and Product Documentation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/index.html&quot; target=&quot;_blank&quot;&gt;Elasticsearch Reference&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/index.html&quot; target=&quot;_blank&quot;&gt;Filebeat Reference&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/index.html&quot; target=&quot;_blank&quot;&gt;Kibana User Guide&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;2-log-shipper&quot;&gt;2. Log Shipper&lt;/h1&gt;
+&lt;p&gt;日志是在各个应用程序中生产的，此外也包括了操作系统级别的日志生产。因此日志的产生这个行为是分散在各个节点上的，日志的收集就是从分散的节点采集数据汇集到中心存储的一个过程，这也是所谓的&lt;code&gt;聚合&lt;/code&gt;。而从分散的节点上采集数据，我们需要Agent（Log Shipper）来执行这个操作。&lt;/p&gt;
+
+&lt;p&gt;经典的&lt;code&gt;ELK&lt;/code&gt;中，&lt;code&gt;L&lt;/code&gt;代表的就是日志采集Agent：Logstash。当然，市面上也有非常多的其他选择，可以做到和Logstash类似的功能。从系统设计上来说，ELK三者本身是完全解耦分离的，所以所谓的ELK堆栈，只是一种经过验证的实践方案，其实中间除了E之外，L和K都是可以自由更换的。&lt;/p&gt;
+
+&lt;h2 id=&quot;21-横向比较--选择&quot;&gt;2.1 横向比较 &amp;amp; 选择&lt;/h2&gt;
+&lt;p&gt;关于日志采集组件的备选有大量横向比较，推荐阅读：&lt;a href=&quot;https://sematext.com/blog/logstash-alternatives/&quot; target=&quot;_blank&quot;&gt;5 Logstash Alternatives&lt;/a&gt;。这篇的时间还算比较新&lt;code&gt;2018-10-09&lt;/code&gt;，讲解也非常到位，基本上看这篇就OK了。&lt;/p&gt;
+
+&lt;p&gt;此外，&lt;a href=&quot;https://gist.github.com/StevenACoffman/4e267f0f60c8e7fcb3f77b9e504f3bd7&quot; target=&quot;_blank&quot;&gt;StevenACoffman/fluent-filebeat-comparison.md&lt;/a&gt;也可以看下。&lt;/p&gt;
+
+&lt;p&gt;排除比较年轻的项目，以及资历不太雄厚的项目，剩下的主要选项有三个：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Logstash
+    &lt;ul&gt;
+      &lt;li&gt;优势：功能强大；经过实践检验&lt;/li&gt;
+      &lt;li&gt;劣势：资源占用过大；JVM&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Filebeat
+    &lt;ul&gt;
+      &lt;li&gt;优势：Go语言；部署简单；资源占用极小&lt;/li&gt;
+      &lt;li&gt;劣势：功能相对简单&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Fluentd
+    &lt;ul&gt;
+      &lt;li&gt;优势：CNCF孵化项目&lt;/li&gt;
+      &lt;li&gt;劣势：Ruby语言实现&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Log Shipper作为每个应用程序都需要附加的边车组件其中之一，Logstash的内存和CPU消耗在某些情况下是完全不能接受的（1GB内存，开玩笑）。JVM众所周知是比较难搞的虚拟机，如果要用好，调优需要有非常专门的知识，所以算是一个减分项。但放在Elasticsearch堆栈上来说，倒也不是那么严重，因为你无论如何都需要JVM知识来调优Elasticsearch本身。功能强大是Logstash的最大优势，能满足基本上所有的应用场景，在某些架构上，即便使用了Filebeat等高效轻量级的Log Shipper，在进入Elasticsearch入库之前仍旧需要一个Logstash来进行转换等工作。&lt;/p&gt;
+
+&lt;p&gt;Filebeat基本上没有缺点，如果它的功能能满足你的需求的话。如果不能满足，那么最新的Kafka输出能解决你的问题。使用Filebeat作为边车的Log Shipper，输出到Kafka，然后使用Logstash或者自己编写的组件来消费Kafka里的日志，最终入库到Elasticsearch。&lt;/p&gt;
+
+&lt;p&gt;Fluentd的最大优势在于CNCF的加持（背书）。但基于我多年的编程经验，ruby的性能一般来说是不可靠的，甚至使用JVM的Logstash都已经为性能付出了过大的代价，我又有什么理由要去相信口碑一直不怎么样的ruby呢。Logstash至少使用的JVM还和Elasticsearch本身是一个技术栈的，Fluentd会引入一个完全新的ruby虚拟机，就更加增加系统复杂度了。甚至，我在调研的初期就随手找到了：&lt;a href=&quot;https://github.com/fluent/fluentd/issues/1657&quot; target=&quot;_blank&quot;&gt;Fluentd retains excessive amounts of memory after handling traffic peaks #1657&lt;/a&gt;，&lt;code&gt;2017年&lt;/code&gt;的BUG，到现在还是&lt;code&gt;Open状态&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;综上所述，任何情况下都应该使用Filebeat作为边车的Log Shipper。Filebeat能满足需求的直接入库到Elasticsearch，不能满足需求的日志进Kafka，然后使用Logstash或其他Consumer来进行转换，最终入库到Elasticsearch。&lt;/p&gt;
+
+&lt;h2 id=&quot;22-架构设计&quot;&gt;2.2 架构设计&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/log_shipper_arc.jpg&quot; alt=&quot;Architecture&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;图中的Logstash部分可以替换成自编写的轻量级Consumer。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-filebeat&quot;&gt;3. Filebeat&lt;/h1&gt;
+&lt;p&gt;非常细节的使用及配置，可以查看这篇中文的博客：&lt;a href=&quot;https://www.cnblogs.com/cjsblog/p/9495024.html&quot; target=&quot;_blank&quot;&gt;Filebeat 模块与配置&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;31-设计--基础概念&quot;&gt;3.1 设计 &amp;amp; 基础概念&lt;/h2&gt;
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/filebeat.png&quot; alt=&quot;Architecture&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;这张图看看就好，意义不大。&lt;/p&gt;
+
+&lt;p&gt;Filebeat是一种&lt;a href=&quot;https://www.elastic.co/cn/products/beats&quot; target=&quot;_blank&quot;&gt;Elastic Beat&lt;/a&gt;，其实现基于&lt;code&gt;libbeat&lt;/code&gt;框架，更多的可以查看：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/libbeat/7.0/index.html&quot; target=&quot;_blank&quot;&gt;Beats Platform Reference&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;工作流：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;输入：从指定的文件进行监控日志增加行为，并触发读取发送&lt;/li&gt;
+  &lt;li&gt;输出：可直接向Elasticsearch集群发送日志，也可以将日志输出到外部的消息队列（Kafka）里&lt;/li&gt;
+  &lt;li&gt;模块：对某些日志进行的采集行为及Elasticsearch集群对这些日志进行分析的配置化和固化&lt;/li&gt;
+  &lt;li&gt;消费：Elasticsearch集群解析日志入库，或从Kafka读取日志然后解析入库&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;32-使用&quot;&gt;3.2 使用&lt;/h2&gt;
+&lt;p&gt;部分说明文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装请参照：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-installation.html#filebeat-installation&quot; target=&quot;_blank&quot;&gt;Step 1: Install Filebeat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;配置请参照：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-configuration.html#filebeat-configuration&quot; target=&quot;_blank&quot;&gt;Step 2: Configure Filebeat&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;33-模块&quot;&gt;3.3 模块&lt;/h2&gt;
+&lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-modules-overview.html&quot; target=&quot;_blank&quot;&gt;Modules overview&lt;/a&gt;。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Elasticsearch Ingest Node pipeline definition, which is used to parse the log lines.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;首先明确一点，Filebeat的模块并不是一般意义上的&lt;code&gt;功能模块&lt;/code&gt;。按软件设计设计来说，模块意味着功能的拓展，意味着根据模块设计的要求（框架）可以将软件本身能做的事情大幅拓展。而Filebeat的模块则不是，在Filebeat里，模块意味着一系列既有行为的组合：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Nginx有两个日志：access和error&lt;/li&gt;
+  &lt;li&gt;Nginx在Elasticsearch上处理的Ingest Pipeline是XXX&lt;/li&gt;
+  &lt;li&gt;Nginx的日志格式是XXX，Elasticsearch里对应的字段是XXX&lt;/li&gt;
+  &lt;li&gt;Nginx日志对应的Kibana面板有XXX，可以看到XXX数据&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;从上面的例子可见：Filebeat本身并没有做什么，它做的仍旧只是采集日志，发送出去，没了。只不过指定了Elasticsearch集群中处理这个日志的Ingest Pipeline是谁，日志应该怎么入库（事情是在Elasticsearch集群上完成的）。因此Filebeat是&lt;code&gt;不可能替代&lt;/code&gt;Logstash的，它的定位看来永远只能当做一个轻量级的应用端Log Shipper。&lt;/p&gt;
+
+&lt;p&gt;部分文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如何创建一个新的模块：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/devguide/7.0/filebeat-modules-devguide.html#filebeat-modules-devguide&quot; target=&quot;_blank&quot;&gt;Creating a New Filebeat Module&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;模块清单：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-modules.html#filebeat-modules&quot; target=&quot;_blank&quot;&gt;Modules&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;命令行列出模块：&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;pre&gt;&lt;code&gt;docker run --rm --name filebeat elastic/filebeat:7.0.0 modules list
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;34-过滤和丰富&quot;&gt;3.4 过滤和丰富&lt;/h2&gt;
+&lt;p&gt;Filebeat可以在配置中指定一些受限的过滤和清洗功能：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/current/filtering-and-enhancing-data.html&quot; target=&quot;_blank&quot;&gt;Filter and enhance the exported data&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;可选的processor清单有：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html#processors&quot; target=&quot;_blank&quot;&gt;Processors&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;触发的条件：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html#conditions&quot; target=&quot;_blank&quot;&gt;Conditions&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;35-文件状态记录--投递保证&quot;&gt;3.5 文件状态记录 &amp;amp; 投递保证&lt;/h2&gt;
+&lt;p&gt;Filebeat对于输入的日志文件，会制作一个本地的注册文件，将状态都保存下来，因此在重启或者挂掉重新拉起来之后，Filebeat总是能知道之前发送到哪里。&lt;/p&gt;
+
+&lt;p&gt;Filebeat会保证本地的日志文件至少被输出一次，如果在输出的结果返回之前Filebeat就挂掉的话，在下次Filebeat启动之后，它还会将之前最后的日志再投递一次（对于Filebeat来说，它并不知道自己死前已经投递过一次，并被输出方接收到了）。因此，收取数据的服务端&lt;code&gt;可能&lt;/code&gt;在某些情况下收到重复的数据。&lt;/p&gt;
+
+&lt;h1 id=&quot;4-elasticsearch&quot;&gt;4. Elasticsearch&lt;/h1&gt;
+&lt;p&gt;2套电子书非常不错：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://fdv.github.io/running-elasticsearch-fun-profit/&quot; target=&quot;_blank&quot;&gt;Operating Elasticsearch for Fun and Profit&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://es.xiaoleilu.com/index.html&quot; target=&quot;_blank&quot;&gt;Elasticsearch 权威指南（中文版）&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;41-知识点&quot;&gt;4.1 知识点&lt;/h2&gt;
+&lt;p&gt;这一节基本上都是简单的知识点和概念罗列，主要阐明：”这是什么”。详细的内容会在后续的章节里分析。&lt;/p&gt;
+
+&lt;h3 id=&quot;411-基础概念&quot;&gt;4.1.1 基础概念&lt;/h3&gt;
+&lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-concepts.html#getting-started-concepts&quot; target=&quot;_blank&quot;&gt;Basic Concepts&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;提到了几点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Near Realtime (NRT)&lt;/li&gt;
+  &lt;li&gt;Cluster&lt;/li&gt;
+  &lt;li&gt;Node&lt;/li&gt;
+  &lt;li&gt;Index&lt;/li&gt;
+  &lt;li&gt;Document&lt;/li&gt;
+  &lt;li&gt;Shards &amp;amp; Replicas&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;412-安装--配置&quot;&gt;4.1.2 安装 &amp;amp; 配置&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docker.html#docker&quot; target=&quot;_blank&quot;&gt;Install Elasticsearch with Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/settings.html#settings&quot; target=&quot;_blank&quot;&gt;Configuring Elasticsearch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/jvm-options.html#jvm-options&quot; target=&quot;_blank&quot;&gt;Setting JVM options&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/important-settings.html#important-settings&quot; target=&quot;_blank&quot;&gt;Important Elasticsearch configuration&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/system-config.html#system-config&quot; target=&quot;_blank&quot;&gt;Important System Configuration&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;后面三条对生产环境影响比较大，需要仔细阅读。&lt;/p&gt;
+
+&lt;h2 id=&quot;413-api&quot;&gt;4.1.3 API&lt;/h2&gt;
+&lt;p&gt;Elasticsearch的API文档相当散，主要是以下几项：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docs.html&quot; target=&quot;_blank&quot;&gt;Document APIs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search.html&quot; target=&quot;_blank&quot;&gt;Search APIs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search-aggregations.html&quot; target=&quot;_blank&quot;&gt;Aggregations&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/indices.html&quot; target=&quot;_blank&quot;&gt;Indices APIs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cat.html&quot; target=&quot;_blank&quot;&gt;cat APIs&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cluster.html&quot; target=&quot;_blank&quot;&gt;Cluster APIs&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;414-query-dsl&quot;&gt;4.1.4 Query DSL&lt;/h2&gt;
+&lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl.html&quot; target=&quot;_blank&quot;&gt;Query DSL&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;了解Elasticsearch的人肯定会问：Query DSL和Elasticsearch的基础Lucene之间是什么关系。关于这个知识点可以查看：&lt;a href=&quot;https://stackoverflow.com/questions/27793721/what-is-the-difference-between-lucene-and-elasticsearch&quot; target=&quot;_blank&quot;&gt;What is the difference between Lucene and Elasticsearch&lt;/a&gt;。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Elasticsearch is a JSON Based, Distributed, web server build over Lucene. Though it’s Lucene who is doing the actual work beneath, Elasticsearch provides us a convenient layer over Lucene. Each shard that gets created in Elasticsearch is a separate Lucene instance.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Lucene是底层，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。&lt;/p&gt;
+
+&lt;h3 id=&quot;415-sql&quot;&gt;4.1.5 SQL&lt;/h3&gt;
+&lt;p&gt;Elasticsearch还可以使用SQL进行查询：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/xpack-sql.html&quot; target=&quot;_blank&quot;&gt;SQL access&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;416-ingest节点&quot;&gt;4.1.6 Ingest节点&lt;/h3&gt;
+&lt;p&gt;在整个&lt;a href=&quot;#ID_ARC_CLUSTER&quot;&gt;Elasticsearch集群&lt;/a&gt;中，有一部分节点是用来进行日志过滤、清洗、丰富化的，这些工作在这个设计出现之前是只能在Agent上实现的，一般来说就是Logstash，而现在在服务器节点上也可以处理相对应的工作了。&lt;/p&gt;
+
+&lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/ingest.html#ingest&quot; target=&quot;_blank&quot;&gt;Ingest Node&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;通过定义Processors来进行日志的解析和处理：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/ingest-processors.html#ingest-processors&quot; target=&quot;_blank&quot;&gt;Processors&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;初步了解下来功能应该还算强大，可以使用脚本化代码进行功能拓展：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/script-processor.html#script-processor&quot; target=&quot;_blank&quot;&gt;Script Processor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/modules-scripting-using.html#modules-scripting-using&quot; target=&quot;_blank&quot;&gt;How to use scripts&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;此外还有插件机制：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/plugins/7.0/ingest.html#ingest&quot; target=&quot;_blank&quot;&gt;Ingest Plugins&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;ID_INDEX&quot;&gt;4.2 文档数据库 &amp;amp; 索引&lt;/h2&gt;
+&lt;p&gt;Elasticsearch是一个文档数据库，从本质上来看，它和Mongo其实相当类似。和传统RDBMS比较起来：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Relational DB -&amp;gt; Databases -&amp;gt; Tables  -&amp;gt; Rows      -&amp;gt; Columns
+Elasticsearch -&amp;gt; DEFAULT   -&amp;gt; Indices -&amp;gt; Documents -&amp;gt; Fields
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;举个例子：
+PUT /employee/1&lt;/p&gt;
+
+&lt;p&gt;Index：&lt;code&gt;employee&lt;/code&gt;  &lt;br /&gt;
+Document：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;first_name&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;John&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;last_name&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;s2&quot;&gt;&amp;quot;Smith&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;age&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;        &lt;span class=&quot;mi&quot;&gt;25&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;about&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;      &lt;span class=&quot;s2&quot;&gt;&amp;quot;I love to go rock climbing&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;interests&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;sports&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;music&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;Fields：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;first_name&lt;/li&gt;
+  &lt;li&gt;last_name&lt;/li&gt;
+  &lt;li&gt;age&lt;/li&gt;
+  &lt;li&gt;about&lt;/li&gt;
+  &lt;li&gt;interests&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;索引非常重要，在集群模式（cluster）中，索引是用来进行分区的唯一指标。Elasticsearch会根据Index来决定当前数据落到哪台实际的存储服务器上。&lt;/p&gt;
+
+&lt;p&gt;关于索引的细节，以及一些集群相关的索引知识，可以查看：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docs-index_.html&quot; target=&quot;_blank&quot;&gt;Index API&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;ID_STORAGE&quot;&gt;4.3 存储&lt;/h2&gt;
+&lt;p&gt;在官方手册文档中，并没有关于存储相关的设计及实现的详细内容。在Blog中找到一篇：&lt;a href=&quot;https://www.elastic.co/blog/found-dive-into-elasticsearch-storage&quot; target=&quot;_blank&quot;&gt;A Dive into the Elasticsearch Storage&lt;/a&gt;，不过时间也稍微有点久，但还算可以用来一窥存储相关的技术点。&lt;/p&gt;
+
+&lt;p&gt;此外，&lt;strong&gt;shards：Lucene segments&lt;/strong&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Each Elasticsearch index is divided into shards. Shards are both logical and physical division of an index. Each Elasticsearch shard is a Lucene index. The maximum number of documents you can have in a Lucene index is 2,147,483,519. The Lucene index is divided into smaller files called segments. A segment is a small Lucene index. Lucene searches in all segments sequentially.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/elk_shards.png&quot; alt=&quot;elk_shards&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ID_ARC_CLUSTER&quot;&gt;4.4 集群&lt;/h2&gt;
+&lt;p&gt;关于架构和集群的基础概念可以阅读官方的一份PPT：&lt;a href=&quot;https://www.elastic.co/pdf/architecture-best-practices.pdf&quot; target=&quot;_blank&quot;&gt;Elasticsearch Best Practice Architecture&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;主要是了解下Elasticsearch集群的节点分类：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/elk_node_types.png&quot; alt=&quot;elk_node_types&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;然后看下之前提到过的ELK整体集群拓扑：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/elk_arch.png&quot; alt=&quot;elk_arch&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;此外推荐一篇：&lt;a href=&quot;https://thoughts.t37.net/designing-the-perfect-elasticsearch-cluster-the-almost-definitive-guide-e614eabc1a87&quot; target=&quot;_blank&quot;&gt;Designing the Perfect Elasticsearch Cluster: the (almost) Definitive Guide&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;在官方的文档库中我并没有找到比较新版本的文档有讲解到分布式和高可用之类的架构设计内容，大部分的文档都是各种API和各种细节。在老的版本中倒是找到一点信息：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/guide/current/_how_primary_and_replica_shards_interact.html&quot; target=&quot;_blank&quot;&gt;How Primary and Replica Shards Interact&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/guide/current/distrib-write.html&quot; target=&quot;_blank&quot;&gt;Creating, Indexing, and Deleting a Document&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;此外，中文书里的内容也可以阅读：&lt;a href=&quot;https://es.xiaoleilu.com/020_Distributed_Cluster/00_Intro.html&quot; target=&quot;_blank&quot;&gt;集群内部工作方式&lt;/a&gt;，注意这本中文书的版本已经相当老了，里面的内容有部分和现在的版本明显不同。&lt;/p&gt;
+
+&lt;p&gt;几点整理：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;replica与数据主节点并不一定是1：1的关系（并不一定一个master拖一个slave这样的设计），主节点的数据是完全分散到其他各个replica节点上的，这个replica节点数量是可设置的&lt;/li&gt;
+  &lt;li&gt;当你的replica设置越多，写入速度就越慢（参与的节点多），主节点写入完毕之后还要让所有的replica写入，全部都完成才会返回客户端完成&lt;/li&gt;
+  &lt;li&gt;当你的replica设置越多，查询（读取）速度就越快（参与的节点多）&lt;/li&gt;
+  &lt;li&gt;当发生查询请求时，查询请求是会落到所有的shard上的，所以集群shards做的越多，整个集群的查询性能开销就越大，这里就有一个平衡的问题&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;45-监控--高可用&quot;&gt;4.5 监控 &amp;amp; 高可用&lt;/h2&gt;
+&lt;h3 id=&quot;451-监控&quot;&gt;4.5.1 监控&lt;/h3&gt;
+&lt;p&gt;对于Elasticsearch的监控，官方有一套解决方案（Elasticsearch算是一个生态了，在上游和下游都有完整的处理）。可以查阅下官方文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/es-monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Elasticsearch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html#setup-xpack&quot; target=&quot;_blank&quot;&gt;Set up X-Pack&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-cluster-health.html#getting-started-cluster-health&quot; target=&quot;_blank&quot;&gt;Cluster Health&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当然也可以选用Prometheus作为监控：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/vvanholl/elasticsearch-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;Prometheus Exporter Plugin for Elasticsearch&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;452-高可用&quot;&gt;4.5.2 高可用&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;数据节点数量选择&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://thoughts.t37.net/resizing-your-elasticsearch-indexes-in-production-d7a0402d137e&quot; target=&quot;_blank&quot;&gt;Resizing your Elasticsearch Indexes in Production&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.signalfx.com/blog/scaling-elasticsearch-sharding-availability-hundreds-millions-documents/&quot; target=&quot;_blank&quot;&gt;Scaling Elasticsearch: Sharding and Availability for Hundreds Of Millions of Documents&lt;/a&gt;：这篇当中有一段讲解了&lt;code&gt;Resharding With Zero Downtime&lt;/code&gt;，这是非常有价值的一个topic&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;可恢复的集群最低配置&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;3 locations to host your nodes. 2 locations to run half of your cluster, and one for the backup master node.&lt;/li&gt;
+  &lt;li&gt;3 master nodes. You need an odd number of eligible master nodes to avoid split brains when you lose a whole data center. Put one master node in each location so you hopefully never lose the quorum.&lt;/li&gt;
+  &lt;li&gt;2 http nodes, one in each primary data center.&lt;/li&gt;
+  &lt;li&gt;As many data nodes as you need, split evenly between both main locations.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;故障恢复&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Elasticsearch在集群中分主节点shard和复制节点replica，当集群的设置足够多（数据冗余充分）的情况下，当某个物理节点不可用时，Elasticsearch会自动进行选举，将丢失的主节点shard的replica节点设置成主节点，并重新对集群进行平衡。举个例子：&lt;/p&gt;
+
+&lt;p&gt;事故发生前：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一共有3个物理节点&lt;/li&gt;
+  &lt;li&gt;一共有3个主节点shard&lt;/li&gt;
+  &lt;li&gt;每个主节点shard有2个复制节点replica&lt;/li&gt;
+  &lt;li&gt;当前物理节点1是作为整个集群的master节点进行服务的&lt;/li&gt;
+  &lt;li&gt;后续事故会发生在物理节点1，这个节点会下线&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/elk_ha_01.png&quot; alt=&quot;Before&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;事故发生后：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;master节点下线了，因此集群重新开始选取master节点，设定为物理节点2&lt;/li&gt;
+  &lt;li&gt;0号主节点shard（P0）本来就在物理节点3上，因此不受影响&lt;/li&gt;
+  &lt;li&gt;1号和2号主节点shard之前在物理节点1上，全部丢失，集群将物理节点2上的2号shard的replica（R2）提升为主节点shard（P2），并将物理节点3上的1号shard的replica（R1）提升为主节点shard（P1）&lt;/li&gt;
+  &lt;li&gt;此时所有的主节点shard都已恢复，且各主节点shard都存在一份replica&lt;/li&gt;
+  &lt;li&gt;后续集群会继续为各主节点shard复制缺失的一份replica&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/elk_ha_02.png&quot; alt=&quot;After&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;46-性能调优&quot;&gt;4.6 性能调优&lt;/h2&gt;
+&lt;p&gt;Ebay有一篇非常细节非常棒的设计及性能优化分析博文：&lt;a href=&quot;https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/&quot; target=&quot;_blank&quot;&gt;Elasticsearch Performance Tuning Practice at eBay&lt;/a&gt;。从时间上来看，这篇文章也比较近：2018-01-08。&lt;/p&gt;
+
+&lt;p&gt;这篇博文分析了大规模Elasticsearch集群会面临的挑战，以及解决方案，还按实际的应用Scenario进行了问题分析以及给出了解决范例，很棒。&lt;/p&gt;
+
+&lt;h1 id=&quot;5-ui&quot;&gt;5. UI&lt;/h1&gt;
+&lt;p&gt;Kibana这块相对来说比较简单（？），这里就只做简单的尝试。下面会列一些关键文档位置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/current/docker.html#docker&quot; target=&quot;_blank&quot;&gt;Running Kibana on Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/settings.html#settings&quot; target=&quot;_blank&quot;&gt;Configuring Kibana&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/current/lucene-query.html#lucene-query&quot; target=&quot;_blank&quot;&gt;Lucene Query Syntax&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;6-实践范例&quot;&gt;6. 实践范例&lt;/h1&gt;
+&lt;p&gt;和之前做Prometheus实验的时候一样，因为需要把握一些细节，所以实验使用的还是下载下来的Elasticsearch、Kibana以及Filebeat。作为配角的Nginx使用的则是镜像版本。&lt;/p&gt;
+
+&lt;p&gt;范例代码可以在Github查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/experiment/elasticsearch&quot; target=&quot;_blank&quot;&gt;dist-system-practice/experiment/elasticsearch/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;7-todo&quot;&gt;7. TODO&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;Elasticsearch集群及一些基本观察用的API熟悉&lt;/li&gt;
+  &lt;li&gt;Elasticsearch JVM相关参数和实践研究&lt;/li&gt;
+  &lt;li&gt;Elasticsearch reshard的策略，最佳实践&lt;/li&gt;
+  &lt;li&gt;Elasticsearch reshard时候的CPU、磁盘、内存，还有特别是网络的影响&lt;/li&gt;
+  &lt;li&gt;Elasticsearch reshard在各种集群规模下的耗时&lt;/li&gt;
+  &lt;li&gt;Elasticsearch的性能指标研究&lt;/li&gt;
+  &lt;li&gt;Elasticsearch性能测试&lt;/li&gt;
+  &lt;li&gt;Kibana使用深入&lt;/li&gt;
+  &lt;li&gt;添加Logstash部分内容，这块由于时间问题暂时不准备展开&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
+&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://sematext.com/blog/logstash-alternatives/&quot; target=&quot;_blank&quot;&gt;5 Logstash Alternatives&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gist.github.com/StevenACoffman/4e267f0f60c8e7fcb3f77b9e504f3bd7&quot; target=&quot;_blank&quot;&gt;StevenACoffman/fluent-filebeat-comparison.md&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/fluent/fluentd/issues/1657&quot; target=&quot;_blank&quot;&gt;Fluentd retains excessive amounts of memory after handling traffic peaks #1657&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/cjsblog/p/9495024.html&quot; target=&quot;_blank&quot;&gt;Filebeat 模块与配置&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://fdv.github.io/running-elasticsearch-fun-profit/&quot; target=&quot;_blank&quot;&gt;Operating Elasticsearch for Fun and Profit&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://es.xiaoleilu.com/index.html&quot; target=&quot;_blank&quot;&gt;Elasticsearch 权威指南（中文版）&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/27793721/what-is-the-difference-between-lucene-and-elasticsearch&quot; target=&quot;_blank&quot;&gt;What is the difference between Lucene and Elasticsearch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://thoughts.t37.net/designing-the-perfect-elasticsearch-cluster-the-almost-definitive-guide-e614eabc1a87&quot; target=&quot;_blank&quot;&gt;Designing the Perfect Elasticsearch Cluster: the (almost) Definitive Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/vvanholl/elasticsearch-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;Prometheus Exporter Plugin for Elasticsearch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://thoughts.t37.net/resizing-your-elasticsearch-indexes-in-production-d7a0402d137e&quot; target=&quot;_blank&quot;&gt;Resizing your Elasticsearch Indexes in Production&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.signalfx.com/blog/scaling-elasticsearch-sharding-availability-hundreds-millions-documents/&quot; target=&quot;_blank&quot;&gt;Scaling Elasticsearch: Sharding and Availability for Hundreds Of Millions of Documents&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/&quot; target=&quot;_blank&quot;&gt;Elasticsearch Performance Tuning Practice at eBay&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Thu, 25 Apr 2019 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2019/04/elasticsearch-note/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2019/04/elasticsearch-note/</guid>
+			</item>
+		
+			<item>
 				<title>Jaeger Notes</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -5684,297 +6143,6 @@ gc 153 @8010.203s 0%: 0.043+0.32+0.006 ms clock, 0.34+0/0.34/0.67+0.053 ms cpu, 
 				<pubDate>Mon, 25 Mar 2019 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/03/golang-memory/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/03/golang-memory/</guid>
-			</item>
-		
-			<item>
-				<title>Golang Modules</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-历史--展望&quot; id=&quot;markdown-toc-2-历史--展望&quot;&gt;2. 历史 &amp;amp; 展望&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-官方文档&quot; id=&quot;markdown-toc-3-官方文档&quot;&gt;3. 官方文档&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#GO_MOD_USE&quot; id=&quot;markdown-toc-GO_MOD_USE&quot;&gt;4. 使用 &amp;amp; 常用命令&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#go111module&quot; id=&quot;markdown-toc-go111module&quot;&gt;GO111MODULE&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#go-mod-init&quot; id=&quot;markdown-toc-go-mod-init&quot;&gt;go mod init&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#go-get--u&quot; id=&quot;markdown-toc-go-get--u&quot;&gt;go get (-u)&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#go-mod-graph&quot; id=&quot;markdown-toc-go-mod-graph&quot;&gt;go mod graph&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#go-mod-download&quot; id=&quot;markdown-toc-go-mod-download&quot;&gt;go mod download&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#go-mod-tidy&quot; id=&quot;markdown-toc-go-mod-tidy&quot;&gt;go mod tidy&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-模块定义--文件结构&quot; id=&quot;markdown-toc-5-模块定义--文件结构&quot;&gt;5. 模块定义 &amp;amp; 文件结构&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#代码根目录的约定&quot; id=&quot;markdown-toc-代码根目录的约定&quot;&gt;代码根目录的约定&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#模块定义官方范例&quot; id=&quot;markdown-toc-模块定义官方范例&quot;&gt;模块定义官方范例&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-版本定义--更新&quot; id=&quot;markdown-toc-6-版本定义--更新&quot;&gt;6. 版本定义 &amp;amp; 更新&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#tag的命名规范&quot; id=&quot;markdown-toc-tag的命名规范&quot;&gt;tag的命名规范&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#版本选择&quot; id=&quot;markdown-toc-版本选择&quot;&gt;版本选择&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#版本引入&quot; id=&quot;markdown-toc-版本引入&quot;&gt;版本引入&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#如何更新依赖的版本&quot; id=&quot;markdown-toc-如何更新依赖的版本&quot;&gt;如何更新依赖的版本&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#GO_MOD_FILE&quot; id=&quot;markdown-toc-GO_MOD_FILE&quot;&gt;7. 补充：go.mod &amp;amp; replace指令&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#replace指令&quot; id=&quot;markdown-toc-replace指令&quot;&gt;replace指令&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;本文是Go语言系列文章&lt;a href=&quot;/2019/02/golang-note/&quot; target=&quot;_blank&quot;&gt;Golang Notes&lt;/a&gt;的其中一篇，完整的文章列表请去总章查看。&lt;/p&gt;
-
-&lt;p&gt;后续&lt;code&gt;模块&lt;/code&gt;相关技术文字内容主要参考自官方wiki说明：&lt;a href=&quot;https://github.com/golang/go/wiki/Modules&quot; target=&quot;_blank&quot;&gt;Go 1.11 Modules&lt;/a&gt;。强烈建议有时间的可以自己通读一遍，任何第三方的讲解都不可能比这篇原文更详细、更细节。这是我见过的最&lt;code&gt;啰嗦&lt;/code&gt;的技术说明文章之一。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;UPDATE 2019-03-21&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;官方博客3.19姗姗来迟了一篇模块博文，算是补足了正规渠道的引导：&lt;a href=&quot;https://blog.golang.org/using-go-modules&quot; target=&quot;_blank&quot;&gt;The Go Blog &amp;gt; Using Go Modules&lt;/a&gt;。比起之前的wiki，这篇博客算是做了点总结，不像wiki那么啰嗦了。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-历史--展望&quot;&gt;2. 历史 &amp;amp; 展望&lt;/h1&gt;
-&lt;p&gt;Go语言的包管理可以说是黑历史了，1.5之前基本上没有解决方案，1.5开始出了个vendor&lt;code&gt;文件夹&lt;/code&gt;，后面几个版本大部分的工具都围绕着这个文件夹做文章。最后终于到了1.11版本才出了个官方的modules解决方案（vgo），算是尘埃落定。估计一开始做语言设计的时候，大佬觉得包管理根本没必要，怎么随意怎么来。结果后面大厂们都开始用go语言构建大型系统和生态了，才慢慢暴露出问题，文件下载随便一扔的解决方案太过随意，有太多太多的不安定要素。&lt;/p&gt;
-
-&lt;p&gt;我之前一直对go语言持观望态度（即便是这两年最火的时候），就是因为这个包管理的原因。于是到了1.11，我终于开始觉得可以入手了。&lt;/p&gt;
-
-&lt;p&gt;1.11正式release的module这个功能应该说是稳定了，后面理论上不会再有很大的改动。这从官方给的modules wiki就可以看得出来，洋洋洒洒长篇累牍写了那么长一篇文章。&lt;/p&gt;
-
-&lt;p&gt;当然以目前的现状来说，仍旧远不能称完善，这里可以简单展望一下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;包搜索过于困难：没有一个服务能根据需求功能进行包搜索（类似&lt;a href=&quot;https://www.npmjs.com/&quot; target=&quot;_blank&quot;&gt;www.npmjs.org&lt;/a&gt;）&lt;/li&gt;
-  &lt;li&gt;包有可能不存在：这问题之前npm遇到过，发布者将库删了，结果依赖它的一堆库都挂了。npm的解决方案比较野蛮，所有上了npm的包不允许删除，永远会留在里面，就杜绝了库消失的问题。go在这方面更弱，很多东西都是一个地址，要是github库被作者删了，或者转private了，马上就出问题，而且还没人管得着&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这些问题官方应该都是有意识到的，具体可以看这篇官方的博客：&lt;a href=&quot;https://blog.golang.org/modules2019&quot; target=&quot;_blank&quot;&gt;Go Modules in 2019&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;3-官方文档&quot;&gt;3. 官方文档&lt;/h1&gt;
-&lt;p&gt;除了github那篇wiki，go语言的官网上并没有针对modules的详细文档（当然从内容上来说那篇也够了）。倒是命令行工具的help里有点内容（因内容过长，这里就不贴了，有兴趣的可以直接用命令查看，建议用&lt;code&gt;&amp;gt; ~/Downloads/xxx.txt&lt;/code&gt;方式输出查看）：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;go help go.mod&lt;/li&gt;
-  &lt;li&gt;go help modules&lt;/li&gt;
-  &lt;li&gt;go help module-get&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;GO_MOD_USE&quot;&gt;4. 使用 &amp;amp; 常用命令&lt;/h1&gt;
-&lt;p&gt;正常使用modules的情况下，其实你并不需要特别做什么，一般就：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;使用go mod init创建模块定义文件&lt;/li&gt;
-  &lt;li&gt;使用go get命令下载对应的依赖（或是更新对应的依赖）&lt;/li&gt;
-  &lt;li&gt;使用go build / go install命令来进行编译&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;和modules功能出来之前没有任何不同，所有的模块管理工作在go的一系列命令中已经默认完成了。比如说&lt;code&gt;go build&lt;/code&gt;或&lt;code&gt;go test&lt;/code&gt;，等等，在执行这些命令的时候会自动对代码进行分析，找到缺失的依赖下载并将信息写入到对应的go.mod文件中。&lt;/p&gt;
-
-&lt;h2 id=&quot;go111module&quot;&gt;GO111MODULE&lt;/h2&gt;
-&lt;p&gt;这个环境变量用来控制是否启用modules功能，还是按之前的套路来处理go的包管理。一般来说都用这个版本了，没什么理由不把这个打开（&lt;code&gt;export GO111MODULE=on&lt;/code&gt;）。如果你的代码是放在GOPATH之外的，那么默认就是打开的，放在GOPATH里的，默认是关闭的（我试下来是如此）。&lt;/p&gt;
-
-&lt;h2 id=&quot;go-mod-init&quot;&gt;go mod init&lt;/h2&gt;
-&lt;p&gt;初始化代码模块，本质上就是创建一个go.mod文件。关于go.mod，可以看&lt;a href=&quot;#GO_MOD_FILE&quot;&gt;这里&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;go-get--u&quot;&gt;go get (-u)&lt;/h2&gt;
-&lt;p&gt;获取或更新代码，同时会更新对应的go.mod文件。对modules来说，这个命令更多用在更新依赖的版本。&lt;/p&gt;
-
-&lt;h2 id=&quot;go-mod-graph&quot;&gt;go mod graph&lt;/h2&gt;
-&lt;p&gt;打印模块依赖图，也就是打印出模块之间的依赖关系。&lt;/p&gt;
-
-&lt;h2 id=&quot;go-mod-download&quot;&gt;go mod download&lt;/h2&gt;
-&lt;p&gt;将依赖下载到本地cache。这个命令的应用场景一般是一个成熟项目，go.mod文件已经编辑好了，协同工作的成员可以在拉下代码之后直接用这个命令进行下载，然后就可以开始工作了。&lt;/p&gt;
-
-&lt;h2 id=&quot;go-mod-tidy&quot;&gt;go mod tidy&lt;/h2&gt;
-&lt;p&gt;添加缺失的依赖，并移除没有使用的依赖。算是一个清理工具，一般在做版本的时候比较常用。&lt;/p&gt;
-
-&lt;p&gt;如果你在使用&lt;code&gt;go mod init&lt;/code&gt;命令创建好一个干净空的go.mod文件之后，使用的是&lt;code&gt;go build&lt;/code&gt;命令来进行对应的包解析和下载的话（同时go.mod文件的内容也生成了），之后你再使用&lt;code&gt;go mod tidy&lt;/code&gt;来进行清理会发现：多出来很多之前&lt;code&gt;go build&lt;/code&gt;命令没有放进go.mod文件的包。&lt;/p&gt;
-
-&lt;p&gt;这里官方有一个解释：&lt;a href=&quot;https://github.com/golang/go/wiki/Modules#why-does-go-mod-tidy-record-indirect-and-test-dependencies-in-my-gomod&quot; target=&quot;_blank&quot;&gt;Why does ‘go mod tidy’ record indirect and test dependencies in my ‘go.mod’?&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;另，其他命令，例如’go build’和’go test’不会从go.mod移除依赖，即便是那些不再被需要的依赖。实质上会在go.mod里进行删除操作的，就只有&lt;code&gt;go mod tidy&lt;/code&gt;这个命令。&lt;/p&gt;
-
-&lt;h1 id=&quot;5-模块定义--文件结构&quot;&gt;5. 模块定义 &amp;amp; 文件结构&lt;/h1&gt;
-&lt;h2 id=&quot;代码根目录的约定&quot;&gt;代码根目录的约定&lt;/h2&gt;
-&lt;p&gt;一般来说，一个go项目就是一个github代码仓库。go语言的最佳实践是一个包一个文件夹，包名和文件夹名重合。所以这里其实就有一个约定，定死的，github仓库的根目录&lt;code&gt;必须&lt;/code&gt;是代码的根目录。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;github.com/my/repo/package_name/code.go  &lt;br /&gt;
-=&amp;gt;  &lt;br /&gt;
-/Users/xxx/Codes/Golang/repo/package_name/code.go&lt;/p&gt;
-
-  &lt;p&gt;import “github.com/my/repo/package_name”&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;如果不是这么放，下载下来的代码文件和代码中的import路径就不一致了，会导致找不到代码。&lt;/p&gt;
-
-&lt;p&gt;你不可以自己映射一个文件夹作为代码的根节点，比如说：/Users/xxx/Codes/Golang/repo/&lt;code&gt;src&lt;/code&gt;/package_name/code.go。对于有强迫症的人来说，这还蛮恶心的。&lt;/p&gt;
-
-&lt;p&gt;几个例子可以看下（gin特别极端，所有源码就散落在根目录下，只有一个包，叫gin）：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/gin-gonic/gin&quot; target=&quot;_blank&quot;&gt;gin-gonic/gin&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/prometheus/prometheus&quot; target=&quot;_blank&quot;&gt;prometheus/prometheus&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;模块定义官方范例&quot;&gt;模块定义官方范例&lt;/h2&gt;
-&lt;p&gt;如果你要在代码仓库 github.com/my/repo 创建一个包含两个包（如下列举）的模块：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;github.com/my/repo/foo&lt;/li&gt;
-  &lt;li&gt;github.com/my/repo/bar&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;那么你的go.mod文件的第一行将会定义一个模块，命名为：github.com/my/repo，而磁盘上的文件结构如下：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;&lt;/span&gt;repo/
-├── go.mod
-├── bar
-│   └── bar.go
-└── foo
-    └── foo.go&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;6-版本定义--更新&quot;&gt;6. 版本定义 &amp;amp; 更新&lt;/h1&gt;
-&lt;p&gt;在&lt;a href=&quot;#GO_MOD_USE&quot;&gt;之前&lt;/a&gt;我们已经说到，modules的出现并没有天翻地覆改变我们日常工作使用的命令和流程，但我们仍旧需要了解modules的很多细节，才能保证不犯错。这一节关于版本号相关的知识非常细节，也相当重要。&lt;/p&gt;
-
-&lt;h2 id=&quot;tag的命名规范&quot;&gt;tag的命名规范&lt;/h2&gt;
-&lt;p&gt;对于tag的命名，Go官方有明确的要求，不可以按自己的想法随便写。值得注意的点只有一点就是三位的版本号之前，必须添加一个&lt;code&gt;v&lt;/code&gt;，也就是说，所有的版本号都应该是：&lt;code&gt;v1.2.3&lt;/code&gt;这样的，而&lt;code&gt;不是&lt;/code&gt; &lt;code&gt;1.2.3&lt;/code&gt;这样。&lt;/p&gt;
-
-&lt;p&gt;看两个例子，打开链接之后观察下他们的版本号列表：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Node.js的web服务器：&lt;a href=&quot;https://github.com/expressjs/express&quot; target=&quot;_blank&quot;&gt;expressjs/express&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Go的web服务器：&lt;a href=&quot;https://github.com/gin-gonic/gin&quot; target=&quot;_blank&quot;&gt;gin-gonic/gin&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;版本选择&quot;&gt;版本选择&lt;/h2&gt;
-&lt;p&gt;wiki原文可以查看：&lt;a href=&quot;https://github.com/golang/go/wiki/Modules#version-selection&quot; target=&quot;_blank&quot;&gt;Version Selection&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;主要内容是说明在使用一些go命令，比如说’go build’、’go test’的时候，这些命令会怎么选择依赖的版本号。这里需要关注的是，如果有多个依赖对某个依赖都有版本要求，且版本号并不一致，这种情况下会发生什么：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;As an example, if your module depends on module A which has a require D v1.0.0, and your module also depends on module B which has a require D v1.1.1, then minimal version selection would choose v1.1.1 of D to include in the build (given it is the highest listed require version). This selection of v1.1.1 remains consistent even if some time later a v1.2.0 of D becomes available. This is an example of how the modules system provides 100% reproducible builds. When ready, the module author or user might choose to upgrade to the latest available version of D or choose an explicit version for D.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;在工具第一次处理同个依赖的多处引入的情况下，会引入该依赖的最高版本。&lt;/li&gt;
-  &lt;li&gt;这个版本会在此后保持不变（go.mod中），即便这个依赖的新版本被release出来（作者更新）。这是为了保证产品100%可重复构建。用户可以自行选择升级与否。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;hr /&gt;
-
-&lt;p&gt;值得注意的是原文wiki中有一句：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;require M v1.2.3, which indicates module M is a dependency with allowed version &amp;gt;= v1.2.3 (and &amp;lt; v2, given v2 is considered incompatible with v1)&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;我没理解这是什么意思，后续需要尝试。猜测：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;虽然go.mod文件中对于M的版本定义是v1.2.3，但允许的版本可以&amp;gt;=v1.2.3，并小于v2.x.x大版本&lt;/li&gt;
-  &lt;li&gt;如果git clone一个带go.mod文件的库（clone下来的时候磁盘上无cache文件），使用go mod download，go.mod里对于这个库的定义是v1.2.3，但最新的release是v1.3.9，那么会下载v1.3.9？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;版本引入&quot;&gt;版本引入&lt;/h2&gt;
-&lt;p&gt;wiki原文可以查看：&lt;a href=&quot;https://github.com/golang/go/wiki/Modules#semantic-import-versioning&quot; target=&quot;_blank&quot;&gt;Semantic Import Versioning&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;使用过modules之后，会发现某些依赖的引入的最后带上了&lt;code&gt;.vN&lt;/code&gt;这样的字符，这里有点细节可以看下：&lt;/p&gt;
-
-&lt;p&gt;major版本是v2或更高的，在require的时候都需要在路径最后带上&lt;code&gt;.vN&lt;/code&gt;（官方给的例子里是&lt;code&gt;/vN&lt;/code&gt;，但我实际看下来几个包都是&lt;code&gt;.vN&lt;/code&gt;，先按实际例子来吧），比如说：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;require gopkg.in/go-playground/validator.v8 v8.18.2&lt;/li&gt;
-  &lt;li&gt;require gopkg.in/yaml.v2 v2.2.2&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;此外，在使用的时候（import）：&lt;code&gt;example&amp;amp;#46;com/my/mod/mypkg&lt;/code&gt;和&lt;code&gt;example&amp;amp;#46;com/my/mod.v2/mypkg&lt;/code&gt;被认为是两个不同的包，会分开下载安装，且不会影响最后的编译。&lt;/p&gt;
-
-&lt;h2 id=&quot;如何更新依赖的版本&quot;&gt;如何更新依赖的版本&lt;/h2&gt;
-&lt;p&gt;日常中对依赖进行版本升级或降级，应该使用&lt;code&gt;go get&lt;/code&gt;命令：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;go get dep&lt;/code&gt;将依赖升级到最新版本（等同于&lt;code&gt;go get dep@latest&lt;/code&gt;）&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;go get -u dep&lt;/code&gt;将依赖升级到最新的minor或者patch版本&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;go get -u=patch dep&lt;/code&gt;将依赖升级到最新的patch版本&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;go get dep@v1.2.3&lt;/code&gt;将依赖升级（或降级）到指定版本&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;注意：使用&lt;code&gt;go get -u&lt;/code&gt;或&lt;code&gt;go get -u=patch&lt;/code&gt;将会一并更新&lt;code&gt;dep&lt;/code&gt;的所有直接和间接依赖。最佳实践是先不要带上&lt;code&gt;-u&lt;/code&gt;参数运行&lt;code&gt;go get&lt;/code&gt;，更新完成没有问题之后，再带上&lt;code&gt;-u=patch&lt;/code&gt;，然后&lt;code&gt;-u&lt;/code&gt;，逐步更新。更新依赖的时候也最好一个一个更新，便于排查。&lt;/p&gt;
-
-&lt;p&gt;此外，同样会对go.mod文件进行更改的一系列命令，比如：’go build’、’go test’，或者是’go list’，会自动添加新需要的依赖进入go.mod来满足依赖（更新go.mod文件，并下载对应的新依赖）。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如果要查看所有可以使用的直接或间接依赖升级，请使用命令：&lt;code&gt;go list -u -m all&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;如果需要查看一个依赖的可用版本，请使用命令：&lt;code&gt;go list -m -versions $depname&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这部分，更详细的可以参见：&lt;a href=&quot;https://github.com/golang/go/wiki/Modules#how-to-upgrade-and-downgrade-dependencies&quot; target=&quot;_blank&quot;&gt;How to Upgrade and Downgrade Dependencies&lt;/a&gt;&lt;/p&gt;
-
-&lt;h1 id=&quot;GO_MOD_FILE&quot;&gt;7. 补充：go.mod &amp;amp; replace指令&lt;/h1&gt;
-&lt;p&gt;官方wiki里关于go.mod的说明可以看这里：&lt;a href=&quot;https://github.com/golang/go/wiki/Modules#gomod&quot; target=&quot;_blank&quot;&gt;go.mod&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;go.mod文件里的指令有：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;module, to define the module path;&lt;/li&gt;
-  &lt;li&gt;go, to set the expected language version;&lt;/li&gt;
-  &lt;li&gt;require, to require a particular module at a given version or later;&lt;/li&gt;
-  &lt;li&gt;exclude, to exclude a particular module version from use; and&lt;/li&gt;
-  &lt;li&gt;replace, to replace a module version with a different module version.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;注意：exclude和replace指令只在主模块的go.mod文件中生效，在依赖中则会被忽略。&lt;/p&gt;
-
-&lt;p&gt;比如说依赖库里用到了 golang.org/x 里的包，你因为网络关系，在你自己的go.mod将这个库replace掉了，但下载完成之后你会发现在cache里还是会有golang.org/x的代码文件，因为第三方依赖可能用到它们了。&lt;/p&gt;
-
-&lt;h2 id=&quot;replace指令&quot;&gt;replace指令&lt;/h2&gt;
-&lt;p&gt;在go.mod文件中，用得比较频繁的指令一般就只有require和replace。require不用多说，非常简单，replace还是有点细节的。&lt;/p&gt;
-
-&lt;p&gt;一般的使用场景：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;使用本地代码：replace example.com/original/import/path =&amp;gt; /your/forked/import/path&lt;/li&gt;
-  &lt;li&gt;指定特定版本：replace example.com/some/dependency =&amp;gt; example.com/some/dependency v1.2.3&lt;/li&gt;
-  &lt;li&gt;指定特定下载地址（特别适合国内）：replace golang.org/x/dependency =&amp;gt; github.com/golang/dependency&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;replace是一个指令，所以它是和require同等级别，相同的使用方法，并不是要和require组合起来使用的，单独使用即可。replace指令引入的包也会直接下载。&lt;/p&gt;
-
-&lt;p&gt;可以试验下下面的例子：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-shell&quot; data-lang=&quot;shell&quot;&gt;&lt;span&gt;&lt;/span&gt;require &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;
-	...
-&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-
-replace golang.org/x/net &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;gt; github.com/golang/net v0.0.0-20190301231341-16b79f2e4e95&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kn&quot;&gt;package&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;
-
-&lt;span class=&quot;kn&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&amp;quot;fmt&amp;quot;&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&amp;quot;golang.org/x/net/html&amp;quot;&lt;/span&gt;
-	&lt;span class=&quot;s&quot;&gt;&amp;quot;strings&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-	&lt;span class=&quot;nx&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;NewReader&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;&amp;lt;html&amp;gt;&amp;lt;/html&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;errp&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-		&lt;span class=&quot;nx&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;errp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-	&lt;span class=&quot;nx&quot;&gt;fmt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Println&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/golang/go/wiki/Modules&quot; target=&quot;_blank&quot;&gt;Go 1.11 Modules&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.golang.org/modules2019&quot; target=&quot;_blank&quot;&gt;Go Modules in 2019&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://windmt.com/2018/11/08/first-look-go-modules/&quot; target=&quot;_blank&quot;&gt;Go 包管理解决之道 —— Modules 初试&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Fri, 08 Mar 2019 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/03/golang-modules/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/03/golang-modules/</guid>
 			</item>
 		
 	</channel>

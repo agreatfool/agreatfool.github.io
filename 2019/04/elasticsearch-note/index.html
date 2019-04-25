@@ -1,0 +1,797 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Elasticsearch Notes | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/04/elasticsearch-note/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/04/elasticsearch-note/">Elasticsearch Notes</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>25 Apr 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Elasticsearch">Elasticsearch</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/SearchEngine">SearchEngine</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Monitor">Monitor</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Metrics">Metrics</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Analytics">Analytics</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DevOps">DevOps</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Keynote">Keynote</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-log-shipper" id="markdown-toc-2-log-shipper">2. Log Shipper</a>    <ul>
+      <li><a href="#21-横向比较--选择" id="markdown-toc-21-横向比较--选择">2.1 横向比较 &amp; 选择</a></li>
+      <li><a href="#22-架构设计" id="markdown-toc-22-架构设计">2.2 架构设计</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-filebeat" id="markdown-toc-3-filebeat">3. Filebeat</a>    <ul>
+      <li><a href="#31-设计--基础概念" id="markdown-toc-31-设计--基础概念">3.1 设计 &amp; 基础概念</a></li>
+      <li><a href="#32-使用" id="markdown-toc-32-使用">3.2 使用</a></li>
+      <li><a href="#33-模块" id="markdown-toc-33-模块">3.3 模块</a></li>
+      <li><a href="#34-过滤和丰富" id="markdown-toc-34-过滤和丰富">3.4 过滤和丰富</a></li>
+      <li><a href="#35-文件状态记录--投递保证" id="markdown-toc-35-文件状态记录--投递保证">3.5 文件状态记录 &amp; 投递保证</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-elasticsearch" id="markdown-toc-4-elasticsearch">4. Elasticsearch</a>    <ul>
+      <li><a href="#41-知识点" id="markdown-toc-41-知识点">4.1 知识点</a>        <ul>
+          <li><a href="#411-基础概念" id="markdown-toc-411-基础概念">4.1.1 基础概念</a></li>
+          <li><a href="#412-安装--配置" id="markdown-toc-412-安装--配置">4.1.2 安装 &amp; 配置</a></li>
+        </ul>
+      </li>
+      <li><a href="#413-api" id="markdown-toc-413-api">4.1.3 API</a></li>
+      <li><a href="#414-query-dsl" id="markdown-toc-414-query-dsl">4.1.4 Query DSL</a>        <ul>
+          <li><a href="#415-sql" id="markdown-toc-415-sql">4.1.5 SQL</a></li>
+          <li><a href="#416-ingest节点" id="markdown-toc-416-ingest节点">4.1.6 Ingest节点</a></li>
+        </ul>
+      </li>
+      <li><a href="#ID_INDEX" id="markdown-toc-ID_INDEX">4.2 文档数据库 &amp; 索引</a></li>
+      <li><a href="#ID_STORAGE" id="markdown-toc-ID_STORAGE">4.3 存储</a></li>
+      <li><a href="#ID_ARC_CLUSTER" id="markdown-toc-ID_ARC_CLUSTER">4.4 集群</a></li>
+      <li><a href="#45-监控--高可用" id="markdown-toc-45-监控--高可用">4.5 监控 &amp; 高可用</a>        <ul>
+          <li><a href="#451-监控" id="markdown-toc-451-监控">4.5.1 监控</a></li>
+          <li><a href="#452-高可用" id="markdown-toc-452-高可用">4.5.2 高可用</a></li>
+        </ul>
+      </li>
+      <li><a href="#46-性能调优" id="markdown-toc-46-性能调优">4.6 性能调优</a></li>
+    </ul>
+  </li>
+  <li><a href="#5-ui" id="markdown-toc-5-ui">5. UI</a></li>
+  <li><a href="#6-实践范例" id="markdown-toc-6-实践范例">6. 实践范例</a></li>
+  <li><a href="#7-todo" id="markdown-toc-7-todo">7. TODO</a></li>
+  <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
+      <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>之前做了Prometheus和Jaeger相关的调研工作，这两者虽然也涉及到日志聚合相关的技术或是类似的技术，但毕竟不是通用的日志聚合系统。通用的日志聚合系统需要能接受任何类型的日志，并将其索引入库以备后续的查询。市面上这方面的产品现在基本上是Elasticsearch为主要选择，已经可以说是很成熟了。所以这块需求我这里也是以ELK为第一备选进行相关的调研。</p>
+
+<p>后续的调研内容版本如下：</p>
+
+<pre><code>elasticsearch 7.0.0
+elastic/filebeat 7.0.0
+kibana 7.0.0
+</code></pre>
+
+<p>在提到Elasticsearch的时候我们一般不会只说Elasticsearch本身，而是会提到<code>ELK</code>这个词，这里说的其实就是从日志采集、清洗、转换、分发、到最后入库的整个流程，以及查询用的面板包含在内的一整套生态。因此下面行文会从：日志采集、日志存储、日志查询三方面着手。</p>
+
+<p>官方文档：</p>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/index.html" target="_blank">Elastic Stack and Product Documentation</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/index.html" target="_blank">Elasticsearch Reference</a></li>
+  <li><a href="https://www.elastic.co/guide/en/beats/filebeat/7.0/index.html" target="_blank">Filebeat Reference</a></li>
+  <li><a href="https://www.elastic.co/guide/en/kibana/7.0/index.html" target="_blank">Kibana User Guide</a></li>
+</ul>
+
+<h1 id="2-log-shipper">2. Log Shipper</h1>
+<p>日志是在各个应用程序中生产的，此外也包括了操作系统级别的日志生产。因此日志的产生这个行为是分散在各个节点上的，日志的收集就是从分散的节点采集数据汇集到中心存储的一个过程，这也是所谓的<code>聚合</code>。而从分散的节点上采集数据，我们需要Agent（Log Shipper）来执行这个操作。</p>
+
+<p>经典的<code>ELK</code>中，<code>L</code>代表的就是日志采集Agent：Logstash。当然，市面上也有非常多的其他选择，可以做到和Logstash类似的功能。从系统设计上来说，ELK三者本身是完全解耦分离的，所以所谓的ELK堆栈，只是一种经过验证的实践方案，其实中间除了E之外，L和K都是可以自由更换的。</p>
+
+<h2 id="21-横向比较--选择">2.1 横向比较 &amp; 选择</h2>
+<p>关于日志采集组件的备选有大量横向比较，推荐阅读：<a href="https://sematext.com/blog/logstash-alternatives/" target="_blank">5 Logstash Alternatives</a>。这篇的时间还算比较新<code>2018-10-09</code>，讲解也非常到位，基本上看这篇就OK了。</p>
+
+<p>此外，<a href="https://gist.github.com/StevenACoffman/4e267f0f60c8e7fcb3f77b9e504f3bd7" target="_blank">StevenACoffman/fluent-filebeat-comparison.md</a>也可以看下。</p>
+
+<p>排除比较年轻的项目，以及资历不太雄厚的项目，剩下的主要选项有三个：</p>
+
+<ul>
+  <li>Logstash
+    <ul>
+      <li>优势：功能强大；经过实践检验</li>
+      <li>劣势：资源占用过大；JVM</li>
+    </ul>
+  </li>
+  <li>Filebeat
+    <ul>
+      <li>优势：Go语言；部署简单；资源占用极小</li>
+      <li>劣势：功能相对简单</li>
+    </ul>
+  </li>
+  <li>Fluentd
+    <ul>
+      <li>优势：CNCF孵化项目</li>
+      <li>劣势：Ruby语言实现</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Log Shipper作为每个应用程序都需要附加的边车组件其中之一，Logstash的内存和CPU消耗在某些情况下是完全不能接受的（1GB内存，开玩笑）。JVM众所周知是比较难搞的虚拟机，如果要用好，调优需要有非常专门的知识，所以算是一个减分项。但放在Elasticsearch堆栈上来说，倒也不是那么严重，因为你无论如何都需要JVM知识来调优Elasticsearch本身。功能强大是Logstash的最大优势，能满足基本上所有的应用场景，在某些架构上，即便使用了Filebeat等高效轻量级的Log Shipper，在进入Elasticsearch入库之前仍旧需要一个Logstash来进行转换等工作。</p>
+
+<p>Filebeat基本上没有缺点，如果它的功能能满足你的需求的话。如果不能满足，那么最新的Kafka输出能解决你的问题。使用Filebeat作为边车的Log Shipper，输出到Kafka，然后使用Logstash或者自己编写的组件来消费Kafka里的日志，最终入库到Elasticsearch。</p>
+
+<p>Fluentd的最大优势在于CNCF的加持（背书）。但基于我多年的编程经验，ruby的性能一般来说是不可靠的，甚至使用JVM的Logstash都已经为性能付出了过大的代价，我又有什么理由要去相信口碑一直不怎么样的ruby呢。Logstash至少使用的JVM还和Elasticsearch本身是一个技术栈的，Fluentd会引入一个完全新的ruby虚拟机，就更加增加系统复杂度了。甚至，我在调研的初期就随手找到了：<a href="https://github.com/fluent/fluentd/issues/1657" target="_blank">Fluentd retains excessive amounts of memory after handling traffic peaks #1657</a>，<code>2017年</code>的BUG，到现在还是<code>Open状态</code>。</p>
+
+<p>综上所述，任何情况下都应该使用Filebeat作为边车的Log Shipper。Filebeat能满足需求的直接入库到Elasticsearch，不能满足需求的日志进Kafka，然后使用Logstash或其他Consumer来进行转换，最终入库到Elasticsearch。</p>
+
+<h2 id="22-架构设计">2.2 架构设计</h2>
+<p><img src="/resources/2019/04/elasticsearch-note/log_shipper_arc.jpg" alt="Architecture" target="_blank" /></p>
+
+<p>图中的Logstash部分可以替换成自编写的轻量级Consumer。</p>
+
+<h1 id="3-filebeat">3. Filebeat</h1>
+<p>非常细节的使用及配置，可以查看这篇中文的博客：<a href="https://www.cnblogs.com/cjsblog/p/9495024.html" target="_blank">Filebeat 模块与配置</a>。</p>
+
+<h2 id="31-设计--基础概念">3.1 设计 &amp; 基础概念</h2>
+<p><img src="/resources/2019/04/elasticsearch-note/filebeat.png" alt="Architecture" target="_blank" /></p>
+
+<p>这张图看看就好，意义不大。</p>
+
+<p>Filebeat是一种<a href="https://www.elastic.co/cn/products/beats" target="_blank">Elastic Beat</a>，其实现基于<code>libbeat</code>框架，更多的可以查看：<a href="https://www.elastic.co/guide/en/beats/libbeat/7.0/index.html" target="_blank">Beats Platform Reference</a>。</p>
+
+<p>工作流：</p>
+
+<ul>
+  <li>输入：从指定的文件进行监控日志增加行为，并触发读取发送</li>
+  <li>输出：可直接向Elasticsearch集群发送日志，也可以将日志输出到外部的消息队列（Kafka）里</li>
+  <li>模块：对某些日志进行的采集行为及Elasticsearch集群对这些日志进行分析的配置化和固化</li>
+  <li>消费：Elasticsearch集群解析日志入库，或从Kafka读取日志然后解析入库</li>
+</ul>
+
+<h2 id="32-使用">3.2 使用</h2>
+<p>部分说明文档：</p>
+
+<ul>
+  <li>安装请参照：<a href="https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-installation.html#filebeat-installation" target="_blank">Step 1: Install Filebeat</a></li>
+  <li>配置请参照：<a href="https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-configuration.html#filebeat-configuration" target="_blank">Step 2: Configure Filebeat</a></li>
+</ul>
+
+<h2 id="33-模块">3.3 模块</h2>
+<p>官方文档：<a href="https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-modules-overview.html" target="_blank">Modules overview</a>。</p>
+
+<blockquote>
+  <p>Elasticsearch Ingest Node pipeline definition, which is used to parse the log lines.</p>
+</blockquote>
+
+<p>首先明确一点，Filebeat的模块并不是一般意义上的<code>功能模块</code>。按软件设计设计来说，模块意味着功能的拓展，意味着根据模块设计的要求（框架）可以将软件本身能做的事情大幅拓展。而Filebeat的模块则不是，在Filebeat里，模块意味着一系列既有行为的组合：</p>
+
+<ul>
+  <li>Nginx有两个日志：access和error</li>
+  <li>Nginx在Elasticsearch上处理的Ingest Pipeline是XXX</li>
+  <li>Nginx的日志格式是XXX，Elasticsearch里对应的字段是XXX</li>
+  <li>Nginx日志对应的Kibana面板有XXX，可以看到XXX数据</li>
+</ul>
+
+<p>从上面的例子可见：Filebeat本身并没有做什么，它做的仍旧只是采集日志，发送出去，没了。只不过指定了Elasticsearch集群中处理这个日志的Ingest Pipeline是谁，日志应该怎么入库（事情是在Elasticsearch集群上完成的）。因此Filebeat是<code>不可能替代</code>Logstash的，它的定位看来永远只能当做一个轻量级的应用端Log Shipper。</p>
+
+<p>部分文档：</p>
+
+<ul>
+  <li>如何创建一个新的模块：<a href="https://www.elastic.co/guide/en/beats/devguide/7.0/filebeat-modules-devguide.html#filebeat-modules-devguide" target="_blank">Creating a New Filebeat Module</a></li>
+  <li>模块清单：<a href="https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-modules.html#filebeat-modules" target="_blank">Modules</a></li>
+  <li>命令行列出模块：</li>
+</ul>
+
+<pre><code>docker run --rm --name filebeat elastic/filebeat:7.0.0 modules list
+</code></pre>
+
+<h2 id="34-过滤和丰富">3.4 过滤和丰富</h2>
+<p>Filebeat可以在配置中指定一些受限的过滤和清洗功能：<a href="https://www.elastic.co/guide/en/beats/filebeat/current/filtering-and-enhancing-data.html" target="_blank">Filter and enhance the exported data</a>。</p>
+
+<p>可选的processor清单有：<a href="https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html#processors" target="_blank">Processors</a>。</p>
+
+<p>触发的条件：<a href="https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html#conditions" target="_blank">Conditions</a>。</p>
+
+<h2 id="35-文件状态记录--投递保证">3.5 文件状态记录 &amp; 投递保证</h2>
+<p>Filebeat对于输入的日志文件，会制作一个本地的注册文件，将状态都保存下来，因此在重启或者挂掉重新拉起来之后，Filebeat总是能知道之前发送到哪里。</p>
+
+<p>Filebeat会保证本地的日志文件至少被输出一次，如果在输出的结果返回之前Filebeat就挂掉的话，在下次Filebeat启动之后，它还会将之前最后的日志再投递一次（对于Filebeat来说，它并不知道自己死前已经投递过一次，并被输出方接收到了）。因此，收取数据的服务端<code>可能</code>在某些情况下收到重复的数据。</p>
+
+<h1 id="4-elasticsearch">4. Elasticsearch</h1>
+<p>2套电子书非常不错：</p>
+
+<ul>
+  <li><a href="https://fdv.github.io/running-elasticsearch-fun-profit/" target="_blank">Operating Elasticsearch for Fun and Profit</a></li>
+  <li><a href="https://es.xiaoleilu.com/index.html" target="_blank">Elasticsearch 权威指南（中文版）</a></li>
+</ul>
+
+<h2 id="41-知识点">4.1 知识点</h2>
+<p>这一节基本上都是简单的知识点和概念罗列，主要阐明：”这是什么”。详细的内容会在后续的章节里分析。</p>
+
+<h3 id="411-基础概念">4.1.1 基础概念</h3>
+<p>官方文档：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-concepts.html#getting-started-concepts" target="_blank">Basic Concepts</a>。</p>
+
+<p>提到了几点：</p>
+
+<ul>
+  <li>Near Realtime (NRT)</li>
+  <li>Cluster</li>
+  <li>Node</li>
+  <li>Index</li>
+  <li>Document</li>
+  <li>Shards &amp; Replicas</li>
+</ul>
+
+<h3 id="412-安装--配置">4.1.2 安装 &amp; 配置</h3>
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docker.html#docker" target="_blank">Install Elasticsearch with Docker</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/settings.html#settings" target="_blank">Configuring Elasticsearch</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/jvm-options.html#jvm-options" target="_blank">Setting JVM options</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/important-settings.html#important-settings" target="_blank">Important Elasticsearch configuration</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/system-config.html#system-config" target="_blank">Important System Configuration</a></li>
+</ul>
+
+<p>后面三条对生产环境影响比较大，需要仔细阅读。</p>
+
+<h2 id="413-api">4.1.3 API</h2>
+<p>Elasticsearch的API文档相当散，主要是以下几项：</p>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docs.html" target="_blank">Document APIs</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search.html" target="_blank">Search APIs</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/search-aggregations.html" target="_blank">Aggregations</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/indices.html" target="_blank">Indices APIs</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cat.html" target="_blank">cat APIs</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cluster.html" target="_blank">Cluster APIs</a></li>
+</ul>
+
+<h2 id="414-query-dsl">4.1.4 Query DSL</h2>
+<p>官方文档：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl.html" target="_blank">Query DSL</a>。</p>
+
+<p>了解Elasticsearch的人肯定会问：Query DSL和Elasticsearch的基础Lucene之间是什么关系。关于这个知识点可以查看：<a href="https://stackoverflow.com/questions/27793721/what-is-the-difference-between-lucene-and-elasticsearch" target="_blank">What is the difference between Lucene and Elasticsearch</a>。</p>
+
+<blockquote>
+  <p>Elasticsearch is a JSON Based, Distributed, web server build over Lucene. Though it’s Lucene who is doing the actual work beneath, Elasticsearch provides us a convenient layer over Lucene. Each shard that gets created in Elasticsearch is a separate Lucene instance.</p>
+</blockquote>
+
+<p>Lucene是底层，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。</p>
+
+<h3 id="415-sql">4.1.5 SQL</h3>
+<p>Elasticsearch还可以使用SQL进行查询：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/xpack-sql.html" target="_blank">SQL access</a>。</p>
+
+<h3 id="416-ingest节点">4.1.6 Ingest节点</h3>
+<p>在整个<a href="#ID_ARC_CLUSTER">Elasticsearch集群</a>中，有一部分节点是用来进行日志过滤、清洗、丰富化的，这些工作在这个设计出现之前是只能在Agent上实现的，一般来说就是Logstash，而现在在服务器节点上也可以处理相对应的工作了。</p>
+
+<p>官方文档：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/ingest.html#ingest" target="_blank">Ingest Node</a>。</p>
+
+<p>通过定义Processors来进行日志的解析和处理：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/ingest-processors.html#ingest-processors" target="_blank">Processors</a>。</p>
+
+<p>初步了解下来功能应该还算强大，可以使用脚本化代码进行功能拓展：</p>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/script-processor.html#script-processor" target="_blank">Script Processor</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/modules-scripting-using.html#modules-scripting-using" target="_blank">How to use scripts</a></li>
+</ul>
+
+<p>此外还有插件机制：<a href="https://www.elastic.co/guide/en/elasticsearch/plugins/7.0/ingest.html#ingest" target="_blank">Ingest Plugins</a>。</p>
+
+<h2 id="ID_INDEX">4.2 文档数据库 &amp; 索引</h2>
+<p>Elasticsearch是一个文档数据库，从本质上来看，它和Mongo其实相当类似。和传统RDBMS比较起来：</p>
+
+<pre><code>Relational DB -&gt; Databases -&gt; Tables  -&gt; Rows      -&gt; Columns
+Elasticsearch -&gt; DEFAULT   -&gt; Indices -&gt; Documents -&gt; Fields
+</code></pre>
+
+<p>举个例子：
+PUT /employee/1</p>
+
+<p>Index：<code>employee</code>  <br />
+Document：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;first_name&quot;</span> <span class="p">:</span> <span class="s2">&quot;John&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;last_name&quot;</span> <span class="p">:</span>  <span class="s2">&quot;Smith&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;age&quot;</span> <span class="p">:</span>        <span class="mi">25</span><span class="p">,</span>
+    <span class="nt">&quot;about&quot;</span> <span class="p">:</span>      <span class="s2">&quot;I love to go rock climbing&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;interests&quot;</span><span class="p">:</span> <span class="p">[</span> <span class="s2">&quot;sports&quot;</span><span class="p">,</span> <span class="s2">&quot;music&quot;</span> <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Fields：</p>
+
+<ul>
+  <li>first_name</li>
+  <li>last_name</li>
+  <li>age</li>
+  <li>about</li>
+  <li>interests</li>
+</ul>
+
+<p>索引非常重要，在集群模式（cluster）中，索引是用来进行分区的唯一指标。Elasticsearch会根据Index来决定当前数据落到哪台实际的存储服务器上。</p>
+
+<p>关于索引的细节，以及一些集群相关的索引知识，可以查看：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docs-index_.html" target="_blank">Index API</a>。</p>
+
+<h2 id="ID_STORAGE">4.3 存储</h2>
+<p>在官方手册文档中，并没有关于存储相关的设计及实现的详细内容。在Blog中找到一篇：<a href="https://www.elastic.co/blog/found-dive-into-elasticsearch-storage" target="_blank">A Dive into the Elasticsearch Storage</a>，不过时间也稍微有点久，但还算可以用来一窥存储相关的技术点。</p>
+
+<p>此外，<strong>shards：Lucene segments</strong></p>
+
+<blockquote>
+  <p>Each Elasticsearch index is divided into shards. Shards are both logical and physical division of an index. Each Elasticsearch shard is a Lucene index. The maximum number of documents you can have in a Lucene index is 2,147,483,519. The Lucene index is divided into smaller files called segments. A segment is a small Lucene index. Lucene searches in all segments sequentially.</p>
+</blockquote>
+
+<p><img src="/resources/2019/04/elasticsearch-note/elk_shards.png" alt="elk_shards" target="_blank" /></p>
+
+<h2 id="ID_ARC_CLUSTER">4.4 集群</h2>
+<p>关于架构和集群的基础概念可以阅读官方的一份PPT：<a href="https://www.elastic.co/pdf/architecture-best-practices.pdf" target="_blank">Elasticsearch Best Practice Architecture</a>。</p>
+
+<p>主要是了解下Elasticsearch集群的节点分类：</p>
+
+<p><img src="/resources/2019/04/elasticsearch-note/elk_node_types.png" alt="elk_node_types" target="_blank" /></p>
+
+<p>然后看下之前提到过的ELK整体集群拓扑：</p>
+
+<p><img src="/resources/2019/04/elasticsearch-note/elk_arch.png" alt="elk_arch" target="_blank" /></p>
+
+<p>此外推荐一篇：<a href="https://thoughts.t37.net/designing-the-perfect-elasticsearch-cluster-the-almost-definitive-guide-e614eabc1a87" target="_blank">Designing the Perfect Elasticsearch Cluster: the (almost) Definitive Guide</a>。</p>
+
+<p>在官方的文档库中我并没有找到比较新版本的文档有讲解到分布式和高可用之类的架构设计内容，大部分的文档都是各种API和各种细节。在老的版本中倒是找到一点信息：</p>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/guide/current/_how_primary_and_replica_shards_interact.html" target="_blank">How Primary and Replica Shards Interact</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/guide/current/distrib-write.html" target="_blank">Creating, Indexing, and Deleting a Document</a></li>
+</ul>
+
+<p>此外，中文书里的内容也可以阅读：<a href="https://es.xiaoleilu.com/020_Distributed_Cluster/00_Intro.html" target="_blank">集群内部工作方式</a>，注意这本中文书的版本已经相当老了，里面的内容有部分和现在的版本明显不同。</p>
+
+<p>几点整理：</p>
+
+<ul>
+  <li>replica与数据主节点并不一定是1：1的关系（并不一定一个master拖一个slave这样的设计），主节点的数据是完全分散到其他各个replica节点上的，这个replica节点数量是可设置的</li>
+  <li>当你的replica设置越多，写入速度就越慢（参与的节点多），主节点写入完毕之后还要让所有的replica写入，全部都完成才会返回客户端完成</li>
+  <li>当你的replica设置越多，查询（读取）速度就越快（参与的节点多）</li>
+  <li>当发生查询请求时，查询请求是会落到所有的shard上的，所以集群shards做的越多，整个集群的查询性能开销就越大，这里就有一个平衡的问题</li>
+</ul>
+
+<h2 id="45-监控--高可用">4.5 监控 &amp; 高可用</h2>
+<h3 id="451-监控">4.5.1 监控</h3>
+<p>对于Elasticsearch的监控，官方有一套解决方案（Elasticsearch算是一个生态了，在上游和下游都有完整的处理）。可以查阅下官方文档：</p>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/es-monitoring.html" target="_blank">Monitoring Elasticsearch</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html#setup-xpack" target="_blank">Set up X-Pack</a></li>
+  <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-cluster-health.html#getting-started-cluster-health" target="_blank">Cluster Health</a></li>
+</ul>
+
+<p>当然也可以选用Prometheus作为监控：</p>
+
+<ul>
+  <li><a href="https://github.com/vvanholl/elasticsearch-prometheus-exporter" target="_blank">Prometheus Exporter Plugin for Elasticsearch</a></li>
+</ul>
+
+<h3 id="452-高可用">4.5.2 高可用</h3>
+<p><strong>数据节点数量选择</strong></p>
+
+<ul>
+  <li><a href="https://thoughts.t37.net/resizing-your-elasticsearch-indexes-in-production-d7a0402d137e" target="_blank">Resizing your Elasticsearch Indexes in Production</a></li>
+  <li><a href="https://www.signalfx.com/blog/scaling-elasticsearch-sharding-availability-hundreds-millions-documents/" target="_blank">Scaling Elasticsearch: Sharding and Availability for Hundreds Of Millions of Documents</a>：这篇当中有一段讲解了<code>Resharding With Zero Downtime</code>，这是非常有价值的一个topic</li>
+</ul>
+
+<p><strong>可恢复的集群最低配置</strong></p>
+
+<ul>
+  <li>3 locations to host your nodes. 2 locations to run half of your cluster, and one for the backup master node.</li>
+  <li>3 master nodes. You need an odd number of eligible master nodes to avoid split brains when you lose a whole data center. Put one master node in each location so you hopefully never lose the quorum.</li>
+  <li>2 http nodes, one in each primary data center.</li>
+  <li>As many data nodes as you need, split evenly between both main locations.</li>
+</ul>
+
+<p><strong>故障恢复</strong></p>
+
+<p>Elasticsearch在集群中分主节点shard和复制节点replica，当集群的设置足够多（数据冗余充分）的情况下，当某个物理节点不可用时，Elasticsearch会自动进行选举，将丢失的主节点shard的replica节点设置成主节点，并重新对集群进行平衡。举个例子：</p>
+
+<p>事故发生前：</p>
+
+<ul>
+  <li>一共有3个物理节点</li>
+  <li>一共有3个主节点shard</li>
+  <li>每个主节点shard有2个复制节点replica</li>
+  <li>当前物理节点1是作为整个集群的master节点进行服务的</li>
+  <li>后续事故会发生在物理节点1，这个节点会下线</li>
+</ul>
+
+<p><img src="/resources/2019/04/elasticsearch-note/elk_ha_01.png" alt="Before" target="_blank" /></p>
+
+<p>事故发生后：</p>
+
+<ul>
+  <li>master节点下线了，因此集群重新开始选取master节点，设定为物理节点2</li>
+  <li>0号主节点shard（P0）本来就在物理节点3上，因此不受影响</li>
+  <li>1号和2号主节点shard之前在物理节点1上，全部丢失，集群将物理节点2上的2号shard的replica（R2）提升为主节点shard（P2），并将物理节点3上的1号shard的replica（R1）提升为主节点shard（P1）</li>
+  <li>此时所有的主节点shard都已恢复，且各主节点shard都存在一份replica</li>
+  <li>后续集群会继续为各主节点shard复制缺失的一份replica</li>
+</ul>
+
+<p><img src="/resources/2019/04/elasticsearch-note/elk_ha_02.png" alt="After" target="_blank" /></p>
+
+<h2 id="46-性能调优">4.6 性能调优</h2>
+<p>Ebay有一篇非常细节非常棒的设计及性能优化分析博文：<a href="https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/" target="_blank">Elasticsearch Performance Tuning Practice at eBay</a>。从时间上来看，这篇文章也比较近：2018-01-08。</p>
+
+<p>这篇博文分析了大规模Elasticsearch集群会面临的挑战，以及解决方案，还按实际的应用Scenario进行了问题分析以及给出了解决范例，很棒。</p>
+
+<h1 id="5-ui">5. UI</h1>
+<p>Kibana这块相对来说比较简单（？），这里就只做简单的尝试。下面会列一些关键文档位置：</p>
+
+<ul>
+  <li><a href="https://www.elastic.co/guide/en/kibana/current/docker.html#docker" target="_blank">Running Kibana on Docker</a></li>
+  <li><a href="https://www.elastic.co/guide/en/kibana/7.0/settings.html#settings" target="_blank">Configuring Kibana</a></li>
+  <li><a href="https://www.elastic.co/guide/en/kibana/current/lucene-query.html#lucene-query" target="_blank">Lucene Query Syntax</a></li>
+</ul>
+
+<h1 id="6-实践范例">6. 实践范例</h1>
+<p>和之前做Prometheus实验的时候一样，因为需要把握一些细节，所以实验使用的还是下载下来的Elasticsearch、Kibana以及Filebeat。作为配角的Nginx使用的则是镜像版本。</p>
+
+<p>范例代码可以在Github查看：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment/elasticsearch" target="_blank">dist-system-practice/experiment/elasticsearch/</a>。</p>
+
+<h1 id="7-todo">7. TODO</h1>
+<ul>
+  <li>Elasticsearch集群及一些基本观察用的API熟悉</li>
+  <li>Elasticsearch JVM相关参数和实践研究</li>
+  <li>Elasticsearch reshard的策略，最佳实践</li>
+  <li>Elasticsearch reshard时候的CPU、磁盘、内存，还有特别是网络的影响</li>
+  <li>Elasticsearch reshard在各种集群规模下的耗时</li>
+  <li>Elasticsearch的性能指标研究</li>
+  <li>Elasticsearch性能测试</li>
+  <li>Kibana使用深入</li>
+  <li>添加Logstash部分内容，这块由于时间问题暂时不准备展开</li>
+</ul>
+
+<h1 id="资料">资料</h1>
+<h2 id="链接">链接</h2>
+<ul>
+  <li><a href="https://sematext.com/blog/logstash-alternatives/" target="_blank">5 Logstash Alternatives</a></li>
+  <li><a href="https://gist.github.com/StevenACoffman/4e267f0f60c8e7fcb3f77b9e504f3bd7" target="_blank">StevenACoffman/fluent-filebeat-comparison.md</a></li>
+  <li><a href="https://github.com/fluent/fluentd/issues/1657" target="_blank">Fluentd retains excessive amounts of memory after handling traffic peaks #1657</a></li>
+  <li><a href="https://www.cnblogs.com/cjsblog/p/9495024.html" target="_blank">Filebeat 模块与配置</a></li>
+  <li><a href="https://fdv.github.io/running-elasticsearch-fun-profit/" target="_blank">Operating Elasticsearch for Fun and Profit</a></li>
+  <li><a href="https://es.xiaoleilu.com/index.html" target="_blank">Elasticsearch 权威指南（中文版）</a></li>
+  <li><a href="https://stackoverflow.com/questions/27793721/what-is-the-difference-between-lucene-and-elasticsearch" target="_blank">What is the difference between Lucene and Elasticsearch</a></li>
+  <li><a href="https://thoughts.t37.net/designing-the-perfect-elasticsearch-cluster-the-almost-definitive-guide-e614eabc1a87" target="_blank">Designing the Perfect Elasticsearch Cluster: the (almost) Definitive Guide</a></li>
+  <li><a href="https://github.com/vvanholl/elasticsearch-prometheus-exporter" target="_blank">Prometheus Exporter Plugin for Elasticsearch</a></li>
+  <li><a href="https://thoughts.t37.net/resizing-your-elasticsearch-indexes-in-production-d7a0402d137e" target="_blank">Resizing your Elasticsearch Indexes in Production</a></li>
+  <li><a href="https://www.signalfx.com/blog/scaling-elasticsearch-sharding-availability-hundreds-millions-documents/" target="_blank">Scaling Elasticsearch: Sharding and Availability for Hundreds Of Millions of Documents</a></li>
+  <li><a href="https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/" target="_blank">Elasticsearch Performance Tuning Practice at eBay</a></li>
+</ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/04/elasticsearch-note/">Elasticsearch Notes</a></li>
+    
+    <li><a href="/2019/04/jaeger-note/">Jaeger Notes</a></li>
+    
+    <li><a href="/2019/04/monitoring-tracing-logging/">Compare: Monitoring | Tracing | Logging</a></li>
+    
+    <li><a href="/2019/04/grafana-note/">Grafana Notes</a></li>
+    
+    <li><a href="/2019/04/prometheus-note/">Prometheus Notes</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/04/elasticsearch-note/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
