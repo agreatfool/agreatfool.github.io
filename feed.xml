@@ -157,7 +157,7 @@ kibana 7.0.0
   &lt;p&gt;Elasticsearch Ingest Node pipeline definition, which is used to parse the log lines.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;首先明确一点，Filebeat的模块并不是一般意义上的&lt;code&gt;功能模块&lt;/code&gt;。按软件设计设计来说，模块意味着功能的拓展，意味着根据模块设计的要求（框架）可以将软件本身能做的事情大幅拓展。而Filebeat的模块则不是，在Filebeat里，模块意味着一系列既有行为的组合：&lt;/p&gt;
+&lt;p&gt;首先明确一点，Filebeat的模块并不是一般意义上的&lt;code&gt;功能模块&lt;/code&gt;。按软件设计思维来说，模块意味着功能的拓展，意味着根据模块设计的要求（框架）可以将软件本身能做的事情大幅拓展。而Filebeat的模块则不是，在Filebeat里，模块意味着一系列既有行为的组合：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;Nginx有两个日志：access和error&lt;/li&gt;
@@ -189,7 +189,7 @@ kibana 7.0.0
 &lt;h2 id=&quot;35-文件状态记录--投递保证&quot;&gt;3.5 文件状态记录 &amp;amp; 投递保证&lt;/h2&gt;
 &lt;p&gt;Filebeat对于输入的日志文件，会制作一个本地的注册文件，将状态都保存下来，因此在重启或者挂掉重新拉起来之后，Filebeat总是能知道之前发送到哪里。&lt;/p&gt;
 
-&lt;p&gt;Filebeat会保证本地的日志文件至少被输出一次，如果在输出的结果返回之前Filebeat就挂掉的话，在下次Filebeat启动之后，它还会将之前最后的日志再投递一次（对于Filebeat来说，它并不知道自己死前已经投递过一次，并被输出方接收到了）。因此，收取数据的服务端&lt;code&gt;可能&lt;/code&gt;在某些情况下收到重复的数据。&lt;/p&gt;
+&lt;p&gt;Filebeat会保证本地的日志文件至少被输出一次，如果在输出的结果返回之前Filebeat就挂掉的话，在下次Filebeat启动之后，它还会将之前最后的日志再投递一次（对于Filebeat来说，它并不知道自己死前已经投递过一次，并被输出方接收到了）。因此，收取数据的服务端&lt;code&gt;可能&lt;/code&gt;在某些情况下收到&lt;code&gt;重复的数据&lt;/code&gt;。&lt;/p&gt;
 
 &lt;h1 id=&quot;4-elasticsearch&quot;&gt;4. Elasticsearch&lt;/h1&gt;
 &lt;p&gt;2套电子书非常不错：&lt;/p&gt;
@@ -248,7 +248,7 @@ kibana 7.0.0
   &lt;p&gt;Elasticsearch is a JSON Based, Distributed, web server build over Lucene. Though it’s Lucene who is doing the actual work beneath, Elasticsearch provides us a convenient layer over Lucene. Each shard that gets created in Elasticsearch is a separate Lucene instance.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Lucene是底层，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。&lt;/p&gt;
+&lt;p&gt;Lucene是底层，Elasticsearch是基于Lucene之上的富集开发，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。&lt;/p&gt;
 
 &lt;h3 id=&quot;415-sql&quot;&gt;4.1.5 SQL&lt;/h3&gt;
 &lt;p&gt;Elasticsearch还可以使用SQL进行查询：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/xpack-sql.html&quot; target=&quot;_blank&quot;&gt;SQL access&lt;/a&gt;。&lt;/p&gt;

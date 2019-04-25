@@ -322,7 +322,7 @@ kibana 7.0.0
   <p>Elasticsearch Ingest Node pipeline definition, which is used to parse the log lines.</p>
 </blockquote>
 
-<p>首先明确一点，Filebeat的模块并不是一般意义上的<code>功能模块</code>。按软件设计设计来说，模块意味着功能的拓展，意味着根据模块设计的要求（框架）可以将软件本身能做的事情大幅拓展。而Filebeat的模块则不是，在Filebeat里，模块意味着一系列既有行为的组合：</p>
+<p>首先明确一点，Filebeat的模块并不是一般意义上的<code>功能模块</code>。按软件设计思维来说，模块意味着功能的拓展，意味着根据模块设计的要求（框架）可以将软件本身能做的事情大幅拓展。而Filebeat的模块则不是，在Filebeat里，模块意味着一系列既有行为的组合：</p>
 
 <ul>
   <li>Nginx有两个日志：access和error</li>
@@ -354,7 +354,7 @@ kibana 7.0.0
 <h2 id="35-文件状态记录--投递保证">3.5 文件状态记录 &amp; 投递保证</h2>
 <p>Filebeat对于输入的日志文件，会制作一个本地的注册文件，将状态都保存下来，因此在重启或者挂掉重新拉起来之后，Filebeat总是能知道之前发送到哪里。</p>
 
-<p>Filebeat会保证本地的日志文件至少被输出一次，如果在输出的结果返回之前Filebeat就挂掉的话，在下次Filebeat启动之后，它还会将之前最后的日志再投递一次（对于Filebeat来说，它并不知道自己死前已经投递过一次，并被输出方接收到了）。因此，收取数据的服务端<code>可能</code>在某些情况下收到重复的数据。</p>
+<p>Filebeat会保证本地的日志文件至少被输出一次，如果在输出的结果返回之前Filebeat就挂掉的话，在下次Filebeat启动之后，它还会将之前最后的日志再投递一次（对于Filebeat来说，它并不知道自己死前已经投递过一次，并被输出方接收到了）。因此，收取数据的服务端<code>可能</code>在某些情况下收到<code>重复的数据</code>。</p>
 
 <h1 id="4-elasticsearch">4. Elasticsearch</h1>
 <p>2套电子书非常不错：</p>
@@ -413,7 +413,7 @@ kibana 7.0.0
   <p>Elasticsearch is a JSON Based, Distributed, web server build over Lucene. Though it’s Lucene who is doing the actual work beneath, Elasticsearch provides us a convenient layer over Lucene. Each shard that gets created in Elasticsearch is a separate Lucene instance.</p>
 </blockquote>
 
-<p>Lucene是底层，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。</p>
+<p>Lucene是底层，Elasticsearch是基于Lucene之上的富集开发，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。</p>
 
 <h3 id="415-sql">4.1.5 SQL</h3>
 <p>Elasticsearch还可以使用SQL进行查询：<a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/xpack-sql.html" target="_blank">SQL access</a>。</p>
