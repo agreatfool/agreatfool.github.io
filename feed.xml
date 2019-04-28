@@ -757,6 +757,8 @@ kibana 7.0.0
   &lt;li&gt;&lt;a href=&quot;https://es.xiaoleilu.com/index.html&quot; target=&quot;_blank&quot;&gt;Elasticsearch 权威指南（中文版）&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;对于作为Elasticsearch底层的Lucene有兴趣的，可以查看这篇：&lt;a href=&quot;https://www.infoq.cn/article/ejEG02VRoeGVaLw4j_LL&quot; target=&quot;_blank&quot;&gt;Lucene 查询原理及解析&lt;/a&gt;。&lt;/p&gt;
+
 &lt;h2 id=&quot;41-知识点&quot;&gt;4.1 知识点&lt;/h2&gt;
 &lt;p&gt;这一节基本上都是简单的知识点和概念罗列，主要阐明：”这是什么”。详细的内容会在后续的章节里分析。&lt;/p&gt;
 
