@@ -7,6 +7,593 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Kafka Notes</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-消息队列&quot; id=&quot;markdown-toc-2-消息队列&quot;&gt;2. 消息队列&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-消息队列选型比较&quot; id=&quot;markdown-toc-3-消息队列选型比较&quot;&gt;3. 消息队列选型比较&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-kafka架构&quot; id=&quot;markdown-toc-4-kafka架构&quot;&gt;4. Kafka架构&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#41-概念&quot; id=&quot;markdown-toc-41-概念&quot;&gt;4.1 概念&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_CLUSTER&quot; id=&quot;markdown-toc-ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#43-分布式痛点offset&quot; id=&quot;markdown-toc-43-分布式痛点offset&quot;&gt;4.3 分布式痛点（offset）&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#44-临时消费压力应急&quot; id=&quot;markdown-toc-44-临时消费压力应急&quot;&gt;4.4 临时消费压力应急&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-kafka监控--高可用&quot; id=&quot;markdown-toc-5-kafka监控--高可用&quot;&gt;5. Kafka监控 &amp;amp; 高可用&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#51-监控&quot; id=&quot;markdown-toc-51-监控&quot;&gt;5.1 监控&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#52-高可用&quot; id=&quot;markdown-toc-52-高可用&quot;&gt;5.2 高可用&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#6-kafka-benchmark&quot; id=&quot;markdown-toc-6-kafka-benchmark&quot;&gt;6. Kafka Benchmark&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#61-测试环境&quot; id=&quot;markdown-toc-61-测试环境&quot;&gt;6.1 测试环境&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#62-不同场景测试&quot; id=&quot;markdown-toc-62-不同场景测试&quot;&gt;6.2 不同场景测试&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#621-场景1&quot; id=&quot;markdown-toc-621-场景1&quot;&gt;6.2.1 场景1&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#622-场景2&quot; id=&quot;markdown-toc-622-场景2&quot;&gt;6.2.2 场景2&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#623-场景3&quot; id=&quot;markdown-toc-623-场景3&quot;&gt;6.2.3 场景3&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#624-场景4&quot; id=&quot;markdown-toc-624-场景4&quot;&gt;6.2.4 场景4&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#625-场景5&quot; id=&quot;markdown-toc-625-场景5&quot;&gt;6.2.5 场景5&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#626-场景6&quot; id=&quot;markdown-toc-626-场景6&quot;&gt;6.2.6 场景6&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#63-各场景测试总结&quot; id=&quot;markdown-toc-63-各场景测试总结&quot;&gt;6.3 各场景测试总结&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-kafka使用范例&quot; id=&quot;markdown-toc-7-kafka使用范例&quot;&gt;7. Kafka使用范例&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#8-todo&quot; id=&quot;markdown-toc-8-todo&quot;&gt;8. TODO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;Kafka是现在业界选择比较多的一种消息队列解决方案。我这里主要也是选Kafka作为消息队列这块需求的解决方案。下面的技术调研会先从消息队列本身开始，然后做一个横向比较，最后再聚焦到Kafka本身上。&lt;/p&gt;
+
+&lt;p&gt;调研用的Kafka版本为：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2.2.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;官方文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;官方介绍：&lt;a href=&quot;https://kafka.apache.org/intro&quot; target=&quot;_blank&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;官方新手入门：&lt;a href=&quot;https://kafka.apache.org/quickstart&quot; target=&quot;_blank&quot;&gt;Quickstart&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;官方应用场景介绍：&lt;a href=&quot;https://kafka.apache.org/uses&quot; target=&quot;_blank&quot;&gt;Use cases&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;官方文档：&lt;a href=&quot;https://kafka.apache.org/documentation/&quot; target=&quot;_blank&quot;&gt;Documentation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Docker Hub：&lt;a href=&quot;https://hub.docker.com/r/wurstmeister/kafka&quot; target=&quot;_blank&quot;&gt;wurstmeister/kafka&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;一本中文手册，版本较老，看看一些范例代码尚可：&lt;a href=&quot;http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html&quot; target=&quot;_blank&quot;&gt;Apache kafka中文手册&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-消息队列&quot;&gt;2. 消息队列&lt;/h1&gt;
+&lt;p&gt;在聊Kafka之前，其实更需要关注下消息队列本身。什么需求下需要使用消息队列、消息队列的功能点有哪些、消息队列的模式有哪些、消息队列的实现难点有哪些，等等。如果什么都不了解，那技术选型就无从谈起了，也没办法理解为什么消息队列要做好是非常困难的一件事情。展开了说，也就没办法举一反三，理解其他软件系统的设计精髓了。&lt;/p&gt;
+
+&lt;p&gt;下面会简单列举下消息队列的一系列知识点，细节内容这里就不展开了，篇幅太大。&lt;/p&gt;
+
+&lt;p&gt;消息队列的需求：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;解耦&lt;/li&gt;
+  &lt;li&gt;最终一致性&lt;/li&gt;
+  &lt;li&gt;广播&lt;/li&gt;
+  &lt;li&gt;错峰与流控&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;消息队列的模型：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;点对点：单生产、单队列、单消费&lt;/li&gt;
+  &lt;li&gt;生产者消费者模型：多生产、单队列、多消费&lt;/li&gt;
+  &lt;li&gt;发布订阅模型：根据topic分队列，多生产、多队列、多消费&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;消息队列的投递模式：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Push：消息队列主动推送（e.g RocketMQ可选）&lt;/li&gt;
+  &lt;li&gt;Pull：消费者主动抓取（e.g Kafka）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;消息队列的性能指标：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;吞吐量（Throughput）&lt;/li&gt;
+  &lt;li&gt;响应时间（Latency）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;消息队列的投递策略：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;最多一次（At most Once）：消息可能会丢，但绝不会重复传输&lt;/li&gt;
+  &lt;li&gt;最少一次（At least Once）：消息绝不会丢，但可能会重复传输&lt;/li&gt;
+  &lt;li&gt;仅有一次（Exactly Once）：每条消息肯定会被传输一次且仅传输一次&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;消息队列的功能性：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;优先级队列&lt;/li&gt;
+  &lt;li&gt;延迟队列&lt;/li&gt;
+  &lt;li&gt;死信队列&lt;/li&gt;
+  &lt;li&gt;重试队列&lt;/li&gt;
+  &lt;li&gt;消息回溯&lt;/li&gt;
+  &lt;li&gt;消息堆积 + 持久化&lt;/li&gt;
+  &lt;li&gt;消息追踪&lt;/li&gt;
+  &lt;li&gt;消息过滤&lt;/li&gt;
+  &lt;li&gt;多租户&lt;/li&gt;
+  &lt;li&gt;多协议支持&lt;/li&gt;
+  &lt;li&gt;跨语言支持&lt;/li&gt;
+  &lt;li&gt;流量控制&lt;/li&gt;
+  &lt;li&gt;可靠投递&lt;/li&gt;
+  &lt;li&gt;消费确认&lt;/li&gt;
+  &lt;li&gt;消息顺序性&lt;/li&gt;
+  &lt;li&gt;安全机制&lt;/li&gt;
+  &lt;li&gt;消息幂等性&lt;/li&gt;
+  &lt;li&gt;事务性消息&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;几篇值得一读的博文：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/2019/04/message-queue-design/&quot; target=&quot;_blank&quot;&gt;消息队列设计精要 - 美团点评技术团队&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;一篇通论形式的消息队列设计博文，讲解了一些消息队列通用的知识点，值得一读。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-01.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.infoq.cn/article/distributed-queue-programme-model-actual-combat-optimization&quot; target=&quot;_blank&quot;&gt;分布式队列编程：从模型、实战到优化&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;本质上也是一篇对于消息队列进行设计和讲解的博文，但结合了美团公司内部的实际项目经验，对于大型系统的设计者有更好的贴近应用场景的指导作用。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;amp;mid=2651745361&amp;amp;idx=1&amp;amp;sn=5f0f67484a0de4b0dd2796848ef9cc94&quot; target=&quot;_blank&quot;&gt;分布式队列编程优化篇&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;接上一篇的博文，更多讲到了性能和高级功能相关的实现以及性能的优化。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.jianshu.com/p/7a6deaba34d2&quot; target=&quot;_blank&quot;&gt;如何保证消息队列的高可用和幂等性以及数据丢失，顺序一致性&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;排版比较粗糙，但内容非常不错。以贴近项目经验的内容讲解了RabbitMQ和Kafka的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;高可用性&lt;/li&gt;
+  &lt;li&gt;消息幂等性&lt;/li&gt;
+  &lt;li&gt;消息可靠性&lt;/li&gt;
+  &lt;li&gt;消息顺序性&lt;/li&gt;
+  &lt;li&gt;消息积压场景处理&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;3-消息队列选型比较&quot;&gt;3. 消息队列选型比较&lt;/h1&gt;
+&lt;p&gt;消息队列的选型一直都是比较困难的，业界现在比较主流的选择有：ActiveMQ、RabbitMQ、Kafka、RocketMQ、ZeroMQ 这几种。&lt;/p&gt;
+
+&lt;p&gt;有几篇不错的博文可以看下：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.infoq.cn/article/kafka-vs-rabbitmq&quot; target=&quot;_blank&quot;&gt;消息中间件选型分析：从 Kafka 与 RabbitMQ 的对比看全局&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这篇时间还算比较接近&lt;code&gt;2018年5月2日&lt;/code&gt;，主要是以Kafka和RabbitMQ为范例进行了消息队列选型的要点讲解。虽然讲解的时候使用了Kafka以及RabbitMQ作为范例，但实际上讲解的是通用的消息队列选型要点。结合本文上一节所讲到的消息队列的一系列知识点，应该能有更深刻的理解。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-02.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
+&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-03.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
+&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-04.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.infoq.cn/article/dXJ3EYIp*WaHfmVwlMeu&quot; target=&quot;_blank&quot;&gt;滴滴出行基于 RocketMQ 构建企业级消息队列服务的实践&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;这篇时间稍微有点久，文中提到的Kafka版本还是0.8左右的（虽然文章的发布时间倒是不久之前），所以文中提到的性能指标之类的仅可作为参考。这篇文章是对Kafka和RocketMQ做的一个技术选型比较，文章中有相当多的性能指标比较，并结合滴滴公司的实际情况讲解了下消息队列系统进行替换时候所做的Migration工作，非常有借鉴价值。此外，文中还有一小节讲解了下RocketMQ使用的经验。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/39586635/why-is-kafka-pull-based-instead-of-push-based&quot; target=&quot;_blank&quot;&gt;Why is Kafka pull-based instead of push-based?&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;为什么Kafka消息队列使用的是Pull投递模式。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5&quot; target=&quot;_blank&quot;&gt;Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;老外写的一篇，提到了不少国内较少提到的开源项目，可以作为参考。&lt;/p&gt;
+
+&lt;h1 id=&quot;4-kafka架构&quot;&gt;4. Kafka架构&lt;/h1&gt;
+&lt;h2 id=&quot;41-概念&quot;&gt;4.1 概念&lt;/h2&gt;
+&lt;p&gt;老样子从基本的概念开始梳理：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;broker&lt;/code&gt;：kafka集群中的任意一台提供服务的物理服务器即被称为broker&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;topic&lt;/code&gt;：消息队列的一个队列，一般做架构的时候按需求将不同的消息分别派送到不同的管道里，而其中的任意一个管道在kafka里就是一个topic&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;partition&lt;/code&gt;：topic下的概念，任意一个topic根据启动时的设定，会分成多个partition，而每个partition会由集群安排在某一台物理机broker上，以此做到集群的横向扩展&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;offset&lt;/code&gt;：partition下的概念，topic被分为很多partition，而每个partition则都会存储消息，每个partition存储的消息都是从0开始进行标号，而这个每条消息一个的标号，即为offset；可以理解为消息在partition里的唯一id；不同的partition都是从0开始标号，因此offset只对其自身的partition生效，不可混用&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;replica&lt;/code&gt;：某个partition的完整备份（在接收写入请求时数据可能会落后于leader），用在集群的高可用服务上，同时也可以提供partition读操作的负载均衡&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;producer&lt;/code&gt;：向topic里输入消息数据的角色&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;consumer&lt;/code&gt;：从topic里消费消息数据的角色&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;consumer group&lt;/code&gt;：可扩展且具有容错性的consumer机制，多个consumer共享一个group id，组内的所有consumer一起来消费topic的所有partition；但一个partition仍旧只能有一个consumer来进行消费；主要是为了解决consumer和partition配对balance的问题，将consumer做成组由集群自动进行平衡和分配到partition&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;关于consumer group，更多的可以看：&lt;a href=&quot;https://www.cnblogs.com/huxi2b/p/6223228.html&quot; target=&quot;_blank&quot;&gt;Kafka消费组(consumer group)&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;ID_CLUSTER&quot;&gt;4.2 集群&lt;/h2&gt;
+&lt;p&gt;一张图基本上就能说明问题：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-05.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;kafka集群由多台broker（物理机）组成&lt;/li&gt;
+  &lt;li&gt;图示中有&lt;code&gt;四台&lt;/code&gt;broker&lt;/li&gt;
+  &lt;li&gt;每个topic会根据配置，生成固定数量的partition，均匀分配到物理机上&lt;/li&gt;
+  &lt;li&gt;图示中的topic被分成了&lt;code&gt;3个&lt;/code&gt;partition：&lt;code&gt;P1_leader&lt;/code&gt;（broker1）、&lt;code&gt;P2_leader&lt;/code&gt;（broker2）、&lt;code&gt;P3_leader&lt;/code&gt;（broker4）&lt;/li&gt;
+  &lt;li&gt;每个partition根据配置，会拥有固定数量的follower（replica），分别分配到各个物理机上&lt;/li&gt;
+  &lt;li&gt;图示中即：&lt;code&gt;P1_follower&lt;/code&gt;（broker2、broker3）、&lt;code&gt;P2_follower&lt;/code&gt;（broker3、broker4）、&lt;code&gt;P3_follower&lt;/code&gt;（broker1、broker2）&lt;/li&gt;
+  &lt;li&gt;当有broker宕机的时候：
+    &lt;ul&gt;
+      &lt;li&gt;丢失的follower会由集群重新寻找节点进行备份&lt;code&gt;恢复&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;丢失的leader会由集群自现存的follower中&lt;code&gt;选举&lt;/code&gt;产生，成为新的leader&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;43-分布式痛点offset&quot;&gt;4.3 分布式痛点（offset）&lt;/h2&gt;
+&lt;p&gt;Kafka在分布式解决方案上也有痛点，主要是每个partition的offset问题。&lt;/p&gt;
+
+&lt;p&gt;为了性能，kafka将一个partition视作一个管道，拥有一个从0开始的offset。这样做的好处就是不再需要在每一个消息体上做metadata存放该消息是否被消费掉等信息，而是通过partition的offset来标记整个管道中的消息被消费到了哪里。消息体更简单，流程上也更简单，不会出现乱序的消费情况。但也正是因为这种设计，导致每个partition无法由多个consumer并发消费，每个partition绑定只能同时允许一个consumer消费。&lt;/p&gt;
+
+&lt;p&gt;因此，从机制上来说，kafka并不适合用来做consumer重消耗（CPU）类型的消息通道。虽然partition可以做很多，极端点来说可以做到和consumer实际需求1：1的配比，但超过适配当前需求的partition数量设置也会造成吞吐量的下降。&lt;/p&gt;
+
+&lt;p&gt;consumer和partition在进行消息是否被消费掉的确认行为上，有两种方式：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;自动提交：
+    &lt;ul&gt;
+      &lt;li&gt;设置&lt;code&gt;enable.auto.commit=true&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;更新的频率根据参数&lt;code&gt;auto.commit.interval.ms&lt;/code&gt;来定，这种方式被称为&lt;code&gt;at most once&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;fetch到消息后就会更新offset，无论是否消费成功&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;手动提交：
+    &lt;ul&gt;
+      &lt;li&gt;设置&lt;code&gt;enable.auto.commit=false&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;这种方式被称为&lt;code&gt;at least once&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;fetch到消息后，消费成功后手用方法&lt;code&gt;consumer.commitSync()&lt;/code&gt;，手动更新offset&lt;/li&gt;
+      &lt;li&gt;如果消费失败，则offset不会更新，此条消息会被重复消费一次&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;关于partition和consumer之间的关系，更多可以看下：&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/45175424/how-multiple-consumer-group-consumers-work-across-partition-on-the-same-topic-in&quot; target=&quot;_blank&quot;&gt;How multiple consumer group consumers work across partition on the same topic in Kafka?&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;If you want to have more consumers than partitions and still have performance enhancement and process only each message once, then you should increase the number of partitions in the topics so that there are at least as many partitions as consumers. Often topics are created with 2 times as many partitions needed to start, just so more consumers can be added later if needed without having to repartition the topic.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/pursuer211/article/details/79799478&quot; target=&quot;_blank&quot;&gt;kafka中partition和消费者对应关系&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;1个partition只能被同组的一个consumer消费，同组的consumer则起到均衡效果&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;以及自动提交相关：&lt;a href=&quot;https://medium.com/@danieljameskay/understanding-the-enable-auto-commit-kafka-consumer-property-12fa0ade7b65&quot; target=&quot;_blank&quot;&gt;Understanding the ‘enable.auto.commit’ Kafka Consumer property&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;44-临时消费压力应急&quot;&gt;4.4 临时消费压力应急&lt;/h2&gt;
+&lt;p&gt;如果因某些原因，之前设计的partition分片数量不够，导致能够上工的consumer数量不够，而且consumer的消费速率跟不上，这时候就会发生消息堆积。如果堆积的情况比较严重的话，就需要程序介入处理。&lt;/p&gt;
+
+&lt;p&gt;思路如下：&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;老的partition以及老的topic肯定不能动，就算重新进行repartition整个集群重新平衡耗费的时间也是难以忍受的&lt;/li&gt;
+  &lt;li&gt;创建新的topic&lt;/li&gt;
+  &lt;li&gt;将新的topic的partition设到consumer消费速率能跟上的数量&lt;/li&gt;
+  &lt;li&gt;将新的consumer部署上去，消费新设置的topic和partition&lt;/li&gt;
+  &lt;li&gt;将老的topic以及partition上挂载的consumer全部停止&lt;/li&gt;
+  &lt;li&gt;在老的topic以及partition上挂载临时consumer，这批consumer不做任何逻辑处理，只是将老的topic内的消息全部读取出来，并输入到新的topic里&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;这样老的topic里的消息就全部分发到新的topic里了，且新的topic的partition数量很高，可以挂载很多consumer处理堆积的消息。&lt;/p&gt;
+
+&lt;h1 id=&quot;5-kafka监控--高可用&quot;&gt;5. Kafka监控 &amp;amp; 高可用&lt;/h1&gt;
+&lt;h2 id=&quot;51-监控&quot;&gt;5.1 监控&lt;/h2&gt;
+&lt;p&gt;监控方面，datadog的几篇文章非常不错，值得一读，不过版本有点老了，文章是2016年的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P1&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/collecting-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P2&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当然，Kafka也有Prometheus的exporter：&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;如果只需要可检索的指标列表，可以直接看这篇：&lt;a href=&quot;https://docs.confluent.io/current/kafka/monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;52-高可用&quot;&gt;5.2 高可用&lt;/h2&gt;
+&lt;p&gt;在之前的&lt;a href=&quot;#ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;中，已经介绍过了Kafka的集群模式，可以看到Kafka天然就是分布式的，而且在设计之初就考虑到了集权的高可用。当然我这里的文字内容偏简单了，只介绍了大致的部分。更深入的可以阅读唯品会的：&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;，这篇讲解非常透彻，基本上可以当经典来看了。&lt;/p&gt;
+
+&lt;p&gt;Kafka的高可用配置，有几个配置项控制了集群的安全程度。这里需要记住一点，整个集群越安全集群的吞吐量就越低，这是等价交换的，不可能不付出任何代价就获得数据的安全性。唯品会的文章讲解的细节非常多，但我们真正执行操作的时候可以只知其然，懂得哪几个配置项需要操作即可：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;topic：
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code&gt;replication.factor&lt;/code&gt;：每个partition会拥有多少个replica&lt;/li&gt;
+      &lt;li&gt;&lt;code&gt;min.insync.replicas&lt;/code&gt;：partition的leader节点要求当前在线的replica节点的数量，如果实际在线数量少于这个数值，客户端的请求会被拒绝：&lt;code&gt;org.apache.kafka.common.errors.NotEnoughReplicasExceptoin: Messages are rejected since there are fewer in-sync replicas than required&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;broker：
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code&gt;unclean.leader.election.enable&lt;/code&gt;：是否允许out-of-sync replica成为leader&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;producer：
+    &lt;ul&gt;
+      &lt;li&gt;producer.type：消息生产者提交消息到kafka服务器的时候的模式，可选：sync或async
+        &lt;ul&gt;
+          &lt;li&gt;&lt;code&gt;sync&lt;/code&gt;拥有很好的安全性&lt;/li&gt;
+          &lt;li&gt;&lt;code&gt;async&lt;/code&gt;拥有更高的吞吐量，可以批量进行消息发送&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;request.required.acks：kafka服务器在收到消息之后何时对生产者进行完成反馈
+        &lt;ul&gt;
+          &lt;li&gt;&lt;code&gt;1（默认）&lt;/code&gt;：partition的leader节点收取完成即反馈，如果在follower同步数据之前leader宕机则数据丢失&lt;/li&gt;
+          &lt;li&gt;&lt;code&gt;0&lt;/code&gt;：producer不等待kafka服务器反馈即直接进行后续发送，拥有最高的吞吐量以及最低的安全性&lt;/li&gt;
+          &lt;li&gt;&lt;code&gt;-1&lt;/code&gt;：partition的所有节点包括了leader以及所有的follower全部都确认数据同步完成再反馈，最高的安全性以及最低的吞吐量&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;要保证数据写入到Kafka是安全的，高可靠的，需要如下配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;topic：
+    &lt;ul&gt;
+      &lt;li&gt;replication.factor&amp;gt;=3：即副本数至少是3个&lt;/li&gt;
+      &lt;li&gt;2&amp;lt;=min.insync.replicas&amp;lt;=replication.factor：要求每个partition leader的在线replica数量最少保持2个&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;broker：
+    &lt;ul&gt;
+      &lt;li&gt;unclean.leader.election.enable=false：不允许out-of-sync replica成为leader&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;producer：
+    &lt;ul&gt;
+      &lt;li&gt;request.required.acks=-1(all)：producer发送的消息请求必须让partition所有的replica都同步完毕才会返回成功&lt;/li&gt;
+      &lt;li&gt;producer.type=sync：producer发送的消息以同步方式发送，即在写入成功之前，producer必须等待&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;6-kafka-benchmark&quot;&gt;6. Kafka Benchmark&lt;/h1&gt;
+&lt;p&gt;这里的内容全部是转载自唯品会的：&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;。网上的资料很容易失效，因此在这里做下转载。&lt;/p&gt;
+
+&lt;p&gt;Benchmark的Kafka版本是：&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;0.10.1.0
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;61-测试环境&quot;&gt;6.1 测试环境&lt;/h2&gt;
+&lt;p&gt;Kafka broker 用到了 4 台机器，分别为 broker[0/1/2/3] 配置如下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CPU: 24core/2.6GHZ&lt;/li&gt;
+  &lt;li&gt;Memory: 62G&lt;/li&gt;
+  &lt;li&gt;Network: 4000Mb&lt;/li&gt;
+  &lt;li&gt;OS/kernel: CentOs release 6.6 (Final)&lt;/li&gt;
+  &lt;li&gt;Disk: 1089G&lt;/li&gt;
+  &lt;li&gt;Kafka 版本：0.10.1.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;broker 端 JVM 参数设置：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;-Xmx8G -Xms8G -server -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+CMSScavengeBeforeRemark -XX:+DisableExplicitGC -Djava.awt.headless=true -Xloggc:/apps/service/kafka/bin/../logs/kafkaServer-gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9999
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;客户端机器配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CPU: 24core/2.6GHZ&lt;/li&gt;
+  &lt;li&gt;Memory: 3G&lt;/li&gt;
+  &lt;li&gt;Network: 1000Mb&lt;/li&gt;
+  &lt;li&gt;OS/kernel: CentOs release 6.3 (Final)&lt;/li&gt;
+  &lt;li&gt;Disk: 240G&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;62-不同场景测试&quot;&gt;6.2 不同场景测试&lt;/h2&gt;
+&lt;h3 id=&quot;621-场景1&quot;&gt;6.2.1 场景1&lt;/h3&gt;
+&lt;p&gt;测试不同的副本数、min.insync.replicas 策略以及 request.required.acks 策略（以下简称 acks 策略）对于发送速度（TPS）的影响。&lt;/p&gt;
+
+&lt;p&gt;具体配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个 producer&lt;/li&gt;
+  &lt;li&gt;发送方式为 sync&lt;/li&gt;
+  &lt;li&gt;消息体大小为 1kB&lt;/li&gt;
+  &lt;li&gt;partition 数为 12&lt;/li&gt;
+  &lt;li&gt;副本数为：1/2/4&lt;/li&gt;
+  &lt;li&gt;min.insync.replicas 分别为 1/2/4&lt;/li&gt;
+  &lt;li&gt;acks 分别为 -1（all）/1/0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;具体测试数据如下表（min.insync.replicas 只在 acks=-1 时有效）：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-06.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;测试结果分析：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;客户端的 acks 策略对发送的 TPS 有较大的影响，TPS：acks_0 &amp;gt; acks_1 &amp;gt; ack_-1;&lt;/li&gt;
+  &lt;li&gt;副本数越高，TPS 越低；副本数一致时，min.insync.replicas 不影响 TPS；&lt;/li&gt;
+  &lt;li&gt;acks=0/1 时，TPS 与 min.insync.replicas 参数以及副本数无关，仅受 acks 策略的影响。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下面将 partition 的个数设置为 1，来进一步确认下不同的 acks 策略、不同的 min.insync.replicas 策略以及不同的副本数对于发送速度的影响，详细请看情景 2 和情景 3。&lt;/p&gt;
+
+&lt;h3 id=&quot;622-场景2&quot;&gt;6.2.2 场景2&lt;/h3&gt;
+&lt;p&gt;在 partition 个数固定为 1，测试不同的副本数和 min.insync.replicas 策略对发送速度的影响。&lt;/p&gt;
+
+&lt;p&gt;具体配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个 producer&lt;/li&gt;
+  &lt;li&gt;发送方式为 sync&lt;/li&gt;
+  &lt;li&gt;消息体大小为 1kB&lt;/li&gt;
+  &lt;li&gt;producer 端 acks=-1(all)&lt;/li&gt;
+  &lt;li&gt;变换副本数：2/3/4&lt;/li&gt;
+  &lt;li&gt;min.insync.replicas 设置为：1/2/4&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;测试结果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-07.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;测试结果分析：&lt;/p&gt;
+
+&lt;p&gt;副本数越高，TPS 越低（这点与场景 1 的测试结论吻合），但是当 partition 数为 1 时差距甚微。min.insync.replicas 不影响 TPS。&lt;/p&gt;
+
+&lt;h3 id=&quot;623-场景3&quot;&gt;6.2.3 场景3&lt;/h3&gt;
+&lt;p&gt;在 partition 个数固定为 1，测试不同的 acks 策略和副本数对发送速度的影响。&lt;/p&gt;
+
+&lt;p&gt;具体配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个 producer&lt;/li&gt;
+  &lt;li&gt;发送方式为 sync&lt;/li&gt;
+  &lt;li&gt;消息体大小为 1kB&lt;/li&gt;
+  &lt;li&gt;min.insync.replicas=1&lt;/li&gt;
+  &lt;li&gt;topic 副本数为：1/2/4&lt;/li&gt;
+  &lt;li&gt;acks： 0/1/-1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;测试结果如下：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-08.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;测试结果分析（与情景 1 一致）：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;副本数越多，TPS 越低；&lt;/li&gt;
+  &lt;li&gt;客户端的 acks 策略对发送的 TPS 有较大的影响，TPS：acks_0 &amp;gt; acks_1 &amp;gt; ack_-1。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;624-场景4&quot;&gt;6.2.4 场景4&lt;/h3&gt;
+&lt;p&gt;测试不同 partition 数对发送速率的影响&lt;/p&gt;
+
+&lt;p&gt;具体配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个 producer&lt;/li&gt;
+  &lt;li&gt;消息体大小为 1KB&lt;/li&gt;
+  &lt;li&gt;发送方式为 sync&lt;/li&gt;
+  &lt;li&gt;topic 副本数为 2&lt;/li&gt;
+  &lt;li&gt;min.insync.replicas=2&lt;/li&gt;
+  &lt;li&gt;acks=-1&lt;/li&gt;
+  &lt;li&gt;partition 数量设置为 1/2/4/8/12&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;测试结果：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-09.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;测试结果分析：&lt;/p&gt;
+
+&lt;p&gt;partition 的不同会影响 TPS，随着 partition 的个数的增长 TPS 会有所增长，但并不是一直成正比关系，到达一定临界值时，partition 数量的增加反而会使 TPS 略微降低。&lt;/p&gt;
+
+&lt;h3 id=&quot;625-场景5&quot;&gt;6.2.5 场景5&lt;/h3&gt;
+&lt;p&gt;通过将集群中部分 broker 设置成不可服务状态，测试对客户端以及消息落盘的影响。&lt;/p&gt;
+
+&lt;p&gt;具体配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个 producer&lt;/li&gt;
+  &lt;li&gt;消息体大小 1KB&lt;/li&gt;
+  &lt;li&gt;发送方式为 sync&lt;/li&gt;
+  &lt;li&gt;topic 副本数为 4&lt;/li&gt;
+  &lt;li&gt;min.insync.replicas 设置为 2&lt;/li&gt;
+  &lt;li&gt;acks=-1&lt;/li&gt;
+  &lt;li&gt;retries=0/100000000&lt;/li&gt;
+  &lt;li&gt;partition 数为 12&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;具体测试数据如下表：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-10.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;出错信息：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;错误 1：客户端返回异常，部分数据可落盘，部分失败：org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.&lt;/li&gt;
+  &lt;li&gt;错误 2：[WARN]internals.Sender - Got error produce response with correlation id 19369 on topic-partition default_channel_replicas_4_1-3, retrying (999999999 attempts left). Error: NETWORK_EXCEPTION&lt;/li&gt;
+  &lt;li&gt;错误 3： [WARN]internals.Sender - Got error produce response with correlation id 77890 on topic-partition default_channel_replicas_4_1-8, retrying (999999859 attempts left). Error: NOT_ENOUGH_REPLICAS&lt;/li&gt;
+  &lt;li&gt;错误 4： [WARN]internals.Sender - Got error produce response with correlation id 77705 on topic-partition default_channel_replicas_4_1-3, retrying (999999999 attempts left). Error: NOT_ENOUGH_REPLICAS_AFTER_APPEND&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;测试结果分析：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;kill 两台 broker 后，客户端可以继续发送。broker 减少后，partition 的 leader 分布在剩余的两台 broker 上，造成了 TPS 的减小；&lt;/li&gt;
+  &lt;li&gt;kill 三台 broker 后，客户端无法继续发送。Kafka 的自动重试功能开始起作用，当大于等于 min.insync.replicas 数量的 broker 恢复后，可以继续发送；&lt;/li&gt;
+  &lt;li&gt;当 retries 不为 0 时，消息有重复落盘；客户端成功返回的消息都成功落盘，异常时部分消息可以落盘。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;626-场景6&quot;&gt;6.2.6 场景6&lt;/h3&gt;
+&lt;p&gt;测试单个 producer 的发送延迟，以及端到端的延迟。&lt;/p&gt;
+
+&lt;p&gt;具体配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一个 producer&lt;/li&gt;
+  &lt;li&gt;消息体大小 1KB&lt;/li&gt;
+  &lt;li&gt;发送方式为 sync&lt;/li&gt;
+  &lt;li&gt;topic 副本数为 4&lt;/li&gt;
+  &lt;li&gt;min.insync.replicas 设置为 2&lt;/li&gt;
+  &lt;li&gt;acks=-1&lt;/li&gt;
+  &lt;li&gt;partition 数为 12&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;测试数据及结果（单位为 ms）：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-11.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;63-各场景测试总结&quot;&gt;6.3 各场景测试总结&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;当 acks=-1 时，Kafka 发送端的 TPS 受限于 topic 的副本数量（ISR 中），副本越多 TPS 越低；&lt;/li&gt;
+  &lt;li&gt;acks=0 时，TPS 最高，其次为 1，最差为 -1，即 TPS：acks_0 &amp;gt; acks_1 &amp;gt; ack_-1；&lt;/li&gt;
+  &lt;li&gt;min.insync.replicas 参数不影响 TPS；&lt;/li&gt;
+  &lt;li&gt;partition 的不同会影响 TPS，随着 partition 的个数的增长 TPS 会有所增长，但并不是一直成正比关系，到达一定临界值时，partition 数量的增加反而会使 TPS 略微降低；&lt;/li&gt;
+  &lt;li&gt;Kafka 在 acks=-1,min.insync.replicas&amp;gt;=1 时，具有高可靠性，所有成功返回的消息都可以落盘。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;7-kafka使用范例&quot;&gt;7. Kafka使用范例&lt;/h1&gt;
+&lt;p&gt;实验使用的还是下载下来的Kafka，版本如头部申明的是&lt;code&gt;2.2.0&lt;/code&gt;。范例代码可以在Github查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/experiment/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/experiment/kafka/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;8-todo&quot;&gt;8. TODO&lt;/h1&gt;
+&lt;ul&gt;
+  &lt;li&gt;深入研究Kafka的监控Metrics&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
+&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html&quot; target=&quot;_blank&quot;&gt;Apache kafka中文手册&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/distributed-queue-programme-model-actual-combat-optimization&quot; target=&quot;_blank&quot;&gt;分布式队列编程：从模型、实战到优化&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;amp;mid=2651745361&amp;amp;idx=1&amp;amp;sn=5f0f67484a0de4b0dd2796848ef9cc94&quot; target=&quot;_blank&quot;&gt;分布式队列编程优化篇&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.jianshu.com/p/7a6deaba34d2&quot; target=&quot;_blank&quot;&gt;如何保证消息队列的高可用和幂等性以及数据丢失，顺序一致性&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/kafka-vs-rabbitmq&quot; target=&quot;_blank&quot;&gt;消息中间件选型分析：从 Kafka 与 RabbitMQ 的对比看全局&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/dXJ3EYIp*WaHfmVwlMeu&quot; target=&quot;_blank&quot;&gt;滴滴出行基于 RocketMQ 构建企业级消息队列服务的实践&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/39586635/why-is-kafka-pull-based-instead-of-push-based&quot; target=&quot;_blank&quot;&gt;Why is Kafka pull-based instead of push-based?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5&quot; target=&quot;_blank&quot;&gt;Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/huxi2b/p/6223228.html&quot; target=&quot;_blank&quot;&gt;Kafka消费组(consumer group)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/45175424/how-multiple-consumer-group-consumers-work-across-partition-on-the-same-topic-in&quot; target=&quot;_blank&quot;&gt;How multiple consumer group consumers work across partition on the same topic in Kafka?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/pursuer211/article/details/79799478&quot; target=&quot;_blank&quot;&gt;kafka中partition和消费者对应关系&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://medium.com/@danieljameskay/understanding-the-enable-auto-commit-kafka-consumer-property-12fa0ade7b65&quot; target=&quot;_blank&quot;&gt;Understanding the ‘enable.auto.commit’ Kafka Consumer property&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P1&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/collecting-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P2&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.confluent.io/current/kafka/monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Mon, 29 Apr 2019 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2019/04/kafka-note/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2019/04/kafka-note/</guid>
+			</item>
+		
+			<item>
 				<title>消息队列设计精要 - 美团点评技术团队</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -4576,94 +5163,6 @@ SCHED 0ms: gomaxprocs=8 idleprocs=6 threads=4 spinningthreads=1 idlethreads=0 ru
 				<pubDate>Tue, 26 Mar 2019 11:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/03/golang-goroutine/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/03/golang-goroutine/</guid>
-			</item>
-		
-			<item>
-				<title>Golang CPU</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-cpu&quot; id=&quot;markdown-toc-2-cpu&quot;&gt;2. CPU&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-核心数量&quot; id=&quot;markdown-toc-21-核心数量&quot;&gt;2.1 核心数量&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-profiling&quot; id=&quot;markdown-toc-22-profiling&quot;&gt;2.2 Profiling&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#23-火焰图&quot; id=&quot;markdown-toc-23-火焰图&quot;&gt;2.3 火焰图&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-代码&quot; id=&quot;markdown-toc-3-代码&quot;&gt;3. 代码&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-资料&quot; id=&quot;markdown-toc-4-资料&quot;&gt;4. 资料&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID_APP_CPU_SAMPLE&quot; id=&quot;markdown-toc-ID_APP_CPU_SAMPLE&quot;&gt;experiment/cpu/cpu.go&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;本文是Go语言系列文章&lt;a href=&quot;/2019/02/golang-note/&quot; target=&quot;_blank&quot;&gt;Golang Notes&lt;/a&gt;的其中一篇，完整的文章列表请去总章查看。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-cpu&quot;&gt;2. CPU&lt;/h1&gt;
-&lt;p&gt;CPU这里基本上就没什么太多原理可以说了，只要知道几个知识点就OK。&lt;/p&gt;
-
-&lt;h2 id=&quot;21-核心数量&quot;&gt;2.1 核心数量&lt;/h2&gt;
-&lt;p&gt;获取可用的核心数量：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;runtime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;NumCPU&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;设置当前Go进程应该使用多少核心：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;runtime&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;GOMAXPROCS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;22-profiling&quot;&gt;2.2 Profiling&lt;/h2&gt;
-&lt;p&gt;Profiling方面和内存使用的工具基本上是一致的，直接看内存那篇里的内容即可：&lt;a href=&quot;/2019/03/golang-memory/#ID_PROF_PPROF_WEB&quot;&gt;Golang Memory#5.3.3 runtime/pprof web&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;仍旧推荐使用WEB入口的方式来进行profiling，更容易进行实时追踪。获取采样的地址为：&lt;code&gt;http://localhost:8080/debug/pprof/profile&lt;/code&gt;。&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;$ go tool pprof http://localhost:8080/debug/pprof/profile
-Fetching profile over HTTP from http://localhost:8080/debug/pprof/profile
-Saved profile in /Users/XXX/pprof/pprof.samples.cpu.001.pb.gz
-Type: cpu
-Time: Mar 26, 2019 at 1:41pm (CST)
-Duration: 30.15s, Total samples = 3.16s (10.48%)
-Entering interactive mode (type &quot;help&quot; for commands, &quot;o&quot; for options)
-(pprof)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;go tool pprof在进行CPU分析的时候先要进行采样，所以需要等待一段时间，如果在URL上不加任何参数的话，默认是采样30秒。可以通过附加&lt;code&gt;?seconds=x&lt;/code&gt;来进行调整。&lt;/p&gt;
-
-&lt;p&gt;e.g&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;$ go tool pprof http://localhost:8080/debug/pprof/profile?seconds=10
-Fetching profile over HTTP from http://localhost:8080/debug/pprof/profile?seconds=10
-Saved profile in /Users/XXX/pprof/pprof.samples.cpu.002.pb.gz
-Type: cpu
-Time: Mar 26, 2019 at 1:44pm (CST)
-Duration: 10.02s, Total samples = 1.06s (10.57%)
-Entering interactive mode (type &quot;help&quot; for commands, &quot;o&quot; for options)
-(pprof)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;同样的，其他的工具例如&lt;code&gt;trace&lt;/code&gt;等也都可以使用。如果要在代码里进行采样，则需要使用接口：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;StartCPUProfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Stdout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pprof&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;StopCPUProfile&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;23-火焰图&quot;&gt;2.3 火焰图&lt;/h2&gt;
-&lt;p&gt;火焰图是最直观的查看CPU消耗的分析工具，如果要在Go工具链上生成火焰图，可以使用在内存篇里提到过的pprof的UI界面。打开之后&lt;code&gt;VIEW &amp;gt; Flame Graph&lt;/code&gt;就能看到了。&lt;/p&gt;
-
-&lt;h1 id=&quot;3-代码&quot;&gt;3. 代码&lt;/h1&gt;
-&lt;p&gt;代码放在github：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/experiment/cpu/cpu.go&quot; target=&quot;_blank&quot;&gt;experiment/cpu/cpu.go&lt;/a&gt;。github上的代码可以看到最新的更新，不过需要打开新的页面稍微麻烦点。&lt;/p&gt;
-
-&lt;p&gt;当前页面会放一份gist，方便直接查看：&lt;a href=&quot;#ID_APP_CPU_SAMPLE&quot;&gt;experiment/cpu/cpu.go&lt;/a&gt;，但可能更新不及时。&lt;/p&gt;
-
-&lt;h1 id=&quot;4-资料&quot;&gt;4. 资料&lt;/h1&gt;
-&lt;h2 id=&quot;ID_APP_CPU_SAMPLE&quot;&gt;experiment/cpu/cpu.go&lt;/h2&gt;
-&lt;noscript&gt;&lt;pre&gt;400: Invalid request
-&lt;/pre&gt;&lt;/noscript&gt;
-&lt;script src=&quot;https://gist.github.com/24a00ddbdb04c68d6fd2792ba8808ce6.js&quot;&gt; &lt;/script&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Tue, 26 Mar 2019 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/03/golang-cpu/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/03/golang-cpu/</guid>
 			</item>
 		
 	</channel>

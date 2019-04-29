@@ -1,0 +1,921 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Kafka Notes | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/04/kafka-note/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/04/kafka-note/">Kafka Notes</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>29 Apr 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Kafka">Kafka</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MessageQueue">MessageQueue</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Keynote">Keynote</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-消息队列" id="markdown-toc-2-消息队列">2. 消息队列</a></li>
+  <li><a href="#3-消息队列选型比较" id="markdown-toc-3-消息队列选型比较">3. 消息队列选型比较</a></li>
+  <li><a href="#4-kafka架构" id="markdown-toc-4-kafka架构">4. Kafka架构</a>    <ul>
+      <li><a href="#41-概念" id="markdown-toc-41-概念">4.1 概念</a></li>
+      <li><a href="#ID_CLUSTER" id="markdown-toc-ID_CLUSTER">4.2 集群</a></li>
+      <li><a href="#43-分布式痛点offset" id="markdown-toc-43-分布式痛点offset">4.3 分布式痛点（offset）</a></li>
+      <li><a href="#44-临时消费压力应急" id="markdown-toc-44-临时消费压力应急">4.4 临时消费压力应急</a></li>
+    </ul>
+  </li>
+  <li><a href="#5-kafka监控--高可用" id="markdown-toc-5-kafka监控--高可用">5. Kafka监控 &amp; 高可用</a>    <ul>
+      <li><a href="#51-监控" id="markdown-toc-51-监控">5.1 监控</a></li>
+      <li><a href="#52-高可用" id="markdown-toc-52-高可用">5.2 高可用</a></li>
+    </ul>
+  </li>
+  <li><a href="#6-kafka-benchmark" id="markdown-toc-6-kafka-benchmark">6. Kafka Benchmark</a>    <ul>
+      <li><a href="#61-测试环境" id="markdown-toc-61-测试环境">6.1 测试环境</a></li>
+      <li><a href="#62-不同场景测试" id="markdown-toc-62-不同场景测试">6.2 不同场景测试</a>        <ul>
+          <li><a href="#621-场景1" id="markdown-toc-621-场景1">6.2.1 场景1</a></li>
+          <li><a href="#622-场景2" id="markdown-toc-622-场景2">6.2.2 场景2</a></li>
+          <li><a href="#623-场景3" id="markdown-toc-623-场景3">6.2.3 场景3</a></li>
+          <li><a href="#624-场景4" id="markdown-toc-624-场景4">6.2.4 场景4</a></li>
+          <li><a href="#625-场景5" id="markdown-toc-625-场景5">6.2.5 场景5</a></li>
+          <li><a href="#626-场景6" id="markdown-toc-626-场景6">6.2.6 场景6</a></li>
+        </ul>
+      </li>
+      <li><a href="#63-各场景测试总结" id="markdown-toc-63-各场景测试总结">6.3 各场景测试总结</a></li>
+    </ul>
+  </li>
+  <li><a href="#7-kafka使用范例" id="markdown-toc-7-kafka使用范例">7. Kafka使用范例</a></li>
+  <li><a href="#8-todo" id="markdown-toc-8-todo">8. TODO</a></li>
+  <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
+      <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>Kafka是现在业界选择比较多的一种消息队列解决方案。我这里主要也是选Kafka作为消息队列这块需求的解决方案。下面的技术调研会先从消息队列本身开始，然后做一个横向比较，最后再聚焦到Kafka本身上。</p>
+
+<p>调研用的Kafka版本为：</p>
+
+<pre><code>2.2.0
+</code></pre>
+
+<p>官方文档：</p>
+
+<ul>
+  <li>官方介绍：<a href="https://kafka.apache.org/intro" target="_blank">Introduction</a></li>
+  <li>官方新手入门：<a href="https://kafka.apache.org/quickstart" target="_blank">Quickstart</a></li>
+  <li>官方应用场景介绍：<a href="https://kafka.apache.org/uses" target="_blank">Use cases</a></li>
+  <li>官方文档：<a href="https://kafka.apache.org/documentation/" target="_blank">Documentation</a></li>
+  <li>Docker Hub：<a href="https://hub.docker.com/r/wurstmeister/kafka" target="_blank">wurstmeister/kafka</a></li>
+</ul>
+
+<p>一本中文手册，版本较老，看看一些范例代码尚可：<a href="http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html" target="_blank">Apache kafka中文手册</a>。</p>
+
+<h1 id="2-消息队列">2. 消息队列</h1>
+<p>在聊Kafka之前，其实更需要关注下消息队列本身。什么需求下需要使用消息队列、消息队列的功能点有哪些、消息队列的模式有哪些、消息队列的实现难点有哪些，等等。如果什么都不了解，那技术选型就无从谈起了，也没办法理解为什么消息队列要做好是非常困难的一件事情。展开了说，也就没办法举一反三，理解其他软件系统的设计精髓了。</p>
+
+<p>下面会简单列举下消息队列的一系列知识点，细节内容这里就不展开了，篇幅太大。</p>
+
+<p>消息队列的需求：</p>
+
+<ul>
+  <li>解耦</li>
+  <li>最终一致性</li>
+  <li>广播</li>
+  <li>错峰与流控</li>
+</ul>
+
+<p>消息队列的模型：</p>
+
+<ul>
+  <li>点对点：单生产、单队列、单消费</li>
+  <li>生产者消费者模型：多生产、单队列、多消费</li>
+  <li>发布订阅模型：根据topic分队列，多生产、多队列、多消费</li>
+</ul>
+
+<p>消息队列的投递模式：</p>
+
+<ul>
+  <li>Push：消息队列主动推送（e.g RocketMQ可选）</li>
+  <li>Pull：消费者主动抓取（e.g Kafka）</li>
+</ul>
+
+<p>消息队列的性能指标：</p>
+
+<ul>
+  <li>吞吐量（Throughput）</li>
+  <li>响应时间（Latency）</li>
+</ul>
+
+<p>消息队列的投递策略：</p>
+
+<ul>
+  <li>最多一次（At most Once）：消息可能会丢，但绝不会重复传输</li>
+  <li>最少一次（At least Once）：消息绝不会丢，但可能会重复传输</li>
+  <li>仅有一次（Exactly Once）：每条消息肯定会被传输一次且仅传输一次</li>
+</ul>
+
+<p>消息队列的功能性：</p>
+
+<ul>
+  <li>优先级队列</li>
+  <li>延迟队列</li>
+  <li>死信队列</li>
+  <li>重试队列</li>
+  <li>消息回溯</li>
+  <li>消息堆积 + 持久化</li>
+  <li>消息追踪</li>
+  <li>消息过滤</li>
+  <li>多租户</li>
+  <li>多协议支持</li>
+  <li>跨语言支持</li>
+  <li>流量控制</li>
+  <li>可靠投递</li>
+  <li>消费确认</li>
+  <li>消息顺序性</li>
+  <li>安全机制</li>
+  <li>消息幂等性</li>
+  <li>事务性消息</li>
+</ul>
+
+<p>几篇值得一读的博文：</p>
+
+<p><a href="/2019/04/message-queue-design/" target="_blank">消息队列设计精要 - 美团点评技术团队</a></p>
+
+<p>一篇通论形式的消息队列设计博文，讲解了一些消息队列通用的知识点，值得一读。</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-01.png" alt="" target="_blank" /></p>
+
+<p><a href="https://www.infoq.cn/article/distributed-queue-programme-model-actual-combat-optimization" target="_blank">分布式队列编程：从模型、实战到优化</a></p>
+
+<p>本质上也是一篇对于消息队列进行设计和讲解的博文，但结合了美团公司内部的实际项目经验，对于大型系统的设计者有更好的贴近应用场景的指导作用。</p>
+
+<p><a href="https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;mid=2651745361&amp;idx=1&amp;sn=5f0f67484a0de4b0dd2796848ef9cc94" target="_blank">分布式队列编程优化篇</a></p>
+
+<p>接上一篇的博文，更多讲到了性能和高级功能相关的实现以及性能的优化。</p>
+
+<p><a href="https://www.jianshu.com/p/7a6deaba34d2" target="_blank">如何保证消息队列的高可用和幂等性以及数据丢失，顺序一致性</a></p>
+
+<p>排版比较粗糙，但内容非常不错。以贴近项目经验的内容讲解了RabbitMQ和Kafka的：</p>
+
+<ul>
+  <li>高可用性</li>
+  <li>消息幂等性</li>
+  <li>消息可靠性</li>
+  <li>消息顺序性</li>
+  <li>消息积压场景处理</li>
+</ul>
+
+<h1 id="3-消息队列选型比较">3. 消息队列选型比较</h1>
+<p>消息队列的选型一直都是比较困难的，业界现在比较主流的选择有：ActiveMQ、RabbitMQ、Kafka、RocketMQ、ZeroMQ 这几种。</p>
+
+<p>有几篇不错的博文可以看下：</p>
+
+<p><a href="https://www.infoq.cn/article/kafka-vs-rabbitmq" target="_blank">消息中间件选型分析：从 Kafka 与 RabbitMQ 的对比看全局</a></p>
+
+<p>这篇时间还算比较接近<code>2018年5月2日</code>，主要是以Kafka和RabbitMQ为范例进行了消息队列选型的要点讲解。虽然讲解的时候使用了Kafka以及RabbitMQ作为范例，但实际上讲解的是通用的消息队列选型要点。结合本文上一节所讲到的消息队列的一系列知识点，应该能有更深刻的理解。</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-02.jpg" alt="" target="_blank" />
+<img src="/resources/2019/04/kafka-note/message-queue-03.jpg" alt="" target="_blank" />
+<img src="/resources/2019/04/kafka-note/message-queue-04.jpg" alt="" target="_blank" /></p>
+
+<p><a href="https://www.infoq.cn/article/dXJ3EYIp*WaHfmVwlMeu" target="_blank">滴滴出行基于 RocketMQ 构建企业级消息队列服务的实践</a></p>
+
+<p>这篇时间稍微有点久，文中提到的Kafka版本还是0.8左右的（虽然文章的发布时间倒是不久之前），所以文中提到的性能指标之类的仅可作为参考。这篇文章是对Kafka和RocketMQ做的一个技术选型比较，文章中有相当多的性能指标比较，并结合滴滴公司的实际情况讲解了下消息队列系统进行替换时候所做的Migration工作，非常有借鉴价值。此外，文中还有一小节讲解了下RocketMQ使用的经验。</p>
+
+<p><a href="https://stackoverflow.com/questions/39586635/why-is-kafka-pull-based-instead-of-push-based" target="_blank">Why is Kafka pull-based instead of push-based?</a></p>
+
+<p>为什么Kafka消息队列使用的是Pull投递模式。</p>
+
+<p><a href="https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5" target="_blank">Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar</a></p>
+
+<p>老外写的一篇，提到了不少国内较少提到的开源项目，可以作为参考。</p>
+
+<h1 id="4-kafka架构">4. Kafka架构</h1>
+<h2 id="41-概念">4.1 概念</h2>
+<p>老样子从基本的概念开始梳理：</p>
+
+<ul>
+  <li><code>broker</code>：kafka集群中的任意一台提供服务的物理服务器即被称为broker</li>
+  <li><code>topic</code>：消息队列的一个队列，一般做架构的时候按需求将不同的消息分别派送到不同的管道里，而其中的任意一个管道在kafka里就是一个topic</li>
+  <li><code>partition</code>：topic下的概念，任意一个topic根据启动时的设定，会分成多个partition，而每个partition会由集群安排在某一台物理机broker上，以此做到集群的横向扩展</li>
+  <li><code>offset</code>：partition下的概念，topic被分为很多partition，而每个partition则都会存储消息，每个partition存储的消息都是从0开始进行标号，而这个每条消息一个的标号，即为offset；可以理解为消息在partition里的唯一id；不同的partition都是从0开始标号，因此offset只对其自身的partition生效，不可混用</li>
+  <li><code>replica</code>：某个partition的完整备份（在接收写入请求时数据可能会落后于leader），用在集群的高可用服务上，同时也可以提供partition读操作的负载均衡</li>
+  <li><code>producer</code>：向topic里输入消息数据的角色</li>
+  <li><code>consumer</code>：从topic里消费消息数据的角色</li>
+  <li><code>consumer group</code>：可扩展且具有容错性的consumer机制，多个consumer共享一个group id，组内的所有consumer一起来消费topic的所有partition；但一个partition仍旧只能有一个consumer来进行消费；主要是为了解决consumer和partition配对balance的问题，将consumer做成组由集群自动进行平衡和分配到partition</li>
+</ul>
+
+<p>关于consumer group，更多的可以看：<a href="https://www.cnblogs.com/huxi2b/p/6223228.html" target="_blank">Kafka消费组(consumer group)</a>。</p>
+
+<h2 id="ID_CLUSTER">4.2 集群</h2>
+<p>一张图基本上就能说明问题：</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-05.jpg" alt="" target="_blank" /></p>
+
+<ul>
+  <li>kafka集群由多台broker（物理机）组成</li>
+  <li>图示中有<code>四台</code>broker</li>
+  <li>每个topic会根据配置，生成固定数量的partition，均匀分配到物理机上</li>
+  <li>图示中的topic被分成了<code>3个</code>partition：<code>P1_leader</code>（broker1）、<code>P2_leader</code>（broker2）、<code>P3_leader</code>（broker4）</li>
+  <li>每个partition根据配置，会拥有固定数量的follower（replica），分别分配到各个物理机上</li>
+  <li>图示中即：<code>P1_follower</code>（broker2、broker3）、<code>P2_follower</code>（broker3、broker4）、<code>P3_follower</code>（broker1、broker2）</li>
+  <li>当有broker宕机的时候：
+    <ul>
+      <li>丢失的follower会由集群重新寻找节点进行备份<code>恢复</code></li>
+      <li>丢失的leader会由集群自现存的follower中<code>选举</code>产生，成为新的leader</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="43-分布式痛点offset">4.3 分布式痛点（offset）</h2>
+<p>Kafka在分布式解决方案上也有痛点，主要是每个partition的offset问题。</p>
+
+<p>为了性能，kafka将一个partition视作一个管道，拥有一个从0开始的offset。这样做的好处就是不再需要在每一个消息体上做metadata存放该消息是否被消费掉等信息，而是通过partition的offset来标记整个管道中的消息被消费到了哪里。消息体更简单，流程上也更简单，不会出现乱序的消费情况。但也正是因为这种设计，导致每个partition无法由多个consumer并发消费，每个partition绑定只能同时允许一个consumer消费。</p>
+
+<p>因此，从机制上来说，kafka并不适合用来做consumer重消耗（CPU）类型的消息通道。虽然partition可以做很多，极端点来说可以做到和consumer实际需求1：1的配比，但超过适配当前需求的partition数量设置也会造成吞吐量的下降。</p>
+
+<p>consumer和partition在进行消息是否被消费掉的确认行为上，有两种方式：</p>
+
+<ul>
+  <li>自动提交：
+    <ul>
+      <li>设置<code>enable.auto.commit=true</code></li>
+      <li>更新的频率根据参数<code>auto.commit.interval.ms</code>来定，这种方式被称为<code>at most once</code></li>
+      <li>fetch到消息后就会更新offset，无论是否消费成功</li>
+    </ul>
+  </li>
+  <li>手动提交：
+    <ul>
+      <li>设置<code>enable.auto.commit=false</code></li>
+      <li>这种方式被称为<code>at least once</code></li>
+      <li>fetch到消息后，消费成功后手用方法<code>consumer.commitSync()</code>，手动更新offset</li>
+      <li>如果消费失败，则offset不会更新，此条消息会被重复消费一次</li>
+    </ul>
+  </li>
+</ul>
+
+<p>关于partition和consumer之间的关系，更多可以看下：</p>
+
+<p><a href="https://stackoverflow.com/questions/45175424/how-multiple-consumer-group-consumers-work-across-partition-on-the-same-topic-in" target="_blank">How multiple consumer group consumers work across partition on the same topic in Kafka?</a></p>
+
+<blockquote>
+  <p>If you want to have more consumers than partitions and still have performance enhancement and process only each message once, then you should increase the number of partitions in the topics so that there are at least as many partitions as consumers. Often topics are created with 2 times as many partitions needed to start, just so more consumers can be added later if needed without having to repartition the topic.</p>
+</blockquote>
+
+<p><a href="https://blog.csdn.net/pursuer211/article/details/79799478" target="_blank">kafka中partition和消费者对应关系</a></p>
+
+<blockquote>
+  <p>1个partition只能被同组的一个consumer消费，同组的consumer则起到均衡效果</p>
+</blockquote>
+
+<p>以及自动提交相关：<a href="https://medium.com/@danieljameskay/understanding-the-enable-auto-commit-kafka-consumer-property-12fa0ade7b65" target="_blank">Understanding the ‘enable.auto.commit’ Kafka Consumer property</a>。</p>
+
+<h2 id="44-临时消费压力应急">4.4 临时消费压力应急</h2>
+<p>如果因某些原因，之前设计的partition分片数量不够，导致能够上工的consumer数量不够，而且consumer的消费速率跟不上，这时候就会发生消息堆积。如果堆积的情况比较严重的话，就需要程序介入处理。</p>
+
+<p>思路如下：</p>
+
+<ol>
+  <li>老的partition以及老的topic肯定不能动，就算重新进行repartition整个集群重新平衡耗费的时间也是难以忍受的</li>
+  <li>创建新的topic</li>
+  <li>将新的topic的partition设到consumer消费速率能跟上的数量</li>
+  <li>将新的consumer部署上去，消费新设置的topic和partition</li>
+  <li>将老的topic以及partition上挂载的consumer全部停止</li>
+  <li>在老的topic以及partition上挂载临时consumer，这批consumer不做任何逻辑处理，只是将老的topic内的消息全部读取出来，并输入到新的topic里</li>
+</ol>
+
+<p>这样老的topic里的消息就全部分发到新的topic里了，且新的topic的partition数量很高，可以挂载很多consumer处理堆积的消息。</p>
+
+<h1 id="5-kafka监控--高可用">5. Kafka监控 &amp; 高可用</h1>
+<h2 id="51-监控">5.1 监控</h2>
+<p>监控方面，datadog的几篇文章非常不错，值得一读，不过版本有点老了，文章是2016年的：</p>
+
+<ul>
+  <li><a href="https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/" target="_blank">Monitoring Kafka performance metrics - P1</a></li>
+  <li><a href="https://www.datadoghq.com/blog/collecting-kafka-performance-metrics/" target="_blank">Monitoring Kafka performance metrics - P2</a></li>
+</ul>
+
+<p>当然，Kafka也有Prometheus的exporter：<a href="https://github.com/danielqsj/kafka_exporter" target="_blank">danielqsj/kafka_exporter</a>。</p>
+
+<p>如果只需要可检索的指标列表，可以直接看这篇：<a href="https://docs.confluent.io/current/kafka/monitoring.html" target="_blank">Monitoring Kafka</a>。</p>
+
+<h2 id="52-高可用">5.2 高可用</h2>
+<p>在之前的<a href="#ID_CLUSTER">4.2 集群</a>中，已经介绍过了Kafka的集群模式，可以看到Kafka天然就是分布式的，而且在设计之初就考虑到了集权的高可用。当然我这里的文字内容偏简单了，只介绍了大致的部分。更深入的可以阅读唯品会的：<a href="https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability" target="_blank">Kafka 数据可靠性深度解读</a>，这篇讲解非常透彻，基本上可以当经典来看了。</p>
+
+<p>Kafka的高可用配置，有几个配置项控制了集群的安全程度。这里需要记住一点，整个集群越安全集群的吞吐量就越低，这是等价交换的，不可能不付出任何代价就获得数据的安全性。唯品会的文章讲解的细节非常多，但我们真正执行操作的时候可以只知其然，懂得哪几个配置项需要操作即可：</p>
+
+<ul>
+  <li>topic：
+    <ul>
+      <li><code>replication.factor</code>：每个partition会拥有多少个replica</li>
+      <li><code>min.insync.replicas</code>：partition的leader节点要求当前在线的replica节点的数量，如果实际在线数量少于这个数值，客户端的请求会被拒绝：<code>org.apache.kafka.common.errors.NotEnoughReplicasExceptoin: Messages are rejected since there are fewer in-sync replicas than required</code></li>
+    </ul>
+  </li>
+  <li>broker：
+    <ul>
+      <li><code>unclean.leader.election.enable</code>：是否允许out-of-sync replica成为leader</li>
+    </ul>
+  </li>
+  <li>producer：
+    <ul>
+      <li>producer.type：消息生产者提交消息到kafka服务器的时候的模式，可选：sync或async
+        <ul>
+          <li><code>sync</code>拥有很好的安全性</li>
+          <li><code>async</code>拥有更高的吞吐量，可以批量进行消息发送</li>
+        </ul>
+      </li>
+      <li>request.required.acks：kafka服务器在收到消息之后何时对生产者进行完成反馈
+        <ul>
+          <li><code>1（默认）</code>：partition的leader节点收取完成即反馈，如果在follower同步数据之前leader宕机则数据丢失</li>
+          <li><code>0</code>：producer不等待kafka服务器反馈即直接进行后续发送，拥有最高的吞吐量以及最低的安全性</li>
+          <li><code>-1</code>：partition的所有节点包括了leader以及所有的follower全部都确认数据同步完成再反馈，最高的安全性以及最低的吞吐量</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>要保证数据写入到Kafka是安全的，高可靠的，需要如下配置：</p>
+
+<ul>
+  <li>topic：
+    <ul>
+      <li>replication.factor&gt;=3：即副本数至少是3个</li>
+      <li>2&lt;=min.insync.replicas&lt;=replication.factor：要求每个partition leader的在线replica数量最少保持2个</li>
+    </ul>
+  </li>
+  <li>broker：
+    <ul>
+      <li>unclean.leader.election.enable=false：不允许out-of-sync replica成为leader</li>
+    </ul>
+  </li>
+  <li>producer：
+    <ul>
+      <li>request.required.acks=-1(all)：producer发送的消息请求必须让partition所有的replica都同步完毕才会返回成功</li>
+      <li>producer.type=sync：producer发送的消息以同步方式发送，即在写入成功之前，producer必须等待</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="6-kafka-benchmark">6. Kafka Benchmark</h1>
+<p>这里的内容全部是转载自唯品会的：<a href="https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability" target="_blank">Kafka 数据可靠性深度解读</a>。网上的资料很容易失效，因此在这里做下转载。</p>
+
+<p>Benchmark的Kafka版本是：</p>
+<pre><code>0.10.1.0
+</code></pre>
+
+<h2 id="61-测试环境">6.1 测试环境</h2>
+<p>Kafka broker 用到了 4 台机器，分别为 broker[0/1/2/3] 配置如下：</p>
+
+<ul>
+  <li>CPU: 24core/2.6GHZ</li>
+  <li>Memory: 62G</li>
+  <li>Network: 4000Mb</li>
+  <li>OS/kernel: CentOs release 6.6 (Final)</li>
+  <li>Disk: 1089G</li>
+  <li>Kafka 版本：0.10.1.0</li>
+</ul>
+
+<p>broker 端 JVM 参数设置：</p>
+
+<pre><code>-Xmx8G -Xms8G -server -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+CMSScavengeBeforeRemark -XX:+DisableExplicitGC -Djava.awt.headless=true -Xloggc:/apps/service/kafka/bin/../logs/kafkaServer-gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9999
+</code></pre>
+
+<p>客户端机器配置：</p>
+
+<ul>
+  <li>CPU: 24core/2.6GHZ</li>
+  <li>Memory: 3G</li>
+  <li>Network: 1000Mb</li>
+  <li>OS/kernel: CentOs release 6.3 (Final)</li>
+  <li>Disk: 240G</li>
+</ul>
+
+<h2 id="62-不同场景测试">6.2 不同场景测试</h2>
+<h3 id="621-场景1">6.2.1 场景1</h3>
+<p>测试不同的副本数、min.insync.replicas 策略以及 request.required.acks 策略（以下简称 acks 策略）对于发送速度（TPS）的影响。</p>
+
+<p>具体配置：</p>
+
+<ul>
+  <li>一个 producer</li>
+  <li>发送方式为 sync</li>
+  <li>消息体大小为 1kB</li>
+  <li>partition 数为 12</li>
+  <li>副本数为：1/2/4</li>
+  <li>min.insync.replicas 分别为 1/2/4</li>
+  <li>acks 分别为 -1（all）/1/0</li>
+</ul>
+
+<p>具体测试数据如下表（min.insync.replicas 只在 acks=-1 时有效）：</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-06.jpg" alt="" target="_blank" /></p>
+
+<p>测试结果分析：</p>
+
+<ul>
+  <li>客户端的 acks 策略对发送的 TPS 有较大的影响，TPS：acks_0 &gt; acks_1 &gt; ack_-1;</li>
+  <li>副本数越高，TPS 越低；副本数一致时，min.insync.replicas 不影响 TPS；</li>
+  <li>acks=0/1 时，TPS 与 min.insync.replicas 参数以及副本数无关，仅受 acks 策略的影响。</li>
+</ul>
+
+<p>下面将 partition 的个数设置为 1，来进一步确认下不同的 acks 策略、不同的 min.insync.replicas 策略以及不同的副本数对于发送速度的影响，详细请看情景 2 和情景 3。</p>
+
+<h3 id="622-场景2">6.2.2 场景2</h3>
+<p>在 partition 个数固定为 1，测试不同的副本数和 min.insync.replicas 策略对发送速度的影响。</p>
+
+<p>具体配置：</p>
+
+<ul>
+  <li>一个 producer</li>
+  <li>发送方式为 sync</li>
+  <li>消息体大小为 1kB</li>
+  <li>producer 端 acks=-1(all)</li>
+  <li>变换副本数：2/3/4</li>
+  <li>min.insync.replicas 设置为：1/2/4</li>
+</ul>
+
+<p>测试结果如下：</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-07.jpg" alt="" target="_blank" /></p>
+
+<p>测试结果分析：</p>
+
+<p>副本数越高，TPS 越低（这点与场景 1 的测试结论吻合），但是当 partition 数为 1 时差距甚微。min.insync.replicas 不影响 TPS。</p>
+
+<h3 id="623-场景3">6.2.3 场景3</h3>
+<p>在 partition 个数固定为 1，测试不同的 acks 策略和副本数对发送速度的影响。</p>
+
+<p>具体配置：</p>
+
+<ul>
+  <li>一个 producer</li>
+  <li>发送方式为 sync</li>
+  <li>消息体大小为 1kB</li>
+  <li>min.insync.replicas=1</li>
+  <li>topic 副本数为：1/2/4</li>
+  <li>acks： 0/1/-1</li>
+</ul>
+
+<p>测试结果如下：</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-08.jpg" alt="" target="_blank" /></p>
+
+<p>测试结果分析（与情景 1 一致）：</p>
+
+<ul>
+  <li>副本数越多，TPS 越低；</li>
+  <li>客户端的 acks 策略对发送的 TPS 有较大的影响，TPS：acks_0 &gt; acks_1 &gt; ack_-1。</li>
+</ul>
+
+<h3 id="624-场景4">6.2.4 场景4</h3>
+<p>测试不同 partition 数对发送速率的影响</p>
+
+<p>具体配置：</p>
+
+<ul>
+  <li>一个 producer</li>
+  <li>消息体大小为 1KB</li>
+  <li>发送方式为 sync</li>
+  <li>topic 副本数为 2</li>
+  <li>min.insync.replicas=2</li>
+  <li>acks=-1</li>
+  <li>partition 数量设置为 1/2/4/8/12</li>
+</ul>
+
+<p>测试结果：</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-09.jpg" alt="" target="_blank" /></p>
+
+<p>测试结果分析：</p>
+
+<p>partition 的不同会影响 TPS，随着 partition 的个数的增长 TPS 会有所增长，但并不是一直成正比关系，到达一定临界值时，partition 数量的增加反而会使 TPS 略微降低。</p>
+
+<h3 id="625-场景5">6.2.5 场景5</h3>
+<p>通过将集群中部分 broker 设置成不可服务状态，测试对客户端以及消息落盘的影响。</p>
+
+<p>具体配置：</p>
+
+<ul>
+  <li>一个 producer</li>
+  <li>消息体大小 1KB</li>
+  <li>发送方式为 sync</li>
+  <li>topic 副本数为 4</li>
+  <li>min.insync.replicas 设置为 2</li>
+  <li>acks=-1</li>
+  <li>retries=0/100000000</li>
+  <li>partition 数为 12</li>
+</ul>
+
+<p>具体测试数据如下表：</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-10.jpg" alt="" target="_blank" /></p>
+
+<p>出错信息：</p>
+
+<ul>
+  <li>错误 1：客户端返回异常，部分数据可落盘，部分失败：org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.</li>
+  <li>错误 2：[WARN]internals.Sender - Got error produce response with correlation id 19369 on topic-partition default_channel_replicas_4_1-3, retrying (999999999 attempts left). Error: NETWORK_EXCEPTION</li>
+  <li>错误 3： [WARN]internals.Sender - Got error produce response with correlation id 77890 on topic-partition default_channel_replicas_4_1-8, retrying (999999859 attempts left). Error: NOT_ENOUGH_REPLICAS</li>
+  <li>错误 4： [WARN]internals.Sender - Got error produce response with correlation id 77705 on topic-partition default_channel_replicas_4_1-3, retrying (999999999 attempts left). Error: NOT_ENOUGH_REPLICAS_AFTER_APPEND</li>
+</ul>
+
+<p>测试结果分析：</p>
+
+<ul>
+  <li>kill 两台 broker 后，客户端可以继续发送。broker 减少后，partition 的 leader 分布在剩余的两台 broker 上，造成了 TPS 的减小；</li>
+  <li>kill 三台 broker 后，客户端无法继续发送。Kafka 的自动重试功能开始起作用，当大于等于 min.insync.replicas 数量的 broker 恢复后，可以继续发送；</li>
+  <li>当 retries 不为 0 时，消息有重复落盘；客户端成功返回的消息都成功落盘，异常时部分消息可以落盘。</li>
+</ul>
+
+<h3 id="626-场景6">6.2.6 场景6</h3>
+<p>测试单个 producer 的发送延迟，以及端到端的延迟。</p>
+
+<p>具体配置：</p>
+
+<ul>
+  <li>一个 producer</li>
+  <li>消息体大小 1KB</li>
+  <li>发送方式为 sync</li>
+  <li>topic 副本数为 4</li>
+  <li>min.insync.replicas 设置为 2</li>
+  <li>acks=-1</li>
+  <li>partition 数为 12</li>
+</ul>
+
+<p>测试数据及结果（单位为 ms）：</p>
+
+<p><img src="/resources/2019/04/kafka-note/message-queue-11.jpg" alt="" target="_blank" /></p>
+
+<h2 id="63-各场景测试总结">6.3 各场景测试总结</h2>
+
+<ul>
+  <li>当 acks=-1 时，Kafka 发送端的 TPS 受限于 topic 的副本数量（ISR 中），副本越多 TPS 越低；</li>
+  <li>acks=0 时，TPS 最高，其次为 1，最差为 -1，即 TPS：acks_0 &gt; acks_1 &gt; ack_-1；</li>
+  <li>min.insync.replicas 参数不影响 TPS；</li>
+  <li>partition 的不同会影响 TPS，随着 partition 的个数的增长 TPS 会有所增长，但并不是一直成正比关系，到达一定临界值时，partition 数量的增加反而会使 TPS 略微降低；</li>
+  <li>Kafka 在 acks=-1,min.insync.replicas&gt;=1 时，具有高可靠性，所有成功返回的消息都可以落盘。</li>
+</ul>
+
+<h1 id="7-kafka使用范例">7. Kafka使用范例</h1>
+<p>实验使用的还是下载下来的Kafka，版本如头部申明的是<code>2.2.0</code>。范例代码可以在Github查看：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment/kafka" target="_blank">dist-system-practice/experiment/kafka/</a>。</p>
+
+<h1 id="8-todo">8. TODO</h1>
+<ul>
+  <li>深入研究Kafka的监控Metrics</li>
+</ul>
+
+<h1 id="资料">资料</h1>
+<h2 id="链接">链接</h2>
+<ul>
+  <li><a href="http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html" target="_blank">Apache kafka中文手册</a></li>
+  <li><a href="https://www.infoq.cn/article/distributed-queue-programme-model-actual-combat-optimization" target="_blank">分布式队列编程：从模型、实战到优化</a></li>
+  <li><a href="https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;mid=2651745361&amp;idx=1&amp;sn=5f0f67484a0de4b0dd2796848ef9cc94" target="_blank">分布式队列编程优化篇</a></li>
+  <li><a href="https://www.jianshu.com/p/7a6deaba34d2" target="_blank">如何保证消息队列的高可用和幂等性以及数据丢失，顺序一致性</a></li>
+  <li><a href="https://www.infoq.cn/article/kafka-vs-rabbitmq" target="_blank">消息中间件选型分析：从 Kafka 与 RabbitMQ 的对比看全局</a></li>
+  <li><a href="https://www.infoq.cn/article/dXJ3EYIp*WaHfmVwlMeu" target="_blank">滴滴出行基于 RocketMQ 构建企业级消息队列服务的实践</a></li>
+  <li><a href="https://stackoverflow.com/questions/39586635/why-is-kafka-pull-based-instead-of-push-based" target="_blank">Why is Kafka pull-based instead of push-based?</a></li>
+  <li><a href="https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5" target="_blank">Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar</a></li>
+  <li><a href="https://www.cnblogs.com/huxi2b/p/6223228.html" target="_blank">Kafka消费组(consumer group)</a></li>
+  <li><a href="https://stackoverflow.com/questions/45175424/how-multiple-consumer-group-consumers-work-across-partition-on-the-same-topic-in" target="_blank">How multiple consumer group consumers work across partition on the same topic in Kafka?</a></li>
+  <li><a href="https://blog.csdn.net/pursuer211/article/details/79799478" target="_blank">kafka中partition和消费者对应关系</a></li>
+  <li><a href="https://medium.com/@danieljameskay/understanding-the-enable-auto-commit-kafka-consumer-property-12fa0ade7b65" target="_blank">Understanding the ‘enable.auto.commit’ Kafka Consumer property</a></li>
+  <li><a href="https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/" target="_blank">Monitoring Kafka performance metrics - P1</a></li>
+  <li><a href="https://www.datadoghq.com/blog/collecting-kafka-performance-metrics/" target="_blank">Monitoring Kafka performance metrics - P2</a></li>
+  <li><a href="https://github.com/danielqsj/kafka_exporter" target="_blank">danielqsj/kafka_exporter</a></li>
+  <li><a href="https://docs.confluent.io/current/kafka/monitoring.html" target="_blank">Monitoring Kafka</a></li>
+  <li><a href="https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability" target="_blank">Kafka 数据可靠性深度解读</a></li>
+</ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/04/kafka-note/">Kafka Notes</a></li>
+    
+    <li><a href="/2019/04/message-queue-design/">消息队列设计精要 - 美团点评技术团队</a></li>
+    
+    <li><a href="/2019/04/elasticsearch-note/">Elasticsearch Notes</a></li>
+    
+    <li><a href="/2019/04/jaeger-note/">Jaeger Notes</a></li>
+    
+    <li><a href="/2019/04/monitoring-tracing-logging/">Compare: Monitoring | Tracing | Logging</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/04/kafka-note/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2018</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
