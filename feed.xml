@@ -31,7 +31,7 @@
           &lt;li&gt;&lt;a href=&quot;#621-场景1&quot; id=&quot;markdown-toc-621-场景1&quot;&gt;6.2.1 场景1&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#622-场景2&quot; id=&quot;markdown-toc-622-场景2&quot;&gt;6.2.2 场景2&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#623-场景3&quot; id=&quot;markdown-toc-623-场景3&quot;&gt;6.2.3 场景3&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#624-场景4&quot; id=&quot;markdown-toc-624-场景4&quot;&gt;6.2.4 场景4&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ID_BENCHMARK_SCEN4&quot; id=&quot;markdown-toc-ID_BENCHMARK_SCEN4&quot;&gt;6.2.4 场景4&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#625-场景5&quot; id=&quot;markdown-toc-625-场景5&quot;&gt;6.2.5 场景5&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#626-场景6&quot; id=&quot;markdown-toc-626-场景6&quot;&gt;6.2.6 场景6&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
@@ -65,7 +65,7 @@
   &lt;li&gt;Docker Hub：&lt;a href=&quot;https://hub.docker.com/r/wurstmeister/kafka&quot; target=&quot;_blank&quot;&gt;wurstmeister/kafka&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;一本中文手册，版本较老，看看一些范例代码尚可：&lt;a href=&quot;http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html&quot; target=&quot;_blank&quot;&gt;Apache kafka中文手册&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;一本中文手册，版本较老，看看范例代码尚可：&lt;a href=&quot;http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html&quot; target=&quot;_blank&quot;&gt;Apache kafka中文手册&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h1 id=&quot;2-消息队列&quot;&gt;2. 消息队列&lt;/h1&gt;
 &lt;p&gt;在聊Kafka之前，其实更需要关注下消息队列本身。什么需求下需要使用消息队列、消息队列的功能点有哪些、消息队列的模式有哪些、消息队列的实现难点有哪些，等等。如果什么都不了解，那技术选型就无从谈起了，也没办法理解为什么消息队列要做好是非常困难的一件事情。展开了说，也就没办法举一反三，理解其他软件系统的设计精髓了。&lt;/p&gt;
@@ -199,7 +199,7 @@
   &lt;li&gt;&lt;code&gt;replica&lt;/code&gt;：某个partition的完整备份（在接收写入请求时数据可能会落后于leader），用在集群的高可用服务上，同时也可以提供partition读操作的负载均衡&lt;/li&gt;
   &lt;li&gt;&lt;code&gt;producer&lt;/code&gt;：向topic里输入消息数据的角色&lt;/li&gt;
   &lt;li&gt;&lt;code&gt;consumer&lt;/code&gt;：从topic里消费消息数据的角色&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;consumer group&lt;/code&gt;：可扩展且具有容错性的consumer机制，多个consumer共享一个group id，组内的所有consumer一起来消费topic的所有partition；但一个partition仍旧只能有一个consumer来进行消费；主要是为了解决consumer和partition配对balance的问题，将consumer做成组由集群自动进行平衡和分配到partition&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;consumer group&lt;/code&gt;：可扩展且具有容错性的consumer机制，多个consumer共享一个group id，组内的所有consumer一起来消费topic的所有partition；但一个partition仍旧只能由一个consumer进行消费；主要是为了解决consumer和partition配对balance的问题，将consumer做成组由集群自动进行平衡并分配到partition&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;关于consumer group，更多的可以看：&lt;a href=&quot;https://www.cnblogs.com/huxi2b/p/6223228.html&quot; target=&quot;_blank&quot;&gt;Kafka消费组(consumer group)&lt;/a&gt;。&lt;/p&gt;
@@ -229,7 +229,7 @@
 
 &lt;p&gt;为了性能，kafka将一个partition视作一个管道，拥有一个从0开始的offset。这样做的好处就是不再需要在每一个消息体上做metadata存放该消息是否被消费掉等信息，而是通过partition的offset来标记整个管道中的消息被消费到了哪里。消息体更简单，流程上也更简单，不会出现乱序的消费情况。但也正是因为这种设计，导致每个partition无法由多个consumer并发消费，每个partition绑定只能同时允许一个consumer消费。&lt;/p&gt;
 
-&lt;p&gt;因此，从机制上来说，kafka并不适合用来做consumer重消耗（CPU）类型的消息通道。虽然partition可以做很多，极端点来说可以做到和consumer实际需求1：1的配比，但超过适配当前需求的partition数量设置也会造成吞吐量的下降。&lt;/p&gt;
+&lt;p&gt;因此，从机制上来说，kafka并不适合用来做consumer重消耗（CPU）类型的消息通道。虽然partition可以做很多，极端点来说可以做到和consumer实际需求1：1的配比，但超过适配当前需求的partition数量设置也会造成吞吐量的下降（参见：&lt;a href=&quot;#ID_BENCHMARK_SCEN4&quot;&gt;6.2.4 场景4&lt;/a&gt;）。&lt;/p&gt;
 
 &lt;p&gt;consumer和partition在进行消息是否被消费掉的确认行为上，有两种方式：&lt;/p&gt;
 
@@ -238,14 +238,14 @@
     &lt;ul&gt;
       &lt;li&gt;设置&lt;code&gt;enable.auto.commit=true&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;更新的频率根据参数&lt;code&gt;auto.commit.interval.ms&lt;/code&gt;来定，这种方式被称为&lt;code&gt;at most once&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;fetch到消息后就会更新offset，无论是否消费成功&lt;/li&gt;
+      &lt;li&gt;consumer fetch到消息后，partition就会更新offset，无论是否消费成功&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;手动提交：
     &lt;ul&gt;
       &lt;li&gt;设置&lt;code&gt;enable.auto.commit=false&lt;/code&gt;&lt;/li&gt;
       &lt;li&gt;这种方式被称为&lt;code&gt;at least once&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;fetch到消息后，消费成功后手用方法&lt;code&gt;consumer.commitSync()&lt;/code&gt;，手动更新offset&lt;/li&gt;
+      &lt;li&gt;consumer fetch到消息后，必须在消费成功后调用方法&lt;code&gt;consumer.commitSync()&lt;/code&gt;，手动通知partition更新offset&lt;/li&gt;
       &lt;li&gt;如果消费失败，则offset不会更新，此条消息会被重复消费一次&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
@@ -268,7 +268,7 @@
 &lt;p&gt;以及自动提交相关：&lt;a href=&quot;https://medium.com/@danieljameskay/understanding-the-enable-auto-commit-kafka-consumer-property-12fa0ade7b65&quot; target=&quot;_blank&quot;&gt;Understanding the ‘enable.auto.commit’ Kafka Consumer property&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h2 id=&quot;44-临时消费压力应急&quot;&gt;4.4 临时消费压力应急&lt;/h2&gt;
-&lt;p&gt;如果因某些原因，之前设计的partition分片数量不够，导致能够上工的consumer数量不够，而且consumer的消费速率跟不上，这时候就会发生消息堆积。如果堆积的情况比较严重的话，就需要程序介入处理。&lt;/p&gt;
+&lt;p&gt;如果因某些原因，之前设计的partition分片数量不够导致能够上工的consumer数量不够，且consumer的消费速率跟不上的时候，就会发生消息堆积。如果堆积的情况比较严重的话，就需要程序介入处理。&lt;/p&gt;
 
 &lt;p&gt;思路如下：&lt;/p&gt;
 
@@ -297,7 +297,7 @@
 &lt;p&gt;如果只需要可检索的指标列表，可以直接看这篇：&lt;a href=&quot;https://docs.confluent.io/current/kafka/monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h2 id=&quot;52-高可用&quot;&gt;5.2 高可用&lt;/h2&gt;
-&lt;p&gt;在之前的&lt;a href=&quot;#ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;中，已经介绍过了Kafka的集群模式，可以看到Kafka天然就是分布式的，而且在设计之初就考虑到了集权的高可用。当然我这里的文字内容偏简单了，只介绍了大致的部分。更深入的可以阅读唯品会的：&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;，这篇讲解非常透彻，基本上可以当经典来看了。&lt;/p&gt;
+&lt;p&gt;在之前的&lt;a href=&quot;#ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;中，已经介绍过了Kafka的集群模式，可以看到Kafka天然就是分布式的，而且在设计之初就考虑到了集群的高可用。本文之前章节内关于集群的内容偏简单了，只介绍了大致的设计。如有需要更深入了解分布式和高可用的细节，则可以阅读唯品会的：&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;，这篇讲解非常透彻，基本上可以当经典来看了。&lt;/p&gt;
 
 &lt;p&gt;Kafka的高可用配置，有几个配置项控制了集群的安全程度。这里需要记住一点，整个集群越安全集群的吞吐量就越低，这是等价交换的，不可能不付出任何代价就获得数据的安全性。唯品会的文章讲解的细节非常多，但我们真正执行操作的时候可以只知其然，懂得哪几个配置项需要操作即可：&lt;/p&gt;
 
@@ -465,7 +465,7 @@
   &lt;li&gt;客户端的 acks 策略对发送的 TPS 有较大的影响，TPS：acks_0 &amp;gt; acks_1 &amp;gt; ack_-1。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;624-场景4&quot;&gt;6.2.4 场景4&lt;/h3&gt;
+&lt;h3 id=&quot;ID_BENCHMARK_SCEN4&quot;&gt;6.2.4 场景4&lt;/h3&gt;
 &lt;p&gt;测试不同 partition 数对发送速率的影响&lt;/p&gt;
 
 &lt;p&gt;具体配置：&lt;/p&gt;
