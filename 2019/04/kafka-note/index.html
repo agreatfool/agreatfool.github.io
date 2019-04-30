@@ -169,7 +169,10 @@
 <ul id="markdown-toc">
   <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
   <li><a href="#2-消息队列" id="markdown-toc-2-消息队列">2. 消息队列</a></li>
-  <li><a href="#3-消息队列选型比较" id="markdown-toc-3-消息队列选型比较">3. 消息队列选型比较</a></li>
+  <li><a href="#3-消息队列选型比较" id="markdown-toc-3-消息队列选型比较">3. 消息队列选型比较</a>    <ul>
+      <li><a href="#31-apache-pulsar" id="markdown-toc-31-apache-pulsar">3.1 Apache Pulsar</a></li>
+    </ul>
+  </li>
   <li><a href="#4-kafka架构" id="markdown-toc-4-kafka架构">4. Kafka架构</a>    <ul>
       <li><a href="#41-概念" id="markdown-toc-41-概念">4.1 概念</a></li>
       <li><a href="#ID_CLUSTER" id="markdown-toc-ID_CLUSTER">4.2 集群</a></li>
@@ -343,6 +346,23 @@
 <p><a href="https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5" target="_blank">Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar</a></p>
 
 <p>老外写的一篇，提到了不少国内较少提到的开源项目，可以作为参考。</p>
+
+<h2 id="31-apache-pulsar">3.1 Apache Pulsar</h2>
+<p>关于Kafka和后起新秀Pulsar的横向比较，可以看：</p>
+
+<ul>
+  <li><a href="https://zhuanlan.zhihu.com/p/47388267" target="_blank">比拼Kafka，大数据分析新秀Pulsar到底好在哪</a></li>
+  <li><a href="https://www.slideshare.net/merlimat/high-performance-messaging-with-apache-pulsar" target="_blank">High performance messaging with Apache Pulsar</a></li>
+</ul>
+
+<p>大略的要点：</p>
+
+<ul>
+  <li>功能性上Pulsar要比Kafka更好，且这是在不牺牲性能的前提下的，就更加难能可贵</li>
+  <li>解决了Kafka单partition只能单consumer消费的问题</li>
+  <li>将Broker和存储解耦，做到更好的错误恢复，在Broker宕机之后可以做到无损耗恢复</li>
+  <li>存储方面的功能交付给Bookie，更细粒度的存储，更好的错误恢复和同步性能</li>
+</ul>
 
 <h1 id="4-kafka架构">4. Kafka架构</h1>
 <h2 id="41-概念">4.1 概念</h2>

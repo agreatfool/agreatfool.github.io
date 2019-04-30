@@ -12,7 +12,10 @@
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#2-消息队列&quot; id=&quot;markdown-toc-2-消息队列&quot;&gt;2. 消息队列&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-消息队列选型比较&quot; id=&quot;markdown-toc-3-消息队列选型比较&quot;&gt;3. 消息队列选型比较&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-消息队列选型比较&quot; id=&quot;markdown-toc-3-消息队列选型比较&quot;&gt;3. 消息队列选型比较&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-apache-pulsar&quot; id=&quot;markdown-toc-31-apache-pulsar&quot;&gt;3.1 Apache Pulsar&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#4-kafka架构&quot; id=&quot;markdown-toc-4-kafka架构&quot;&gt;4. Kafka架构&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#41-概念&quot; id=&quot;markdown-toc-41-概念&quot;&gt;4.1 概念&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID_CLUSTER&quot; id=&quot;markdown-toc-ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;&lt;/li&gt;
@@ -186,6 +189,23 @@
 &lt;p&gt;&lt;a href=&quot;https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5&quot; target=&quot;_blank&quot;&gt;Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;老外写的一篇，提到了不少国内较少提到的开源项目，可以作为参考。&lt;/p&gt;
+
+&lt;h2 id=&quot;31-apache-pulsar&quot;&gt;3.1 Apache Pulsar&lt;/h2&gt;
+&lt;p&gt;关于Kafka和后起新秀Pulsar的横向比较，可以看：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/47388267&quot; target=&quot;_blank&quot;&gt;比拼Kafka，大数据分析新秀Pulsar到底好在哪&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/merlimat/high-performance-messaging-with-apache-pulsar&quot; target=&quot;_blank&quot;&gt;High performance messaging with Apache Pulsar&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;大略的要点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;功能性上Pulsar要比Kafka更好，且这是在不牺牲性能的前提下的，就更加难能可贵&lt;/li&gt;
+  &lt;li&gt;解决了Kafka单partition只能单consumer消费的问题&lt;/li&gt;
+  &lt;li&gt;将Broker和存储解耦，做到更好的错误恢复，在Broker宕机之后可以做到无损耗恢复&lt;/li&gt;
+  &lt;li&gt;存储方面的功能交付给Bookie，更细粒度的存储，更好的错误恢复和同步性能&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;h1 id=&quot;4-kafka架构&quot;&gt;4. Kafka架构&lt;/h1&gt;
 &lt;h2 id=&quot;41-概念&quot;&gt;4.1 概念&lt;/h2&gt;
