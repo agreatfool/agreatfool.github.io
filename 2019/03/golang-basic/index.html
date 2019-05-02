@@ -305,7 +305,7 @@ byte // uint8 的别名</p>
   <p>complex64 complex128</p>
 </blockquote>
 
-<p>因为是强类型语言，且Go里面的类型转换都必须要显示进行。这方面，比较常见的是字符串和数字之间的转换：</p>
+<p>因为是强类型语言，且Go里面的类型转换都必须要显示进行，因此有的时候处理起来比较麻烦。这方面，比较常见的问题是字符串和数字类型之间的转换：</p>
 
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="c1">// string =&gt; int</span>
 <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">strconv</span><span class="p">.</span><span class="nx">Atoi</span><span class="p">(</span><span class="kt">string</span><span class="p">)</span>
