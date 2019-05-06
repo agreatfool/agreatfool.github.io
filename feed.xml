@@ -7,6 +7,348 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>gRPC Notes</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-基本资料及网络问题&quot; id=&quot;markdown-toc-2-基本资料及网络问题&quot;&gt;2. 基本资料及网络问题&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-go-support-for-protocol-buffers&quot; id=&quot;markdown-toc-21-go-support-for-protocol-buffers&quot;&gt;2.1 Go support for Protocol Buffers&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-grpc-basics-go&quot; id=&quot;markdown-toc-22-grpc-basics-go&quot;&gt;2.2 gRPC Basics: Go&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#23-grpc-enhanced-example&quot; id=&quot;markdown-toc-23-grpc-enhanced-example&quot;&gt;2.3 gRPC enhanced example&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#24-网络问题&quot; id=&quot;markdown-toc-24-网络问题&quot;&gt;2.4 网络问题&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-并发编程&quot; id=&quot;markdown-toc-3-并发编程&quot;&gt;3. 并发编程&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-go语言的grpc并发&quot; id=&quot;markdown-toc-31-go语言的grpc并发&quot;&gt;3.1 Go语言的gRPC并发&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_CONCURRENCY_DOC&quot; id=&quot;markdown-toc-ID_CONCURRENCY_DOC&quot;&gt;3.2 并发相关官方文档&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#concurrency&quot; id=&quot;markdown-toc-concurrency&quot;&gt;Concurrency&lt;/a&gt;            &lt;ul&gt;
+              &lt;li&gt;&lt;a href=&quot;#clients&quot; id=&quot;markdown-toc-clients&quot;&gt;Clients&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#streams&quot; id=&quot;markdown-toc-streams&quot;&gt;Streams&lt;/a&gt;&lt;/li&gt;
+              &lt;li&gt;&lt;a href=&quot;#servers&quot; id=&quot;markdown-toc-servers&quot;&gt;Servers&lt;/a&gt;&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-并发范例&quot; id=&quot;markdown-toc-33-并发范例&quot;&gt;3.3 并发范例&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#331-代码差异&quot; id=&quot;markdown-toc-331-代码差异&quot;&gt;3.3.1 代码差异&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#332-顺序执行&quot; id=&quot;markdown-toc-332-顺序执行&quot;&gt;3.3.2 顺序执行&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#333-并发执行&quot; id=&quot;markdown-toc-333-并发执行&quot;&gt;3.3.3 并发执行&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#34-连接池&quot; id=&quot;markdown-toc-34-连接池&quot;&gt;3.4 连接池&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#35-benchmark&quot; id=&quot;markdown-toc-35-benchmark&quot;&gt;3.5 Benchmark&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#测试硬件&quot; id=&quot;markdown-toc-测试硬件&quot;&gt;测试硬件&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#客户端及服务器启动命令&quot; id=&quot;markdown-toc-客户端及服务器启动命令&quot;&gt;客户端及服务器启动命令&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#测试结果&quot; id=&quot;markdown-toc-测试结果&quot;&gt;测试结果&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#结论&quot; id=&quot;markdown-toc-结论&quot;&gt;结论&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-负载均衡&quot; id=&quot;markdown-toc-4-负载均衡&quot;&gt;4. 负载均衡&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-状态检查&quot; id=&quot;markdown-toc-5-状态检查&quot;&gt;5. 状态检查&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;首先需要申明本文并不是通泛的对gRPC的讲解，而是以Golang为基础的一篇gRPC偏应用方向的博文。因此后面的所有技术点和使用范例都会以Go语言为基础。此外，本文中对gRPC偏基础方面的内容不会涉猎过多，而是更多讲解gRPC偏设计方向的技术点。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-基本资料及网络问题&quot;&gt;2. 基本资料及网络问题&lt;/h1&gt;
+&lt;h2 id=&quot;21-go-support-for-protocol-buffers&quot;&gt;2.1 Go support for Protocol Buffers&lt;/h2&gt;
+&lt;p&gt;关于使用Go语言的情况下的一系列protobuf相关技术点，可以参阅：&lt;a href=&quot;https://github.com/golang/protobuf&quot; target=&quot;_blank&quot;&gt;golang/protobuf&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;主要需要关注的点有几个：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;安装：除了标准的protobuf（protoc）之外，还需要安装go的插件：&lt;code&gt;protoc-gen-go&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;插件：protoc如果要使用go的插件，且需要生成service相关代码的话，需要在&lt;code&gt;go_out&lt;/code&gt;中附带上&lt;code&gt;plugins=grpc:&lt;/code&gt;字符串，e.g：&lt;code&gt;--go_out=plugins=grpc:${OUTPUT_PATH}&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;包管理：protobuf的包定义和go语言的习惯用法有不少差异，使用前建议阅读：&lt;a href=&quot;https://github.com/golang/protobuf#packages-and-input-paths&quot; target=&quot;_blank&quot;&gt;Packages and input paths&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;默认的包名不会转换成相对文件夹，e.g：&lt;code&gt;package com.book&lt;/code&gt;会生成&lt;code&gt;com_book&lt;/code&gt;文件夹，而不是&lt;code&gt;com/book&lt;/code&gt;这样的嵌套文件夹&lt;/li&gt;
+      &lt;li&gt;go的包路径可以使用：&lt;code&gt;option go_package = ...&lt;/code&gt;来设定&lt;/li&gt;
+      &lt;li&gt;在某些全局编译的情况下，可以：&lt;code&gt;--go_out=$GOPATH&lt;/code&gt;，直接输出到GOPATH&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;生成出来的代码相关规范：&lt;a href=&quot;https://github.com/golang/protobuf#generated-code&quot; target=&quot;_blank&quot;&gt;Generated code&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;protoc插件的额外参数：&lt;a href=&quot;https://github.com/golang/protobuf#parameters&quot; target=&quot;_blank&quot;&gt;Parameters&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;22-grpc-basics-go&quot;&gt;2.2 gRPC Basics: Go&lt;/h2&gt;
+&lt;p&gt;初次使用Go语言来编写gRPC代码，请阅读文档：&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/gotutorial.md&quot; target=&quot;_blank&quot;&gt;grpc-go/examples/gotutorial.md&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;对于gRPC非常熟悉的程序员可以跳过这个文档，基本上这个文档是面向新手的指引，但是范例代码都使用的是Go语言。&lt;/p&gt;
+
+&lt;h2 id=&quot;23-grpc-enhanced-example&quot;&gt;2.3 gRPC enhanced example&lt;/h2&gt;
+&lt;p&gt;进阶的Go语言gRPC代码可以阅读范例：&lt;a href=&quot;https://github.com/grpc/grpc-go/tree/master/examples/route_guide&quot; target=&quot;_blank&quot;&gt;grpc-go/examples/route_guide/&lt;/a&gt;。这个范例代码里加入了单向和双向流的范例，算是比较进阶和完整的范例代码了。&lt;/p&gt;
+
+&lt;p&gt;我的实验项目中也有比较完整的应用范例代码，相对官方的范例来说少了点不伦不类的业务逻辑，对于只需要了解技术的读者来说更友好：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/book&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/book/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;24-网络问题&quot;&gt;2.4 网络问题&lt;/h2&gt;
+&lt;p&gt;因国情原因，Go的包安装会遇到一些网络问题：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/1959&quot; target=&quot;_blank&quot;&gt;go get not working unrecognized import path “google.golang.org/grpc” #1959&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/1780&quot; target=&quot;_blank&quot;&gt;go get -u google.golang.org/grpc i/o timeout #1780&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;这种情况的最佳对应方法是在命令行下设置HTTP和HTTPS代理：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;http_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://127.0.0.1:6152
+&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;https_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://127.0.0.1:6152
+go get -u ...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;3-并发编程&quot;&gt;3. 并发编程&lt;/h1&gt;
+&lt;h2 id=&quot;31-go语言的grpc并发&quot;&gt;3.1 Go语言的gRPC并发&lt;/h2&gt;
+&lt;p&gt;关于在Go语言中使用gRPC的并发问题在官方的issues中已经有很多了：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/682&quot; target=&quot;_blank&quot;&gt;Best practices for reusing connections, concurrency #682&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/85&quot; target=&quot;_blank&quot;&gt;Concurrency #85&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/1345&quot; target=&quot;_blank&quot;&gt;Add section on concurrency to documentation #1345&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上述的三个issues都可以仔细阅读下，提出的问题都非常有代表性。从一系列的问题中可以看出，官方对于gRPC的并发其实是有一些指导意见的，但并没有很好的文档化（至少之前如此）。而目前对这些问题已经有部分解答了，请继续阅读下去。&lt;/p&gt;
+
+&lt;h2 id=&quot;ID_CONCURRENCY_DOC&quot;&gt;3.2 并发相关官方文档&lt;/h2&gt;
+&lt;p&gt;在&lt;a href=&quot;https://github.com/grpc/grpc-go/pull/2034/files&quot; target=&quot;_blank&quot;&gt;这个提交&lt;/a&gt;中，官方添加了对于并发相关的官方指引。正式的文档地址是在：&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/Documentation/concurrency.md&quot; target=&quot;_blank&quot;&gt;grpc-go/Documentation/concurrency.md&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;这里做下简单翻译：&lt;/p&gt;
+
+&lt;h3 id=&quot;concurrency&quot;&gt;Concurrency&lt;/h3&gt;
+&lt;p&gt;一般来说，gRPC-go提供了对并发友好的API。下文是一些指引。&lt;/p&gt;
+
+&lt;h4 id=&quot;clients&quot;&gt;Clients&lt;/h4&gt;
+&lt;p&gt;一个&lt;a href=&quot;https://godoc.org/google.golang.org/grpc#ClientConn&quot; target=&quot;_blank&quot;&gt;ClientConn&lt;/a&gt;可以被安全地并发访问。以&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/helloworld/greeter_client/main.go#L43&quot; target=&quot;_blank&quot;&gt;helloworld&lt;/a&gt;作为范例，程序员可以在多个goroutine之间共享一个ClientConn来创建多个GreeterClient客户端类型。在这种使用情况下，RPCs会并行传输。&lt;/p&gt;
+
+&lt;h4 id=&quot;streams&quot;&gt;Streams&lt;/h4&gt;
+&lt;p&gt;当使用&lt;a href=&quot;https://godoc.org/google.golang.org/grpc#Stream&quot; target=&quot;_blank&quot;&gt;Stream&lt;/a&gt;的时候，程序员必须小心避免从不同的goroutine向同一个stream发送多次&lt;code&gt;SendMsg&lt;/code&gt;或&lt;code&gt;RecvMsg&lt;/code&gt;请求。换句话来说，如果有一个goroutine向stream中发送SendMsg，然后在同一时间有另一个goroutine向stream中发送RecvMsg，这样做是安全的。但在不同的goroutine中同时向同一个stream发送SendMsg，或是RecvMsg则是不安全的。&lt;/p&gt;
+
+&lt;h4 id=&quot;servers&quot;&gt;Servers&lt;/h4&gt;
+&lt;p&gt;每个被附到已注册服务器上的RPC处理器都会在其自身的goroutine中运作。举例来说，&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/helloworld/greeter_server/main.go#L41&quot; target=&quot;_blank&quot;&gt;SayHello&lt;/a&gt;会在其自身的goroutine中被调用到。同样的，streaming RPC也是一样，route guide例子可以在&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/route_guide/server/server.go#L126&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;看得到。&lt;/p&gt;
+
+&lt;h2 id=&quot;33-并发范例&quot;&gt;3.3 并发范例&lt;/h2&gt;
+&lt;p&gt;我在实验项目中做了点并发的范例，可以看下：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/concurrency&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/concurrency/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;331-代码差异&quot;&gt;3.3.1 代码差异&lt;/h3&gt;
+&lt;p&gt;服务端代码是一致的，根据&lt;a href=&quot;#ID_CONCURRENCY_DOC&quot;&gt;3.2 并发相关官方文档&lt;/a&gt;，服务端的所有请求都是自然并发的，无需代码特殊处理。但客户端则需要自行编码处理。&lt;/p&gt;
+
+&lt;p&gt;顺序执行：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Echo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;EchoRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)});&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Fatalf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnSequence: err: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnSequence: response: %v, consumed: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;并发执行：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;WaitGroup&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Echo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;EchoRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)});&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Fatalf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnConcurrency: err: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnConcurrency: response: %v, consumed: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;332-顺序执行&quot;&gt;3.3.2 顺序执行&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 启动服务器
+DELAY_NO_5=true go run server.go
+
+# 启动客户端，发送请求
+MODE=CONN_ONE_SEQUENCE go run client.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;# 客户端输出
+2019/05/03 13:58:23 [Client] singleConnSequence: response: id:1 , consumed: 4.284231ms
+2019/05/03 13:58:23 [Client] singleConnSequence: response: id:2 , consumed: 381.818µs
+2019/05/03 13:58:23 [Client] singleConnSequence: response: id:3 , consumed: 361.608µs
+2019/05/03 13:58:23 [Client] singleConnSequence: response: id:4 , consumed: 332.662µs
+2019/05/03 13:58:24 [Client] singleConnSequence: response: id:5 , consumed: 1.004485058s
+2019/05/03 13:58:24 [Client] singleConnSequence: response: id:6 , consumed: 470.532µs
+2019/05/03 13:58:24 [Client] singleConnSequence: response: id:7 , consumed: 468.148µs
+2019/05/03 13:58:24 [Client] singleConnSequence: response: id:8 , consumed: 389.214µs
+2019/05/03 13:58:24 [Client] singleConnSequence: response: id:9 , consumed: 418.01µs
+2019/05/03 13:58:25 [Client] singleConnSequence: response: id:10 , consumed: 1.003602442s
+
+# 服务器输出
+2019/05/03 13:58:23 [Server] Echo: request: id:1
+2019/05/03 13:58:23 [Server] Echo: response: id:1
+2019/05/03 13:58:23 [Server] Echo: request: id:2
+2019/05/03 13:58:23 [Server] Echo: response: id:2
+2019/05/03 13:58:23 [Server] Echo: request: id:3
+2019/05/03 13:58:23 [Server] Echo: response: id:3
+2019/05/03 13:58:23 [Server] Echo: request: id:4
+2019/05/03 13:58:23 [Server] Echo: response: id:4
+2019/05/03 13:58:23 [Server] Echo: request: id:5
+2019/05/03 13:58:24 [Server] Echo: response: id:5
+2019/05/03 13:58:24 [Server] Echo: request: id:6
+2019/05/03 13:58:24 [Server] Echo: response: id:6
+2019/05/03 13:58:24 [Server] Echo: request: id:7
+2019/05/03 13:58:24 [Server] Echo: response: id:7
+2019/05/03 13:58:24 [Server] Echo: request: id:8
+2019/05/03 13:58:24 [Server] Echo: response: id:8
+2019/05/03 13:58:24 [Server] Echo: request: id:9
+2019/05/03 13:58:24 [Server] Echo: response: id:9
+2019/05/03 13:58:24 [Server] Echo: request: id:10
+2019/05/03 13:58:25 [Server] Echo: response: id:10
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;333-并发执行&quot;&gt;3.3.3 并发执行&lt;/h3&gt;
+&lt;pre&gt;&lt;code&gt;# 启动服务器
+DELAY_NO_5=true go run server.go
+
+# 启动客户端，发送请求
+MODE=CONN_ONE_CONCURRENCY go run client.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;pre&gt;&lt;code&gt;# 客户端输出
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:9 , consumed: 5.651184ms
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:6 , consumed: 5.595945ms
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:2 , consumed: 5.693124ms
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:4 , consumed: 5.637734ms
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:1 , consumed: 5.592096ms
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:3 , consumed: 5.58596ms
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:7 , consumed: 5.652258ms
+2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:8 , consumed: 5.658945ms
+2019/05/03 13:54:42 [Client] singleConnConcurrency: response: id:10 , consumed: 1.008472004s
+2019/05/03 13:54:42 [Client] singleConnConcurrency: response: id:5 , consumed: 1.008440948s
+
+# 服务器输出
+2019/05/03 13:54:41 [Server] Echo: request: id:3
+2019/05/03 13:54:41 [Server] Echo: response: id:3
+2019/05/03 13:54:41 [Server] Echo: request: id:1
+2019/05/03 13:54:41 [Server] Echo: response: id:1
+2019/05/03 13:54:41 [Server] Echo: request: id:6
+2019/05/03 13:54:41 [Server] Echo: response: id:6
+2019/05/03 13:54:41 [Server] Echo: request: id:10
+2019/05/03 13:54:41 [Server] Echo: request: id:8
+2019/05/03 13:54:41 [Server] Echo: response: id:8
+2019/05/03 13:54:41 [Server] Echo: request: id:9
+2019/05/03 13:54:41 [Server] Echo: response: id:9
+2019/05/03 13:54:41 [Server] Echo: request: id:5
+2019/05/03 13:54:41 [Server] Echo: request: id:2
+2019/05/03 13:54:41 [Server] Echo: response: id:2
+2019/05/03 13:54:41 [Server] Echo: request: id:4
+2019/05/03 13:54:41 [Server] Echo: response: id:4
+2019/05/03 13:54:41 [Server] Echo: request: id:7
+2019/05/03 13:54:41 [Server] Echo: response: id:7
+2019/05/03 13:54:42 [Server] Echo: response: id:10
+2019/05/03 13:54:42 [Server] Echo: response: id:5
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;服务端对ID逢5的请求sleep 1秒进行反馈，因此并发的客户端请求中，5和10就是最后返回打印出来的，耗时也是1秒多。&lt;/p&gt;
+
+&lt;h2 id=&quot;34-连接池&quot;&gt;3.4 连接池&lt;/h2&gt;
+&lt;p&gt;虽然单连接也是可以进行并发编程的，但在某些极端情况下，数据包可能达到网络吞吐的极限。众所周知Go语言天生对并发编程友好，因此CPU的利用必然是非常充分的，如果RPC服务的类型是低CPU消耗而高网络消耗的情况就有可能出现之前提到的问题。这种情况就需要创建多个连接了。&lt;/p&gt;
+
+&lt;p&gt;在多连接管理方面，官方的类库并没有连接池的功能，第三方倒是有：&lt;a href=&quot;https://github.com/processout/grpc-go-pool/blob/master/pool_test.go&quot; target=&quot;_blank&quot;&gt;grpc-go-pool/pool_test.go&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;此外，可以拓展阅读：&lt;a href=&quot;https://mycodesmells.com/post/pooling-grpc-connections&quot; target=&quot;_blank&quot;&gt;Pooling gRPC Connections&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;范例可以看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/pool&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/pool/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;35-benchmark&quot;&gt;3.5 Benchmark&lt;/h2&gt;
+&lt;p&gt;范例代码在：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/throughput&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/throughput/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;测试硬件&quot;&gt;测试硬件&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;rMBP 2014 mid
+CPU：2.5GHz 四核 Intel Core i7 处理器 (Turbo Boost 3.7GHz)
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;测试的时候一些在系统使用中的软件我并没有清空，因此可能有稍许干扰，但总体问题不大。&lt;/p&gt;
+
+&lt;h3 id=&quot;客户端及服务器启动命令&quot;&gt;客户端及服务器启动命令&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;CORE_NUM=3 go run server.go
+CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;使用&lt;code&gt;CORE_NUM&lt;/code&gt;来控制使用到的物理核心数量，客户端使用&lt;code&gt;ROUTINES_PER_CORE&lt;/code&gt;来决定启动的routine总量：&lt;code&gt;CORE_NUM * ROUTINES_PER_CORE&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;测试结果&quot;&gt;测试结果&lt;/h3&gt;
+&lt;p&gt;请求数量/s：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;2019/05/04 14:19:33 [Client] 73065 requests in 1s
+2019/05/04 14:19:34 [Client] 68826 requests in 1s
+2019/05/04 14:19:35 [Client] 73655 requests in 1s
+2019/05/04 14:19:36 [Client] 70973 requests in 1s
+2019/05/04 14:19:37 [Client] 73645 requests in 1s
+2019/05/04 14:19:38 [Client] 70616 requests in 1s
+2019/05/04 14:19:39 [Client] 72252 requests in 1s
+2019/05/04 14:19:40 [Client] 69342 requests in 1s
+2019/05/04 14:19:41 [Client] 69745 requests in 1s
+2019/05/04 14:19:42 [Client] 62251 requests in 1s
+2019/05/04 14:19:43 [Client] 58043 requests in 1s
+2019/05/04 14:19:44 [Client] 69316 requests in 1s
+2019/05/04 14:19:45 [Client] 69796 requests in 1s
+2019/05/04 14:19:46 [Client] 57246 requests in 1s
+2019/05/04 14:19:47 [Client] 72265 requests in 1s
+2019/05/04 14:19:48 [Client] 72940 requests in 1s
+2019/05/04 14:19:49 [Client] 70237 requests in 1s
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;CPU：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/05/grpc-note/cpu.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Network：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/05/grpc-note/network-low.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
+&lt;img src=&quot;/resources/2019/05/grpc-note/network-high.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;结论&quot;&gt;结论&lt;/h3&gt;
+&lt;p&gt;因硬件环境的限制，没有使用通过网卡的测试方案，而是使用了127.0.0.1的环回请求方案。此外，测试期间MAC上的一些软件进程也并没有进行清理，因此可能有部分干扰。结论就不做了，这样简单且限制资源的benchmark实际意义不大，列几点可以观测到的状态：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;请求数量/s&lt;/code&gt;符合预期&lt;/li&gt;
+  &lt;li&gt;CPU占用基本满&lt;/li&gt;
+  &lt;li&gt;提升核心使用数量，提升routine数量，能观察到rps提升&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;4-负载均衡&quot;&gt;4. 负载均衡&lt;/h1&gt;
+&lt;p&gt;官方有一篇关于负载均衡设计的文档，可以读下：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/doc/load-balancing.md&quot; target=&quot;_blank&quot;&gt;Load Balancing in gRPC&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;意义不大，可以了解一些简单的负载均衡概念，以及一些设计上的思路。&lt;/p&gt;
+
+&lt;h1 id=&quot;5-状态检查&quot;&gt;5. 状态检查&lt;/h1&gt;
+&lt;p&gt;官方对于如何设计及暴露服务端状态检查接口的一份文档：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/doc/health-checking.md&quot; target=&quot;_blank&quot;&gt;GRPC Health Checking Protocol&lt;/a&gt;。可以说是一份guideline。同样意义不大。&lt;/p&gt;
+
+&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
+&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/processout/grpc-go-pool/blob/master/pool_test.go&quot; target=&quot;_blank&quot;&gt;grpc-go-pool/pool_test.go&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mycodesmells.com/post/pooling-grpc-connections&quot; target=&quot;_blank&quot;&gt;Pooling gRPC Connections&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Mon, 06 May 2019 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2019/05/grpc-note/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2019/05/grpc-note/</guid>
+			</item>
+		
+			<item>
 				<title>Kafka Notes</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -5007,182 +5349,6 @@ Type help followed by a command for full documentation.
 				<pubDate>Wed, 27 Mar 2019 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/03/golang-debug/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/03/golang-debug/</guid>
-			</item>
-		
-			<item>
-				<title>Golang Goroutine</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-gpm--原理&quot; id=&quot;markdown-toc-2-gpm--原理&quot;&gt;2. GPM &amp;amp; 原理&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-profiling&quot; id=&quot;markdown-toc-3-profiling&quot;&gt;3. Profiling&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#pprof-web&quot; id=&quot;markdown-toc-pprof-web&quot;&gt;pprof web&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#godebugschedtrace1000&quot; id=&quot;markdown-toc-godebugschedtrace1000&quot;&gt;GODEBUG=schedtrace=1000&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-blocking&quot; id=&quot;markdown-toc-4-blocking&quot;&gt;4. Blocking&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;本文是Go语言系列文章&lt;a href=&quot;/2019/02/golang-note/&quot; target=&quot;_blank&quot;&gt;Golang Notes&lt;/a&gt;的其中一篇，完整的文章列表请去总章查看。&lt;/p&gt;
-
-&lt;p&gt;Goroutine或者说Go程是Go语言的高性能关键。常见的高级语言比如说node、php这种，天生就是单进程单线程的，如果需要充分利用CPU，就需要启动多个进程进行集群管理。即便如此，在多个进程之间如何进行数据交换、进行业务协作又是一个基本上无解的头痛问题。而像Java这种，虽然用的是单个进程中的多线程，但因语言本身及线程设计本质的问题，开发体验仍旧说不上好。&lt;/p&gt;
-
-&lt;p&gt;Go为什么能这么快就火起来，第一是因为它本身的性能很好，能满足各种需求，另一个就是Goroutine了，可以说是Go的灵魂。在不增加程序复杂度的情况下，马上就能将所有的物理核心都跑满利用起来的，横向过一遍也就只有Go了。&lt;/p&gt;
-
-&lt;p&gt;但世上无银弹，Goroutine虽然好用消耗小，但使用不当仍旧会出问题，所以这里就需要理解其原理，并知道如何profiling找问题。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-gpm--原理&quot;&gt;2. GPM &amp;amp; 原理&lt;/h1&gt;
-&lt;p&gt;这部分的文章实在是太多了，基本上看完或者选择性看完（最重要的是3和4）下面几篇，就OK了：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;如果只需要初步的理解，这篇即可：&lt;a href=&quot;https://juejin.im/post/5b7678f451882533110e8948&quot; target=&quot;_blank&quot;&gt;Golang 的 协程调度机制 与 GOMAXPROCS 性能调优&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;如果需要深入源码及实现细节（过于细节，有点偏离了行文的目的）：&lt;a href=&quot;https://studygolang.com/articles/11627&quot; target=&quot;_blank&quot;&gt;Golang源码探索(二) 协程的实现原理&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;如果需要完美理解GPM及Goroutine（其实这篇是最好的）：&lt;a href=&quot;https://tonybai.com/2017/06/23/an-intro-about-goroutine-scheduler/&quot; target=&quot;_blank&quot;&gt;也谈goroutine调度器&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;接上一篇，更多范例的调度细节：&lt;a href=&quot;https://tonybai.com/2017/11/23/the-simple-analysis-of-goroutine-schedule-examples/&quot; target=&quot;_blank&quot;&gt;Goroutine调度实例简要分析&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;几点记住就好：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;G是任务，全局有一个队列，每个P还有自己的队列&lt;/li&gt;
-  &lt;li&gt;P是逻辑处理器，由P来处理G&lt;/li&gt;
-  &lt;li&gt;M是物理处理器（实际上是Go应用程序里的&lt;code&gt;线程&lt;/code&gt;），P会和M绑定，得到执行的实体&lt;/li&gt;
-  &lt;li&gt;M最终会通过操作系统调度，在CPU上得到运行&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;3-profiling&quot;&gt;3. Profiling&lt;/h1&gt;
-&lt;h2 id=&quot;pprof-web&quot;&gt;pprof web&lt;/h2&gt;
-&lt;p&gt;继续建议使用基于WEB的入口的方式进行查看：&lt;a href=&quot;/2019/03/golang-memory/#ID_PROF_PPROF_WEB&quot;&gt;Golang Memory#5.3.3 runtime/pprof web&lt;/a&gt;。此外，由于Goroutine一般数量巨大，不像CPU和内存检查的是点，goroutine更多的时候是要把握一个状态（面），因此更建议使用pprof的WEB UI来进行观察。入口在：&lt;code&gt;http://127.0.0.1:8080/debug/pprof/goroutine&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;e.g&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ go tool pprof -http=:8899 http://127.0.0.1:8080/debug/pprof/goroutine
-Fetching profile over HTTP from http://127.0.0.1:8080/debug/pprof/goroutine
-Saved profile in /Users/Jonathan/pprof/pprof.goroutine.001.pb.gz
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;在Profile的分析结果里，一般会看到&lt;code&gt;gopark&lt;/code&gt;这个东西，这个在之前的几篇文章里都没怎么提到过（当然最细节的那篇是有的）。这里可以再看下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27056944&quot; target=&quot;_blank&quot;&gt;Go调度详解&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/u010853261/article/details/85887948&quot; target=&quot;_blank&quot;&gt;Golang-gopark函数和goready函数原理分析&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在第一篇里还可以顺道看下&lt;code&gt;自旋（spinning）&lt;/code&gt;的概念。&lt;/p&gt;
-
-&lt;p&gt;测试代码这里就不帖了，写起来实在是太简单，做个循环，起一点goroutine就好。&lt;/p&gt;
-
-&lt;h2 id=&quot;godebugschedtrace1000&quot;&gt;GODEBUG=schedtrace=1000&lt;/h2&gt;
-&lt;p&gt;如果需要查看Go调度器当前状态：使用&lt;code&gt;GODEBUG=schedtrace=...&lt;/code&gt;，第二个等号后面给时间间隔，单位为毫秒。&lt;/p&gt;
-
-&lt;p&gt;e.g&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ GODEBUG=schedtrace=1000 go run goroutine.go
-SCHED 0ms: gomaxprocs=8 idleprocs=6 threads=4 spinningthreads=1 idlethreads=0 runqueue=0 [0 0 0 0 0 0 0 0]
-# command-line-arguments
-SCHED 0ms: gomaxprocs=8 idleprocs=5 threads=5 spinningthreads=1 idlethreads=0 runqueue=0 [0 0 0 0 0 0 0 0]
-# command-line-arguments
-SCHED 0ms: gomaxprocs=8 idleprocs=5 threads=5 spinningthreads=1 idlethreads=0 runqueue=0 [0 0 0 0 0 0 0 0]
-SCHED 0ms: gomaxprocs=8 idleprocs=6 threads=4 spinningthreads=1 idlethreads=0 runqueue=0 [0 0 0 0 0 0 0 0]
-SCHED 1000ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=15 runqueue=0 [0 0 0 0 0 0 0 0]
-SCHED 1010ms: gomaxprocs=8 idleprocs=0 threads=12 spinningthreads=0 idlethreads=1 runqueue=33 [1 1 0 2 2 1 1 2]
-SCHED 2010ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=15 runqueue=0 [0 0 0 0 0 0 0 0]
-SCHED 2022ms: gomaxprocs=8 idleprocs=0 threads=12 spinningthreads=0 idlethreads=1 runqueue=36 [1 1 0 1 0 2 2 0]
-SCHED 3019ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=15 runqueue=0 [0 0 0 0 0 0 0 0]
-SCHED 3027ms: gomaxprocs=8 idleprocs=0 threads=12 spinningthreads=0 idlethreads=1 runqueue=36 [1 1 1 1 0 1 1 0]
-SCHED 4028ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=15 runqueue=0 [0 0 0 0 0 0 0 0]
-SCHED 4034ms: gomaxprocs=8 idleprocs=0 threads=12 spinningthreads=0 idlethreads=1 runqueue=31 [1 0 4 4 1 0 1 0]
-SCHED 5037ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=15 runqueue=0 [0 0 0 0 0 0 0 0]
-SCHED 5037ms: gomaxprocs=8 idleprocs=0 threads=12 spinningthreads=0 idlethreads=1 runqueue=22 [3 3 3 0 3 2 3 3]
-SCHED 6041ms: gomaxprocs=8 idleprocs=8 threads=22 spinningthreads=0 idlethreads=15 runqueue=0 [0 0 0 0 0 0 0 0]
-...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;字段说明：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;SCHED&lt;/code&gt;：标识该输出信息为goroutine scheduler的输出&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;5037ms&lt;/code&gt;：从程序启动到输出这行日志的时间&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;gomaxprocs&lt;/code&gt;：P的数量&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;idleprocs&lt;/code&gt;：idle状态的P的数量&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;threads&lt;/code&gt;：操作系统threads的数量，包含scheduler使用的m数量，加上runtime自用的类似sysmon这样的thread的数量&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;spinningthreads&lt;/code&gt;：处于自旋状态的操作系统thread数量&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;idlethread&lt;/code&gt;：处于idle状态的操作系统thread的数量&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;runqueue=22&lt;/code&gt;：go scheduler全局队列中G的数量&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;[3 3 3 0 3 2 3 3]&lt;/code&gt;：8个P的local queue中的G的数量&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;通过这个输出可以很清晰看到goroutine的整体状态，特别是调度的状态，到底有没有跑满CPU，到底有没有空闲的线程，任务调度整体是不是平滑的，等等。可以说是非常有用。&lt;/p&gt;
-
-&lt;p&gt;如果在GODEBUG中再加上&lt;code&gt;,scheddetail=1&lt;/code&gt;的话，则会给出更多的细节：每个G、M和P的详细调度信息。&lt;/p&gt;
-
-&lt;p&gt;e.g&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;$ GODEBUG=schedtrace=1000,scheddetail=1 go run goroutine.go
-...
-# command-line-arguments
-SCHED 0ms: gomaxprocs=8 idleprocs=5 threads=5 spinningthreads=1 idlethreads=0 runqueue=0 gcwaiting=0 nmidlelocked=1 stopwait=0 sysmonwait=0
-  P0: status=1 schedtick=0 syscalltick=0 m=3 runqsize=0 gfreecnt=0
-  P1: status=1 schedtick=1 syscalltick=0 m=2 runqsize=0 gfreecnt=0
-  P2: status=1 schedtick=0 syscalltick=0 m=4 runqsize=0 gfreecnt=0
-  P3: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P4: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P5: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P6: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P7: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  M4: p=2 curg=-1 mallocing=0 throwing=0 preemptoff= locks=1 dying=0 spinning=true blocked=false lockedg=-1
-  M3: p=0 curg=-1 mallocing=0 throwing=0 preemptoff= locks=1 dying=0 spinning=false blocked=false lockedg=-1
-  M2: p=1 curg=-1 mallocing=0 throwing=0 preemptoff= locks=1 dying=0 spinning=true blocked=false lockedg=-1
-  M1: p=-1 curg=-1 mallocing=0 throwing=0 preemptoff= locks=1 dying=0 spinning=false blocked=false lockedg=-1
-  M0: p=-1 curg=-1 mallocing=0 throwing=0 preemptoff= locks=0 dying=0 spinning=false blocked=true lockedg=1
-  G1: status=1(chan receive) m=-1 lockedm=0
-  G2: status=4(force gc (idle)) m=-1 lockedm=-1
-  G3: status=4(GC sweep wait) m=-1 lockedm=-1
-SCHED 0ms: gomaxprocs=8 idleprocs=6 threads=4 spinningthreads=1 idlethreads=0 runqueue=0 gcwaiting=0 nmidlelocked=0 stopwait=0 sysmonwait=0
-  P0: status=1 schedtick=0 syscalltick=0 m=0 runqsize=0 gfreecnt=0
-  P1: status=1 schedtick=0 syscalltick=0 m=3 runqsize=0 gfreecnt=0
-  P2: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P3: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P4: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P5: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P6: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  P7: status=0 schedtick=0 syscalltick=0 m=-1 runqsize=0 gfreecnt=0
-  M3: p=1 curg=-1 mallocing=0 throwing=0 preemptoff= locks=1 dying=0 spinning=false blocked=false lockedg=-1
-  M2: p=-1 curg=-1 mallocing=0 throwing=0 preemptoff= locks=1 dying=0 spinning=false blocked=false lockedg=-1
-  M1: p=-1 curg=17 mallocing=0 throwing=0 preemptoff= locks=0 dying=0 spinning=false blocked=false lockedg=17
-  M0: p=0 curg=-1 mallocing=0 throwing=0 preemptoff= locks=1 dying=0 spinning=false blocked=false lockedg=1
-  G1: status=1() m=-1 lockedm=0
-  G17: status=6() m=1 lockedm=1
-  G2: status=1() m=-1 lockedm=-1
-...
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&quot;4-blocking&quot;&gt;4. Blocking&lt;/h1&gt;
-&lt;p&gt;阻塞的事情在这里顺道提一笔，毕竟阻塞和goroutine还是有很深的关系的，很多时候我们的debug就是要找死循环或死锁的goroutine。如果需要查看程序当中的阻塞情况（主要是竞争锁），一样可以使用pprof，入口在：&lt;code&gt;go tool pprof http://127.0.0.1:8080/debug/pprof/block&lt;/code&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://juejin.im/post/5b7678f451882533110e8948&quot; target=&quot;_blank&quot;&gt;Golang 的 协程调度机制 与 GOMAXPROCS 性能调优&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://studygolang.com/articles/11627&quot; target=&quot;_blank&quot;&gt;Golang源码探索(二) 协程的实现原理&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2017/06/23/an-intro-about-goroutine-scheduler/&quot; target=&quot;_blank&quot;&gt;也谈goroutine调度器&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://tonybai.com/2017/11/23/the-simple-analysis-of-goroutine-schedule-examples/&quot; target=&quot;_blank&quot;&gt;Goroutine调度实例简要分析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://juejin.im/post/5b7678f451882533110e8948&quot; target=&quot;_blank&quot;&gt;Golang 的 协程调度机制 与 GOMAXPROCS 性能调优&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/28351811&quot; target=&quot;_blank&quot;&gt;剖析使Go语言高效的5个特性(4/5): Goroutines&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/28381197&quot; target=&quot;_blank&quot;&gt;Goroutine是如何工作的?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/27056944&quot; target=&quot;_blank&quot;&gt;Go调度详解&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/u010853261/article/details/85887948&quot; target=&quot;_blank&quot;&gt;Golang-gopark函数和goready函数原理分析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://software.intel.com/en-us/blogs/2014/05/10/debugging-performance-issues-in-go-programs&quot; target=&quot;_blank&quot;&gt;Debugging performance issues in Go programs&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Tue, 26 Mar 2019 11:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/03/golang-goroutine/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/03/golang-goroutine/</guid>
 			</item>
 		
 	</channel>
