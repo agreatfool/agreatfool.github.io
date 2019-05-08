@@ -58,12 +58,12 @@
   &lt;p&gt;Envoy came out as the overall winner in this benchmark. It had the highest throughput in terms of requests per second.&lt;/p&gt;
 &lt;/blockquote&gt;
 
+&lt;p&gt;文章发布时间是：&lt;code&gt;10 Dec 2018&lt;/code&gt;，应该说还是非常具有时效性的。&lt;/p&gt;
+
 &lt;p&gt;&lt;img style=&quot;background-color:transparent;&quot; target=&quot;_blank&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-01.png&quot; /&gt;
 &lt;img style=&quot;background-color:transparent;&quot; target=&quot;_blank&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-02.png&quot; /&gt;
 &lt;img style=&quot;background-color:transparent;&quot; target=&quot;_blank&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-03.png&quot; /&gt;
 &lt;img style=&quot;background-color:transparent;&quot; target=&quot;_blank&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-04.png&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;文章发布时间是：&lt;code&gt;10 Dec 2018&lt;/code&gt;，应该说还是非常具有时效性的。&lt;/p&gt;
 
 &lt;h1 id=&quot;4-架构&quot;&gt;4. 架构&lt;/h1&gt;
 &lt;p&gt;除了在Nginx中比较常见的作为流量入口的代理模式之外，Envoy还介绍了一种作为服务网格总线的架构模式：&lt;/p&gt;
@@ -134,14 +134,13 @@
 &lt;h1 id=&quot;ID_ADMIN&quot;&gt;6. Admin&lt;/h1&gt;
 &lt;p&gt;在Envoy的配置中有一个&lt;code&gt;admin&lt;/code&gt;节点可以用来配置admin功能访问：&lt;/p&gt;
 
-&lt;pre&gt;&lt;code class=&quot;language-yaml&quot;&gt;admin:
-  access_log_path: &quot;/tmp/admin_access.log&quot;
-  profile_path: &quot;/tmp/envoy.prof&quot;
-  address:
-    socket_address:
-      address: 127.0.0.1
-      port_value: 9901
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;admin&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;access_log_path&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/tmp/admin_access.log&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;profile_path&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/tmp/envoy.prof&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;socket_address&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;127.0.0.1&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;port_value&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;9901&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;提供一些admin相关功能，文档可以看：&lt;a href=&quot;https://www.envoyproxy.io/docs/envoy/v1.10.0/operations/admin&quot; target=&quot;_blank&quot;&gt;Administration interface&lt;/a&gt;。功能列表东西还真不少。&lt;/p&gt;
 

@@ -215,12 +215,12 @@
   <p>Envoy came out as the overall winner in this benchmark. It had the highest throughput in terms of requests per second.</p>
 </blockquote>
 
+<p>文章发布时间是：<code>10 Dec 2018</code>，应该说还是非常具有时效性的。</p>
+
 <p><img style="background-color:transparent;" target="_blank" src="/resources/2019/05/envoy-note/envoy-benchmark-01.png" />
 <img style="background-color:transparent;" target="_blank" src="/resources/2019/05/envoy-note/envoy-benchmark-02.png" />
 <img style="background-color:transparent;" target="_blank" src="/resources/2019/05/envoy-note/envoy-benchmark-03.png" />
 <img style="background-color:transparent;" target="_blank" src="/resources/2019/05/envoy-note/envoy-benchmark-04.png" /></p>
-
-<p>文章发布时间是：<code>10 Dec 2018</code>，应该说还是非常具有时效性的。</p>
 
 <h1 id="4-架构">4. 架构</h1>
 <p>除了在Nginx中比较常见的作为流量入口的代理模式之外，Envoy还介绍了一种作为服务网格总线的架构模式：</p>
@@ -291,14 +291,13 @@
 <h1 id="ID_ADMIN">6. Admin</h1>
 <p>在Envoy的配置中有一个<code>admin</code>节点可以用来配置admin功能访问：</p>
 
-<pre><code class="language-yaml">admin:
-  access_log_path: "/tmp/admin_access.log"
-  profile_path: "/tmp/envoy.prof"
-  address:
-    socket_address:
-      address: 127.0.0.1
-      port_value: 9901
-</code></pre>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">admin</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">access_log_path</span><span class="p p-Indicator">:</span> <span class="s">&quot;/tmp/admin_access.log&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">profile_path</span><span class="p p-Indicator">:</span> <span class="s">&quot;/tmp/envoy.prof&quot;</span>
+  <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">socket_address</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">address</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">127.0.0.1</span>
+      <span class="l l-Scalar l-Scalar-Plain">port_value</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">9901</span></code></pre></figure>
 
 <p>提供一些admin相关功能，文档可以看：<a href="https://www.envoyproxy.io/docs/envoy/v1.10.0/operations/admin" target="_blank">Administration interface</a>。功能列表东西还真不少。</p>
 
