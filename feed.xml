@@ -58,10 +58,10 @@
   &lt;p&gt;Envoy came out as the overall winner in this benchmark. It had the highest throughput in terms of requests per second.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;&lt;img src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-01.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-02.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-03.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-04.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img style=&quot;background-color:transparent;&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-01.png&quot; /&gt;
+&lt;img style=&quot;background-color:transparent;&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-02.png&quot; /&gt;
+&lt;img style=&quot;background-color:transparent;&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-03.png&quot; /&gt;
+&lt;img style=&quot;background-color:transparent;&quot; src=&quot;/resources/2019/05/envoy-note/envoy-benchmark-04.png&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;文章发布时间是：&lt;code&gt;10 Dec 2018&lt;/code&gt;，应该说还是非常具有时效性的。&lt;/p&gt;
 
