@@ -81,7 +81,14 @@
 
 &lt;p&gt;启动：&lt;/p&gt;
 
-&lt;pre&gt;&lt;code&gt;docker run --rm -d --name envoy_test -p 10000:10000 envoyproxy/envoy:v1.10.0
+&lt;pre&gt;&lt;code&gt;docker run --rm -it -d \
+    --name envoy-test \
+    --network=envoy-test-net \
+    -p 9901:9901 \
+    -p 9988:9988 \
+    -v ${PATH}/conf:/etc/envoy \
+    -v ${PATH}/log:/tmp \
+    envoyproxy/envoy:v1.10.0
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;镜像中配置文件的位置为：&lt;/p&gt;
@@ -120,7 +127,7 @@
 
 &lt;ul&gt;
   &lt;li&gt;监听端的地址都必须是&lt;code&gt;0.0.0.0&lt;/code&gt;，不能是127.0.0.1，否则在容器里收不到外部请求&lt;/li&gt;
-  &lt;li&gt;将其他的网络服务作为upstream使用时，必须让其他的网络服务与envoy连接在同一个docker network中&lt;/li&gt;
+  &lt;li&gt;将其他的网络服务作为upstream使用时，必须与envoy连接在同一个docker network中&lt;/li&gt;
   &lt;li&gt;clusters配置中的端点地址可以使用其他&lt;code&gt;docker容器的名字&lt;/code&gt;作为address&lt;/li&gt;
 &lt;/ul&gt;
 
