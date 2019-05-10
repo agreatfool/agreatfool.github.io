@@ -7,6 +7,147 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Golang Pipeline</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-channel实验范例&quot; id=&quot;markdown-toc-2-channel实验范例&quot;&gt;2. Channel实验范例&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-go-concurrency-patterns-pipelines-and-cancellation&quot; id=&quot;markdown-toc-3-go-concurrency-patterns-pipelines-and-cancellation&quot;&gt;3. Go Concurrency Patterns: Pipelines and cancellation&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#31-什么是pipeline&quot; id=&quot;markdown-toc-31-什么是pipeline&quot;&gt;3.1 什么是Pipeline&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#32-cancel-channel-done&quot; id=&quot;markdown-toc-32-cancel-channel-done&quot;&gt;3.2 Cancel: Channel Done&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#33-cancel-context&quot; id=&quot;markdown-toc-33-cancel-context&quot;&gt;3.3 Cancel: Context&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;学习一门新语言最简单的就是那些顺序执行的语言，会了PHP，换JAVA、Python、Ruby，无非就是语法更换下，上stackoverflow查下：”python字符串拼接”之类的，看下怎么写就完事了。难的是那些有特殊编程思维的语言，比如说JavaScript，异步原生，写代码要非常小心注意异步的返回如何处理，否则就会明明看着是先A后B，执行的时候却成了先B再A。就这方面来说，Go语言也属于后者，属于那种&lt;code&gt;语法看会简单，实际学精很难&lt;/code&gt;的语言，而Golang难就难在goroutine以及channel带来的功能上。&lt;/p&gt;
+
+&lt;p&gt;之前在查看Go语言的gRPC第三方库的时候，其代码对channel的运用非常灵活：&lt;a href=&quot;https://github.com/processout/grpc-go-pool/blob/master/pool.go&quot; target=&quot;_blank&quot;&gt;grpc-go-pool/pool.go&lt;/a&gt;。深感需要加深这块的理解。&lt;/p&gt;
+
+&lt;p&gt;在学习的时候，找到了一篇官方之前的博客，时间比较早了（2014年），但还算有用：&lt;a href=&quot;https://blog.golang.org/pipelines&quot; target=&quot;_blank&quot;&gt;Go Concurrency Patterns: Pipelines and cancellation&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;不过语言还是一直在发展的，目前在进行批量的routine控制以及退出触发的方面，最佳的解决方案是&lt;code&gt;context&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;接下来，一点点开始。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-channel实验范例&quot;&gt;2. Channel实验范例&lt;/h1&gt;
+&lt;p&gt;在阅读官方博文之前，先自己着手做一些范例代码，加深对于&lt;a href=&quot;/2019/03/golang-basic/#ID_CHANNEL&quot;&gt;Golang Basic &amp;gt; 2.4 通道 / 信道 channel&lt;/a&gt;的理解。&lt;/p&gt;
+
+&lt;p&gt;我做了点简单的演示范例：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/channel&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/channel/&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;只需要结果的话，可以直接读README：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/experiment/channel/README.md&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/channel/README.md&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;当中有几点比较有意思：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;slice值进出channel之后，&lt;code&gt;地址&lt;/code&gt;并&lt;code&gt;没有改变&lt;/code&gt;，和pointer是一样的结果&lt;/li&gt;
+  &lt;li&gt;channel在无buffer的情况下，很容易就会阻塞，导致routine睡眠，必须小心处理&lt;/li&gt;
+  &lt;li&gt;带buffer的channel，在buffer耗尽之后也是同样的结果，实际上来说也必须小心阻塞&lt;/li&gt;
+  &lt;li&gt;虽然向关闭的通道写数据会引起panic，但向关闭的通道&lt;code&gt;读数据&lt;/code&gt;却&lt;code&gt;不会&lt;/code&gt;，只会获得通道类型的&lt;code&gt;默认值&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;有一张图，很好地将一系列状态以及操作结果整理了出来，可以参考：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/05/golang-pipeline/close_chan.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;3-go-concurrency-patterns-pipelines-and-cancellation&quot;&gt;3. Go Concurrency Patterns: Pipelines and cancellation&lt;/h1&gt;
+&lt;p&gt;这里并不会通篇翻译：&lt;a href=&quot;https://blog.golang.org/pipelines&quot; target=&quot;_blank&quot;&gt;Go Concurrency Patterns: Pipelines and cancellation&lt;/a&gt;，有需要的可以看&lt;a href=&quot;https://imdiot.github.io/2016/01/01/Go%20Concurrency%20Patterns-Pipelines%20and%20cancellation.html&quot; target=&quot;_blank&quot;&gt;这篇&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;此外，本章后半也会涉及到&lt;code&gt;context&lt;/code&gt;，毕竟这家伙才是现在的准标准。&lt;/p&gt;
+
+&lt;h2 id=&quot;31-什么是pipeline&quot;&gt;3.1 什么是Pipeline&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通过输入channel从&lt;code&gt;上游&lt;/code&gt;接收值&lt;/li&gt;
+  &lt;li&gt;对这些数据执行某些函数，通常是生成一些新的值&lt;/li&gt;
+  &lt;li&gt;通过输出channel发送值到&lt;code&gt;下游&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;而在这一系列的交棒过程中，&lt;code&gt;错误&lt;/code&gt;的发生和事务的&lt;code&gt;取消&lt;/code&gt;是正常的情况，必须要进行&lt;code&gt;处理&lt;/code&gt;，否则的话作为下游的routine可能会一直等待已经错误退出或取消事务的上游routine，导致&lt;code&gt;资源泄露&lt;/code&gt;。使用的难点就在这里。&lt;/p&gt;
+
+&lt;h2 id=&quot;32-cancel-channel-done&quot;&gt;3.2 Cancel: Channel Done&lt;/h2&gt;
+&lt;p&gt;官方博文中的代码范例写的非常散，因为有多处重复修改，这里提供一份完整拼接的版本：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/experiment/pipeline/pipeline.go&quot; target=&quot;_blank&quot;&gt;experiment/pipeline/pipeline.go&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;官方博文通篇都阅读了的话，撇开行文中的Dummy业务逻辑不谈，可以了解到该文主要还是谈了如何对出问题的routine进行退出通知。官方的博文中使用的方法是申明一个类型为&lt;code&gt;struct{}&lt;/code&gt;的Dummy通道，关闭该通道来进行退出消息的传送。&lt;/p&gt;
+
+&lt;p&gt;通过：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;close&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;out&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// HL&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;range&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;nums&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;out&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// HL&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;以这样的方式，监听&lt;code&gt;done&lt;/code&gt;通道的关闭，退出routine函数，并设置defer函数，在routine函数退出的时候，清理对应的资源并关闭通道。这种编码解决方法确实能解决问题，但非常难看，也没有层级退出的概念。&lt;/p&gt;
+
+&lt;h2 id=&quot;33-cancel-context&quot;&gt;3.3 Cancel: Context&lt;/h2&gt;
+&lt;p&gt;&lt;code&gt;done通道&lt;/code&gt;确实能在功能上达到要求，但尚欠缺了一些要素，因此后续就有&lt;code&gt;context&lt;/code&gt;这个包的出现。相关的学习可以阅读：&lt;a href=&quot;https://deepzz.com/post/golang-context-package-notes.html&quot; target=&quot;_blank&quot;&gt;快速掌握 Golang context 包，简单示例&lt;/a&gt;。此外，还有官方博客：&lt;a href=&quot;https://blog.golang.org/context&quot; target=&quot;_blank&quot;&gt;Go Concurrency Patterns: Context&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;一些概念和规范这里做下引用：&lt;/p&gt;
+
+&lt;p&gt;Context 的调用应该是链式的，通过&lt;code&gt;WithCancel&lt;/code&gt;，&lt;code&gt;WithDeadline&lt;/code&gt;，&lt;code&gt;WithTimeout&lt;/code&gt;或&lt;code&gt;WithValue&lt;/code&gt;派生出新的 Context。当父 Context 被取消时，其派生的所有 Context 都将取消。&lt;/p&gt;
+
+&lt;p&gt;通过&lt;code&gt;context.WithXXX&lt;/code&gt;都将返回新的 Context 和 CancelFunc。调用 CancelFunc 将取消子代，移除父代对子代的引用，并且停止所有定时器。未能调用 CancelFunc 将泄漏子代，直到父代被取消或定时器触发。&lt;code&gt;go vet&lt;/code&gt;工具检查所有流程控制路径上使用 CancelFuncs。&lt;/p&gt;
+
+&lt;p&gt;遵循以下规则，以保持包之间的接口一致，并启用静态分析工具以检查上下文传播。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;不要将 Contexts 放入结构体，相反&lt;code&gt;context&lt;/code&gt;应该作为第一个参数传入，命名为ctx。&lt;code&gt;func DoSomething（ctx context.Context，arg Arg）error { // ... use ctx ... }&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;即使函数允许，也不要传入&lt;code&gt;nil&lt;/code&gt;的 Context。如果不知道用哪种 Context，可以使用&lt;code&gt;context.TODO()&lt;/code&gt;。&lt;/li&gt;
+  &lt;li&gt;使用context的Value相关方法只应该用于在程序和接口中传递的和请求相关的元数据，不要用它来传递一些可选的参数&lt;/li&gt;
+  &lt;li&gt;相同的 Context 可以传递给在不同的&lt;code&gt;goroutine&lt;/code&gt;；Context 是并发安全的。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;用法：&lt;/p&gt;
+
+&lt;p&gt;Done函数会返回一个channel，用来进行close通知（本质上还是之前的那一套）：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gen&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;chan&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;():&lt;/span&gt;
+			&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// returning not to leak the goroutine&lt;/span&gt;
+		&lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+		&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;//...&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;cancel&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;WithCancel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Background&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;cancel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// cancel when we are finished consuming integers&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;此外，还有一篇老王的：&lt;a href=&quot;https://blog.huoding.com/2019/04/15/730&quot; target=&quot;_blank&quot;&gt;Golang之Context的迷思&lt;/a&gt;，可以好好读下。&lt;/p&gt;
+
+&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
+&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/processout/grpc-go-pool/blob/master/pool.go&quot; target=&quot;_blank&quot;&gt;grpc-go-pool/pool.go&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.golang.org/pipelines&quot; target=&quot;_blank&quot;&gt;Go Concurrency Patterns: Pipelines and cancellation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://imdiot.github.io/2016/01/01/Go%20Concurrency%20Patterns-Pipelines%20and%20cancellation.html&quot; target=&quot;_blank&quot;&gt;『译』Go Concurrency Patterns: Pipelines and cancellation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://deepzz.com/post/golang-context-package-notes.html&quot; target=&quot;_blank&quot;&gt;快速掌握 Golang context 包，简单示例&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.huoding.com/2019/04/15/730&quot; target=&quot;_blank&quot;&gt;Golang之Context的迷思&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Fri, 10 May 2019 10:01:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2019/05/golang-pipeline/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2019/05/golang-pipeline/</guid>
+			</item>
+		
+			<item>
 				<title>Envoy Notes</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -5966,62 +6107,6 @@ api_server_http_requests_total{method=&quot;POST&quot;,handler=&quot;/tracks&quo
 				<pubDate>Tue, 09 Apr 2019 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/04/prometheus-note/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/04/prometheus-note/</guid>
-			</item>
-		
-			<item>
-				<title>也谈996</title>
-				<description>&lt;h1 id=&quot;996的本质&quot;&gt;996的本质&lt;/h1&gt;
-&lt;p&gt;最近996这个事情因为&lt;a href=&quot;https://github.com/996icu/996.ICU&quot; target=&quot;_blank&quot;&gt;996icu/996.ICU&lt;/a&gt;快速热门起来，作为同行我当年也遭遇过985（当然没996那么惨），因此很清楚这种文化带来的破坏作用。本来其实并没有什么想法要对这个热点做一点感悟笔记的，毕竟我是悲观主义者，对这世道甚至是人类的未来都不看好，理性的、熟悉历史的人差不多都应该是这个状态。读读历史可以看到人类并没有进步，读读阮一峰的&lt;a href=&quot;https://survivor.ruanyifeng.com/&quot; target=&quot;_blank&quot;&gt;未来世界的幸存者&lt;/a&gt;可以看到人类也没有什么未来。所以996这种，再正常不过了，无非就是山崩泥石流里的一颗小石子，对小石子还有什么好评论的呢，是吧？&lt;/p&gt;
-
-&lt;p&gt;但撇开单纯的劳动者权力这种点，放宽到一个个体的人和公司的经营，我倒是有点想法真的觉得应该记录下来。&lt;/p&gt;
-
-&lt;p&gt;我的观点是：其实我还蛮理解这些资本主义老板的，996的本质，在于&lt;code&gt;符合要求的劳动力不足&lt;/code&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;何谓人才&quot;&gt;何谓人才&lt;/h1&gt;
-&lt;p&gt;往大了说，开过公司的人，往小了说，带过团队的人，都知道，现代的高精尖公司的关键生产要素不再是百年前的地皮、水电煤、能源这样的物质资源，而是&lt;code&gt;人才&lt;/code&gt;，亦即所谓的&lt;code&gt;团队&lt;/code&gt;。煤老板有钱，开个公司，败；投资人有钱，投个公司，烂。为什么？因为没有团队。没有有能力的人，就没有战斗力。市场上招聘，能找到的都是生物学上的人，而不是&lt;code&gt;人才&lt;/code&gt;，也就是我刚才说的&lt;code&gt;符合要求的劳动力&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;在我看来，软件公司里的人才，要的其实不是&lt;code&gt;技术&lt;/code&gt;，而是&lt;code&gt;解决问题的能力&lt;/code&gt;。这里面有什么差别呢？其实差别很大。大部分的软件从业者都觉得，我只要技术，我就能找到好的工作，实际上并非如此。技术和能力的关系，举个例子，就像是一张死的图纸和从图纸生产产品的之间的关系。有图纸（技术完备），但从图纸到产品，当中还有很多难点很多环节需要去攻克，这时候需要做很多事情。零件哪里来？如何做好零件的品控？组装的车床哪里来？运作车床的厂房和能源哪里来？其中甚至可以说是千山万水。&lt;/p&gt;
-
-&lt;p&gt;光有&lt;code&gt;技术&lt;/code&gt;其实一点用都没有。商业公司需要的是产品，而制作产品要很多能力：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;划分目标：如何将产品的最终目标分割成一个个小的可实现的节点&lt;/li&gt;
-  &lt;li&gt;做好管理：如何正确估时进行工作规划，让不同的部门小组之间的规划能够协同起来&lt;/li&gt;
-  &lt;li&gt;懂得学习：遇到不知道的东西，能不能及时自学攻克难关，并很快应用到生产中&lt;/li&gt;
-  &lt;li&gt;善于沟通：产品永远不是由一个人完成，人和人、团队和团队之间如何协调协作&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;此外还有很多很多。&lt;/p&gt;
-
-&lt;p&gt;这也是常说的死读书和能做事两种人的区别。我常和下属说，不要轻视你平时在做的工作，能把CRUD工作做到完善都不是一个普通程序员能轻易做到的。同样做一个简单的业务逻辑模块，有的人可以做好编码规范、写好注释、做好文档、编写测试脚本，做到与之对接的其他协作者感叹其尽善尽美；而有的人就可以做到一团糟糕什么都出错，让后续交接的人一头雾水。&lt;/p&gt;
-
-&lt;p&gt;大部分的程序员并不懂这一点。我以前有一个下属，也算是名校毕业，计算机技术和算法等基础都很扎实，但工作上的很多细节点还是做的不够好，平时code review之类的，我也经常对他进行指导。后来有一天他提出离职，想回家学几个月的人工智能算法，以后争取做这方面的工作。我说，你有这样的志向我觉得很好，祝愿你今后能在人工智能这块学到知识，进入大厂做出成绩。但是，我还是建议你在这个团队继续锻炼下，至少做到你平时的工作让我没有话说。如果你今后在做事的细节方面仍旧和现在一样的话，即便你算法方面多出色，你做出来的东西，仍旧是不能让人放心的。读几个月书，看懂所有算法，就能把事情做好做对了？这还是没理解什么是&lt;code&gt;知识&lt;/code&gt;什么是&lt;code&gt;能力&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;现如今的技术发展实在是太快了，热门的东西一直都在更迭，我刚从业的时候是J2EE，后来PHP热门，再后来，Flash、Cocos2dx、iOS、Android，等等。如果只看&lt;code&gt;技术&lt;/code&gt;，那是不是很多人才都过气了？当然不是。就像使用英语还是法语还是汉语写一本小说，本质在于能不能写好小说，而不在于使用的语言是什么。技术这种东西，只要掌握了软件工程的本质，再辅以强大的自学能力，再新奇的东西也就是一个上手时间的问题，让&lt;code&gt;有能力的人才&lt;/code&gt;来做，最后还是能做得很好。&lt;/p&gt;
-
-&lt;h1 id=&quot;理解996&quot;&gt;理解996&lt;/h1&gt;
-&lt;p&gt;所以回过头来我们再来看996，为什么大厂都喜欢996？因为能满足&lt;code&gt;人才&lt;/code&gt;需求的从业者实在是太少，而要从那么多自然人当中筛选出合适的人选培养，并组建&lt;code&gt;团队&lt;/code&gt;，对于一个公司来说成本太高，特别是超大型的软件公司。要提升生产力，老板有两个选择：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;花大量时间大量代价，真正把公司的管理工作做好，把团队压缩下来，把有能力的人留住，做类似&lt;code&gt;精实创业（Lean Startup）&lt;/code&gt;在做的事情&lt;/li&gt;
-  &lt;li&gt;野蛮地延长工作时间，即便效率更低，人员流动性更大，生产力总是有提升的&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;你看看，所以大公司只能选后者，其来自有。反过来说，当你成为头部的&lt;code&gt;人才&lt;/code&gt;，想象下，是不是路就宽阔了很多。所以996我从来不担心，当你有能力了，你自然就多了很多选择。&lt;/p&gt;
-
-&lt;h1 id=&quot;你应该做什么&quot;&gt;你应该做什么&lt;/h1&gt;
-&lt;p&gt;放下奶头乐，放下名为&lt;code&gt;努力工作&lt;/code&gt;实则&lt;code&gt;放弃思考&lt;/code&gt;的麻醉剂，睁开闭起来的眼睛，一步一个脚印做好自己的能力提升。以我个人的经验，每天做一个小的笔记，把每天做的事情尽量详细记录下来，晚上都过一遍，找找自己有没有能力的提升，每日自省，如果没有，就要找方法挤出时间来做对提升自己有益的事情。每天一回顾，每周一大回顾，按周期给自己制定目标，并慢慢实现之。所谓逆水行舟，人生在世没有轻松的方法能让你活得更好，你每天轻松，那就长期悲剧，每天痛苦，那就长期顺利，就这么简单。&lt;/p&gt;
-
-&lt;p&gt;共勉。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-
-</description>
-				<pubDate>Fri, 05 Apr 2019 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/04/996/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/04/996/</guid>
 			</item>
 		
 	</channel>

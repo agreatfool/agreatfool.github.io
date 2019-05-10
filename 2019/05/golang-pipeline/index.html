@@ -1,0 +1,477 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Golang Pipeline | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/05/golang-pipeline/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/05/golang-pipeline/">Golang Pipeline</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>10 May 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Golang">Golang</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Goroutine">Goroutine</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-channel实验范例" id="markdown-toc-2-channel实验范例">2. Channel实验范例</a></li>
+  <li><a href="#3-go-concurrency-patterns-pipelines-and-cancellation" id="markdown-toc-3-go-concurrency-patterns-pipelines-and-cancellation">3. Go Concurrency Patterns: Pipelines and cancellation</a>    <ul>
+      <li><a href="#31-什么是pipeline" id="markdown-toc-31-什么是pipeline">3.1 什么是Pipeline</a></li>
+      <li><a href="#32-cancel-channel-done" id="markdown-toc-32-cancel-channel-done">3.2 Cancel: Channel Done</a></li>
+      <li><a href="#33-cancel-context" id="markdown-toc-33-cancel-context">3.3 Cancel: Context</a></li>
+    </ul>
+  </li>
+  <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
+      <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>学习一门新语言最简单的就是那些顺序执行的语言，会了PHP，换JAVA、Python、Ruby，无非就是语法更换下，上stackoverflow查下：”python字符串拼接”之类的，看下怎么写就完事了。难的是那些有特殊编程思维的语言，比如说JavaScript，异步原生，写代码要非常小心注意异步的返回如何处理，否则就会明明看着是先A后B，执行的时候却成了先B再A。就这方面来说，Go语言也属于后者，属于那种<code>语法看会简单，实际学精很难</code>的语言，而Golang难就难在goroutine以及channel带来的功能上。</p>
+
+<p>之前在查看Go语言的gRPC第三方库的时候，其代码对channel的运用非常灵活：<a href="https://github.com/processout/grpc-go-pool/blob/master/pool.go" target="_blank">grpc-go-pool/pool.go</a>。深感需要加深这块的理解。</p>
+
+<p>在学习的时候，找到了一篇官方之前的博客，时间比较早了（2014年），但还算有用：<a href="https://blog.golang.org/pipelines" target="_blank">Go Concurrency Patterns: Pipelines and cancellation</a>。</p>
+
+<p>不过语言还是一直在发展的，目前在进行批量的routine控制以及退出触发的方面，最佳的解决方案是<code>context</code>。</p>
+
+<p>接下来，一点点开始。</p>
+
+<h1 id="2-channel实验范例">2. Channel实验范例</h1>
+<p>在阅读官方博文之前，先自己着手做一些范例代码，加深对于<a href="/2019/03/golang-basic/#ID_CHANNEL">Golang Basic &gt; 2.4 通道 / 信道 channel</a>的理解。</p>
+
+<p>我做了点简单的演示范例：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/channel" target="_blank">dist-system-practice/golang/src/experiment/channel/</a>。</p>
+
+<p>只需要结果的话，可以直接读README：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/experiment/channel/README.md" target="_blank">dist-system-practice/golang/src/experiment/channel/README.md</a>。</p>
+
+<p>当中有几点比较有意思：</p>
+
+<ul>
+  <li>slice值进出channel之后，<code>地址</code>并<code>没有改变</code>，和pointer是一样的结果</li>
+  <li>channel在无buffer的情况下，很容易就会阻塞，导致routine睡眠，必须小心处理</li>
+  <li>带buffer的channel，在buffer耗尽之后也是同样的结果，实际上来说也必须小心阻塞</li>
+  <li>虽然向关闭的通道写数据会引起panic，但向关闭的通道<code>读数据</code>却<code>不会</code>，只会获得通道类型的<code>默认值</code></li>
+</ul>
+
+<p>有一张图，很好地将一系列状态以及操作结果整理了出来，可以参考：</p>
+
+<p><img src="/resources/2019/05/golang-pipeline/close_chan.png" alt="" target="_blank" /></p>
+
+<h1 id="3-go-concurrency-patterns-pipelines-and-cancellation">3. Go Concurrency Patterns: Pipelines and cancellation</h1>
+<p>这里并不会通篇翻译：<a href="https://blog.golang.org/pipelines" target="_blank">Go Concurrency Patterns: Pipelines and cancellation</a>，有需要的可以看<a href="https://imdiot.github.io/2016/01/01/Go%20Concurrency%20Patterns-Pipelines%20and%20cancellation.html" target="_blank">这篇</a>。</p>
+
+<p>此外，本章后半也会涉及到<code>context</code>，毕竟这家伙才是现在的准标准。</p>
+
+<h2 id="31-什么是pipeline">3.1 什么是Pipeline</h2>
+
+<ul>
+  <li>通过输入channel从<code>上游</code>接收值</li>
+  <li>对这些数据执行某些函数，通常是生成一些新的值</li>
+  <li>通过输出channel发送值到<code>下游</code></li>
+</ul>
+
+<p>而在这一系列的交棒过程中，<code>错误</code>的发生和事务的<code>取消</code>是正常的情况，必须要进行<code>处理</code>，否则的话作为下游的routine可能会一直等待已经错误退出或取消事务的上游routine，导致<code>资源泄露</code>。使用的难点就在这里。</p>
+
+<h2 id="32-cancel-channel-done">3.2 Cancel: Channel Done</h2>
+<p>官方博文中的代码范例写的非常散，因为有多处重复修改，这里提供一份完整拼接的版本：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/experiment/pipeline/pipeline.go" target="_blank">experiment/pipeline/pipeline.go</a>。</p>
+
+<p>官方博文通篇都阅读了的话，撇开行文中的Dummy业务逻辑不谈，可以了解到该文主要还是谈了如何对出问题的routine进行退出通知。官方的博文中使用的方法是申明一个类型为<code>struct{}</code>的Dummy通道，关闭该通道来进行退出消息的传送。</p>
+
+<p>通过：</p>
+
+<figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">defer</span> <span class="nb">close</span><span class="p">(</span><span class="nx">out</span><span class="p">)</span> <span class="c1">// HL</span>
+	<span class="k">for</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">n</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">nums</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">out</span> <span class="o">&lt;-</span> <span class="nx">n</span><span class="p">:</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">done</span><span class="p">:</span>
+			<span class="k">return</span> <span class="c1">// HL</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}()</span></code></pre></figure>
+
+<p>以这样的方式，监听<code>done</code>通道的关闭，退出routine函数，并设置defer函数，在routine函数退出的时候，清理对应的资源并关闭通道。这种编码解决方法确实能解决问题，但非常难看，也没有层级退出的概念。</p>
+
+<h2 id="33-cancel-context">3.3 Cancel: Context</h2>
+<p><code>done通道</code>确实能在功能上达到要求，但尚欠缺了一些要素，因此后续就有<code>context</code>这个包的出现。相关的学习可以阅读：<a href="https://deepzz.com/post/golang-context-package-notes.html" target="_blank">快速掌握 Golang context 包，简单示例</a>。此外，还有官方博客：<a href="https://blog.golang.org/context" target="_blank">Go Concurrency Patterns: Context</a>。</p>
+
+<p>一些概念和规范这里做下引用：</p>
+
+<p>Context 的调用应该是链式的，通过<code>WithCancel</code>，<code>WithDeadline</code>，<code>WithTimeout</code>或<code>WithValue</code>派生出新的 Context。当父 Context 被取消时，其派生的所有 Context 都将取消。</p>
+
+<p>通过<code>context.WithXXX</code>都将返回新的 Context 和 CancelFunc。调用 CancelFunc 将取消子代，移除父代对子代的引用，并且停止所有定时器。未能调用 CancelFunc 将泄漏子代，直到父代被取消或定时器触发。<code>go vet</code>工具检查所有流程控制路径上使用 CancelFuncs。</p>
+
+<p>遵循以下规则，以保持包之间的接口一致，并启用静态分析工具以检查上下文传播。</p>
+
+<ul>
+  <li>不要将 Contexts 放入结构体，相反<code>context</code>应该作为第一个参数传入，命名为ctx。<code>func DoSomething（ctx context.Context，arg Arg）error { // ... use ctx ... }</code></li>
+  <li>即使函数允许，也不要传入<code>nil</code>的 Context。如果不知道用哪种 Context，可以使用<code>context.TODO()</code>。</li>
+  <li>使用context的Value相关方法只应该用于在程序和接口中传递的和请求相关的元数据，不要用它来传递一些可选的参数</li>
+  <li>相同的 Context 可以传递给在不同的<code>goroutine</code>；Context 是并发安全的。</li>
+</ul>
+
+<p>用法：</p>
+
+<p>Done函数会返回一个channel，用来进行close通知（本质上还是之前的那一套）：</p>
+
+<figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">gen</span> <span class="o">:=</span> <span class="kd">func</span><span class="p">(</span><span class="nx">ctx</span> <span class="nx">context</span><span class="p">.</span><span class="nx">Context</span><span class="p">)</span> <span class="o">&lt;-</span><span class="kd">chan</span> <span class="kt">int</span> <span class="p">{</span>
+	<span class="k">go</span> <span class="kd">func</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">select</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="o">&lt;-</span><span class="nx">ctx</span><span class="p">.</span><span class="nx">Done</span><span class="p">():</span>
+			<span class="k">return</span> <span class="c1">// returning not to leak the goroutine</span>
+		<span class="c1">//...</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="c1">//...</span>
+<span class="p">}</span>
+<span class="c1">//...</span>
+<span class="nx">ctx</span><span class="p">,</span> <span class="nx">cancel</span> <span class="o">:=</span> <span class="nx">context</span><span class="p">.</span><span class="nx">WithCancel</span><span class="p">(</span><span class="nx">context</span><span class="p">.</span><span class="nx">Background</span><span class="p">())</span>
+<span class="k">defer</span> <span class="nx">cancel</span><span class="p">()</span> <span class="c1">// cancel when we are finished consuming integers</span></code></pre></figure>
+
+<p>此外，还有一篇老王的：<a href="https://blog.huoding.com/2019/04/15/730" target="_blank">Golang之Context的迷思</a>，可以好好读下。</p>
+
+<h1 id="资料">资料</h1>
+<h2 id="链接">链接</h2>
+<ul>
+  <li><a href="https://github.com/processout/grpc-go-pool/blob/master/pool.go" target="_blank">grpc-go-pool/pool.go</a></li>
+  <li><a href="https://blog.golang.org/pipelines" target="_blank">Go Concurrency Patterns: Pipelines and cancellation</a></li>
+  <li><a href="https://imdiot.github.io/2016/01/01/Go%20Concurrency%20Patterns-Pipelines%20and%20cancellation.html" target="_blank">『译』Go Concurrency Patterns: Pipelines and cancellation</a></li>
+  <li><a href="https://deepzz.com/post/golang-context-package-notes.html" target="_blank">快速掌握 Golang context 包，简单示例</a></li>
+  <li><a href="https://blog.huoding.com/2019/04/15/730" target="_blank">Golang之Context的迷思</a></li>
+</ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/05/golang-pipeline/">Golang Pipeline</a></li>
+    
+    <li><a href="/2019/05/envoy-note/">Envoy Notes</a></li>
+    
+    <li><a href="/2019/05/grpc-note/">gRPC Notes</a></li>
+    
+    <li><a href="/2019/04/kafka-note/">Kafka Notes</a></li>
+    
+    <li><a href="/2019/04/message-queue-design/">消息队列设计精要 - 美团点评技术团队</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/05/golang-pipeline/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
