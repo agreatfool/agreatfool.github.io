@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Vim命令 | Xenojoshua</title>
+  <title>Memcached Notes | Xenojoshua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://xenojoshua.com/js/jquery.min.js"></script>
   <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
   <script src="https://xenojoshua.com/js/header.js"></script>
   <script src="https://xenojoshua.com/js/toc.js"></script>
-  <link href="https://xenojoshua.com//2011/03/vi-useful-command/" rel="canonical" />
+  <link href="https://xenojoshua.com//2019/05/memcached-note/" rel="canonical" />
   <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
@@ -148,39 +148,56 @@
         <div class="col-md-8">
           <div class="article">
             <div class="well">
-              <h1><a href="https://xenojoshua.com/2011/03/vi-useful-command/">Vim命令</a></h1>
+              <h1><a href="https://xenojoshua.com/2019/05/memcached-note/">Memcached Notes</a></h1>
               <div class="post-meta">
                 <div class="post-time">
                   <i class="fa fa-calendar"></i>
-                  <time>25 Mar 2011</time>
+                  <time>11 May 2019</time>
                 </div>
                 <ul>
                   
-                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                    <li><a href="https://xenojoshua.com/tag/Memcache">Memcache</a></li>
                   
-                    <li><a href="https://xenojoshua.com/tag/vi">vi</a></li>
+                    <li><a href="https://xenojoshua.com/tag/Keynote">Keynote</a></li>
                   
                 </ul>
               </div>
               <div class="post-content">
-                <ol>
-<li>上下左右：k j h l</li>
-<li>开始选中：shift+v</li>
-<li>到文件头：gg</li>
-<li>到文件尾：shift+g</li>
-<li>全文删除：dG</li>
-<li>删除一行：dd</li>
-<li>保存：命令模式下:w</li>
-<li>保存退出：命令模式下wq</li>
-<li>强行保存：命令模式下w!</li>
-<li>删除当前光标的字符：x</li>
-<li>跳到下个单词词头、词尾：w、e</li>
-<li>跳到上个单词词头：b</li>
-<li>到当前行的行首：^</li>
-<li>到当前行的行末：$</li>
-<li>撤销上一步的执行：u</li>
-<li>在一个UI内切换同时打开的多个窗口：ctrl + w</li>
-</ol>
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-清单" id="markdown-toc-2-清单">2. 清单</a>    <ul>
+      <li><a href="#21-mixi的系列博文" id="markdown-toc-21-mixi的系列博文">2.1 Mixi的系列博文</a></li>
+      <li><a href="#22-自撰的系列博文" id="markdown-toc-22-自撰的系列博文">2.2 自撰的系列博文</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>早年对memcached有过一系列非常深入的研究分析，并形成了大量的文字积累。memcached这个软件在那么多年中也并没有什么很大的变化，毕竟它要服务的功能相对来说还是非常稳定的，就那么一小块，做好就好了。</p>
+
+<p>因为文章年代都比较久远了，现在要找都需要到tag里去搜，就比较麻烦。因此在这里做一个综合，把所有的内容都罗列进来。</p>
+
+<h1 id="2-清单">2. 清单</h1>
+<h2 id="21-mixi的系列博文">2.1 Mixi的系列博文</h2>
+<ul>
+  <li><a href="/2011/04/memcached-anatomy-001/" target="_blank">memcached完全剖析–1. memcached的基础</a></li>
+  <li><a href="/2011/04/memcached-anatomy-002/" target="_blank">memcached全面剖析–2.理解memcached的内存存储</a></li>
+  <li><a href="/2011/04/memcached-anatomy-003/" target="_blank">memcached全面剖析–3.memcached的删除机制和发展方向</a></li>
+  <li><a href="/2011/04/memcached-anatomy-004/" target="_blank">memcached全面剖析–4. memcached的分布式算法</a></li>
+  <li><a href="/2011/04/memcached-anatomy-005/" target="_blank">memcached全面剖析–5. memcached的应用和兼容程序</a></li>
+</ul>
+
+<h2 id="22-自撰的系列博文">2.2 自撰的系列博文</h2>
+<ul>
+  <li><a href="/2011/04/deep-in-memcached-how-it-works/" target="_blank">Memcached深入理解 - memcached究竟是如何运作的</a></li>
+  <li><a href="/2011/04/deep-in-memcached-learning-official-protocol-stats/" target="_blank">Memcached深入理解 – 理解官方protocol中的统计方法</a></li>
+  <li><a href="/2011/04/deep-in-memcached-how-to-monitor/" target="_blank">Memcached深入理解 - memcached的监控</a></li>
+</ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
 
               </div>
               
@@ -308,7 +325,7 @@
 <script type="text/javascript">
   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
   var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
-  var disqus_identifier = "/2011/03/vi-useful-command/";
+  var disqus_identifier = "/2019/05/memcached-note/";
 
   /* * * DON'T EDIT BELOW THIS LINE * * */
   (function() {
