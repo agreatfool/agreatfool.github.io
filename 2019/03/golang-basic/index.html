@@ -402,6 +402,8 @@ byte // uint8 的别名</p>
 <figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">f</span> <span class="o">:=</span> <span class="nb">float32</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></code></pre></figure>
 
 <h3 id="类型断言">类型断言</h3>
+<p>官方文档：<a href="https://golang.org/ref/spec#Type_assertions" target="_blank">Type assertions</a>。</p>
+
 <p>类型断言表达式的语法形式是x.(T)。其中的x代表要被判断类型的值。这个值当下的类型必须是接口类型的，不过具体是哪个接口类型其实是无所谓的。  <br />
 <code>value, ok := interface{}(container).([]string)</code>  <br />
 一对不包裹任何东西的花括号，除了可以代表空的代码块之外，还可以用于表示不包含任何内容的数据结构（或者说数据类型）。</p>
