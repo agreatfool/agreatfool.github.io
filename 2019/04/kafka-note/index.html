@@ -774,7 +774,7 @@
 
 <p>因此最好的方法是使用yaml的配置重用，来设置共通的配置，然后像变量一样重用。这可以参见我之前提到的范例配置文件：</p>
 
-<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">x-kafka-defaults</span><span class="p p-Indicator">:</span> <span class="nl">&amp;KAFKA_DEFAULTS</span>
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">x-kafka-environment-defaults</span><span class="p p-Indicator">:</span> <span class="nl">&amp;KAFKA_ENV_DEFAULTS</span>
   <span class="l l-Scalar l-Scalar-Plain">...</span>
   <span class="l l-Scalar l-Scalar-Plain"># 在这里放默认的配置</span>
   <span class="l l-Scalar l-Scalar-Plain">...</span>
@@ -784,7 +784,7 @@
     <span class="l l-Scalar l-Scalar-Plain">...</span>
     <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">...</span>
-      <span class="l l-Scalar l-Scalar-Plain">&lt;&lt;</span><span class="p p-Indicator">:</span> <span class="nv">*KAFKA_DEFAULTS</span> <span class="c1"># 这样就把作为变量的配置全部导入到这个点上了</span></code></pre></figure>
+      <span class="l l-Scalar l-Scalar-Plain">&lt;&lt;</span><span class="p p-Indicator">:</span> <span class="nv">*KAFKA_ENV_DEFAULTS</span> <span class="c1"># 这样就把作为变量的配置全部导入到这个点上了</span></code></pre></figure>
 
 <h2 id="84-相关参考">8.4 相关参考</h2>
 <ul>

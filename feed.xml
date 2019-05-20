@@ -2021,7 +2021,7 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
 
 &lt;p&gt;因此最好的方法是使用yaml的配置重用，来设置共通的配置，然后像变量一样重用。这可以参见我之前提到的范例配置文件：&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;x-kafka-defaults&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;KAFKA_DEFAULTS&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;x-kafka-environment-defaults&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;KAFKA_ENV_DEFAULTS&lt;/span&gt;
   &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
   &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;# 在这里放默认的配置&lt;/span&gt;
   &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
@@ -2031,7 +2031,7 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
       &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*KAFKA_DEFAULTS&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 这样就把作为变量的配置全部导入到这个点上了&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*KAFKA_ENV_DEFAULTS&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 这样就把作为变量的配置全部导入到这个点上了&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h2 id=&quot;84-相关参考&quot;&gt;8.4 相关参考&lt;/h2&gt;
 &lt;ul&gt;
