@@ -1406,6 +1406,7 @@ $ docker volume rm <span class="k">$(</span>docker volume ls -q<span class="k">)
 <p>更多的可以查看官方文档。</p>
 
 <h2 id="查看网络内容器列表">查看网络内容器列表</h2>
+<p>注意下面的例子中双花括号的转译符需要自行去除：</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1"># 只获取名字</span>
 $ docker network inspect -f <span class="s1">&#39;\{\{ range $key, $value := .Containers \}\}\{\{ printf &quot;%s\n&quot; $value.Name \}\}\{\{ end \}\}&#39;</span> <span class="si">${</span><span class="p">网络名</span><span class="si">}</span>
@@ -1414,6 +1415,7 @@ $ docker network inspect -f <span class="s1">&#39;\{\{ range $key, $value := .Co
 $ docker network inspect <span class="si">${</span><span class="p">网络名</span><span class="si">}</span></code></pre></figure>
 
 <h2 id="查看容器所属网络">查看容器所属网络</h2>
+<p>注意下面的例子中双花括号的转译符需要自行去除：</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1"># 只获取名字</span>
 $ docker inspect -f <span class="s1">&#39;\{\{ range $key, $value := .NetworkSettings.Networks \}\}\{\{ printf &quot;%s\n&quot; $key \}\}\{\{ end \}\}&#39;</span> <span class="si">${</span><span class="p">容器名</span><span class="si">}</span>
@@ -1422,6 +1424,7 @@ $ docker inspect -f <span class="s1">&#39;\{\{ range $key, $value := .NetworkSet
 $ docker inspect <span class="si">${</span><span class="p">容器名</span><span class="si">}</span></code></pre></figure>
 
 <h2 id="查看容器运行状态">查看容器运行状态</h2>
+<p>注意下面的例子中双花括号的转译符需要自行去除：</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker stats <span class="c1"># 默认一直刷新，类似top命令</span>
 $ docker stats --no-stream <span class="c1"># 不刷新，只获取一次</span>
