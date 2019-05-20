@@ -1408,7 +1408,7 @@ $ docker volume rm <span class="k">$(</span>docker volume ls -q<span class="k">)
 <h2 id="查看网络内容器列表">查看网络内容器列表</h2>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1"># 只获取名字</span>
-$ docker network inspect -f <span class="s1">&#39;&#39;</span> <span class="si">${</span><span class="p">网络名</span><span class="si">}</span>
+$ docker network inspect -f <span class="s1">&#39;\{\{ range $key, $value := .Containers \}\}\{\{ printf &quot;%s\n&quot; $value.Name \}\}\{\{ end \}\}&#39;</span> <span class="si">${</span><span class="p">网络名</span><span class="si">}</span>
 
 <span class="c1"># 观察打印出来的结构中的 Containers 部分，可以获得更详细的信息</span>
 $ docker network inspect <span class="si">${</span><span class="p">网络名</span><span class="si">}</span></code></pre></figure>
@@ -1416,7 +1416,7 @@ $ docker network inspect <span class="si">${</span><span class="p">网络名</sp
 <h2 id="查看容器所属网络">查看容器所属网络</h2>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1"># 只获取名字</span>
-$ docker inspect -f <span class="s1">&#39;&#39;</span> <span class="si">${</span><span class="p">容器名</span><span class="si">}</span>
+$ docker inspect -f <span class="s1">&#39;\{\{ range $key, $value := .NetworkSettings.Networks \}\}\{\{ printf &quot;%s\n&quot; $key \}\}\{\{ end \}\}&#39;</span> <span class="si">${</span><span class="p">容器名</span><span class="si">}</span>
 
 <span class="c1"># 观察打印出来的结构中的 Networks 部分，可以获得更详细的信息</span>
 $ docker inspect <span class="si">${</span><span class="p">容器名</span><span class="si">}</span></code></pre></figure>
@@ -1426,10 +1426,10 @@ $ docker inspect <span class="si">${</span><span class="p">容器名</span><span
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker stats <span class="c1"># 默认一直刷新，类似top命令</span>
 $ docker stats --no-stream <span class="c1"># 不刷新，只获取一次</span>
 $ docker stats --no-stream <span class="si">${</span><span class="p">容器名</span><span class="si">}</span> <span class="c1"># 获取指定的容器状态</span>
-$ docker stats --format <span class="s2">&quot;table \t\t&quot;</span> <span class="c1"># 格式化输出</span>
+$ docker stats --format <span class="s2">&quot;table \{\{.Name\}\}\t\{\{.CPUPerc\}\}\t\{\{.MemUsage\}\}&quot;</span> <span class="c1"># 格式化输出</span>
 <span class="c1"># JSON格式输出</span>
 $ docker stats --no-stream --format <span class="se">\</span>
-      <span class="s2">&quot;{\&quot;container\&quot;:\&quot;\&quot;,\&quot;memory\&quot;:{\&quot;raw\&quot;:\&quot;\&quot;,\&quot;percent\&quot;:\&quot;\&quot;},\&quot;cpu\&quot;:\&quot;\&quot;}&quot;</span></code></pre></figure>
+      <span class="s2">&quot;{\&quot;container\&quot;:\&quot;\{\{ .Container \}\}\&quot;,\&quot;memory\&quot;:{\&quot;raw\&quot;:\&quot;\{\{ .MemUsage \}\}\&quot;,\&quot;percent\&quot;:\&quot;\{\{ .MemPerc \}\}\&quot;},\&quot;cpu\&quot;:\&quot;\{\{ .CPUPerc \}\}\&quot;}&quot;</span></code></pre></figure>
 
 <ul>
   <li>.Container：根据用户指定的名称显示容器的名称或 ID</li>
