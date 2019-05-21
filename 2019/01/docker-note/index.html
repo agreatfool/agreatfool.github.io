@@ -1468,9 +1468,12 @@ $ docker stats --no-stream --format <span class="se">\</span>
 
 <p>官方论坛有一个issue：<a href="https://github.com/docker/for-mac/issues/1759#issuecomment-481742599" target="_blank">High CPU Utilization of Hyperkit in Mac #1759</a>，到现在还是<code>open状态</code>，且看起来解决遥遥无期。</p>
 
-<p>issue中似乎有用只有改大max open file选项这项，具体操作可以参见：<a href="https://wilsonmar.github.io/maximum-limits/" target="_blank">Maximum limits (macOS etc.)</a>。</p>
+<p>issue中似乎有用的只有改大max open file选项这条意见，具体操作可以参见：<a href="https://wilsonmar.github.io/maximum-limits/" target="_blank">Maximum limits (macOS etc.)</a>。</p>
 
-<p>不确定是否一定能生效，但应该是对部分情况有效的。</p>
+<p>不确定是否一定能起效果，应该是对部分情况有效的。但对我来说貌似是没用，我的ulimit已经是：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ launchctl limit maxfiles
+<span class="c1"># maxfiles    65536          65536</span></code></pre></figure>
 
 <h1 id="资料">资料</h1>
 <h2 id="docker官方">Docker官方</h2>
