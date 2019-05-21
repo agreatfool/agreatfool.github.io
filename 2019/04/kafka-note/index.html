@@ -202,7 +202,7 @@
   <li><a href="#7-kafka使用范例" id="markdown-toc-7-kafka使用范例">7. Kafka使用范例</a></li>
   <li><a href="#8-在docker内部署集群" id="markdown-toc-8-在docker内部署集群">8. 在Docker内部署集群</a>    <ul>
       <li><a href="#81-重要配置项" id="markdown-toc-81-重要配置项">8.1 重要配置项</a></li>
-      <li><a href="#82-对容器外应用提供服务" id="markdown-toc-82-对容器外应用提供服务">8.2 对容器外应用提供服务</a></li>
+      <li><a href="#DOCKER_OUT_NET" id="markdown-toc-DOCKER_OUT_NET">8.2 对容器外应用提供服务</a></li>
       <li><a href="#83-docker-compose-scale" id="markdown-toc-83-docker-compose-scale">8.3 docker-compose scale</a></li>
       <li><a href="#84-yaml配置重用" id="markdown-toc-84-yaml配置重用">8.4 yaml配置重用</a></li>
       <li><a href="#84-相关参考" id="markdown-toc-84-相关参考">8.4 相关参考</a></li>
@@ -749,13 +749,42 @@
 
 <h2 id="81-重要配置项">8.1 重要配置项</h2>
 
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">services</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">kafka_1</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="s">&quot;wurstmeister/kafka:2.12-2.2.0&quot;</span> <span class="c1"># 一定需要</span>
+    <span class="l l-Scalar l-Scalar-Plain">hostname</span><span class="p p-Indicator">:</span> <span class="s">&quot;kafka_1&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">container_name</span><span class="p p-Indicator">:</span> <span class="s">&quot;kafka_1&quot;</span> <span class="c1"># 使用这个名字来让同network的其他服务进行访问</span>
+    <span class="l l-Scalar l-Scalar-Plain">depends_on</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;zookeeper&quot;</span> <span class="c1"># 保证启动先后顺序</span>
+    <span class="l l-Scalar l-Scalar-Plain">networks</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;kafka-net&quot;</span>
+    <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;19092:19092&quot;</span> <span class="c1"># 保证非同一network的其他服务也能访问，但这么做要求每个kafka service都监听不同的端口，相互不能冲突</span>
+    <span class="l l-Scalar l-Scalar-Plain">expose</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&quot;19093&quot;</span> <span class="c1"># kafka集群内部流量走的端口号</span>
+    <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="s">&quot;always&quot;</span> <span class="c1"># 保证container存活</span>
+    <span class="l l-Scalar l-Scalar-Plain">logging</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">driver</span><span class="p p-Indicator">:</span> <span class="s">&quot;json-file&quot;</span> <span class="c1"># 日志输出以json格式，容易让聚合工具使用</span>
+      <span class="l l-Scalar l-Scalar-Plain">options</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">max-size</span><span class="p p-Indicator">:</span> <span class="s">&quot;512m&quot;</span> <span class="c1"># 保证日志最大尺寸不会过大占用过多系统磁盘</span>
+    <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">KAFKA_LISTENERS</span><span class="p p-Indicator">:</span> <span class="s">&quot;INSIDE://0.0.0.0:19093,OUTSIDE://0.0.0.0:19092&quot;</span> <span class="c1"># kafka的实际监听地址，一般不是0.0.0.0就是容器名</span>
+      <span class="l l-Scalar l-Scalar-Plain">KAFKA_ADVERTISED_LISTENERS</span><span class="p p-Indicator">:</span> <span class="s">&quot;INSIDE://kafka_1:19093,OUTSIDE://127.0.0.1:19092&quot;</span> <span class="c1"># kafka发布到zookeeper，让客户端获取并凭之连接kafka的地址，一定需要是客户端能访问到的地址，INSIDE部分供集群内部流量使用，OUTSIDE供客户端使用</span>
+      <span class="l l-Scalar l-Scalar-Plain">KAFKA_LISTENER_SECURITY_PROTOCOL_MAP</span><span class="p p-Indicator">:</span> <span class="s">&quot;INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT&quot;</span> <span class="c1"># 明确内部外部的通讯协议</span>
+      <span class="l l-Scalar l-Scalar-Plain">KAFKA_INTER_BROKER_LISTENER_NAME</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">INSIDE</span> <span class="c1"># 告诉kafka集群上面的INSIDE和OUTSIDE配置哪个才是供集群内部流量使用的，按语义一般是INSIDE</span>
+      <span class="l l-Scalar l-Scalar-Plain">KAFKA_BROKER_ID</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span> <span class="c1"># 必须每个kafka service单独一个，不可重复</span>
+      <span class="l l-Scalar l-Scalar-Plain">KAFKA_ZOOKEEPER_CONNECT</span><span class="p p-Indicator">:</span> <span class="s">&quot;zookeeper:2181&quot;</span> <span class="c1"># 告知kafka zookeeper的访问地址</span>
+      <span class="l l-Scalar l-Scalar-Plain">KAFKA_LOG_DIRS</span><span class="p p-Indicator">:</span> <span class="s">&quot;/tmp/kafka-logs&quot;</span> <span class="c1"># kafka实际的数据存放位置，推荐使用volume进行该地址的local映射</span></code></pre></figure>
+
+<p>关于<code>LISTENER</code>相关的几个配置（用于集群访问）更多的可以看下：<a href="#DOCKER_OUT_NET">8.2 对容器外应用提供服务</a>。</p>
+
 <p>参见：</p>
 
 <ul>
   <li><a href="https://docs.confluent.io/current/kafka/deployment.html" target="_blank">Running Kafka in Production</a></li>
 </ul>
 
-<h2 id="82-对容器外应用提供服务">8.2 对容器外应用提供服务</h2>
+<h2 id="DOCKER_OUT_NET">8.2 对容器外应用提供服务</h2>
 <p>在docker中部署集群有一个比较大的问题就是容器内部和外部的网络访问地址是隔离的，而kafka集群部分节点的相互发现是根据配置：<code>KAFKA_ADVERTISED_LISTENERS</code>来进行通知的。</p>
 
 <p>如果该配置内的地址填写的是<code>127.0.0.1</code>这样的回环地址或容器外的IP，那么容器内各kafka节点之间的通讯就会有问题（因为容器内各节点拿到的配置地址都是容器外的IP）。而如果将该配置内的地址都配置成docker容器的名字，那么在容器内部的流量是没问题了，但外部访问kafka服务的应用程序拿到的地址则是容器的名字，就没法访问了。</p>
