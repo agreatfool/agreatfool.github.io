@@ -1448,9 +1448,10 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#7-kafka使用范例&quot; id=&quot;markdown-toc-7-kafka使用范例&quot;&gt;7. Kafka使用范例&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#8-在docker内部署集群&quot; id=&quot;markdown-toc-8-在docker内部署集群&quot;&gt;8. 在Docker内部署集群&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#81-对容器外应用提供服务&quot; id=&quot;markdown-toc-81-对容器外应用提供服务&quot;&gt;8.1 对容器外应用提供服务&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#82-docker-compose-scale&quot; id=&quot;markdown-toc-82-docker-compose-scale&quot;&gt;8.2 docker-compose scale&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#83-yaml配置重用&quot; id=&quot;markdown-toc-83-yaml配置重用&quot;&gt;8.3 yaml配置重用&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#81-重要配置项&quot; id=&quot;markdown-toc-81-重要配置项&quot;&gt;8.1 重要配置项&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#82-对容器外应用提供服务&quot; id=&quot;markdown-toc-82-对容器外应用提供服务&quot;&gt;8.2 对容器外应用提供服务&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#83-docker-compose-scale&quot; id=&quot;markdown-toc-83-docker-compose-scale&quot;&gt;8.3 docker-compose scale&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#84-yaml配置重用&quot; id=&quot;markdown-toc-84-yaml配置重用&quot;&gt;8.4 yaml配置重用&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#84-相关参考&quot; id=&quot;markdown-toc-84-相关参考&quot;&gt;8.4 相关参考&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
@@ -1993,7 +1994,15 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
 
 &lt;p&gt;主要有几个点需要注意下。&lt;/p&gt;
 
-&lt;h2 id=&quot;81-对容器外应用提供服务&quot;&gt;8.1 对容器外应用提供服务&lt;/h2&gt;
+&lt;h2 id=&quot;81-重要配置项&quot;&gt;8.1 重要配置项&lt;/h2&gt;
+
+&lt;p&gt;参见：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.confluent.io/current/kafka/deployment.html&quot; target=&quot;_blank&quot;&gt;Running Kafka in Production&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;82-对容器外应用提供服务&quot;&gt;8.2 对容器外应用提供服务&lt;/h2&gt;
 &lt;p&gt;在docker中部署集群有一个比较大的问题就是容器内部和外部的网络访问地址是隔离的，而kafka集群部分节点的相互发现是根据配置：&lt;code&gt;KAFKA_ADVERTISED_LISTENERS&lt;/code&gt;来进行通知的。&lt;/p&gt;
 
 &lt;p&gt;如果该配置内的地址填写的是&lt;code&gt;127.0.0.1&lt;/code&gt;这样的回环地址或容器外的IP，那么容器内各kafka节点之间的通讯就会有问题（因为容器内各节点拿到的配置地址都是容器外的IP）。而如果将该配置内的地址都配置成docker容器的名字，那么在容器内部的流量是没问题了，但外部访问kafka服务的应用程序拿到的地址则是容器的名字，就没法访问了。&lt;/p&gt;
@@ -2011,12 +2020,12 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
 
 &lt;p&gt;一般第一次在本地设置集群进行开发和调试的时候，这里是个大坑，非常麻烦。配置不正确就会发现kafka完全无法通讯。&lt;/p&gt;
 
-&lt;h2 id=&quot;82-docker-compose-scale&quot;&gt;8.2 docker-compose scale&lt;/h2&gt;
+&lt;h2 id=&quot;83-docker-compose-scale&quot;&gt;8.3 docker-compose scale&lt;/h2&gt;
 &lt;p&gt;一般来说，kafka service的配置不适合在配置文件中只设置一份，然后使用docker-compose scale的方法进行横向扩展。&lt;/p&gt;
 
 &lt;p&gt;适用scale的场景只有完全无状态，且各个节点之间的配置完全相同的情况，而kafka各节点一般最好设置自身的&lt;code&gt;container_name&lt;/code&gt;，然后在监听地址中使用正确的容器名作为地址，来进行相互通讯。&lt;/p&gt;
 
-&lt;h2 id=&quot;83-yaml配置重用&quot;&gt;8.3 yaml配置重用&lt;/h2&gt;
+&lt;h2 id=&quot;84-yaml配置重用&quot;&gt;8.4 yaml配置重用&lt;/h2&gt;
 &lt;p&gt;因为无法使用scale的缘故，必须手写大量的kafka service节点yaml配置，这倒也不算是大问题。关键的问题在于有大量重复的配置项，如果后面要修改，就很麻烦，怕漏改或者改错。&lt;/p&gt;
 
 &lt;p&gt;因此最好的方法是使用yaml的配置重用，来设置共通的配置，然后像变量一样重用。这可以参见我之前提到的范例配置文件：&lt;/p&gt;
@@ -2066,6 +2075,7 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://better-coding.com/building-apache-kafka-cluster-using-docker-compose-and-virtualbox/&quot; target=&quot;_blank&quot;&gt;Building Apache Kafka cluster using docker-compose and VirtualBox&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.kaaproject.org/kafka-docker&quot; target=&quot;_blank&quot;&gt;Deploying a Kafka broker in a Docker container&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.confluent.io/current/kafka/deployment.html&quot; target=&quot;_blank&quot;&gt;Running Kafka in Production&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;

@@ -296,6 +296,7 @@
   </li>
   <li><a href="#11-其他" id="markdown-toc-11-其他">11. 其他</a>    <ul>
       <li><a href="#111-什么是docker-host" id="markdown-toc-111-什么是docker-host">11.1 什么是docker host</a></li>
+      <li><a href="#112-comdockerhyperkit-x00-cpu-consumption-mac" id="markdown-toc-112-comdockerhyperkit-x00-cpu-consumption-mac">11.2 com.docker.hyperkit X00% cpu consumption MAC</a></li>
     </ul>
   </li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
@@ -1461,6 +1462,15 @@ $ docker stats --no-stream --format <span class="se">\</span>
 
   <p>Docker machine is basically the second option. When you do a docker-machine create it creates a new virtual machine with Docker already installed. This means that to access any containers running on this machine you’ll have to use the IP address of the virtual machine. Also, to give Docker access to a file you’ll either have to copy it to the VM that’s running Docker, or share a directory between your OS and the VM that’s running Docker.</p>
 </blockquote>
+
+<h2 id="112-comdockerhyperkit-x00-cpu-consumption-mac">11.2 com.docker.hyperkit X00% cpu consumption MAC</h2>
+<p>在MAC上使用docker，如果放一些有真实负载的container，一般都会遇到这个问题（甚至是没什么负载，只是搭建环境都会）。</p>
+
+<p>官方论坛有一个issue：<a href="https://github.com/docker/for-mac/issues/1759#issuecomment-481742599" target="_blank">High CPU Utilization of Hyperkit in Mac #1759</a>，到现在还是<code>open状态</code>，且看起来解决遥遥无期。</p>
+
+<p>issue中似乎有用只有改大max open file选项这项，具体操作可以参见：<a href="https://wilsonmar.github.io/maximum-limits/" target="_blank">Maximum limits (macOS etc.)</a>。</p>
+
+<p>不确定是否一定能生效，但应该是对部分情况有效的。</p>
 
 <h1 id="资料">资料</h1>
 <h2 id="docker官方">Docker官方</h2>

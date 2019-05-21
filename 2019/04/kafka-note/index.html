@@ -201,9 +201,10 @@
   </li>
   <li><a href="#7-kafka使用范例" id="markdown-toc-7-kafka使用范例">7. Kafka使用范例</a></li>
   <li><a href="#8-在docker内部署集群" id="markdown-toc-8-在docker内部署集群">8. 在Docker内部署集群</a>    <ul>
-      <li><a href="#81-对容器外应用提供服务" id="markdown-toc-81-对容器外应用提供服务">8.1 对容器外应用提供服务</a></li>
-      <li><a href="#82-docker-compose-scale" id="markdown-toc-82-docker-compose-scale">8.2 docker-compose scale</a></li>
-      <li><a href="#83-yaml配置重用" id="markdown-toc-83-yaml配置重用">8.3 yaml配置重用</a></li>
+      <li><a href="#81-重要配置项" id="markdown-toc-81-重要配置项">8.1 重要配置项</a></li>
+      <li><a href="#82-对容器外应用提供服务" id="markdown-toc-82-对容器外应用提供服务">8.2 对容器外应用提供服务</a></li>
+      <li><a href="#83-docker-compose-scale" id="markdown-toc-83-docker-compose-scale">8.3 docker-compose scale</a></li>
+      <li><a href="#84-yaml配置重用" id="markdown-toc-84-yaml配置重用">8.4 yaml配置重用</a></li>
       <li><a href="#84-相关参考" id="markdown-toc-84-相关参考">8.4 相关参考</a></li>
     </ul>
   </li>
@@ -746,7 +747,15 @@
 
 <p>主要有几个点需要注意下。</p>
 
-<h2 id="81-对容器外应用提供服务">8.1 对容器外应用提供服务</h2>
+<h2 id="81-重要配置项">8.1 重要配置项</h2>
+
+<p>参见：</p>
+
+<ul>
+  <li><a href="https://docs.confluent.io/current/kafka/deployment.html" target="_blank">Running Kafka in Production</a></li>
+</ul>
+
+<h2 id="82-对容器外应用提供服务">8.2 对容器外应用提供服务</h2>
 <p>在docker中部署集群有一个比较大的问题就是容器内部和外部的网络访问地址是隔离的，而kafka集群部分节点的相互发现是根据配置：<code>KAFKA_ADVERTISED_LISTENERS</code>来进行通知的。</p>
 
 <p>如果该配置内的地址填写的是<code>127.0.0.1</code>这样的回环地址或容器外的IP，那么容器内各kafka节点之间的通讯就会有问题（因为容器内各节点拿到的配置地址都是容器外的IP）。而如果将该配置内的地址都配置成docker容器的名字，那么在容器内部的流量是没问题了，但外部访问kafka服务的应用程序拿到的地址则是容器的名字，就没法访问了。</p>
@@ -764,12 +773,12 @@
 
 <p>一般第一次在本地设置集群进行开发和调试的时候，这里是个大坑，非常麻烦。配置不正确就会发现kafka完全无法通讯。</p>
 
-<h2 id="82-docker-compose-scale">8.2 docker-compose scale</h2>
+<h2 id="83-docker-compose-scale">8.3 docker-compose scale</h2>
 <p>一般来说，kafka service的配置不适合在配置文件中只设置一份，然后使用docker-compose scale的方法进行横向扩展。</p>
 
 <p>适用scale的场景只有完全无状态，且各个节点之间的配置完全相同的情况，而kafka各节点一般最好设置自身的<code>container_name</code>，然后在监听地址中使用正确的容器名作为地址，来进行相互通讯。</p>
 
-<h2 id="83-yaml配置重用">8.3 yaml配置重用</h2>
+<h2 id="84-yaml配置重用">8.4 yaml配置重用</h2>
 <p>因为无法使用scale的缘故，必须手写大量的kafka service节点yaml配置，这倒也不算是大问题。关键的问题在于有大量重复的配置项，如果后面要修改，就很麻烦，怕漏改或者改错。</p>
 
 <p>因此最好的方法是使用yaml的配置重用，来设置共通的配置，然后像变量一样重用。这可以参见我之前提到的范例配置文件：</p>
@@ -819,6 +828,7 @@
   <li><a href="https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability" target="_blank">Kafka 数据可靠性深度解读</a></li>
   <li><a href="https://better-coding.com/building-apache-kafka-cluster-using-docker-compose-and-virtualbox/" target="_blank">Building Apache Kafka cluster using docker-compose and VirtualBox</a></li>
   <li><a href="https://www.kaaproject.org/kafka-docker" target="_blank">Deploying a Kafka broker in a Docker container</a></li>
+  <li><a href="https://docs.confluent.io/current/kafka/deployment.html" target="_blank">Running Kafka in Production</a></li>
 </ul>
 
 <blockquote>
