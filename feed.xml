@@ -1608,6 +1608,7 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/47388267&quot; target=&quot;_blank&quot;&gt;比拼Kafka，大数据分析新秀Pulsar到底好在哪&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/merlimat/high-performance-messaging-with-apache-pulsar&quot; target=&quot;_blank&quot;&gt;High performance messaging with Apache Pulsar&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/Us*a8umKXT9LpV9hA6tF&quot; target=&quot;_blank&quot;&gt;选择 Pulsar 而不是 Kafka 的 7 大理由&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;大略的要点：&lt;/p&gt;
@@ -2105,6 +2106,9 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   &lt;li&gt;&lt;a href=&quot;https://better-coding.com/building-apache-kafka-cluster-using-docker-compose-and-virtualbox/&quot; target=&quot;_blank&quot;&gt;Building Apache Kafka cluster using docker-compose and VirtualBox&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.kaaproject.org/kafka-docker&quot; target=&quot;_blank&quot;&gt;Deploying a Kafka broker in a Docker container&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://docs.confluent.io/current/kafka/deployment.html&quot; target=&quot;_blank&quot;&gt;Running Kafka in Production&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/47388267&quot; target=&quot;_blank&quot;&gt;比拼Kafka，大数据分析新秀Pulsar到底好在哪&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/merlimat/high-performance-messaging-with-apache-pulsar&quot; target=&quot;_blank&quot;&gt;High performance messaging with Apache Pulsar&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/Us*a8umKXT9LpV9hA6tF&quot; target=&quot;_blank&quot;&gt;选择 Pulsar 而不是 Kafka 的 7 大理由&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;
