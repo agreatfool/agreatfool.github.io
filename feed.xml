@@ -3920,7 +3920,7 @@ filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/sp
       &lt;li&gt;&lt;a href=&quot;#34-data-store&quot; id=&quot;markdown-toc-34-data-store&quot;&gt;3.4 Data Store&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#35-jaeger-query&quot; id=&quot;markdown-toc-35-jaeger-query&quot;&gt;3.5 Jaeger Query&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#36-jaeger-ingester&quot; id=&quot;markdown-toc-36-jaeger-ingester&quot;&gt;3.6 Jaeger Ingester&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#日志模式&quot; id=&quot;markdown-toc-日志模式&quot;&gt;日志模式&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#37-日志模式&quot; id=&quot;markdown-toc-37-日志模式&quot;&gt;3.7 日志模式&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#4-jaeger使用&quot; id=&quot;markdown-toc-4-jaeger使用&quot;&gt;4. Jaeger使用&lt;/a&gt;    &lt;ul&gt;
@@ -4162,7 +4162,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 &lt;p&gt;感觉应该是一个解决吞吐量的中间件。&lt;/p&gt;
 
-&lt;h2 id=&quot;日志模式&quot;&gt;日志模式&lt;/h2&gt;
+&lt;h2 id=&quot;37-日志模式&quot;&gt;3.7 日志模式&lt;/h2&gt;
 &lt;p&gt;按照Jaeger当前的设计，Client和Agent之间是使用UDP进行通讯，必须是实时连接的，这就对Agent的健壮性提出了要求，如果当前Agent已挂，Client就基本上不可用了。而日志文件化的好处就是将Client和Agent彻底解耦，使用操作系统的磁盘IO来解决Tracing生成的问题，而这方面，官方&lt;code&gt;并没有计划&lt;/code&gt;要这么做，没有任何关于这方面的设计讨论（至少我没找到）。&lt;/p&gt;
 
 &lt;p&gt;而官方倒是有讨论：如果有一个外部存储已经存放了Tracing相关数据，能不能直接使用Query连接上去进行Tracing数据的展示和分析。见：&lt;/p&gt;
