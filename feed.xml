@@ -3886,6 +3886,7 @@ filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/sp
   &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/4948933/is-there-a-way-to-alias-anchor-an-array-in-yaml&quot; target=&quot;_blank&quot;&gt;Is there a way to alias/anchor an array in YAML?&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://discuss.elastic.co/t/elastic-search-7-unable-to-bootstrap-the-cluster-due-to-master-not-discovered-yet/182073/2&quot; target=&quot;_blank&quot;&gt;Elastic Search 7 unable to bootstrap the cluster due to master not discovered yet&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/elastic/kibana/issues/32303&quot; target=&quot;_blank&quot;&gt;Kibana fails to validate config if elasticsearch.hosts is not a string #32303&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://qbox.io/blog/optimizing-elasticsearch-how-many-shards-per-index&quot; target=&quot;_blank&quot;&gt;Optimizing Elasticsearch: How Many Shards per Index?&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;
