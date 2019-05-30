@@ -409,7 +409,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 <ul>
   <li>Cassandra</li>
   <li>Elasticsearch</li>
-  <li>Kafka</li>
+  <li>Kafka (only as a buffer)，即并不能把Kafka当做最终存储设施</li>
 </ul>
 
 <p>存储选择是个问题，我简单搜索了下，没有找到非常权威的帖子对这三者进行横向比较，也可能是因为这块的技术比较新发展比较快。就我来看，个人建议是熟悉什么用什么，以不增加系统复杂度为第一要务。猜想：</p>
@@ -417,7 +417,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 <ul>
   <li>Cassandra大概是稳定性最好的，大数据量的选择应该是这个</li>
   <li>功能上大概是ELK最好，本来它就是以全文搜索为功能设计出来的系统</li>
-  <li>性能上应该是Kafka最高，毕竟Kafka的吞吐量是有口皆碑的</li>
+  <li>性能上应该是Kafka最高，毕竟Kafka的吞吐量是有口皆碑的（中间通道）</li>
 </ul>
 
 <p>从官方的文档口径上来看，最推荐的应该是使用Kafka和Ingester组成通道，然后使用Cassandra作为存储设备。</p>
@@ -695,7 +695,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 <p>同个Trace的多个组成部分Span是否都到达，是否缺失了一部分，看来是没有任何处理和保证的。这也就是说：可能会有部分Trace在UI中可以查到，但其中组成部分的Spans是不完整的，部分缺失的。说实在的，这还蛮致命的。</p>
 
 <h3 id="524-data-store">5.2.4 Data Store</h3>
-<p>这块就完全由选择的后台数据存储设施自己负责了，Cassandra是出了名的好用，Kafka在扩展上也不错。</p>
+<p>这块就完全由选择的后台数据存储设施自己负责了，Cassandra是出了名的好用，Kafka在扩展上也不错，但Kafka仅只能作为中间通道使用，官方文档描述为：<code>kafka (only as a buffer)</code>。</p>
 
 <h1 id="6-jaeger采样">6. Jaeger采样</h1>
 <p>在<a href="/2019/04/monitoring-tracing-logging/" target="_blank">Compare: Monitoring | Tracing | Logging</a>里我已经提到过，tracing是一件频度相当高，且数据量很庞大的工作，因此其性能很可能有问题。Jaeger给了一个新的思路，就是按规则采样，而不是将所有发生的事件全部都发送并存储。</p>
