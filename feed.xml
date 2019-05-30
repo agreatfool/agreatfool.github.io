@@ -4297,7 +4297,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 ...
 &lt;/code&gt;&lt;/pre&gt;
 
-&lt;p&gt;此外，端口&lt;code&gt;14250&lt;/code&gt;的说明也不够清楚，实际上它是，Protocol是gRPC，也就是HTTP2：&lt;/p&gt;
+&lt;p&gt;此外，端口&lt;code&gt;14250&lt;/code&gt;的说明也不够清楚，实际上它的Protocol是gRPC，也就是HTTP2：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;...
 --collector.grpc-port int    The gRPC port for the collector service (default 14250)
