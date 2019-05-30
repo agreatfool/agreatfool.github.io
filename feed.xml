@@ -1991,7 +1991,9 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
 &lt;p&gt;实验使用的还是下载下来的Kafka，版本如头部申明的是&lt;code&gt;2.2.0&lt;/code&gt;。范例代码可以在Github查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/experiment/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/experiment/kafka/&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h1 id=&quot;8-在docker内部署集群&quot;&gt;8. 在Docker内部署集群&lt;/h1&gt;
-&lt;p&gt;一般来说部署一个以上的docker容器组成集群，可以使用bash脚本的方法，自己编写命令一个个启动，但更好的方法是使用&lt;code&gt;docker-compose&lt;/code&gt;命令，读取配置文件，将整个集群按设定的模式启动起来。可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/kafka.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/kafka.yaml&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;一般来说部署一个以上的docker容器组成集群，可以使用bash脚本的方法，自己编写命令一个个启动，但更好的方法是使用&lt;code&gt;docker-compose&lt;/code&gt;命令，读取配置文件，将整个集群按设定的模式启动起来。可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/kafka-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/kafka-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;启动脚本：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/dev/docker_kafka.sh&quot; target=&quot;_blank&quot;&gt;dist-system-practice/bash/dev/docker_kafka.sh&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;主要有几个点需要注意下。&lt;/p&gt;
 
@@ -2700,15 +2702,18 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
       &lt;li&gt;&lt;a href=&quot;#41-知识点&quot; id=&quot;markdown-toc-41-知识点&quot;&gt;4.1 知识点&lt;/a&gt;        &lt;ul&gt;
           &lt;li&gt;&lt;a href=&quot;#411-基础概念&quot; id=&quot;markdown-toc-411-基础概念&quot;&gt;4.1.1 基础概念&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#412-安装--配置&quot; id=&quot;markdown-toc-412-安装--配置&quot;&gt;4.1.2 安装 &amp;amp; 配置&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#413-api&quot; id=&quot;markdown-toc-413-api&quot;&gt;4.1.3 API&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#414-query-dsl&quot; id=&quot;markdown-toc-414-query-dsl&quot;&gt;4.1.4 Query DSL&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#413-api&quot; id=&quot;markdown-toc-413-api&quot;&gt;4.1.3 API&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#414-query-dsl&quot; id=&quot;markdown-toc-414-query-dsl&quot;&gt;4.1.4 Query DSL&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#415-sql&quot; id=&quot;markdown-toc-415-sql&quot;&gt;4.1.5 SQL&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#416-ingest节点&quot; id=&quot;markdown-toc-416-ingest节点&quot;&gt;4.1.6 Ingest节点&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID_INDEX&quot; id=&quot;markdown-toc-ID_INDEX&quot;&gt;4.2 文档数据库 &amp;amp; 索引&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_INDEX&quot; id=&quot;markdown-toc-ID_INDEX&quot;&gt;4.2 文档数据库 &amp;amp; 索引&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#421-index-template&quot; id=&quot;markdown-toc-421-index-template&quot;&gt;4.2.1 Index Template&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#422-设置index生命周期&quot; id=&quot;markdown-toc-422-设置index生命周期&quot;&gt;4.2.2 设置index生命周期&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#423-index的自动创建设置&quot; id=&quot;markdown-toc-423-index的自动创建设置&quot;&gt;4.2.3 Index的自动创建设置&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID_STORAGE&quot; id=&quot;markdown-toc-ID_STORAGE&quot;&gt;4.3 存储&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID_ARC_CLUSTER&quot; id=&quot;markdown-toc-ID_ARC_CLUSTER&quot;&gt;4.4 集群&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#45-监控--高可用&quot; id=&quot;markdown-toc-45-监控--高可用&quot;&gt;4.5 监控 &amp;amp; 高可用&lt;/a&gt;        &lt;ul&gt;
@@ -2719,9 +2724,41 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
       &lt;li&gt;&lt;a href=&quot;#46-性能调优&quot; id=&quot;markdown-toc-46-性能调优&quot;&gt;4.6 性能调优&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-ui&quot; id=&quot;markdown-toc-5-ui&quot;&gt;5. UI&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-实践范例&quot; id=&quot;markdown-toc-6-实践范例&quot;&gt;6. 实践范例&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-todo&quot; id=&quot;markdown-toc-7-todo&quot;&gt;7. TODO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#5-kibana&quot; id=&quot;markdown-toc-5-kibana&quot;&gt;5. Kibana&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_INDEX_PATTERN&quot; id=&quot;markdown-toc-ID_INDEX_PATTERN&quot;&gt;5.1 Index Pattern&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#52-使用简介&quot; id=&quot;markdown-toc-52-使用简介&quot;&gt;5.2 使用简介&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#53-qa&quot; id=&quot;markdown-toc-53-qa&quot;&gt;5.3 Q&amp;amp;A&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#6-filebeat直连elasticsearch实践&quot; id=&quot;markdown-toc-6-filebeat直连elasticsearch实践&quot;&gt;6. Filebeat直连Elasticsearch实践&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#61-直连流程&quot; id=&quot;markdown-toc-61-直连流程&quot;&gt;6.1 直连流程&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#62-应用场景&quot; id=&quot;markdown-toc-62-应用场景&quot;&gt;6.2 应用场景&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_INDEX_TEMPLATE&quot; id=&quot;markdown-toc-ID_INDEX_TEMPLATE&quot;&gt;6.3 Index Template&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#64-issues&quot; id=&quot;markdown-toc-64-issues&quot;&gt;6.4 Issues&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#641-filebeat字段层级&quot; id=&quot;markdown-toc-641-filebeat字段层级&quot;&gt;6.4.1 Filebeat字段层级&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#642-kibana-message字段&quot; id=&quot;markdown-toc-642-kibana-message字段&quot;&gt;6.4.2 Kibana message字段&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#643-input--processors-fields&quot; id=&quot;markdown-toc-643-input--processors-fields&quot;&gt;6.4.3 input | processors fields&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#ID_FILEBEAT_INDEX_TEMPLATE&quot; id=&quot;markdown-toc-ID_FILEBEAT_INDEX_TEMPLATE&quot;&gt;6.4.4 Index Template设置&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#645-切片数量&quot; id=&quot;markdown-toc-645-切片数量&quot;&gt;6.4.5 切片数量&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#646-kibana-timestamp&quot; id=&quot;markdown-toc-646-kibana-timestamp&quot;&gt;6.4.6 Kibana @timestamp&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#647-elasticsearch-预创建数据&quot; id=&quot;markdown-toc-647-elasticsearch-预创建数据&quot;&gt;6.4.7 Elasticsearch 预创建数据&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-实践范例&quot; id=&quot;markdown-toc-7-实践范例&quot;&gt;7. 实践范例&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#8-docker集群部署&quot; id=&quot;markdown-toc-8-docker集群部署&quot;&gt;8. Docker集群部署&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#ID_ES_CONFIG&quot; id=&quot;markdown-toc-ID_ES_CONFIG&quot;&gt;8.1 Elasticsearch配置&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#811-环境变量配置&quot; id=&quot;markdown-toc-811-环境变量配置&quot;&gt;8.1.1 环境变量配置&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#812-多节点配置的共享&quot; id=&quot;markdown-toc-812-多节点配置的共享&quot;&gt;8.1.2 多节点配置的共享&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#813-集群发现相关配置&quot; id=&quot;markdown-toc-813-集群发现相关配置&quot;&gt;8.1.3 集群发现相关配置&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#82-kibana配置&quot; id=&quot;markdown-toc-82-kibana配置&quot;&gt;8.2 Kibana配置&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#83-filebeat配置&quot; id=&quot;markdown-toc-83-filebeat配置&quot;&gt;8.3 Filebeat配置&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#9-todo&quot; id=&quot;markdown-toc-9-todo&quot;&gt;9. TODO&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -2820,6 +2857,7 @@ kibana 7.0.0
 &lt;ul&gt;
   &lt;li&gt;安装请参照：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-installation.html#filebeat-installation&quot; target=&quot;_blank&quot;&gt;Step 1: Install Filebeat&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;配置请参照：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-configuration.html#filebeat-configuration&quot; target=&quot;_blank&quot;&gt;Step 2: Configure Filebeat&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;容器内运行：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/running-on-docker.html#running-on-docker&quot; target=&quot;_blank&quot;&gt;Running Filebeat on Docker&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;33-模块&quot;&gt;3.3 模块&lt;/h2&gt;
@@ -2838,7 +2876,7 @@ kibana 7.0.0
   &lt;li&gt;Nginx日志对应的Kibana面板有XXX，可以看到XXX数据&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;从上面的例子可见：Filebeat本身并没有做什么，它做的仍旧只是采集日志，发送出去，没了。只不过指定了Elasticsearch集群中处理这个日志的Ingest Pipeline是谁，日志应该怎么入库（事情是在Elasticsearch集群上完成的）。因此Filebeat是&lt;code&gt;不可能替代&lt;/code&gt;Logstash的，它的定位看来永远只能当做一个轻量级的应用端Log Shipper。&lt;/p&gt;
+&lt;p&gt;从上面的例子可见：Filebeat本身并没有做什么，它做的仍旧只是采集日志，发送出去，没了。只不过指定了Elasticsearch集群中处理这个日志的Ingest Pipeline是谁，日志应该怎么入库（事情是在Elasticsearch集群上完成的）。因此在功能性上Filebeat是&lt;code&gt;不可能替代&lt;/code&gt;Logstash的，它的定位只是轻量级的应用端Log Shipper，如果要在功能上覆盖Logstash的功能点，就需要使用Elasticsearch自身的Ingest Pipeline，仍旧需要Filebeat以外的系统支持。&lt;/p&gt;
 
 &lt;p&gt;部分文档：&lt;/p&gt;
 
@@ -2848,15 +2886,16 @@ kibana 7.0.0
   &lt;li&gt;命令行列出模块：&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;pre&gt;&lt;code&gt;docker run --rm --name filebeat elastic/filebeat:7.0.0 modules list
-&lt;/code&gt;&lt;/pre&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run --rm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name filebeat &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    elastic/filebeat:7.0.0 modules list&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h2 id=&quot;34-过滤和丰富&quot;&gt;3.4 过滤和丰富&lt;/h2&gt;
-&lt;p&gt;Filebeat可以在配置中指定一些受限的过滤和清洗功能：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/current/filtering-and-enhancing-data.html&quot; target=&quot;_blank&quot;&gt;Filter and enhance the exported data&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Filebeat可以在配置中指定一些受限的过滤和清洗功能：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filtering-and-enhancing-data.html&quot; target=&quot;_blank&quot;&gt;Filter and enhance the exported data&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;可选的processor清单有：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html#processors&quot; target=&quot;_blank&quot;&gt;Processors&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;可选的processor清单有：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/defining-processors.html#processors&quot; target=&quot;_blank&quot;&gt;Define processors&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;触发的条件：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/current/defining-processors.html#conditions&quot; target=&quot;_blank&quot;&gt;Conditions&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;触发的条件：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/defining-processors.html#conditions&quot; target=&quot;_blank&quot;&gt;Conditions&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h2 id=&quot;35-文件状态记录--投递保证&quot;&gt;3.5 文件状态记录 &amp;amp; 投递保证&lt;/h2&gt;
 &lt;p&gt;Filebeat对于输入的日志文件，会制作一个本地的注册文件，将状态都保存下来，因此在重启或者挂掉重新拉起来之后，Filebeat总是能知道之前发送到哪里。&lt;/p&gt;
@@ -2899,9 +2938,9 @@ kibana 7.0.0
   &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/system-config.html#system-config&quot; target=&quot;_blank&quot;&gt;Important System Configuration&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;后面三条对生产环境影响比较大，需要仔细阅读。&lt;/p&gt;
+&lt;p&gt;后面三条对生产环境影响比较大，需要仔细阅读。更贴近实践的范例可以参见：&lt;a href=&quot;#ID_ES_CONFIG&quot;&gt;8.1 Elasticsearch配置&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h2 id=&quot;413-api&quot;&gt;4.1.3 API&lt;/h2&gt;
+&lt;h3 id=&quot;413-api&quot;&gt;4.1.3 API&lt;/h3&gt;
 &lt;p&gt;Elasticsearch的API文档相当散，主要是以下几项：&lt;/p&gt;
 
 &lt;ul&gt;
@@ -2913,7 +2952,9 @@ kibana 7.0.0
   &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cluster.html&quot; target=&quot;_blank&quot;&gt;Cluster APIs&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;414-query-dsl&quot;&gt;4.1.4 Query DSL&lt;/h2&gt;
+&lt;p&gt;API最常见的用途是对Elasticsearch集群进行观察，并进行一些例如Index Template设置之类的，超乎于日常日志输入相关业务之外的管理和控制。&lt;/p&gt;
+
+&lt;h3 id=&quot;414-query-dsl&quot;&gt;4.1.4 Query DSL&lt;/h3&gt;
 &lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl.html&quot; target=&quot;_blank&quot;&gt;Query DSL&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;了解Elasticsearch的人肯定会问：Query DSL和Elasticsearch的基础Lucene之间是什么关系。关于这个知识点可以查看：&lt;a href=&quot;https://stackoverflow.com/questions/27793721/what-is-the-difference-between-lucene-and-elasticsearch&quot; target=&quot;_blank&quot;&gt;What is the difference between Lucene and Elasticsearch&lt;/a&gt;。&lt;/p&gt;
@@ -2922,15 +2963,15 @@ kibana 7.0.0
   &lt;p&gt;Elasticsearch is a JSON Based, Distributed, web server build over Lucene. Though it’s Lucene who is doing the actual work beneath, Elasticsearch provides us a convenient layer over Lucene. Each shard that gets created in Elasticsearch is a separate Lucene instance.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;Lucene是底层，Elasticsearch是基于Lucene之上的富集开发，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。&lt;/p&gt;
+&lt;p&gt;Lucene是底层，Elasticsearch是基于Lucene之上的超集开发，而QueryDSL则是用户和Elasticsearch之间交互的桥梁。&lt;/p&gt;
 
 &lt;h3 id=&quot;415-sql&quot;&gt;4.1.5 SQL&lt;/h3&gt;
-&lt;p&gt;Elasticsearch还可以使用SQL进行查询：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/xpack-sql.html&quot; target=&quot;_blank&quot;&gt;SQL access&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Elasticsearch还可以使用SQL进行查询：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/xpack-sql.html&quot; target=&quot;_blank&quot;&gt;SQL access&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h3 id=&quot;416-ingest节点&quot;&gt;4.1.6 Ingest节点&lt;/h3&gt;
 &lt;p&gt;在整个&lt;a href=&quot;#ID_ARC_CLUSTER&quot;&gt;Elasticsearch集群&lt;/a&gt;中，有一部分节点是用来进行日志过滤、清洗、丰富化的，这些工作在这个设计出现之前是只能在Agent上实现的，一般来说就是Logstash，而现在在服务器节点上也可以处理相对应的工作了。&lt;/p&gt;
 
-&lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/ingest.html#ingest&quot; target=&quot;_blank&quot;&gt;Ingest Node&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/ingest.html#ingest&quot; target=&quot;_blank&quot;&gt;Ingest Node&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;通过定义Processors来进行日志的解析和处理：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/ingest-processors.html#ingest-processors&quot; target=&quot;_blank&quot;&gt;Processors&lt;/a&gt;。&lt;/p&gt;
 
@@ -2947,8 +2988,10 @@ kibana 7.0.0
 &lt;p&gt;Elasticsearch是一个文档数据库，从本质上来看，它和Mongo其实相当类似。和传统RDBMS比较起来：&lt;/p&gt;
 
 &lt;pre&gt;&lt;code&gt;Relational DB -&amp;gt; Databases -&amp;gt; Tables  -&amp;gt; Rows      -&amp;gt; Columns
-Elasticsearch -&amp;gt; DEFAULT   -&amp;gt; Indices -&amp;gt; Documents -&amp;gt; Fields
+Elasticsearch -&amp;gt; Cluster   -&amp;gt; Indices -&amp;gt; Documents -&amp;gt; Fields
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;简单理解：所谓的索引就是&lt;code&gt;表名&lt;/code&gt;，用来定位查询以及根据该名字进行分片sharding。&lt;/p&gt;
 
 &lt;p&gt;举个例子：
 PUT /employee/1&lt;/p&gt;
@@ -2976,7 +3019,22 @@ Document：&lt;/p&gt;
 
 &lt;p&gt;索引非常重要，在集群模式（cluster）中，索引是用来进行分区的唯一指标。Elasticsearch会根据Index来决定当前数据落到哪台实际的存储服务器上。&lt;/p&gt;
 
+&lt;p&gt;此外，需要注意，Index可以被Reindex，但不可以Reshard。换句话说，在Index被创建出来的时候，其shards数量就已经被固定下来了，以后不可更改。如果有这样的需求的话，必须使用Reindex来重新分配并平衡Index，已经创建出来的就没办法了。而Replicas则可以随时更改数量。&lt;/p&gt;
+
 &lt;p&gt;关于索引的细节，以及一些集群相关的索引知识，可以查看：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docs-index_.html&quot; target=&quot;_blank&quot;&gt;Index API&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;421-index-template&quot;&gt;4.2.1 Index Template&lt;/h3&gt;
+&lt;p&gt;和索引（&lt;code&gt;Index&lt;/code&gt;）息息相关的有一个概念叫：&lt;code&gt;Index Template&lt;/code&gt;。这部分比较重要也稍微有点复杂，后面会结合实际实践一并解释，会更容易理解：&lt;a href=&quot;#ID_INDEX_TEMPLATE&quot;&gt;6.3 Index Template&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;422-设置index生命周期&quot;&gt;4.2.2 设置index生命周期&lt;/h3&gt;
+&lt;p&gt;一般实践的时候，建议不要向单个Index内放入过多的文档，这会对写入和查询都造成比较大的压力。比较常见的做法是对输出端进行设置，将日志的输出索引设置成按日划分：&lt;code&gt;index: &quot;dist-%{[fields.app]}-%{[fields.module]}-%{[agent.version]}-%{+yyyy.MM.dd}&quot;&lt;/code&gt;，这样就有一个最基本的保障。但这样做的缺陷一样非常明显，当单日的业务量上涨之后，单日的日志量可能就比较夸张。&lt;/p&gt;
+
+&lt;p&gt;在Elasticsearch中，Index的生命周期有另外的管理方法：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-index-lifecycle-management.html#getting-started-index-lifecycle-management&quot; target=&quot;_blank&quot;&gt;Getting started with index lifecycle management&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;同时需要在Filebeat端进行配合：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/ilm.html&quot; target=&quot;_blank&quot;&gt;Configure index lifecycle management&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h3 id=&quot;423-index的自动创建设置&quot;&gt;4.2.3 Index的自动创建设置&lt;/h3&gt;
+&lt;p&gt;在大部分情况下Elasticsearch都是允许自动创建Index的。在某些情况下可能需要关闭自动创建的允许权限，可以参见文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docs-index_.html#index-creation&quot; target=&quot;_blank&quot;&gt;Automatic Index Creation&lt;/a&gt;，来查看如何操作。&lt;/p&gt;
 
 &lt;h2 id=&quot;ID_STORAGE&quot;&gt;4.3 存储&lt;/h2&gt;
 &lt;p&gt;在官方手册文档中，并没有关于存储相关的设计及实现的详细内容。在Blog中找到一篇：&lt;a href=&quot;https://www.elastic.co/blog/found-dive-into-elasticsearch-storage&quot; target=&quot;_blank&quot;&gt;A Dive into the Elasticsearch Storage&lt;/a&gt;，不过时间也稍微有点久，但还算可以用来一窥存储相关的技术点。&lt;/p&gt;
@@ -3014,7 +3072,7 @@ Document：&lt;/p&gt;
 &lt;p&gt;几点整理：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;replica与数据主节点并不一定是1：1的关系（并不一定一个master拖一个slave这样的设计），主节点的数据是完全分散到其他各个replica节点上的，这个replica节点数量是可设置的&lt;/li&gt;
+  &lt;li&gt;replica与数据主节点并不一定是1：1的关系（并不一定一个master拖一个slave这样的设计），这个replica节点数量是可设置的，一个主节点可能有多份完全一致的replica&lt;/li&gt;
   &lt;li&gt;当你的replica设置越多，写入速度就越慢（参与的节点多），主节点写入完毕之后还要让所有的replica写入，全部都完成才会返回客户端完成&lt;/li&gt;
   &lt;li&gt;当你的replica设置越多，查询（读取）速度就越快（参与的节点多）&lt;/li&gt;
   &lt;li&gt;当发生查询请求时，查询请求是会落到所有的shard上的，所以集群shards做的越多，整个集群的查询性能开销就越大，这里就有一个平衡的问题&lt;/li&gt;
@@ -3025,8 +3083,8 @@ Document：&lt;/p&gt;
 &lt;p&gt;对于Elasticsearch的监控，官方有一套解决方案（Elasticsearch算是一个生态了，在上游和下游都有完整的处理）。可以查阅下官方文档：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/es-monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Elasticsearch&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/current/setup-xpack.html#setup-xpack&quot; target=&quot;_blank&quot;&gt;Set up X-Pack&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/es-monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Elasticsearch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/setup-xpack.html#setup-xpack&quot; target=&quot;_blank&quot;&gt;Set up X-Pack&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/getting-started-cluster-health.html#getting-started-cluster-health&quot; target=&quot;_blank&quot;&gt;Cluster Health&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -3082,25 +3140,707 @@ Document：&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/elk_ha_02.png&quot; alt=&quot;After&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;46-性能调优&quot;&gt;4.6 性能调优&lt;/h2&gt;
-&lt;p&gt;Ebay有一篇非常细节非常棒的设计及性能优化分析博文：&lt;a href=&quot;https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/&quot; target=&quot;_blank&quot;&gt;Elasticsearch Performance Tuning Practice at eBay&lt;/a&gt;。从时间上来看，这篇文章也比较近：2018-01-08。&lt;/p&gt;
+&lt;p&gt;Ebay有一篇非常细节非常棒的设计及性能优化分析博文：&lt;a href=&quot;https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/&quot; target=&quot;_blank&quot;&gt;Elasticsearch Performance Tuning Practice at eBay&lt;/a&gt;。从时间上来看，这篇文章也还算近：&lt;code&gt;2018-01-08&lt;/code&gt;。&lt;/p&gt;
 
 &lt;p&gt;这篇博文分析了大规模Elasticsearch集群会面临的挑战，以及解决方案，还按实际的应用Scenario进行了问题分析以及给出了解决范例，很棒。&lt;/p&gt;
 
-&lt;h1 id=&quot;5-ui&quot;&gt;5. UI&lt;/h1&gt;
-&lt;p&gt;Kibana这块相对来说比较简单（？），这里就只做简单的尝试。下面会列一些关键文档位置：&lt;/p&gt;
+&lt;h1 id=&quot;5-kibana&quot;&gt;5. Kibana&lt;/h1&gt;
+&lt;p&gt;Kibana这块相对来说比较简单。一些关键文档位置：&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/current/docker.html#docker&quot; target=&quot;_blank&quot;&gt;Running Kibana on Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/docker.html#docker&quot; target=&quot;_blank&quot;&gt;Running Kibana on Docker&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/settings.html#settings&quot; target=&quot;_blank&quot;&gt;Configuring Kibana&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/current/lucene-query.html#lucene-query&quot; target=&quot;_blank&quot;&gt;Lucene Query Syntax&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/kuery-query.html&quot; target=&quot;_blank&quot;&gt;Kibana Query Language&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/lucene-query.html#lucene-query&quot; target=&quot;_blank&quot;&gt;Lucene Query Syntax&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&quot;6-实践范例&quot;&gt;6. 实践范例&lt;/h1&gt;
+&lt;h2 id=&quot;ID_INDEX_PATTERN&quot;&gt;5.1 Index Pattern&lt;/h2&gt;
+&lt;p&gt;在打开Kibana页面进行任何查询和设置之前，必须进行&lt;code&gt;Index Pattern&lt;/code&gt;的设置。这是使用的前提。该设置是用来告知Kibana，Elasticsearch集群中的哪些Index是需要进行解析和观察的，作为后续所有查询的数据来源。&lt;/p&gt;
+
+&lt;p&gt;官方文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/index-patterns.html#index-patterns&quot; target=&quot;_blank&quot;&gt;Index Patterns&lt;/a&gt; &lt;a href=&quot;https://www.elastic.co/guide/cn/kibana/current/index-patterns.html&quot; target=&quot;_blank&quot;&gt;中文&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/tutorial-define-index.html#tutorial-define-index&quot; target=&quot;_blank&quot;&gt;Defining your index patterns&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;官方对于自动化的支持做的不太好，如果需要在Elasticsearch集群启动之后自动化对Kibana内设置Index Pattern的话，该需求是没有官方的解决方案的。找了一圈有一些hack方案，但都不稳定，非常容易因版本更新的原因后续就无法使用了。这方面后面只能说有需要再临时找对应版本的hack。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/elastic/kibana/issues/3709&quot; target=&quot;_blank&quot;&gt;Index pattern creation API #3709&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;52-使用简介&quot;&gt;5.2 使用简介&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果只是要简单过滤下数据进行简单的统计或者进行临时的debug日志搜索，那么在&lt;code&gt;Discover&lt;/code&gt;页面直接使用条件搜索过滤即可：&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/tutorial-discovering.html#tutorial-discovering&quot; target=&quot;_blank&quot;&gt;Discovering your data&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;如果需要对一个常用的搜索或数值结果进行定义，方便后续直接查看，那么可以使用&lt;code&gt;Visualize&lt;/code&gt;页面制作图表，这里的Visualize是和Grafana里的&lt;code&gt;Panel&lt;/code&gt;同样的概念：&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/tutorial-visualizing.html#tutorial-visualizing&quot; target=&quot;_blank&quot;&gt;Visualizing your data&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;如果需要定义一系列常用的图表进行观察，则可以使用&lt;code&gt;Dashboard&lt;/code&gt;页面进行设置，这里的Dashboard是和Grafana里的&lt;code&gt;Dashboard&lt;/code&gt;同样的概念：&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/tutorial-dashboard.html#tutorial-dashboard&quot; target=&quot;_blank&quot;&gt;Displaying your visualizations in a dashboard&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;一般如果将Elasticsearch作为日志聚合debug工具的话，不需要很复杂的设置，直接使用Discover即可。偶尔会有些例如同时在线或最近请求数量之类的观测需求，那么简单设置下Visualize即可。&lt;/p&gt;
+
+&lt;h2 id=&quot;53-qa&quot;&gt;5.3 Q&amp;amp;A&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/47370280/whats-the-difference-between-the-field-and-field-keyword-fields-in-kibana&quot; target=&quot;_blank&quot;&gt;What’s the difference between the ‘field’ and ‘field.keyword’ fields in Kibana?&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;6-filebeat直连elasticsearch实践&quot;&gt;6. Filebeat直连Elasticsearch实践&lt;/h1&gt;
+&lt;h2 id=&quot;61-直连流程&quot;&gt;6.1 直连流程&lt;/h2&gt;
+&lt;p&gt;在实际应用的场景中，大部分情况下我们需要的这是将本地日志的内容分类传送到Elasticsearch集群中，按条件定位到不同的索引内。最多也就是对日志里的字段进行一些简单的丰富化或转换。而完成这样的需求其实是不需要Logstash这样的工具，仅使用Filebeat就可以独立完成。这样做的好处是节约了大量系统资源（Golang vs Java），同时还兼具了高可用和性能。&lt;/p&gt;
+
+&lt;p&gt;流程也非常简单：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Filebeat监听本地日志变化&lt;/li&gt;
+  &lt;li&gt;Filebeat将新产生的日志内容按JSON进行解析&lt;/li&gt;
+  &lt;li&gt;Filebeat根据日志内的字段内容，进行&lt;code&gt;processors&lt;/code&gt;处理，进行丰富化或进行格式转换&lt;/li&gt;
+  &lt;li&gt;Filebeat根据根据&lt;code&gt;Elasticsearch template setting&lt;/code&gt;，启用在Elasticsearch集群上设置好的Index Template（只有这步是依赖Elasticsearch集群的，需要预先在Elasticsearch集群中设置好Template）&lt;/li&gt;
+  &lt;li&gt;Filebeat根据设置，将日志传输到Elasticsearch集群中不同的Index里&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;基本上全部的处理都是在Filebeat里完成了，不需要Ingest Pipeline做什么，更不需要Logstash出马。&lt;/p&gt;
+
+&lt;p&gt;实际操作下来，还是有很多细节问题，后面一一细说。&lt;/p&gt;
+
+&lt;h2 id=&quot;62-应用场景&quot;&gt;6.2 应用场景&lt;/h2&gt;
+&lt;p&gt;先描述下应用场景，否则后面的一些配置和细节都不好说明。&lt;/p&gt;
+
+&lt;p&gt;系统有三个应用程序：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;web&lt;/li&gt;
+  &lt;li&gt;service&lt;/li&gt;
+  &lt;li&gt;consumer&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;每个应用程序都会输出一份日志：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;web：/tmp/logs/app/app.web.stdout.log&lt;/li&gt;
+  &lt;li&gt;service：/tmp/logs/app/app.service.stdout.log&lt;/li&gt;
+  &lt;li&gt;consumer：/tmp/logs/app/app.consumer.stdout.log&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;每个应用除了自身的业务日志之外，也会有一些使用中的组件会在对应的日志内输出内容：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;web：
+    &lt;ul&gt;
+      &lt;li&gt;web：自身业务日志&lt;/li&gt;
+      &lt;li&gt;gin：web框架gin的日志&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;service：
+    &lt;ul&gt;
+      &lt;li&gt;service：自身业务日志&lt;/li&gt;
+      &lt;li&gt;gorm：数据库orm框架的日志&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;consumer：
+    &lt;ul&gt;
+      &lt;li&gt;consumer：自身业务日志&lt;/li&gt;
+      &lt;li&gt;gorm：数据库orm框架的日志&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;需求是跟踪、解析这三份日志文件，将输出的日志根据应用以及组件分发到Elasticsearch不同的Index中：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;web：
+    &lt;ul&gt;
+      &lt;li&gt;web：分发到 dist-web-web-*&lt;/li&gt;
+      &lt;li&gt;gin：分发到 dist-web-gin-*&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;service：
+    &lt;ul&gt;
+      &lt;li&gt;service：分发到 dist-service-service-*&lt;/li&gt;
+      &lt;li&gt;gorm：分发到 dist-service-gorm-*&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;consumer：
+    &lt;ul&gt;
+      &lt;li&gt;consumer：分发到 dist-consumer-consumer-*&lt;/li&gt;
+      &lt;li&gt;gorm：分发到 dist-consumer-gorm-*&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;解决方案：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;使用input配置下的fields配置，根据输入的文件，添加自定义字段：&lt;code&gt;fields.app: web|service|consumer&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;使用processors，解析JSON日志内容、字段，添加自定义字段：&lt;code&gt;fields.module: web|gin|service|consumer|gorm&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;根据字段&lt;code&gt;fields.app&lt;/code&gt;&lt;code&gt;fields.module&lt;/code&gt;输出日志到不同的Index：&lt;code&gt;dist-%{[fields.app]}-%{[fields.module]}-%{[agent.version]}-%{+yyyy.MM.dd}&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;ID_INDEX_TEMPLATE&quot;&gt;6.3 Index Template&lt;/h2&gt;
+&lt;p&gt;中间还需要补一个Elasticsearch的概念：&lt;code&gt;Index Template&lt;/code&gt;。官方文档在：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/indices-templates.html&quot; target=&quot;_blank&quot;&gt;Index Templates&lt;/a&gt;，也有一份&lt;a href=&quot;https://www.elastic.co/guide/cn/elasticsearch/guide/current/index-templates.html&quot; target=&quot;_blank&quot;&gt;中文&lt;/a&gt;的。&lt;/p&gt;
+
+&lt;p&gt;之前在&lt;a href=&quot;#ID_INDEX&quot;&gt;4.2 文档数据库 &amp;amp; 索引&lt;/a&gt;已经讲到了，Index即相当于RDBMS里的&lt;code&gt;表名&lt;/code&gt;，且在Elasticsearch中是用来进行sharding的重要字段。而同时我们之前也提到过了，在大部分的情况下，Index是自动创建的，按某些格式：&lt;code&gt;dist-%{[fields.app]}-%{[fields.module]}-%{[agent.version]}-%{+yyyy.MM.dd}&lt;/code&gt;。所以如果要针对每一个Index进行单独的配置，这基本上是不可能的。在Elasticsearch中，为了应对这样的需求，就有了&lt;code&gt;Index Template&lt;/code&gt;这个设置。新创建的Index都会根据名字套用上某个Template（如果有匹配到的话），达到对Index进行设置的目的。&lt;/p&gt;
+
+&lt;p&gt;此外，Index Template里还设置了很多细节（这些设置都会在名字匹配的Index上生效）：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Index的shards数量&lt;/li&gt;
+  &lt;li&gt;Index的replicas数量&lt;/li&gt;
+  &lt;li&gt;Index如何分词、如何过滤&lt;/li&gt;
+  &lt;li&gt;Index对应日志中的字段应该怎么解析，分别都是什么类型的字段（如果不设置的话，Elasticsearch会根据第一次出现的值进行猜测，以后将不再更改，除非使用API手动重设）&lt;/li&gt;
+  &lt;li&gt;等等&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果某个新创建的Index不符合任何Elasticsearch集群上已知的所有Template，则该Index内的所有设置都会按默认值来。一般来说这种情况下最严重的问题是：该Index将只会存在一个shard，且只会有一份replica。&lt;/p&gt;
+
+&lt;p&gt;所以，一般来说都需要在正式使用之前将需要的Index Template创建好，才可能开始向Elasticsearch输入日志，否则创建出来的Index会有问题，至少分片就不对。&lt;/p&gt;
+
+&lt;p&gt;额外的资料：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;有一份中文的博文，讲解的很好，后续可以看下：&lt;a href=&quot;https://www.jianshu.com/p/1f67e4436c37&quot; target=&quot;_blank&quot;&gt;初探 Elasticsearch Index Template（索引模板)&lt;/a&gt;。&lt;/li&gt;
+  &lt;li&gt;官方社区有一个讨论帖，里面有comment对如何操作自定义Index Template有比较详细的步骤讲解：&lt;a href=&quot;https://discuss.elastic.co/t/custom-filebeat-template-for-json-log-lines/114761/5&quot; target=&quot;_blank&quot;&gt;Custom filebeat template for JSON log lines&lt;/a&gt;。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;64-issues&quot;&gt;6.4 Issues&lt;/h2&gt;
+&lt;h3 id=&quot;641-filebeat字段层级&quot;&gt;6.4.1 Filebeat字段层级&lt;/h3&gt;
+&lt;p&gt;Filebeat默认将日志JSON解析出来的内容放到&lt;code&gt;message&lt;/code&gt;字段下，见下图的message字段内容：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/filebeat_json_no_root.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果不知道这点的话，在使用&lt;code&gt;processors&lt;/code&gt;时候会发现设定的条件因字段没有找到而没有被触发。调试的时候会非常痛苦。&lt;/p&gt;
+
+&lt;p&gt;这里需要了解filebeat的设置：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-input-log.html#filebeat-input-log-config-json&quot; target=&quot;_blank&quot;&gt;Log input &amp;gt; json&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;有几项配置需要了解下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;filebeat.inputs&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;log&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/...&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;json.keys_under_root&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;json.overwrite_keys&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;json.message_key&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;message&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;json.keys_under_root: true&lt;/code&gt;：将之前存放在message字段里的JSON释放到根节点，效果见下图，可以和上面的图做下比对；一般来说这也是用户希望的效果&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;json.overwrite_keys: true&lt;/code&gt;：是否在冲突的时候使用释放出来的字段的值覆盖根目录下同Key的值，一般也需要配置&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;json.message_key: message&lt;/code&gt;：这项一般不要改，留默认的&lt;code&gt;message&lt;/code&gt;即可，后面会解释原因&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/filebeat_json_root.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;如果不配置&lt;code&gt;json.keys_under_root: true&lt;/code&gt;也不是不可以，但在查找日志JSON内容的时候就需要到message字段下去查找，而不是根节点。&lt;/p&gt;
+
+&lt;h3 id=&quot;642-kibana-message字段&quot;&gt;6.4.2 Kibana message字段&lt;/h3&gt;
+&lt;p&gt;Kibana页面上的原始日志页面，显示的是filebeat传输到Elasticsearch日志内容中的&lt;code&gt;message&lt;/code&gt;字段内容，且显示的仅只有message字段的内容。并且，当Kibana发现Elasticsearch中存放的日志不存在message字段的时候，还会显示错误：&lt;code&gt;failed to find message&lt;/code&gt;。因此之前提到，不要随意更改：&lt;code&gt;json.message_key: message&lt;/code&gt;。要更改Kibana的行为也不是不可以，参见：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://discuss.elastic.co/t/log-ui-failed-to-format-message-from/163196&quot; target=&quot;_blank&quot;&gt;Log UI failed to format message from&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/elastic/kibana/pull/26579/files#diff-3d8e25bfa60ef76c1ce7b5e7a68232f2R9&quot; target=&quot;_blank&quot;&gt;[InfraOps] Update docs with data source configuration&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;实际效果可以参见下面两张图的比对，第一张是没有使用&lt;code&gt;json.keys_under_root: true&lt;/code&gt;的情况，第二张则是释放之后的情况：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/elasticsearch-note/filebeat_logs_msg_no_root.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
+&lt;img src=&quot;/resources/2019/04/elasticsearch-note/filebeat_logs_msg_root.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;643-input--processors-fields&quot;&gt;6.4.3 input | processors fields&lt;/h3&gt;
+&lt;p&gt;在filebeat的input配置中，可以根据日志输入向日志内容中添加自定义的字段：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;filebeat.inputs&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;log&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/tmp/app/logs/app.web.stdout.log&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;web&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;在processors配置中，也可以根据条件向日志内容中添加自定义的字段：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;processors&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;add_fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;WEB.Handler&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;web&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;但有一点需要明确，这些添加的字段，都会存放在根节点下的&lt;code&gt;fields&lt;/code&gt;字段里。上面例子里的两个设置，会产生：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;fields.app: web&lt;/li&gt;
+  &lt;li&gt;fields.module: web&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;可以看下之前6.4.1图中的字段列表。&lt;/p&gt;
+
+&lt;h3 id=&quot;ID_FILEBEAT_INDEX_TEMPLATE&quot;&gt;6.4.4 Index Template设置&lt;/h3&gt;
+&lt;p&gt;Index Template虽然是在Elasticsearch上创建的（见：&lt;a href=&quot;#ID_INDEX_TEMPLATE&quot;&gt;6.3 Index Template&lt;/a&gt;），但在filebeat端还是需要做设置的。主要是需要在filebeat端加载Elasticsearch上存在的Index Template，然后后续在filebeat向Elasticsearch传输日志的时候，就会应用这些Template。如果配置不正确的话，诸如shards数量之类的配置就会出错、不生效。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;filebeat中关于Index Template的配置项：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/configuration-template.html&quot; target=&quot;_blank&quot;&gt;Load the Elasticsearch index template&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;filebeat中如何加载Index Template：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/filebeat-template.html&quot; target=&quot;_blank&quot;&gt;Step 4: Load the index template in Elasticsearch&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;此外，该功能一般和输出相关配置有关：&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/elasticsearch-output.html#indices-option-es&quot; target=&quot;_blank&quot;&gt;Configure the Elasticsearch output &amp;gt; indices&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果不想在Elasticsearch端创建自定义的Index Template，那么可以使用的Template只有一个，就是filebeat默认的：&lt;code&gt;filebeat-%{[agent.version]}-%{+yyyy.MM.dd}&lt;/code&gt;，在当前的版本下就是：&lt;code&gt;filebeat-7.0.0-2019-05-29&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;该默认的Template在Elastcsearch上的配置可以通过API &lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/indices-templates.html#getting&quot; target=&quot;_blank&quot;&gt;Getting templates&lt;/a&gt; 进行观察：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;filebeat-7.0.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;order&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;index_patterns&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;filebeat-7.0.0-*&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;lifecycle&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;filebeat-7.0.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;rollover_alias&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;filebeat-7.0.0&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;mapping&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;total_fields&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+          &lt;span class=&quot;nt&quot;&gt;&amp;quot;limit&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;10000&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;refresh_interval&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;5s&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;number_of_shards&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;3&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;可以看到，该Template的名字匹配pattern是：&lt;code&gt;filebeat-7.0.0-*&lt;/code&gt;，所以如果要利用这个默认的Template的话，名字一定不能搞错。我之前做实验的时候使用过：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;filebeat-web-web-7.0.0-*&lt;/li&gt;
+  &lt;li&gt;filebeat-web-gin-7.0.0-*&lt;/li&gt;
+  &lt;li&gt;…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;之类的，就因为名字不匹配导致没有套用上这个Template，最后shards数量之类的就全错了。&lt;/p&gt;
+
+&lt;h3 id=&quot;645-切片数量&quot;&gt;6.4.5 切片数量&lt;/h3&gt;
+&lt;p&gt;查看集群Index切片状态，可以通过API &lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cat-shards.html#cat-shards&quot; target=&quot;_blank&quot;&gt;cat shards&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;范例集群的切片设置为：&lt;code&gt;主节点&lt;/code&gt;数量3，&lt;code&gt;replica&lt;/code&gt;数量1。也就是说一个Index的切片总数为：&lt;code&gt;primary * (1 + replica)&lt;/code&gt; = 6。公式括号中的1就是primary，每一份切片只会有一个primary。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -X GET &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://127.0.0.1:9201/_cat/shards&amp;quot;&lt;/span&gt;
+dist-consumer-gorm-7.0.0-2019.05.29     &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-consumer-gorm-7.0.0-2019.05.29     &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-consumer-gorm-7.0.0-2019.05.29     &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-consumer-gorm-7.0.0-2019.05.29     &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-consumer-gorm-7.0.0-2019.05.29     &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;17&lt;/span&gt;.2kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-consumer-gorm-7.0.0-2019.05.29     &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;17&lt;/span&gt;.2kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-web-gin-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-web-gin-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-web-gin-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;32&lt;/span&gt;.3kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-web-gin-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;32&lt;/span&gt;.3kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-web-gin-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;32&lt;/span&gt;.3kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-web-gin-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;32&lt;/span&gt;.3kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-service-gorm-7.0.0-2019.05.29      &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;33&lt;/span&gt;.4kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-service-gorm-7.0.0-2019.05.29      &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;33&lt;/span&gt;.4kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-service-gorm-7.0.0-2019.05.29      &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;16&lt;/span&gt;.6kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-service-gorm-7.0.0-2019.05.29      &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;16&lt;/span&gt;.6kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-service-gorm-7.0.0-2019.05.29      &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-service-gorm-7.0.0-2019.05.29      &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-consumer-consumer-7.0.0-2019.05.29 &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;14&lt;/span&gt;.6kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-consumer-consumer-7.0.0-2019.05.29 &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;14&lt;/span&gt;.6kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-consumer-consumer-7.0.0-2019.05.29 &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-consumer-consumer-7.0.0-2019.05.29 &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-consumer-consumer-7.0.0-2019.05.29 &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;14&lt;/span&gt;.6kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-consumer-consumer-7.0.0-2019.05.29 &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;14&lt;/span&gt;.6kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+.kibana_1                               &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt;.2kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+.kibana_1                               &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;50&lt;/span&gt;.2kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-service-service-7.0.0-2019.05.29   &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-service-service-7.0.0-2019.05.29   &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-service-service-7.0.0-2019.05.29   &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;28&lt;/span&gt;.2kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-service-service-7.0.0-2019.05.29   &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;14&lt;/span&gt;.9kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-service-service-7.0.0-2019.05.29   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;13&lt;/span&gt;.9kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-service-service-7.0.0-2019.05.29   &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;13&lt;/span&gt;.9kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+.kibana_task_manager                    &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;45&lt;/span&gt;.4kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+.kibana_task_manager                    &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;45&lt;/span&gt;.4kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-web-web-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;27&lt;/span&gt;.9kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+dist-web-web-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;27&lt;/span&gt;.9kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-web-web-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;   14kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-web-web-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;   14kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+dist-web-web-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;   14kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+dist-web-web-7.0.0-2019.05.29           &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;   14kb &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;2&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.2 es_3
+filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1
+filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; p STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.4 es_2
+filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt; r STARTED &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;   230b &lt;span class=&quot;m&quot;&gt;172&lt;/span&gt;.20.0.3 es_1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;输出的内容有几列，这里解释下含义：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code&gt;Index名&lt;/code&gt;：dist-consumer-gorm-7.0.0-2019.05.29&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;节点编号&lt;/code&gt;：切片在当前Index的切片组中的编号，从0开始，一个primary占用一个编号，所有该primary的从属replicas和primary共享同一个编号&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;节点类型&lt;/code&gt;：只有&lt;code&gt;p&lt;/code&gt;和&lt;code&gt;r&lt;/code&gt;，表示是primary还是replica&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;节点状态&lt;/code&gt;：正常状态为&lt;code&gt;STARTED&lt;/code&gt;，启动中为&lt;code&gt;INITIALIZING&lt;/code&gt;，错误状态为&lt;code&gt;UNASSIGNED&lt;/code&gt;；unassigned相关参见：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/cat-shards.html#reason-unassigned&quot; target=&quot;_blank&quot;&gt;Reasons for unassigned shard&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;文档数量&lt;/code&gt;：存储在该节点内的文档数量&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;节点容量&lt;/code&gt;：节点占用的磁盘容量&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;节点IP&lt;/code&gt;：节点的IP地址&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;节点名&lt;/code&gt;：节点在Elasticsearch集群中的名字&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;646-kibana-timestamp&quot;&gt;6.4.6 Kibana @timestamp&lt;/h3&gt;
+&lt;p&gt;Filebeat向Elasticsearch传输的日志内容会添加一个字段：&lt;code&gt;@timestamp&lt;/code&gt;。而Kibana在设置Index Pattern（&lt;a href=&quot;#ID_INDEX_PATTERN&quot;&gt;5.1 Index Pattern&lt;/a&gt;）的时候，强制需要选择一项日志内的时间字段作为后续时间相关过滤的指标。如果用户没有自己的时间字段的话，一般都会选择&lt;code&gt;@timestamp&lt;/code&gt;字段，因为该段总是存在的。&lt;/p&gt;
+
+&lt;p&gt;不过这里有一项需要注意：&lt;/p&gt;
+
+&lt;p&gt;@timestamp 是日志被filebeat处理的时间点，而不是日志发生的时间点。一般来说这两者可以混用，但在日志有堆积，处理比较慢的情况下，就不合适了。千万需要小心，一般来说尽量选择业务日志自带的时间字段，就不会有问题了。&lt;/p&gt;
+
+&lt;h3 id=&quot;647-elasticsearch-预创建数据&quot;&gt;6.4.7 Elasticsearch 预创建数据&lt;/h3&gt;
+&lt;p&gt;一般来说，在Elasticsearch启动的时候都会有创建一些预设配置的需求，特别是在docker中运行的时候，因为docker本来就具有高度自动化的特征，也就格外需要这样的预设数据。这方面只能说官方仍旧没有提供非常完备的支持，只能自行处理：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://discuss.elastic.co/t/best-practice-for-creating-an-index-when-an-es-docker-container-starts/126651&quot; target=&quot;_blank&quot;&gt;Best practice for creating an index when an ES docker container starts&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/35526532/how-to-add-an-elasticsearch-index-during-docker-build&quot; target=&quot;_blank&quot;&gt;How to add an elasticsearch index during docker build&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;7-实践范例&quot;&gt;7. 实践范例&lt;/h1&gt;
 &lt;p&gt;和之前做Prometheus实验的时候一样，因为需要把握一些细节，所以实验使用的还是下载下来的Elasticsearch、Kibana以及Filebeat。作为配角的Nginx使用的则是镜像版本。&lt;/p&gt;
 
 &lt;p&gt;范例代码可以在Github查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/experiment/elasticsearch&quot; target=&quot;_blank&quot;&gt;dist-system-practice/experiment/elasticsearch/&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h1 id=&quot;7-todo&quot;&gt;7. TODO&lt;/h1&gt;
+&lt;p&gt;这则例子非常简单，基本上没有涉及任何比较核心的使用，粗略看下启动还是可以的。&lt;/p&gt;
+
+&lt;h1 id=&quot;8-docker集群部署&quot;&gt;8. Docker集群部署&lt;/h1&gt;
+&lt;p&gt;仍旧是使用docker-compose进行群组的编辑和启动，可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/elk-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/elk-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;启动脚本：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/dev/docker_elasticsearch.sh&quot; target=&quot;_blank&quot;&gt;dist-system-practice/bash/dev/docker_elasticsearch.sh&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;下面会根据职责一一解析配置文件。&lt;/p&gt;
+
+&lt;h2 id=&quot;ID_ES_CONFIG&quot;&gt;8.1 Elasticsearch配置&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;elk-cluster.yaml&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;x-es-environment-defaults&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;C1&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;DISCOVERY_SEED_HOSTS&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;discovery.seed_hosts=es_1:9300,es_2:9300,es_3:9300&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 集群中的所有可用节点，这个配置中需要完整给出节点的HOST和PORT&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;C2&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;CLUSTER_INITIAL_MASTER_NODES&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;cluster.initial_master_nodes=es_1,es_2,es_3&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 集群初始化的master节点，这个配置中只需要给节点名，即 node.name=es_1 里面设置的名字&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;C4&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;ES_JAVA_OPTS&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;ES_JAVA_OPTS=\&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;-Xms256m&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;\&lt;/span&gt;
+      &lt;span class=&quot;s&quot;&gt;-Xmx256m&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;s&quot;&gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;x-es-ulimit-defaults&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;ES_ULIMIT_DEFAULTS&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;nproc&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;65535&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;nofile&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;soft&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;65535&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hard&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;65535&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;memlock&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;soft&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;-1&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hard&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;-1&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;x-es-logging-defaults&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;ES_LOGGING_DEFAULTS&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;json-file&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;max-size&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;512m&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;net&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;bridge&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;es_vol_1_logs&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;local&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;es_vol_1_data&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;local&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;es_1&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;elasticsearch:7.0.0&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_1&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_1&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;es_vol_1_data:/usr/share/elasticsearch/data&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;es_vol_1_logs:/usr/share/elasticsearch/logs&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/elasticsearch.yaml:/usr/share/elasticsearch/config/elasticsearch.yml&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;net&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9201:9201&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 该PORT是给外部访问使用的，比如Kibana、Filebeat，以及客户端查询API&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;expose&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9300&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 该PORT是给集群内部流量使用的，所以只要expose即可&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*ES_LOGGING_DEFAULTS&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;node.name=es_1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 节点名必须设置且不可重复&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http.port=9201&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 这个PORT同上&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;node.master=true&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 如果需要该节点作为master角色提供服务，则这里设置成true&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;node.data=true&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 如果需要该节点作为数据节点提供服务（数据存储），则这里设置成true&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*DISCOVERY_SEED_HOSTS&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*CLUSTER_INITIAL_MASTER_NODES&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*ES_JAVA_OPTS&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ulimits&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*ES_ULIMIT_DEFAULTS&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;elasticsearch.yaml&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;cluster.name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;es_cluster&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;path.data&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/usr/share/elasticsearch/data&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;path.logs&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/usr/share/elasticsearch/logs&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;bootstrap.memory_lock&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;network.host&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;0.0.0.0&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;transport.tcp.port&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;9300&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;相关文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;官方文档及范例配置文件：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docker.html#docker-cli-run-prod-mode&quot; target=&quot;_blank&quot;&gt;Install Elasticsearch with Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;理解Elasticsearch的集群发现：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/modules-discovery-hosts-providers.html#modules-discovery-hosts-providers&quot; target=&quot;_blank&quot;&gt;Discovery&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;全局变量配置的使用：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/settings.html#_environment_variable_substitution&quot; target=&quot;_blank&quot;&gt;Environment variable substitution&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;同上，不同的做法：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docker.html#docker-configuration-methods&quot; target=&quot;_blank&quot;&gt;Configuring Elasticsearch with Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;一些比较常见的问题：&lt;a href=&quot;https://www.jianshu.com/p/fa31f38d241e&quot; target=&quot;_blank&quot;&gt;使用ElasticSearch踩过的坑&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;一个非常完整的搭建例子：&lt;a href=&quot;https://www.infvie.com/ops-notes/elkstack-beats&quot; target=&quot;_blank&quot;&gt;ELK Stack+Beats 搭建分布式日志平台&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;大杂烩：&lt;a href=&quot;https://www.jianshu.com/p/6a700cc61913&quot; target=&quot;_blank&quot;&gt;Elasticsearch安装配置&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;带说明的非docker安装：&lt;a href=&quot;https://logz.io/blog/elasticsearch-cluster-tutorial/&quot; target=&quot;_blank&quot;&gt;Creating an Elasticsearch Cluster: Getting Started&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;811-环境变量配置&quot;&gt;8.1.1 环境变量配置&lt;/h3&gt;
+&lt;p&gt;Elasticsearch的环境变量配置要求使用配置文件中的配置项字符串，完全不用改动，全部都是小写，然后使用&lt;code&gt;=&lt;/code&gt;连接配置项的值。此外需要注意，数组的配置和配置文件中有所不同，直接使用以&lt;code&gt;,&lt;/code&gt;分隔的字符串即可：&lt;code&gt;discovery.seed_hosts=es_1:9300,es_2:9300,es_3:9300&lt;/code&gt;。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;node.name=es_1&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http.port=9201&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;node.master=true&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;node.data=true&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;812-多节点配置的共享&quot;&gt;8.1.2 多节点配置的共享&lt;/h3&gt;
+&lt;p&gt;Elasticsearch docker compose的配置中，需要把environment配置成数组，而YAML则恰恰不支持数组的Anchor Merge。这是YAML的一个功能性问题，不支持Array的平铺Merge：&lt;a href=&quot;https://github.com/yaml/yaml/issues/35&quot; target=&quot;_blank&quot;&gt;Merge arrays #35&lt;/a&gt;。社区的方案一般都需要在原生的YAML之外，再使用工具把嵌套的Array整平：&lt;a href=&quot;https://stackoverflow.com/questions/4948933/is-there-a-way-to-alias-anchor-an-array-in-yaml&quot; target=&quot;_blank&quot;&gt;Is there a way to alias/anchor an array in YAML?&lt;/a&gt;，这就在我的接受范围之外了，我不希望使用任何第三方工具来修改yaml文件。&lt;/p&gt;
+
+&lt;p&gt;最后方案为：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;把不怎么需要在运行时修改的共通变量写入配置文件&lt;/li&gt;
+  &lt;li&gt;使用bind mount的方法加载配置文件到容器里&lt;/li&gt;
+  &lt;li&gt;在yaml中设置变量&lt;/li&gt;
+  &lt;li&gt;在多节点中使用变量，至少里面的值只需要改一个地方就可以生效了&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;813-集群发现相关配置&quot;&gt;8.1.3 集群发现相关配置&lt;/h3&gt;
+&lt;p&gt;官方文档：&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/discovery-settings.html#discovery-settings&quot; target=&quot;_blank&quot;&gt;Important discovery and cluster formation settings&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;集群发现主要依赖两项配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;discovery.seed_hosts=es_1:9300,es_2:9300,es_3:9300&lt;/li&gt;
+  &lt;li&gt;cluster.initial_master_nodes=es_1,es_2,es_3&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;code&gt;discovery.seed_hosts&lt;/code&gt;用来告知Elasticsearch组成集群的所有节点都是谁，分别HOST和PORT是什么。无论是否是master节点，或者是否仅仅只是data节点，都需要列在这个选项中，告知给Elasticsearch。这个选项里的配置是常规的&lt;code&gt;host:port&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;cluster.initial_master_nodes&lt;/code&gt;用来告知Elasticsearch，集群启动的时候初期可用的master节点是哪几个，之后Elasticsearch会从这些节点中选出master节点。列在这个配置中的节点，其&lt;code&gt;node.master=true&lt;/code&gt;必须为true。&lt;/p&gt;
+
+&lt;p&gt;然后，这个配置有个坑，非常非常坑，这个配置中的所有字符串，列的都是节点的名字，即必须和&lt;code&gt;node.name=es_1&lt;/code&gt;里的名字一致，不需要配置成&lt;code&gt;host:port&lt;/code&gt;，只需要&lt;code&gt;node_name&lt;/code&gt;。官方文档中的&lt;a href=&quot;https://www.elastic.co/guide/en/elasticsearch/reference/7.0/docker.html#docker-cli-run-prod-mode&quot; target=&quot;_blank&quot;&gt;例子&lt;/a&gt;因为是docker，所以节点的名字和docker network中的container名字是一致的，而且官方的例子用的都是默认port，所有的port都没写，所以我一开始误认为这个选项里的配置也是&lt;code&gt;host:port&lt;/code&gt;，然后各种无法组成集群。而且Elasticsearch针对这种错误给的错误信息非常暧昧，完全找不到有用的信息。最后找了半天才在官方论坛的一个帖子里找到线索。我填了这个坑之后貌似官方文档就更新了。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://discuss.elastic.co/t/elastic-search-7-unable-to-bootstrap-the-cluster-due-to-master-not-discovered-yet/182073/2&quot; target=&quot;_blank&quot;&gt;Elastic Search 7 unable to bootstrap the cluster due to master not discovered yet&lt;/a&gt;（这个comment离我找到它只隔了3天，超级新的问题）：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Remove the port from the cluster.initial_master_nodes setting, and it will work. We have updated the docs recently to make it clearer that either node name, or ip/port is to be used. Node name/port is not a valid combination.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://discuss.elastic.co/t/elastic-search-7-unable-to-bootstrap-the-cluster-due-to-master-not-discovered-yet/182073/4&quot; target=&quot;_blank&quot;&gt;另一个comment&lt;/a&gt;：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;It is intentional. This setting does not denote a hostname, but the node name or the advertised publish address. In particular, it is not an address that is resolved or actively connected to. The discovery.seed_hosts setting is used for that. The cluster.initial_master_nodes setting is used to determine the identities of the subset of master-eligible nodes that participate in the bootstrapping process after discovery.seed_hosts has established a connection to the nodes.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;82-kibana配置&quot;&gt;8.2 Kibana配置&lt;/h2&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kibana&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kibana:7.0.0&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kibana&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kibana&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_1&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_2&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_3&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;net&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;5601:5601&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*ES_LOGGING_DEFAULTS&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;SERVER_PORT=5601&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;SERVER_HOST=0.0.0.0&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;SERVER_NAME=es_cluster&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ELASTICSEARCH_HOSTS=[&amp;quot;http://es_1:9201&amp;quot;]&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KIBANA_INDEX=.kibana&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;DIBANA_DEFAULTAPPID=home&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ELASTICSEARCH_PINGTIMEOUT=1500&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ELASTICSEARCH_REQUESTTIMEOUT=10000&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ELASTICSEARCH_LOGQUERIES=false&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;相关文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/docker.html&quot; target=&quot;_blank&quot;&gt;Running Kibana on Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/kibana/7.0/docker.html#environment-variable-config&quot; target=&quot;_blank&quot;&gt;Environment variable configuration&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Kibana环境变量的配置和Elasticsearch不一致：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Elasticsearch使用的是数组，常量的键使用的直接是配置文件中的键，不需要转大写和下划线&lt;/li&gt;
+  &lt;li&gt;Kibana使用的是数组，常量的键使用的是配置文件中的键转大写，且将点转换成下划线&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;当前版本有一个配置项相关非常严重的BUG：&lt;a href=&quot;https://github.com/elastic/kibana/issues/32303&quot; target=&quot;_blank&quot;&gt;Kibana fails to validate config if elasticsearch.hosts is not a string #32303&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;简单来说就是&lt;code&gt;ELASTICSEARCH_HOSTS&lt;/code&gt;这项配置，如果写成下面的任何一种，都不正确，Kibana会报错告知找不到Elasticsearch集群：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ELASTICSEARCH_HOSTS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http://es_1:9201&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http://es_2:9202&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http://es_3:9203&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ELASTICSEARCH_HOSTS=[&amp;quot;http://es_1:9201&amp;quot;,&amp;quot;http://es_2:9202&amp;quot;,&amp;quot;http://es_3:9203&amp;quot;]&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ELASTICSEARCH_HOSTS=es_1:9201,es_2:9202,es_3:9203&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;虽然上面的写法其实理论上来说都是合法的，但现在就是会出错。现在唯一的写法是：&lt;code&gt;ELASTICSEARCH_HOSTS=[&quot;http://es_1:9201&quot;]&lt;/code&gt;。写成数组格式，但里面只能放一个节点，这样就不会出错。&lt;/p&gt;
+
+&lt;h2 id=&quot;83-filebeat配置&quot;&gt;8.3 Filebeat配置&lt;/h2&gt;
+&lt;p&gt;&lt;strong&gt;elk-cluster.yaml&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;filebeat&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;elastic/filebeat:7.0.0&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;filebeat&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;filebeat&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_1&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_2&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;es_3&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;net&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/filebeat.yaml:/usr/share/filebeat/filebeat.yml&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/logs/app:/tmp/app/logs&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*ES_LOGGING_DEFAULTS&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ES_HOSTS=es_1:9201,es_2:9202,es_3:9203&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;LOGGING_LEVEL=debug&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# error, warning, info, debug&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;NUM_OF_OUTPUT_WORKERS=9&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# workers会均匀分配到node：如果有3个ES的node，那么每个node会分到3个workers&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;NUM_OF_SHARDS=3&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;NUM_OF_REPLICAS=1&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;filebeat.yaml&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;filebeat.inputs&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;log&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/tmp/app/logs/app.web.stdout.log&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;json.keys_under_root&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 释放日志JSON到根节点&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;web&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 根据日志文件，添加不同的app字段值，后续会使用该值进行不同的Index分发&lt;/span&gt;
+
+&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;log&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/tmp/app/logs/app.service.stdout.log&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;json.keys_under_root&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;service&lt;/span&gt;
+
+&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;log&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;paths&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/tmp/app/logs/app.consumer.stdout.log&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;json.keys_under_root&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;consumer&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging.level&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;${LOGGING_LEVEL}&amp;#39;&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging.selectors&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p p-Indicator&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;*&amp;quot;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;processors&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;add_fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;WEB.Handler&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 根据日志内容，进行条件匹配&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;web&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 根据不同的匹配，添加不同的module字段值，后续会使用该值进行不同的Index分发&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;add_fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logger&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;7c4b822813e7&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# &amp;quot;logger&amp;quot;:&amp;quot;zap@v0.0.0-20190405225521-7c4b822813e7/zap.go:46&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;gin&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;add_fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;gorm&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;gorm&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;add_fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Service.Rpc&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;service&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;add_fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+          &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Consumer&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;module&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;consumer&amp;quot;&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;setup.template.name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dist&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 启用的Elasticsearch Index Template，注意这个Template必须在Elasticsearch中存在&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;setup.template.pattern&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dist-*&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# Index名字匹配模式&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;setup.template.settings&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;index.number_of_shards&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;${NUM_OF_SHARDS}&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;index.number_of_replicas&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;${NUM_OF_REPLICAS}&amp;#39;&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;output.elasticsearch&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hosts&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;${ES_HOSTS}&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;worker&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;${NUM_OF_OUTPUT_WORKERS}&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;indices&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 根据之前添加的字段，决定应该发送日志到什么Index&lt;/span&gt;
+    &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;dist-%{[fields.app]}-%{[fields.module]}-%{[agent.version]}-%{+yyyy.MM.dd}&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 注意这里使用到的Index名字需要匹配Index Template&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;elk-index-template.json&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;order&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;index_patterns&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;dist-*&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;settings&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;index&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;number_of_shards&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;number_of_replicas&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+      &lt;span class=&quot;nt&quot;&gt;&amp;quot;refresh_interval&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;5s&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;相关文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/running-on-docker.html#_configure_filebeat_on_docker&quot; target=&quot;_blank&quot;&gt;Configure Filebeat on Docker&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.elastic.co/guide/en/beats/filebeat/7.0/using-environ-vars.html#using-environ-vars&quot; target=&quot;_blank&quot;&gt;Use environment variables in the configuration&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Filebeat的环境变量配置和Kibana还有Elasticsearch都不一致，明明是一家公司的三个组件，居然相互之间的做法各不相同，也是服了。Filebeat的做法是在启动时设置环境变量，但这个环境变量不会自动转换并覆盖配置文件中的值，而是需要在配置文件中使用&lt;code&gt;${ENV_KEY}&lt;/code&gt;这样的方法来使用环境变量的值。&lt;/p&gt;
+
+&lt;p&gt;此外，关于非常重要的Index Template设置，参见：&lt;a href=&quot;#ID_FILEBEAT_INDEX_TEMPLATE&quot;&gt;6.4.4 Index Template设置&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h1 id=&quot;9-todo&quot;&gt;9. TODO&lt;/h1&gt;
 &lt;ul&gt;
   &lt;li&gt;Elasticsearch集群及一些基本观察用的API熟悉&lt;/li&gt;
   &lt;li&gt;Elasticsearch JVM相关参数和实践研究&lt;/li&gt;
@@ -3122,12 +3862,30 @@ Document：&lt;/p&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/cjsblog/p/9495024.html&quot; target=&quot;_blank&quot;&gt;Filebeat 模块与配置&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://fdv.github.io/running-elasticsearch-fun-profit/&quot; target=&quot;_blank&quot;&gt;Operating Elasticsearch for Fun and Profit&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://es.xiaoleilu.com/index.html&quot; target=&quot;_blank&quot;&gt;Elasticsearch 权威指南（中文版）&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/ejEG02VRoeGVaLw4j_LL&quot; target=&quot;_blank&quot;&gt;Lucene 查询原理及解析&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/27793721/what-is-the-difference-between-lucene-and-elasticsearch&quot; target=&quot;_blank&quot;&gt;What is the difference between Lucene and Elasticsearch&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://thoughts.t37.net/designing-the-perfect-elasticsearch-cluster-the-almost-definitive-guide-e614eabc1a87&quot; target=&quot;_blank&quot;&gt;Designing the Perfect Elasticsearch Cluster: the (almost) Definitive Guide&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://es.xiaoleilu.com/020_Distributed_Cluster/00_Intro.html&quot; target=&quot;_blank&quot;&gt;集群内部工作方式&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/vvanholl/elasticsearch-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;Prometheus Exporter Plugin for Elasticsearch&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://thoughts.t37.net/resizing-your-elasticsearch-indexes-in-production-d7a0402d137e&quot; target=&quot;_blank&quot;&gt;Resizing your Elasticsearch Indexes in Production&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.signalfx.com/blog/scaling-elasticsearch-sharding-availability-hundreds-millions-documents/&quot; target=&quot;_blank&quot;&gt;Scaling Elasticsearch: Sharding and Availability for Hundreds Of Millions of Documents&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.ebayinc.com/stories/blogs/tech/elasticsearch-performance-tuning-practice-at-ebay/&quot; target=&quot;_blank&quot;&gt;Elasticsearch Performance Tuning Practice at eBay&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/elastic/kibana/issues/3709&quot; target=&quot;_blank&quot;&gt;Index pattern creation API #3709&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/47370280/whats-the-difference-between-the-field-and-field-keyword-fields-in-kibana&quot; target=&quot;_blank&quot;&gt;What’s the difference between the ‘field’ and ‘field.keyword’ fields in Kibana?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.jianshu.com/p/1f67e4436c37&quot; target=&quot;_blank&quot;&gt;初探 Elasticsearch Index Template（索引模板)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://discuss.elastic.co/t/custom-filebeat-template-for-json-log-lines/114761/5&quot; target=&quot;_blank&quot;&gt;Custom filebeat template for JSON log lines&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://discuss.elastic.co/t/log-ui-failed-to-format-message-from/163196&quot; target=&quot;_blank&quot;&gt;Log UI failed to format message from&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/elastic/kibana/pull/26579/files#diff-3d8e25bfa60ef76c1ce7b5e7a68232f2R9&quot; target=&quot;_blank&quot;&gt;[InfraOps] Update docs with data source configuration&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://discuss.elastic.co/t/best-practice-for-creating-an-index-when-an-es-docker-container-starts/126651&quot; target=&quot;_blank&quot;&gt;Best practice for creating an index when an ES docker container starts&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/35526532/how-to-add-an-elasticsearch-index-during-docker-build&quot; target=&quot;_blank&quot;&gt;How to add an elasticsearch index during docker build&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.jianshu.com/p/fa31f38d241e&quot; target=&quot;_blank&quot;&gt;使用ElasticSearch踩过的坑&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.infvie.com/ops-notes/elkstack-beats&quot; target=&quot;_blank&quot;&gt;ELK Stack+Beats 搭建分布式日志平台&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.jianshu.com/p/6a700cc61913&quot; target=&quot;_blank&quot;&gt;Elasticsearch安装配置&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://logz.io/blog/elasticsearch-cluster-tutorial/&quot; target=&quot;_blank&quot;&gt;Creating an Elasticsearch Cluster: Getting Started&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/yaml/yaml/issues/35&quot; target=&quot;_blank&quot;&gt;Merge arrays #35&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/4948933/is-there-a-way-to-alias-anchor-an-array-in-yaml&quot; target=&quot;_blank&quot;&gt;Is there a way to alias/anchor an array in YAML?&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://discuss.elastic.co/t/elastic-search-7-unable-to-bootstrap-the-cluster-due-to-master-not-discovered-yet/182073/2&quot; target=&quot;_blank&quot;&gt;Elastic Search 7 unable to bootstrap the cluster due to master not discovered yet&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/elastic/kibana/issues/32303&quot; target=&quot;_blank&quot;&gt;Kibana fails to validate config if elasticsearch.hosts is not a string #32303&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;

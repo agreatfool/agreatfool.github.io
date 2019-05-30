@@ -744,7 +744,9 @@
 <p>实验使用的还是下载下来的Kafka，版本如头部申明的是<code>2.2.0</code>。范例代码可以在Github查看：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment/kafka" target="_blank">dist-system-practice/experiment/kafka/</a>。</p>
 
 <h1 id="8-在docker内部署集群">8. 在Docker内部署集群</h1>
-<p>一般来说部署一个以上的docker容器组成集群，可以使用bash脚本的方法，自己编写命令一个个启动，但更好的方法是使用<code>docker-compose</code>命令，读取配置文件，将整个集群按设定的模式启动起来。可运行范例可以查看：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/kafka.yaml" target="_blank">dist-system-practice/conf/kafka.yaml</a>。</p>
+<p>一般来说部署一个以上的docker容器组成集群，可以使用bash脚本的方法，自己编写命令一个个启动，但更好的方法是使用<code>docker-compose</code>命令，读取配置文件，将整个集群按设定的模式启动起来。可运行范例可以查看：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/kafka-cluster.yaml" target="_blank">dist-system-practice/conf/kafka-cluster.yaml</a>。</p>
+
+<p>启动脚本：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/dev/docker_kafka.sh" target="_blank">dist-system-practice/bash/dev/docker_kafka.sh</a>。</p>
 
 <p>主要有几个点需要注意下。</p>
 
