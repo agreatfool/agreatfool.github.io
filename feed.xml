@@ -1110,6 +1110,7 @@ envoy_http_downstream_cx_length_ms_count&lt;span class=&quot;o&quot;&gt;{&lt;/sp
   &lt;li&gt;&lt;a href=&quot;#4-负载均衡&quot; id=&quot;markdown-toc-4-负载均衡&quot;&gt;4. 负载均衡&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#5-状态检查&quot; id=&quot;markdown-toc-5-状态检查&quot;&gt;5. 状态检查&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#6-interceptor&quot; id=&quot;markdown-toc-6-interceptor&quot;&gt;6. Interceptor&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-debug&quot; id=&quot;markdown-toc-7-debug&quot;&gt;7. Debug&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -1415,6 +1416,25 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/client/main.go&quot; target=&quot;_blank&quot;&gt;client/main.go&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go&quot; target=&quot;_blank&quot;&gt;server/main.go&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
+
+&lt;h1 id=&quot;7-debug&quot;&gt;7. Debug&lt;/h1&gt;
+&lt;p&gt;官方的指引：&lt;a href=&quot;https://github.com/grpc/grpc-go/tree/master/examples/features/debugging&quot; target=&quot;_blank&quot;&gt;Debugging&lt;/a&gt;，包括了一份范例代码：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/debugging/client/main.go&quot; target=&quot;_blank&quot;&gt;client/main.go&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/debugging/server/main.go&quot; target=&quot;_blank&quot;&gt;server/main.go&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;也可以使用go的trace包，做简单的观察：&lt;a href=&quot;https://segmentfault.com/a/1190000008087436&quot; target=&quot;_blank&quot;&gt;Golang gRPC实践 连载六 内置Trace&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;几个环境变量可以大量输出程序执行的细节：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GODEBUG=http2debug=1 \
+GODEBUG=http2debug=2 \
+GRPC_GO_LOG_VERBOSITY_LEVEL=99 \
+GRPC_GO_LOG_SEVERITY_LEVEL=info \
+yourapp
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
 &lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;

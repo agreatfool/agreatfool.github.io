@@ -211,6 +211,7 @@
   <li><a href="#4-负载均衡" id="markdown-toc-4-负载均衡">4. 负载均衡</a></li>
   <li><a href="#5-状态检查" id="markdown-toc-5-状态检查">5. 状态检查</a></li>
   <li><a href="#6-interceptor" id="markdown-toc-6-interceptor">6. Interceptor</a></li>
+  <li><a href="#7-debug" id="markdown-toc-7-debug">7. Debug</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
     </ul>
@@ -516,6 +517,25 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/client/main.go" target="_blank">client/main.go</a></li>
   <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go" target="_blank">server/main.go</a></li>
 </ul>
+
+<h1 id="7-debug">7. Debug</h1>
+<p>官方的指引：<a href="https://github.com/grpc/grpc-go/tree/master/examples/features/debugging" target="_blank">Debugging</a>，包括了一份范例代码：</p>
+
+<ul>
+  <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/debugging/client/main.go" target="_blank">client/main.go</a></li>
+  <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/debugging/server/main.go" target="_blank">server/main.go</a></li>
+</ul>
+
+<p>也可以使用go的trace包，做简单的观察：<a href="https://segmentfault.com/a/1190000008087436" target="_blank">Golang gRPC实践 连载六 内置Trace</a>。</p>
+
+<p>几个环境变量可以大量输出程序执行的细节：</p>
+
+<pre><code>GODEBUG=http2debug=1 \
+GODEBUG=http2debug=2 \
+GRPC_GO_LOG_VERBOSITY_LEVEL=99 \
+GRPC_GO_LOG_SEVERITY_LEVEL=info \
+yourapp
+</code></pre>
 
 <h1 id="资料">资料</h1>
 <h2 id="链接">链接</h2>
