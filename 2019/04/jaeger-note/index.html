@@ -189,7 +189,10 @@
       <li><a href="#31-jaeger-client" id="markdown-toc-31-jaeger-client">3.1 Jaeger Client</a></li>
       <li><a href="#32-jaeger-agent" id="markdown-toc-32-jaeger-agent">3.2 Jaeger Agent</a></li>
       <li><a href="#33-jaeger-collector" id="markdown-toc-33-jaeger-collector">3.3 Jaeger Collector</a></li>
-      <li><a href="#34-data-store" id="markdown-toc-34-data-store">3.4 Data Store</a></li>
+      <li><a href="#34-data-store" id="markdown-toc-34-data-store">3.4 Data Store</a>        <ul>
+          <li><a href="#341-elasticsearch支持" id="markdown-toc-341-elasticsearch支持">3.4.1 ElasticSearch支持</a></li>
+        </ul>
+      </li>
       <li><a href="#35-jaeger-query" id="markdown-toc-35-jaeger-query">3.5 Jaeger Query</a></li>
       <li><a href="#36-jaeger-ingester" id="markdown-toc-36-jaeger-ingester">3.6 Jaeger Ingester</a></li>
       <li><a href="#37-日志模式" id="markdown-toc-37-日志模式">3.7 日志模式</a></li>
@@ -223,7 +226,18 @@
       <li><a href="#62-collector配置" id="markdown-toc-62-collector配置">6.2 Collector配置</a></li>
     </ul>
   </li>
-  <li><a href="#7-todo" id="markdown-toc-7-todo">7. TODO</a></li>
+  <li><a href="#7-docker集群实践" id="markdown-toc-7-docker集群实践">7. Docker集群实践</a>    <ul>
+      <li><a href="#71-docker集群配置" id="markdown-toc-71-docker集群配置">7.1 Docker集群配置</a></li>
+      <li><a href="#72-storage-schema" id="markdown-toc-72-storage-schema">7.2 Storage Schema</a>        <ul>
+          <li><a href="#721-使用cqlsh导入" id="markdown-toc-721-使用cqlsh导入">7.2.1 使用cqlsh导入</a></li>
+          <li><a href="#722-工具镜像导入" id="markdown-toc-722-工具镜像导入">7.2.2 工具镜像导入</a></li>
+        </ul>
+      </li>
+      <li><a href="#73-opentracing-coding-tutorial" id="markdown-toc-73-opentracing-coding-tutorial">7.3 Opentracing Coding Tutorial</a></li>
+      <li><a href="#74-client-coding" id="markdown-toc-74-client-coding">7.4 Client Coding</a></li>
+    </ul>
+  </li>
+  <li><a href="#8-todo" id="markdown-toc-8-todo">8. TODO</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
       <li><a href="#help" id="markdown-toc-help">Help</a>        <ul>
@@ -421,6 +435,11 @@ Span context: Trace information that accompanies the distributed transaction, in
 </ul>
 
 <p>从官方的文档口径上来看，最推荐的应该是使用Kafka和Ingester组成通道，然后使用Cassandra作为存储设备。</p>
+
+<h3 id="341-elasticsearch支持">3.4.1 ElasticSearch支持</h3>
+<p>Jaeger最佳支持的后端存储是Cassandra，Elasticsearch是第二个官方支持的存储设施。文档在：<a href="https://github.com/jaegertracing/jaeger/blob/master/plugin/storage/es/README.md" target="_blank">ElasticSearch Support</a>。</p>
+
+<p>需要注意的是，当前版本<code>1.11.x</code>是不支持Elasticsearch最新版本<code>7.x</code>的：<a href="https://github.com/jaegertracing/jaeger/issues/1474">Support Elasticsearch 7.x #1474</a>，而且看情况短期内应该也不会支持。后面我做practice的时候就直接选择cassandra作为存储了，毕竟存储还是安全第一。</p>
 
 <h2 id="35-jaeger-query">3.5 Jaeger Query</h2>
 <p>Jaeger的查询引擎，UI发送查询请求到该组件，然后查询引擎会查询后台数据仓库，返回结果。该组件启动的时候已经附带启动了HTTP的UI界面。</p>
@@ -814,7 +833,93 @@ Span context: Trace information that accompanies the distributed transaction, in
   <li>除此之外的所有都按0.5的概率频次进行采样</li>
 </ul>
 
-<h1 id="7-todo">7. TODO</h1>
+<h1 id="7-docker集群实践">7. Docker集群实践</h1>
+<h2 id="71-docker集群配置">7.1 Docker集群配置</h2>
+<p>配置相对来说比较简单，范例地址：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/jaeger-cluster.yaml" target="_blank">dist-system-practice/conf/dev/jaeger-cluster.yaml</a>。</p>
+
+<p>主要搞清楚端口号就行了，jaeger这块开的端口实在是太多了，容易搞混。不过实际上用得多的也就那几个。</p>
+
+<h2 id="72-storage-schema">7.2 Storage Schema</h2>
+<p>Jaeger支持的后端主要是Cassandra，对Elasticsearch的支持有，但只是二等的（版本更新、支持、响应都比Cassandra慢），所以如果可能，尽量使用Cassandra。</p>
+
+<p>实验项目中使用的后端存储为Cassandra，版本为：<code>3.11.4</code>。</p>
+
+<p>Jaeger在使用之前，必须对后端存储设施进行Schema的初始化，也就是说要在数据库当中创建表才能使用，下文主要讲述Cassandra作为后端的使用经验，Elasticsearch相关请查阅官方文档：<a href="https://github.com/jaegertracing/jaeger/blob/master/plugin/storage/es/README.md" target="_blank">ElasticSearch Support</a>。</p>
+
+<p>使用Cassandra作为后端，其Schema相关的导入代码存放在：<a href="https://github.com/jaegertracing/jaeger/tree/v1.11.0/plugin/storage/cassandra/schema" target="_blank">jaeger/plugin/storage/cassandra/schema/</a>，虽然路径是plugin，但实际上是可以单独使用的。</p>
+
+<p>路径中存在两份<code>*.cql.tmpl</code>，这实际上就是真正导入的SQL，如果不希望使用bash脚本工具，直接使用也是可以的，当然也需要像bash中的内容一样做一些准备和调整。关于cql相关，可以查看文档：</p>
+
+<ul>
+  <li><a href="https://cassandra.apache.org/doc/latest/cql/" target="_blank">The Cassandra Query Language (CQL)</a></li>
+  <li><a href="https://docs.datastax.com/en/archived/cql/3.3/cql/cql_reference/cqlsh.html" target="_blank">Starting cqlsh</a></li>
+</ul>
+
+<h3 id="721-使用cqlsh导入">7.2.1 使用cqlsh导入</h3>
+<p><code>不推荐</code>直接使用cqlsh这种方法，下面的7.2.2有更好的方法。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker run -it --rm <span class="se">\</span>
+    --network dist_net <span class="se">\</span>
+    cassandra:3.11.4 <span class="se">\</span>
+    cqlsh <span class="se">\</span>
+    <span class="si">${</span><span class="nv">host</span><span class="si">}</span> <span class="si">${</span><span class="nv">port</span><span class="si">}</span> <span class="se">\</span>
+    -u cassandra -p cassandra <span class="se">\</span>
+    -f <span class="si">${</span><span class="nv">file_path</span><span class="si">}</span></code></pre></figure>
+
+<p>关于Cassandra的端口号，可以查看：<a href="https://docs.datastax.com/en/archived/cassandra/3.0/cassandra/configuration/secureFireWall.html" target="_blank">Configuring firewall port access</a>。cqlsh连接用的端口号为client用端口号，即：<code>9042</code>。</p>
+
+<p>默认的用户名和密码：</p>
+
+<pre><code>The default user is cassandra. The default password is cassandra. 
+</code></pre>
+
+<h3 id="722-工具镜像导入">7.2.2 工具镜像导入</h3>
+<p>实际上官方有一个docker镜像帮忙协助进行schema的创建，但你直接去看这个镜像你根本就不会知道这个镜像是干嘛的，因为什么文档都没有。官方的文档中也没提到过这个镜像，我是在google的时候搜到jaeger的维护者中某一个人的博客的时候才找到的，哎。。。只能说，怎么说呢，这文档工作。。。jaeger已经算是好的了，实际上。</p>
+
+<p>镜像：<a href="https://hub.docker.com/r/jaegertracing/jaeger-cassandra-schema" target="_blank">jaegertracing/jaeger-cassandra-schema</a>。使用方法可以查看博客里的范例：<a href="https://medium.com/jaegertracing/jaeger-and-multitenancy-99dfa1d49dc0" target="_blank">Jaeger and multitenancy</a>。</p>
+
+<p>例子已经比较老了，修改如下：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker run --rm <span class="se">\</span>
+  --name jaeger-cassandra-schema <span class="se">\</span>
+  --network dist_net <span class="se">\</span>
+  -e <span class="nv">MODE</span><span class="o">=</span><span class="nb">test</span> <span class="se">\</span>
+  -e <span class="nv">CQLSH_HOST</span><span class="o">=</span>cas_1 <span class="se">\</span>
+  -e <span class="nv">KEYSPACE</span><span class="o">=</span>jaeger_keyspace <span class="se">\</span>
+  jaegertracing/jaeger-cassandra-schema:1.11.0</code></pre></figure>
+
+<p><code>KEYSPACE=jaeger_keyspace</code>这个名字一定要记住，后面在架设集群的时候是需要提供给collector的。</p>
+
+<p>具体镜像做了什么，以及这个镜像可用的环境变量设置，可以查看：<a href="https://github.com/jaegertracing/jaeger/blob/v1.11.0/plugin/storage/cassandra/schema/docker.sh" target="_blank">jaeger/plugin/storage/cassandra/schema/docker.sh</a>。</p>
+
+<p>其实这些环境变量最后还是落实到执行的脚本create.sh里，所以需要查看环境变量的作用以及脚本做了什么，可以查看：<a href="https://github.com/jaegertracing/jaeger/blob/v1.11.0/plugin/storage/cassandra/schema/create.sh" target="_blank">jaeger/plugin/storage/cassandra/schema/create.sh</a>。</p>
+
+<h2 id="73-opentracing-coding-tutorial">7.3 Opentracing Coding Tutorial</h2>
+<p>Opentracing Go官方是有Tutorial的：<a href="https://github.com/yurishkuro/opentracing-tutorial/tree/master/go" target="_blank">OpenTracing Tutorial - Go</a>。一样在官方文档里只字未提。</p>
+
+<p>这个tutorial对新了解opentracing的人，以及对需要学习opentracing client编码的人都很有帮助。范例举得相当不错。</p>
+
+<h2 id="74-client-coding">7.4 Client Coding</h2>
+<p>Jaeger集群架设完毕还不算结束，后面还需要编写客户端的集成代码。Opentracing的整体流程，以及trace、span等概念，首先需要阅读官方文档，以及7.3中提到的tutorial。</p>
+
+<p>这里要提一点，jaeger免不了会遇到rpc调用之间的上下文跨实体的情况，遇到这种情况，需要上游将trace相关信息<code>inject</code>到请求中，然后在下游将trace信息<code>extract</code>出来，根据extract的信息继续走之前的trace，这样才能保证跨实体的请求是在同一个trace中。相关细节可以查看7.3的tutorial中的第三节课。</p>
+
+<p>客户端代码怎么写，看下下面的文档基本上就了解了。</p>
+
+<ul>
+  <li>Opentracing官方文档：<a href="https://opentracing.io/guides/golang/quick-start/" target="_blank">Quick Start</a></li>
+  <li>gRPC Interceptor插件，官方：<a href="https://github.com/grpc-ecosystem/go-grpc-middleware/tree/master/tracing/opentracing" target="_blank">go-grpc-middleware/tracing/opentracing/</a></li>
+  <li>gRPC非官方插件：<a href="https://github.com/grpc-ecosystem/grpc-opentracing/tree/master/go/otgrpc" target="_blank">grpc-opentracing/go/otgrpc/</a></li>
+</ul>
+
+<p>对于一般的客户端使用看下官方文档就没什么问题了，gRPC稍微有点不同，官方提供了interceptor插件。至于这些插件怎么使用，可以查看范例：</p>
+
+<ul>
+  <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/client/main.go" target="_blank">client/main.go</a></li>
+  <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go" target="_blank">server/main.go</a></li>
+</ul>
+
+<h1 id="8-todo">8. TODO</h1>
 <p>囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：</p>
 
 <ul>
@@ -822,6 +927,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   <li>Jaeger的Benchmark</li>
   <li>特别需要关注Jaeger在高负载情况下的数据丢失情况</li>
   <li>后端Data Store的选择问题</li>
+  <li>和gin混用的情况下，gRPC客户端的interceptor不会生效（服务端正常），很奇怪，需要后续debug</li>
 </ul>
 
 <h1 id="资料">资料</h1>
@@ -835,6 +941,13 @@ Span context: Trace information that accompanies the distributed transaction, in
   <li><a href="https://github.com/jaegertracing/jaeger/issues/365" target="_blank">Adaptive Sampling #365</a></li>
   <li><a href="https://github.com/jaegertracing/jaeger/issues/832" target="_blank">How sampler.type=remote works #832</a></li>
   <li><a href="https://github.com/jaegertracing/jaeger/issues/649" target="_blank">Integration with external logs storage when displaying traces #649</a></li>
+  <li><a href="https://cassandra.apache.org/doc/latest/cql/" target="_blank">The Cassandra Query Language (CQL)</a></li>
+  <li><a href="https://docs.datastax.com/en/archived/cql/3.3/cql/cql_reference/cqlsh.html" target="_blank">Starting cqlsh</a></li>
+  <li><a href="https://docs.datastax.com/en/archived/cassandra/3.0/cassandra/configuration/secureFireWall.html" target="_blank">Configuring firewall port access</a></li>
+  <li><a href="https://hub.docker.com/r/jaegertracing/jaeger-cassandra-schema" target="_blank">jaegertracing/jaeger-cassandra-schema</a></li>
+  <li><a href="https://medium.com/jaegertracing/jaeger-and-multitenancy-99dfa1d49dc0" target="_blank">Jaeger and multitenancy</a></li>
+  <li><a href="https://github.com/yurishkuro/opentracing-tutorial/tree/master/go" target="_blank">OpenTracing Tutorial - Go</a></li>
+  <li><a href="https://github.com/grpc-ecosystem/grpc-opentracing/tree/master/go/otgrpc" target="_blank">grpc-opentracing/go/otgrpc/</a></li>
 </ul>
 
 <h2 id="help">Help</h2>

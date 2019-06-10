@@ -210,6 +210,7 @@
   </li>
   <li><a href="#4-负载均衡" id="markdown-toc-4-负载均衡">4. 负载均衡</a></li>
   <li><a href="#5-状态检查" id="markdown-toc-5-状态检查">5. 状态检查</a></li>
+  <li><a href="#6-interceptor" id="markdown-toc-6-interceptor">6. Interceptor</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
     </ul>
@@ -494,6 +495,27 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
 
 <h1 id="5-状态检查">5. 状态检查</h1>
 <p>官方对于如何设计及暴露服务端状态检查接口的一份文档：<a href="https://github.com/grpc/grpc/blob/master/doc/health-checking.md" target="_blank">GRPC Health Checking Protocol</a>。可以说是一份guideline。同样意义不大。</p>
+
+<h1 id="6-interceptor">6. Interceptor</h1>
+<p>所谓的interceptor，写过gin或者koa的可以直接理解为gRPC里的<code>middleware</code>。官方文档：<a href="https://github.com/grpc/grpc-go/tree/master/examples/features/interceptor" target="_blank">Interceptor</a>。</p>
+
+<p>虽然gRPC本身的rpc调用分为多种不同的可能：</p>
+
+<ul>
+  <li>请求响应皆为unary</li>
+  <li>请求unary响应stream</li>
+  <li>请求stream响应unary</li>
+  <li>请求响应皆为stream</li>
+</ul>
+
+<p>但interceptor的签名则只有<code>unary</code>和<code>stream</code>这两种。</p>
+
+<p>范例代码可以查看官方的：</p>
+
+<ul>
+  <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/client/main.go" target="_blank">client/main.go</a></li>
+  <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go" target="_blank">server/main.go</a></li>
+</ul>
 
 <h1 id="资料">资料</h1>
 <h2 id="链接">链接</h2>

@@ -1109,6 +1109,7 @@ envoy_http_downstream_cx_length_ms_count&lt;span class=&quot;o&quot;&gt;{&lt;/sp
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#4-负载均衡&quot; id=&quot;markdown-toc-4-负载均衡&quot;&gt;4. 负载均衡&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#5-状态检查&quot; id=&quot;markdown-toc-5-状态检查&quot;&gt;5. 状态检查&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#6-interceptor&quot; id=&quot;markdown-toc-6-interceptor&quot;&gt;6. Interceptor&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -1394,6 +1395,27 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
 &lt;h1 id=&quot;5-状态检查&quot;&gt;5. 状态检查&lt;/h1&gt;
 &lt;p&gt;官方对于如何设计及暴露服务端状态检查接口的一份文档：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/doc/health-checking.md&quot; target=&quot;_blank&quot;&gt;GRPC Health Checking Protocol&lt;/a&gt;。可以说是一份guideline。同样意义不大。&lt;/p&gt;
 
+&lt;h1 id=&quot;6-interceptor&quot;&gt;6. Interceptor&lt;/h1&gt;
+&lt;p&gt;所谓的interceptor，写过gin或者koa的可以直接理解为gRPC里的&lt;code&gt;middleware&lt;/code&gt;。官方文档：&lt;a href=&quot;https://github.com/grpc/grpc-go/tree/master/examples/features/interceptor&quot; target=&quot;_blank&quot;&gt;Interceptor&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;虽然gRPC本身的rpc调用分为多种不同的可能：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;请求响应皆为unary&lt;/li&gt;
+  &lt;li&gt;请求unary响应stream&lt;/li&gt;
+  &lt;li&gt;请求stream响应unary&lt;/li&gt;
+  &lt;li&gt;请求响应皆为stream&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;但interceptor的签名则只有&lt;code&gt;unary&lt;/code&gt;和&lt;code&gt;stream&lt;/code&gt;这两种。&lt;/p&gt;
+
+&lt;p&gt;范例代码可以查看官方的：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/client/main.go&quot; target=&quot;_blank&quot;&gt;client/main.go&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go&quot; target=&quot;_blank&quot;&gt;server/main.go&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
 &lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
 &lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
 &lt;ul&gt;
@@ -1455,7 +1477,8 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
       &lt;li&gt;&lt;a href=&quot;#84-相关参考&quot; id=&quot;markdown-toc-84-相关参考&quot;&gt;8.4 相关参考&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#9-todo&quot; id=&quot;markdown-toc-9-todo&quot;&gt;9. TODO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#9-写性能与安全性&quot; id=&quot;markdown-toc-9-写性能与安全性&quot;&gt;9. 写性能与安全性&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#10-todo&quot; id=&quot;markdown-toc-10-todo&quot;&gt;10. TODO&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -2080,9 +2103,71 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   &lt;li&gt;&lt;a href=&quot;https://www.kaaproject.org/kafka-docker&quot; target=&quot;_blank&quot;&gt;Deploying a Kafka broker in a Docker container&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&quot;9-todo&quot;&gt;9. TODO&lt;/h1&gt;
+&lt;h1 id=&quot;9-写性能与安全性&quot;&gt;9. 写性能与安全性&lt;/h1&gt;
+&lt;p&gt;在进行测试的过程中，发现写入的速度比较慢，基本上每次写入在kafka集群这边会耗时1秒多，完全不能接受了。之前的博文中也提到了，集群安全性和写入性能是反比的，主要有几项因素：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;producer的写入模式：同步、异步
+    &lt;ul&gt;
+      &lt;li&gt;异步拥有最佳的性能，但安全性极差&lt;/li&gt;
+      &lt;li&gt;同步性能很差，但安全性有保证&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;acks写入的集群同步模式：-1完全同步、0完全不等待同步、1Leader节点同步
+    &lt;ul&gt;
+      &lt;li&gt;0拥有最佳性能，最低的安全性&lt;/li&gt;
+      &lt;li&gt;-1拥有最佳性能，但性能最低&lt;/li&gt;
+      &lt;li&gt;1则比较均衡&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;partition数量：acks如果为-1，则需要同步所有节点，partition数量越多则性能越低&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;后续进行了一些研究和测试。&lt;/p&gt;
+
+&lt;p&gt;集群共3个broker，topic分片如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;Topic:work-topic	PartitionCount:3	ReplicationFactor:3	Configs:
+	Topic: work-topic	Partition: 0	Leader: 2	Replicas: 2,0,1	Isr: 2,0,1
+	Topic: work-topic	Partition: 1	Leader: 1	Replicas: 1,2,0	Isr: 1,2,0
+	Topic: work-topic	Partition: 2	Leader: 0	Replicas: 0,1,2	Isr: 0,1,2
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;查了下官方配置，&lt;code&gt;producer.acks&lt;/code&gt;这个现在放在&lt;code&gt;3.3 Producer Configs&lt;/code&gt;里，命名为&lt;code&gt;acks&lt;/code&gt;（&lt;a href=&quot;https://kafka.apache.org/22/documentation.html#producerconfigs&quot; target=&quot;_blank&quot;&gt;链接&lt;/a&gt;）。需要注意的是，这一项配置并不是服务端的配置项，而是连接上来的客户端producer所进行的设置，是否acks根据客户端producer的要求而变动。这很反直觉，我一开始一直都以为这是服务端的配置项，没想到居然是客户端的。&lt;/p&gt;
+
+&lt;p&gt;acks在kafka-go的使用，可以查看注释：&lt;a href=&quot;https://github.com/segmentio/kafka-go/blob/v0.2.4/writer.go#L101&quot; target=&quot;_blank&quot;&gt;kafka-go/writer.go&lt;/a&gt;，默认是-1，也就是最安全但最慢的那种。&lt;/p&gt;
+
+&lt;p&gt;此外，写入模式是同步还是异步也是客户端设置，见：&lt;a href=&quot;https://github.com/segmentio/kafka-go/blob/v0.2.4/writer.go#L105&quot; target=&quot;_blank&quot;&gt;kafka-go/writer.go&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;在上面提到的几项要素中，集群规模和partition数量之类都是业务要求，一般不会轻易变动，所以测试主要是实验在不同写入模式和acks情况下的性能变动。&lt;/p&gt;
+
+&lt;p&gt;测试：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;同步 -1 1秒+
+同步 1  1秒+
+同步 0  1秒+
+异步 -1 0.2ms 几乎瞬间完成
+异步 1  0.2ms 几乎瞬间完成
+异步 0  0.2ms 几乎瞬间完成
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;结论：性能只在于是否将客户端设置成异步写入，acks对性能的影响微乎其微。&lt;/p&gt;
+
+&lt;p&gt;但上述的测试是在MAC本地环境进行的，有几项因素不够稳定：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;kafka集群的内存很小&lt;/li&gt;
+  &lt;li&gt;磁盘IO和实际情况差别较大&lt;/li&gt;
+  &lt;li&gt;集群规模过小&lt;/li&gt;
+  &lt;li&gt;partition数量很少（集群和partition数量很小能够解释为什么acks的改动基本上不影响性能）&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;因此上述测试的结论主要是参考价值，不能作为最终结论。如果后续需要严谨结论的话，需要在真实机器上测试，并需要开启go的profiling，观察下kafka类库中的写入到底是怎么完成的，以及kafka集群的响应情况。此外，即便是模拟集群1秒左右的同步写入速度也实在是太慢了，后续还需要深入profiling，到底这1秒做了什么（无论是kafka还是go客户端）。&lt;/p&gt;
+
+&lt;h1 id=&quot;10-todo&quot;&gt;10. TODO&lt;/h1&gt;
 &lt;ul&gt;
   &lt;li&gt;深入研究Kafka的监控Metrics&lt;/li&gt;
+  &lt;li&gt;Kafka集群同步写入性能较低的原因解析&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
@@ -3918,7 +4003,10 @@ filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/sp
       &lt;li&gt;&lt;a href=&quot;#31-jaeger-client&quot; id=&quot;markdown-toc-31-jaeger-client&quot;&gt;3.1 Jaeger Client&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#32-jaeger-agent&quot; id=&quot;markdown-toc-32-jaeger-agent&quot;&gt;3.2 Jaeger Agent&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#33-jaeger-collector&quot; id=&quot;markdown-toc-33-jaeger-collector&quot;&gt;3.3 Jaeger Collector&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#34-data-store&quot; id=&quot;markdown-toc-34-data-store&quot;&gt;3.4 Data Store&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#34-data-store&quot; id=&quot;markdown-toc-34-data-store&quot;&gt;3.4 Data Store&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#341-elasticsearch支持&quot; id=&quot;markdown-toc-341-elasticsearch支持&quot;&gt;3.4.1 ElasticSearch支持&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#35-jaeger-query&quot; id=&quot;markdown-toc-35-jaeger-query&quot;&gt;3.5 Jaeger Query&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#36-jaeger-ingester&quot; id=&quot;markdown-toc-36-jaeger-ingester&quot;&gt;3.6 Jaeger Ingester&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#37-日志模式&quot; id=&quot;markdown-toc-37-日志模式&quot;&gt;3.7 日志模式&lt;/a&gt;&lt;/li&gt;
@@ -3952,7 +4040,18 @@ filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/sp
       &lt;li&gt;&lt;a href=&quot;#62-collector配置&quot; id=&quot;markdown-toc-62-collector配置&quot;&gt;6.2 Collector配置&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-todo&quot; id=&quot;markdown-toc-7-todo&quot;&gt;7. TODO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-docker集群实践&quot; id=&quot;markdown-toc-7-docker集群实践&quot;&gt;7. Docker集群实践&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#71-docker集群配置&quot; id=&quot;markdown-toc-71-docker集群配置&quot;&gt;7.1 Docker集群配置&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#72-storage-schema&quot; id=&quot;markdown-toc-72-storage-schema&quot;&gt;7.2 Storage Schema&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#721-使用cqlsh导入&quot; id=&quot;markdown-toc-721-使用cqlsh导入&quot;&gt;7.2.1 使用cqlsh导入&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#722-工具镜像导入&quot; id=&quot;markdown-toc-722-工具镜像导入&quot;&gt;7.2.2 工具镜像导入&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#73-opentracing-coding-tutorial&quot; id=&quot;markdown-toc-73-opentracing-coding-tutorial&quot;&gt;7.3 Opentracing Coding Tutorial&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#74-client-coding&quot; id=&quot;markdown-toc-74-client-coding&quot;&gt;7.4 Client Coding&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#8-todo&quot; id=&quot;markdown-toc-8-todo&quot;&gt;8. TODO&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#help&quot; id=&quot;markdown-toc-help&quot;&gt;Help&lt;/a&gt;        &lt;ul&gt;
@@ -4150,6 +4249,11 @@ Span context: Trace information that accompanies the distributed transaction, in
 &lt;/ul&gt;
 
 &lt;p&gt;从官方的文档口径上来看，最推荐的应该是使用Kafka和Ingester组成通道，然后使用Cassandra作为存储设备。&lt;/p&gt;
+
+&lt;h3 id=&quot;341-elasticsearch支持&quot;&gt;3.4.1 ElasticSearch支持&lt;/h3&gt;
+&lt;p&gt;Jaeger最佳支持的后端存储是Cassandra，Elasticsearch是第二个官方支持的存储设施。文档在：&lt;a href=&quot;https://github.com/jaegertracing/jaeger/blob/master/plugin/storage/es/README.md&quot; target=&quot;_blank&quot;&gt;ElasticSearch Support&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;需要注意的是，当前版本&lt;code&gt;1.11.x&lt;/code&gt;是不支持Elasticsearch最新版本&lt;code&gt;7.x&lt;/code&gt;的：&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/1474&quot;&gt;Support Elasticsearch 7.x #1474&lt;/a&gt;，而且看情况短期内应该也不会支持。后面我做practice的时候就直接选择cassandra作为存储了，毕竟存储还是安全第一。&lt;/p&gt;
 
 &lt;h2 id=&quot;35-jaeger-query&quot;&gt;3.5 Jaeger Query&lt;/h2&gt;
 &lt;p&gt;Jaeger的查询引擎，UI发送查询请求到该组件，然后查询引擎会查询后台数据仓库，返回结果。该组件启动的时候已经附带启动了HTTP的UI界面。&lt;/p&gt;
@@ -4543,7 +4647,93 @@ Span context: Trace information that accompanies the distributed transaction, in
   &lt;li&gt;除此之外的所有都按0.5的概率频次进行采样&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&quot;7-todo&quot;&gt;7. TODO&lt;/h1&gt;
+&lt;h1 id=&quot;7-docker集群实践&quot;&gt;7. Docker集群实践&lt;/h1&gt;
+&lt;h2 id=&quot;71-docker集群配置&quot;&gt;7.1 Docker集群配置&lt;/h2&gt;
+&lt;p&gt;配置相对来说比较简单，范例地址：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/jaeger-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/jaeger-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;主要搞清楚端口号就行了，jaeger这块开的端口实在是太多了，容易搞混。不过实际上用得多的也就那几个。&lt;/p&gt;
+
+&lt;h2 id=&quot;72-storage-schema&quot;&gt;7.2 Storage Schema&lt;/h2&gt;
+&lt;p&gt;Jaeger支持的后端主要是Cassandra，对Elasticsearch的支持有，但只是二等的（版本更新、支持、响应都比Cassandra慢），所以如果可能，尽量使用Cassandra。&lt;/p&gt;
+
+&lt;p&gt;实验项目中使用的后端存储为Cassandra，版本为：&lt;code&gt;3.11.4&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;Jaeger在使用之前，必须对后端存储设施进行Schema的初始化，也就是说要在数据库当中创建表才能使用，下文主要讲述Cassandra作为后端的使用经验，Elasticsearch相关请查阅官方文档：&lt;a href=&quot;https://github.com/jaegertracing/jaeger/blob/master/plugin/storage/es/README.md&quot; target=&quot;_blank&quot;&gt;ElasticSearch Support&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;使用Cassandra作为后端，其Schema相关的导入代码存放在：&lt;a href=&quot;https://github.com/jaegertracing/jaeger/tree/v1.11.0/plugin/storage/cassandra/schema&quot; target=&quot;_blank&quot;&gt;jaeger/plugin/storage/cassandra/schema/&lt;/a&gt;，虽然路径是plugin，但实际上是可以单独使用的。&lt;/p&gt;
+
+&lt;p&gt;路径中存在两份&lt;code&gt;*.cql.tmpl&lt;/code&gt;，这实际上就是真正导入的SQL，如果不希望使用bash脚本工具，直接使用也是可以的，当然也需要像bash中的内容一样做一些准备和调整。关于cql相关，可以查看文档：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cassandra.apache.org/doc/latest/cql/&quot; target=&quot;_blank&quot;&gt;The Cassandra Query Language (CQL)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.datastax.com/en/archived/cql/3.3/cql/cql_reference/cqlsh.html&quot; target=&quot;_blank&quot;&gt;Starting cqlsh&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;721-使用cqlsh导入&quot;&gt;7.2.1 使用cqlsh导入&lt;/h3&gt;
+&lt;p&gt;&lt;code&gt;不推荐&lt;/code&gt;直接使用cqlsh这种方法，下面的7.2.2有更好的方法。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run -it --rm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --network dist_net &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    cassandra:3.11.4 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    cqlsh &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -u cassandra -p cassandra &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -f &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;file_path&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;关于Cassandra的端口号，可以查看：&lt;a href=&quot;https://docs.datastax.com/en/archived/cassandra/3.0/cassandra/configuration/secureFireWall.html&quot; target=&quot;_blank&quot;&gt;Configuring firewall port access&lt;/a&gt;。cqlsh连接用的端口号为client用端口号，即：&lt;code&gt;9042&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;默认的用户名和密码：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;The default user is cassandra. The default password is cassandra. 
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;722-工具镜像导入&quot;&gt;7.2.2 工具镜像导入&lt;/h3&gt;
+&lt;p&gt;实际上官方有一个docker镜像帮忙协助进行schema的创建，但你直接去看这个镜像你根本就不会知道这个镜像是干嘛的，因为什么文档都没有。官方的文档中也没提到过这个镜像，我是在google的时候搜到jaeger的维护者中某一个人的博客的时候才找到的，哎。。。只能说，怎么说呢，这文档工作。。。jaeger已经算是好的了，实际上。&lt;/p&gt;
+
+&lt;p&gt;镜像：&lt;a href=&quot;https://hub.docker.com/r/jaegertracing/jaeger-cassandra-schema&quot; target=&quot;_blank&quot;&gt;jaegertracing/jaeger-cassandra-schema&lt;/a&gt;。使用方法可以查看博客里的范例：&lt;a href=&quot;https://medium.com/jaegertracing/jaeger-and-multitenancy-99dfa1d49dc0&quot; target=&quot;_blank&quot;&gt;Jaeger and multitenancy&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;例子已经比较老了，修改如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run --rm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --name jaeger-cassandra-schema &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  --network dist_net &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  -e &lt;span class=&quot;nv&quot;&gt;MODE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  -e &lt;span class=&quot;nv&quot;&gt;CQLSH_HOST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;cas_1 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  -e &lt;span class=&quot;nv&quot;&gt;KEYSPACE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;jaeger_keyspace &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+  jaegertracing/jaeger-cassandra-schema:1.11.0&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code&gt;KEYSPACE=jaeger_keyspace&lt;/code&gt;这个名字一定要记住，后面在架设集群的时候是需要提供给collector的。&lt;/p&gt;
+
+&lt;p&gt;具体镜像做了什么，以及这个镜像可用的环境变量设置，可以查看：&lt;a href=&quot;https://github.com/jaegertracing/jaeger/blob/v1.11.0/plugin/storage/cassandra/schema/docker.sh&quot; target=&quot;_blank&quot;&gt;jaeger/plugin/storage/cassandra/schema/docker.sh&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;其实这些环境变量最后还是落实到执行的脚本create.sh里，所以需要查看环境变量的作用以及脚本做了什么，可以查看：&lt;a href=&quot;https://github.com/jaegertracing/jaeger/blob/v1.11.0/plugin/storage/cassandra/schema/create.sh&quot; target=&quot;_blank&quot;&gt;jaeger/plugin/storage/cassandra/schema/create.sh&lt;/a&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;73-opentracing-coding-tutorial&quot;&gt;7.3 Opentracing Coding Tutorial&lt;/h2&gt;
+&lt;p&gt;Opentracing Go官方是有Tutorial的：&lt;a href=&quot;https://github.com/yurishkuro/opentracing-tutorial/tree/master/go&quot; target=&quot;_blank&quot;&gt;OpenTracing Tutorial - Go&lt;/a&gt;。一样在官方文档里只字未提。&lt;/p&gt;
+
+&lt;p&gt;这个tutorial对新了解opentracing的人，以及对需要学习opentracing client编码的人都很有帮助。范例举得相当不错。&lt;/p&gt;
+
+&lt;h2 id=&quot;74-client-coding&quot;&gt;7.4 Client Coding&lt;/h2&gt;
+&lt;p&gt;Jaeger集群架设完毕还不算结束，后面还需要编写客户端的集成代码。Opentracing的整体流程，以及trace、span等概念，首先需要阅读官方文档，以及7.3中提到的tutorial。&lt;/p&gt;
+
+&lt;p&gt;这里要提一点，jaeger免不了会遇到rpc调用之间的上下文跨实体的情况，遇到这种情况，需要上游将trace相关信息&lt;code&gt;inject&lt;/code&gt;到请求中，然后在下游将trace信息&lt;code&gt;extract&lt;/code&gt;出来，根据extract的信息继续走之前的trace，这样才能保证跨实体的请求是在同一个trace中。相关细节可以查看7.3的tutorial中的第三节课。&lt;/p&gt;
+
+&lt;p&gt;客户端代码怎么写，看下下面的文档基本上就了解了。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Opentracing官方文档：&lt;a href=&quot;https://opentracing.io/guides/golang/quick-start/&quot; target=&quot;_blank&quot;&gt;Quick Start&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;gRPC Interceptor插件，官方：&lt;a href=&quot;https://github.com/grpc-ecosystem/go-grpc-middleware/tree/master/tracing/opentracing&quot; target=&quot;_blank&quot;&gt;go-grpc-middleware/tracing/opentracing/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;gRPC非官方插件：&lt;a href=&quot;https://github.com/grpc-ecosystem/grpc-opentracing/tree/master/go/otgrpc&quot; target=&quot;_blank&quot;&gt;grpc-opentracing/go/otgrpc/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;对于一般的客户端使用看下官方文档就没什么问题了，gRPC稍微有点不同，官方提供了interceptor插件。至于这些插件怎么使用，可以查看范例：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/client/main.go&quot; target=&quot;_blank&quot;&gt;client/main.go&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go&quot; target=&quot;_blank&quot;&gt;server/main.go&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;8-todo&quot;&gt;8. TODO&lt;/h1&gt;
 &lt;p&gt;囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：&lt;/p&gt;
 
 &lt;ul&gt;
@@ -4551,6 +4741,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   &lt;li&gt;Jaeger的Benchmark&lt;/li&gt;
   &lt;li&gt;特别需要关注Jaeger在高负载情况下的数据丢失情况&lt;/li&gt;
   &lt;li&gt;后端Data Store的选择问题&lt;/li&gt;
+  &lt;li&gt;和gin混用的情况下，gRPC客户端的interceptor不会生效（服务端正常），很奇怪，需要后续debug&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
@@ -4564,6 +4755,13 @@ Span context: Trace information that accompanies the distributed transaction, in
   &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/365&quot; target=&quot;_blank&quot;&gt;Adaptive Sampling #365&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/832&quot; target=&quot;_blank&quot;&gt;How sampler.type=remote works #832&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/jaegertracing/jaeger/issues/649&quot; target=&quot;_blank&quot;&gt;Integration with external logs storage when displaying traces #649&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://cassandra.apache.org/doc/latest/cql/&quot; target=&quot;_blank&quot;&gt;The Cassandra Query Language (CQL)&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.datastax.com/en/archived/cql/3.3/cql/cql_reference/cqlsh.html&quot; target=&quot;_blank&quot;&gt;Starting cqlsh&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.datastax.com/en/archived/cassandra/3.0/cassandra/configuration/secureFireWall.html&quot; target=&quot;_blank&quot;&gt;Configuring firewall port access&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/jaegertracing/jaeger-cassandra-schema&quot; target=&quot;_blank&quot;&gt;jaegertracing/jaeger-cassandra-schema&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://medium.com/jaegertracing/jaeger-and-multitenancy-99dfa1d49dc0&quot; target=&quot;_blank&quot;&gt;Jaeger and multitenancy&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/yurishkuro/opentracing-tutorial/tree/master/go&quot; target=&quot;_blank&quot;&gt;OpenTracing Tutorial - Go&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc-ecosystem/grpc-opentracing/tree/master/go/otgrpc&quot; target=&quot;_blank&quot;&gt;grpc-opentracing/go/otgrpc/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;help&quot;&gt;Help&lt;/h2&gt;
