@@ -213,7 +213,14 @@
   </li>
   <li><a href="#5-prometheus监控指标" id="markdown-toc-5-prometheus监控指标">5. Prometheus监控指标</a></li>
   <li><a href="#6-范例" id="markdown-toc-6-范例">6. 范例</a></li>
-  <li><a href="#7-todo" id="markdown-toc-7-todo">7. TODO</a></li>
+  <li><a href="#7-常用监控" id="markdown-toc-7-常用监控">7. 常用监控</a>    <ul>
+      <li><a href="#71-prometheus" id="markdown-toc-71-prometheus">7.1 Prometheus</a></li>
+      <li><a href="#72-host-machine" id="markdown-toc-72-host-machine">7.2 Host Machine</a></li>
+      <li><a href="#73-docker-container" id="markdown-toc-73-docker-container">7.3 Docker Container</a></li>
+      <li><a href="#74-memcached" id="markdown-toc-74-memcached">7.4 Memcached</a></li>
+    </ul>
+  </li>
+  <li><a href="#8-todo" id="markdown-toc-8-todo">8. TODO</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
       <li><a href="#ID_APP_SELF_METRICS" id="markdown-toc-ID_APP_SELF_METRICS">prometheus/metrics</a></li>
@@ -606,7 +613,61 @@ INFO[0000]  - time                                       source="node_exporter.g
 <h1 id="6-范例">6. 范例</h1>
 <p>实际的可运行范例可以查看：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment/prometheus/federation" target="_blank">dist-system-practice/experiment/prometheus/federation/</a>。</p>
 
-<h1 id="7-todo">7. TODO</h1>
+<h1 id="7-常用监控">7. 常用监控</h1>
+<h2 id="71-prometheus">7.1 Prometheus</h2>
+<p>Prometheus自带metrics输出，自己采集自己即可，当然也可以用一个节点的prometheus将整个集群的metrics都采集起来。Grafana这边有一个2.0的Dashboard可以开箱即用，非常方便：<a href="https://grafana.com/dashboards/3662" target="_blank">Prometheus 2.0 Overview</a>。</p>
+
+<h2 id="72-host-machine">7.2 Host Machine</h2>
+<p>主机监控需要使用node_exporter：</p>
+
+<ul>
+  <li>代码：<a href="https://github.com/prometheus/node_exporter" target="_blank">prometheus/node_exporter</a></li>
+  <li>镜像：<a href="https://hub.docker.com/r/prom/node-exporter/" target="_blank">prom/node-exporter</a>
+    <ul>
+      <li>prom/node-exporter:v0.17.0</li>
+    </ul>
+  </li>
+</ul>
+
+<p>问题：</p>
+
+<ul>
+  <li>之前提到过，指标默认基本上全部都开启并输出，如果需要过滤部分非常麻烦：<a href="https://github.com/prometheus/node_exporter/issues/735" target="_blank">Question: Disable all collectors?</a></li>
+  <li>不同的操作系统指标名不同，exporter直接将系统的指标名输出出来，因此不同系统还不同，且官方目前来看没有意愿进行抽象统一：<a href="https://github.com/prometheus/node_exporter/issues/855" target="_blank">Weird Memory Readings on macOS #855</a></li>
+</ul>
+
+<p>Grafana Dashboard：<a href="https://grafana.com/dashboards/8919" target="_blank">1 Node Exporter 0.16–0.18 for Prometheus 监控展示看板</a></p>
+
+<blockquote>
+  <p>depends: grafana-cli plugins install grafana-piechart-panel</p>
+</blockquote>
+
+<h2 id="73-docker-container">7.3 Docker Container</h2>
+<p>7.2提到了主机的监控，而在容器为主的系统架构中，光监控主机还不够，因为应用程序都是运行在容器中的。而且也有可能某些主机运行了多个容器，那么这些容器（应用程序）占用了多少资源就需要进行监控了。Google出品的cAdvisor基本上是最优解：</p>
+
+<ul>
+  <li>代码：<a href="https://github.com/google/cadvisor" target="_blank">google/cadvisor</a></li>
+  <li>镜像：<a href="https://hub.docker.com/r/google/cadvisor/" target="_blank">google/cadvisor</a>
+    <ul>
+      <li>google/cadvisor:v0.33.0</li>
+    </ul>
+  </li>
+  <li>配置：<a href="https://github.com/google/cadvisor/blob/master/docs/runtime_options.md" target="_blank">cAdvisor Runtime Options</a></li>
+  <li>Dashboard：<a href="https://grafana.com/dashboards/893" target="_blank">Docker and system monitoring</a></li>
+</ul>
+
+<h2 id="74-memcached">7.4 Memcached</h2>
+<ul>
+  <li>Exporter代码：<a href="https://github.com/prometheus/memcached_exporter" target="_blank">prometheus/memcached_exporter</a></li>
+  <li>Exporter镜像：<a href="https://hub.docker.com/r/prom/memcached-exporter/" target="_blank">prom/memcached-exporter</a>
+    <ul>
+      <li>prom/memcached-exporter:v0.5.0</li>
+    </ul>
+  </li>
+  <li>Dashboard：<a href="https://grafana.com/dashboards/37" target="_blank">Prometheus memcached</a></li>
+</ul>
+
+<h1 id="8-todo">8. TODO</h1>
 <p>囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：</p>
 
 <ul>
