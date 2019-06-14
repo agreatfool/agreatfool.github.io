@@ -269,7 +269,11 @@
           <li><a href="#833-其他" id="markdown-toc-833-其他">8.3.3 其他</a></li>
         </ul>
       </li>
-      <li><a href="#84-监控--metrics" id="markdown-toc-84-监控--metrics">8.4 监控 &amp; Metrics</a></li>
+      <li><a href="#84-监控--metrics" id="markdown-toc-84-监控--metrics">8.4 监控 &amp; Metrics</a>        <ul>
+          <li><a href="#841-official-guide" id="markdown-toc-841-official-guide">8.4.1 Official Guide</a></li>
+          <li><a href="#842-cadvisor" id="markdown-toc-842-cadvisor">8.4.2 cAdvisor</a></li>
+        </ul>
+      </li>
       <li><a href="#85-安全" id="markdown-toc-85-安全">8.5 安全</a></li>
       <li><a href="#87-其他" id="markdown-toc-87-其他">8.7 其他</a></li>
     </ul>
@@ -1273,7 +1277,8 @@ changed
 </ul>
 
 <h2 id="84-监控--metrics">8.4 监控 &amp; Metrics</h2>
-<p>这块和上面的内容类似也比较鸡肋，一般来说不会直接裸用Docker，如果有K8S之类的，那监控也不会从Docker来了。所以这里就给点资料即可，有需要的可以深入下官方文档：</p>
+<h3 id="841-official-guide">8.4.1 Official Guide</h3>
+<p>Docker官方的监控，这块和上面的内容类似也比较鸡肋，一般来说不会直接裸用Docker，如果有K8S之类的，那监控也不会从Docker来了。所以这里就给点资料即可，有需要的可以深入下官方文档：</p>
 
 <ul>
   <li><a href="https://docs.docker.com/config/containers/runmetrics/" target="_blank">Runtime metrics</a>
@@ -1287,6 +1292,22 @@ changed
   </li>
   <li><a href="https://docs.docker.com/config/thirdparty/prometheus/" target="_blank">Collect Docker metrics with Prometheus</a></li>
 </ul>
+
+<h3 id="842-cadvisor">8.4.2 cAdvisor</h3>
+<p>在以容器为主的系统架构中，除了主机监控之外还需要监控容器，因为应用程序都是运行在容器中的。而且也有可能某些主机运行了多个容器，那么这些容器（应用程序）占用了多少资源就需要进行监控了。Google出品的cAdvisor基本上是最优解：</p>
+
+<ul>
+  <li>代码：<a href="https://github.com/google/cadvisor" target="_blank">google/cadvisor</a></li>
+  <li>镜像：<a href="https://hub.docker.com/r/google/cadvisor/" target="_blank">google/cadvisor</a>
+    <ul>
+      <li>google/cadvisor:v0.33.0</li>
+    </ul>
+  </li>
+  <li>配置：<a href="https://github.com/google/cadvisor/blob/master/docs/runtime_options.md" target="_blank">cAdvisor Runtime Options</a></li>
+  <li>Dashboard：<a href="https://grafana.com/dashboards/893" target="_blank">Docker and system monitoring</a></li>
+</ul>
+
+<p>注意cAdvisor不仅仅只服务于Docker，也可以用在其他容器运行时上。</p>
 
 <h2 id="85-安全">8.5 安全</h2>
 <p>官方文档：<a href="https://docs.docker.com/engine/security/security/" target="_blank">Docker security</a>。</p>
