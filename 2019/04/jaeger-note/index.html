@@ -226,18 +226,23 @@
       <li><a href="#62-collector配置" id="markdown-toc-62-collector配置">6.2 Collector配置</a></li>
     </ul>
   </li>
-  <li><a href="#7-docker集群实践" id="markdown-toc-7-docker集群实践">7. Docker集群实践</a>    <ul>
-      <li><a href="#71-docker集群配置" id="markdown-toc-71-docker集群配置">7.1 Docker集群配置</a></li>
-      <li><a href="#72-storage-schema" id="markdown-toc-72-storage-schema">7.2 Storage Schema</a>        <ul>
-          <li><a href="#721-使用cqlsh导入" id="markdown-toc-721-使用cqlsh导入">7.2.1 使用cqlsh导入</a></li>
-          <li><a href="#722-工具镜像导入" id="markdown-toc-722-工具镜像导入">7.2.2 工具镜像导入</a></li>
-        </ul>
-      </li>
-      <li><a href="#73-opentracing-coding-tutorial" id="markdown-toc-73-opentracing-coding-tutorial">7.3 Opentracing Coding Tutorial</a></li>
-      <li><a href="#74-client-coding" id="markdown-toc-74-client-coding">7.4 Client Coding</a></li>
+  <li><a href="#7-jaeger监控" id="markdown-toc-7-jaeger监控">7. Jaeger监控</a>    <ul>
+      <li><a href="#71-exporter" id="markdown-toc-71-exporter">7.1 Exporter</a></li>
+      <li><a href="#72-grafana-dashboard" id="markdown-toc-72-grafana-dashboard">7.2 Grafana Dashboard</a></li>
     </ul>
   </li>
-  <li><a href="#8-todo" id="markdown-toc-8-todo">8. TODO</a></li>
+  <li><a href="#8-docker集群实践" id="markdown-toc-8-docker集群实践">8. Docker集群实践</a>    <ul>
+      <li><a href="#81-docker集群配置" id="markdown-toc-81-docker集群配置">8.1 Docker集群配置</a></li>
+      <li><a href="#82-storage-schema" id="markdown-toc-82-storage-schema">8.2 Storage Schema</a>        <ul>
+          <li><a href="#821-使用cqlsh导入" id="markdown-toc-821-使用cqlsh导入">8.2.1 使用cqlsh导入</a></li>
+          <li><a href="#822-工具镜像导入" id="markdown-toc-822-工具镜像导入">8.2.2 工具镜像导入</a></li>
+        </ul>
+      </li>
+      <li><a href="#83-opentracing-coding-tutorial" id="markdown-toc-83-opentracing-coding-tutorial">8.3 Opentracing Coding Tutorial</a></li>
+      <li><a href="#84-client-coding" id="markdown-toc-84-client-coding">8.4 Client Coding</a></li>
+    </ul>
+  </li>
+  <li><a href="#9-todo" id="markdown-toc-9-todo">9. TODO</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
       <li><a href="#help" id="markdown-toc-help">Help</a>        <ul>
@@ -833,13 +838,37 @@ Span context: Trace information that accompanies the distributed transaction, in
   <li>除此之外的所有都按0.5的概率频次进行采样</li>
 </ul>
 
-<h1 id="7-docker集群实践">7. Docker集群实践</h1>
-<h2 id="71-docker集群配置">7.1 Docker集群配置</h2>
+<h1 id="7-jaeger监控">7. Jaeger监控</h1>
+<p>也许是因为项目太年轻了，在监控实践的过程中实在是很难找到资料，无论是metrics指标的说明文档，还是实际操作起来的Grafana Dashboard，基本上都是空白。大量工作只能自己手动实践解决。</p>
+
+<h2 id="71-exporter">7.1 Exporter</h2>
+<p>Jaeger应用官方直接带了metrics输出，这方面就不需要找第三方的Exporter了。</p>
+
+<p>端口需要简单说明下。metrics输出端口都是各服务的HTTP端口，也就是说，默认：</p>
+
+<ul>
+  <li>jaeger-agent：5778</li>
+  <li>jaeger-collector：14268</li>
+</ul>
+
+<p>关于输出的metrics的说明没有找到对应的文档，官方有一个open的issue表示该工作在进行中：<a href="https://github.com/jaegertracing/jaeger/issues/1224" target="_blank">Is there a document to explain the specific meaning of various metrics? #1224</a>，至少近期是没指望了。</p>
+
+<p>查找代码可以找到部分指标的简单说明：<a href="https://github.com/jaegertracing/jaeger/blob/v1.11.0/cmd/collector/app/metrics.go#L30" target="_blank">jaeger/cmd/collector/app/metrics.go</a>。</p>
+
+<h2 id="72-grafana-dashboard">7.2 Grafana Dashboard</h2>
+<p>在Grafana Labs简单查找了下，没有找到可以直接使用的Dashboard。确实能搜到几个Dashboard，但时间都比较久远，Jaeger的部分metrics已经改名了，导致这些Dashboard都无法正常使用，因此一般需要手动自制Dashboard。</p>
+
+<p>官方有意向提供开箱即用的Dashboard，阅读下这个issue：<a href="https://github.com/jaegertracing/jaeger/issues/789" target="_blank">Could we provide pre-made Grafana dashboards for Jaeger backend components? #789</a>，但一样短期内不用指望了。</p>
+
+<p>Issue中提到的<a href="https://github.com/grafana/jsonnet-libs/tree/master/jaeger-mixin" target="_blank">jsonnet-libs/jaeger-mixin/</a>倒是可以花点时间简单过一下。虽然不能直接使用，但对自制Dashboard有点指导帮助。</p>
+
+<h1 id="8-docker集群实践">8. Docker集群实践</h1>
+<h2 id="81-docker集群配置">8.1 Docker集群配置</h2>
 <p>配置相对来说比较简单，范例地址：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/jaeger-cluster.yaml" target="_blank">dist-system-practice/conf/dev/jaeger-cluster.yaml</a>。</p>
 
 <p>主要搞清楚端口号就行了，jaeger这块开的端口实在是太多了，容易搞混。不过实际上用得多的也就那几个。</p>
 
-<h2 id="72-storage-schema">7.2 Storage Schema</h2>
+<h2 id="82-storage-schema">8.2 Storage Schema</h2>
 <p>Jaeger支持的后端主要是Cassandra，对Elasticsearch的支持有，但只是二等的（版本更新、支持、响应都比Cassandra慢），所以如果可能，尽量使用Cassandra。</p>
 
 <p>实验项目中使用的后端存储为Cassandra，版本为：<code>3.11.4</code>。</p>
@@ -855,7 +884,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   <li><a href="https://docs.datastax.com/en/archived/cql/3.3/cql/cql_reference/cqlsh.html" target="_blank">Starting cqlsh</a></li>
 </ul>
 
-<h3 id="721-使用cqlsh导入">7.2.1 使用cqlsh导入</h3>
+<h3 id="821-使用cqlsh导入">8.2.1 使用cqlsh导入</h3>
 <p><code>不推荐</code>直接使用cqlsh这种方法，下面的7.2.2有更好的方法。</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker run -it --rm <span class="se">\</span>
@@ -873,7 +902,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 <pre><code>The default user is cassandra. The default password is cassandra. 
 </code></pre>
 
-<h3 id="722-工具镜像导入">7.2.2 工具镜像导入</h3>
+<h3 id="822-工具镜像导入">8.2.2 工具镜像导入</h3>
 <p>实际上官方有一个docker镜像帮忙协助进行schema的创建，但你直接去看这个镜像你根本就不会知道这个镜像是干嘛的，因为什么文档都没有。官方的文档中也没提到过这个镜像，我是在google的时候搜到jaeger的维护者中某一个人的博客的时候才找到的，哎。。。只能说，怎么说呢，这文档工作。。。jaeger已经算是好的了，实际上。</p>
 
 <p>镜像：<a href="https://hub.docker.com/r/jaegertracing/jaeger-cassandra-schema" target="_blank">jaegertracing/jaeger-cassandra-schema</a>。使用方法可以查看博客里的范例：<a href="https://medium.com/jaegertracing/jaeger-and-multitenancy-99dfa1d49dc0" target="_blank">Jaeger and multitenancy</a>。</p>
@@ -894,12 +923,12 @@ Span context: Trace information that accompanies the distributed transaction, in
 
 <p>其实这些环境变量最后还是落实到执行的脚本create.sh里，所以需要查看环境变量的作用以及脚本做了什么，可以查看：<a href="https://github.com/jaegertracing/jaeger/blob/v1.11.0/plugin/storage/cassandra/schema/create.sh" target="_blank">jaeger/plugin/storage/cassandra/schema/create.sh</a>。</p>
 
-<h2 id="73-opentracing-coding-tutorial">7.3 Opentracing Coding Tutorial</h2>
+<h2 id="83-opentracing-coding-tutorial">8.3 Opentracing Coding Tutorial</h2>
 <p>Opentracing Go官方是有Tutorial的：<a href="https://github.com/yurishkuro/opentracing-tutorial/tree/master/go" target="_blank">OpenTracing Tutorial - Go</a>。一样在官方文档里只字未提。</p>
 
 <p>这个tutorial对新了解opentracing的人，以及对需要学习opentracing client编码的人都很有帮助。范例举得相当不错。</p>
 
-<h2 id="74-client-coding">7.4 Client Coding</h2>
+<h2 id="84-client-coding">8.4 Client Coding</h2>
 <p>Jaeger集群架设完毕还不算结束，后面还需要编写客户端的集成代码。Opentracing的整体流程，以及trace、span等概念，首先需要阅读官方文档，以及7.3中提到的tutorial。</p>
 
 <p>这里要提一点，jaeger免不了会遇到rpc调用之间的上下文跨实体的情况，遇到这种情况，需要上游将trace相关信息<code>inject</code>到请求中，然后在下游将trace信息<code>extract</code>出来，根据extract的信息继续走之前的trace，这样才能保证跨实体的请求是在同一个trace中。相关细节可以查看7.3的tutorial中的第三节课。</p>
@@ -919,7 +948,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go" target="_blank">server/main.go</a></li>
 </ul>
 
-<h1 id="8-todo">8. TODO</h1>
+<h1 id="9-todo">9. TODO</h1>
 <p>囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：</p>
 
 <ul>
