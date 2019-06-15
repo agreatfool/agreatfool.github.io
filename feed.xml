@@ -2179,7 +2179,7 @@ yourapp
   &lt;li&gt;kafka集群的内存很小&lt;/li&gt;
   &lt;li&gt;磁盘IO和实际情况差别较大&lt;/li&gt;
   &lt;li&gt;集群规模过小&lt;/li&gt;
-  &lt;li&gt;partition数量很少（集群和partition数量很小能够解释为什么acks的改动基本上不影响性能）&lt;/li&gt;
+  &lt;li&gt;partition数量很少（集群和partition数量很小能够部分解释为什么acks的改动基本上不影响性能）&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;因此上述测试的结论主要是参考价值，不能作为最终结论。如果后续需要严谨结论的话，需要在真实机器上测试，并需要开启go的profiling，观察下kafka类库中的写入到底是怎么完成的，以及kafka集群的响应情况。此外，即便是模拟集群1秒左右的同步写入速度也实在是太慢了，后续还需要深入profiling，到底这1秒做了什么（无论是kafka还是go客户端）。&lt;/p&gt;
@@ -5585,8 +5585,18 @@ process_virtual_memory_bytes &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;.3139
   &lt;li&gt;&lt;a href=&quot;#42-数据保存--导出&quot; id=&quot;markdown-toc-42-数据保存--导出&quot;&gt;4.2 数据保存 &amp;amp; 导出&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#43-数据源&quot; id=&quot;markdown-toc-43-数据源&quot;&gt;4.3 数据源&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#5-监控指标&quot; id=&quot;markdown-toc-5-监控指标&quot;&gt;5. 监控指标&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-todo&quot; id=&quot;markdown-toc-6-todo&quot;&gt;6. TODO&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-写在最后&quot; id=&quot;markdown-toc-7-写在最后&quot;&gt;7. 写在最后&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#6-docker实践&quot; id=&quot;markdown-toc-6-docker实践&quot;&gt;6. Docker实践&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#61-docker安装&quot; id=&quot;markdown-toc-61-docker安装&quot;&gt;6.1 Docker安装&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#62-compose配置&quot; id=&quot;markdown-toc-62-compose配置&quot;&gt;6.2 Compose配置&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#63-provisioning&quot; id=&quot;markdown-toc-63-provisioning&quot;&gt;6.3 Provisioning&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#64-dashboard&quot; id=&quot;markdown-toc-64-dashboard&quot;&gt;6.4 Dashboard&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#641-variables&quot; id=&quot;markdown-toc-641-variables&quot;&gt;6.4.1 Variables&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-todo&quot; id=&quot;markdown-toc-7-todo&quot;&gt;7. TODO&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#8-写在最后&quot; id=&quot;markdown-toc-8-写在最后&quot;&gt;8. 写在最后&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#ID_APP_GRAFANA_HELP&quot; id=&quot;markdown-toc-ID_APP_GRAFANA_HELP&quot;&gt;grafana -h&lt;/a&gt;&lt;/li&gt;
@@ -5798,7 +5808,58 @@ tools               # 忽略
 
 &lt;p&gt;我在本文中也留了一份，有必要可以研究下里面的内容：&lt;a href=&quot;#ID_APP_SELF_METRICS&quot;&gt;grafana/metrics&lt;/a&gt;。&lt;/p&gt;
 
-&lt;h1 id=&quot;6-todo&quot;&gt;6. TODO&lt;/h1&gt;
+&lt;h1 id=&quot;6-docker实践&quot;&gt;6. Docker实践&lt;/h1&gt;
+&lt;p&gt;接下来的章节会从实践的角度来尝试在容器中安装和使用Grafana。数据源皆为Prometheus，此后不再备注。&lt;/p&gt;
+
+&lt;h2 id=&quot;61-docker安装&quot;&gt;6.1 Docker安装&lt;/h2&gt;
+&lt;p&gt;在容器内安装官方有指导文档：&lt;a href=&quot;https://grafana.com/docs/installation/docker/&quot; target=&quot;_blank&quot;&gt;Installing using Docker&lt;/a&gt;。主要了解几个重点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;配置文件中的选项如何使用env参数来进行调整，如何进行配置名字映射：&lt;a href=&quot;https://grafana.com/docs/installation/docker/#configuration&quot; target=&quot;_blank&quot;&gt;Configuration&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;容器内的一些路径，以及如何调整这些默认路径：&lt;a href=&quot;https://grafana.com/docs/installation/docker/#default-paths&quot; target=&quot;_blank&quot;&gt;Default Paths&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;如何在启动时就自动安装插件（保证启动完成立即可用）：&lt;a href=&quot;https://grafana.com/docs/installation/docker/#installing-plugins-for-grafana&quot; target=&quot;_blank&quot;&gt;Installing Plugins for Grafana&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;映射volume，保证数据不会被清除：&lt;a href=&quot;https://grafana.com/docs/installation/docker/#grafana-container-with-persistent-storage-recommended&quot; target=&quot;_blank&quot;&gt;Grafana container with persistent storage &lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;62-compose配置&quot;&gt;6.2 Compose配置&lt;/h2&gt;
+&lt;p&gt;可运行的docker compose配置文件范例，参见：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/prometheus-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/prometheus-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;重点是&lt;code&gt;environment&lt;/code&gt;部分。&lt;/p&gt;
+
+&lt;h2 id=&quot;63-provisioning&quot;&gt;6.3 Provisioning&lt;/h2&gt;
+&lt;p&gt;既然已经要求Grafana在容器内使用，那么一般也就要做到启动即可用。Grafana在使用之前一般需要几步配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;用户、密码管理&lt;/li&gt;
+  &lt;li&gt;数据源配置&lt;/li&gt;
+  &lt;li&gt;Dashboard配置&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;用户和密码之类的设置，可用通过容器的env配置解决，而数据源和Dashboard就比较麻烦了。Grafana官方提供了一个解决方案，非常好用：&lt;a href=&quot;https://grafana.com/docs/administration/provisioning/&quot; target=&quot;_blank&quot;&gt;Provisioning Grafana&lt;/a&gt;。简单来说就是提供两个配置文件，一个用来告诉Grafana启动时需要输入的数据源有哪些，另一个告诉Grafana启动时候需要导入的Dashboard有哪些。&lt;/p&gt;
+
+&lt;p&gt;存储provisioning配置文件的指定路径在之前6.1中提到的默认路径中有，一般使用bind mount的方式将本地的provisioning配置文件导入到容器中。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;数据源配置文件范例，参见：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/prometheus/grafana/provisioning/datasources/datasource.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/prometheus/grafana/provisioning/datasources/datasource.yaml&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Dashboard配置文件范例，参见：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/prometheus/grafana/provisioning/dashboards/providers.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/prometheus/grafana/provisioning/dashboards/providers.yaml&lt;/a&gt;。实际上就是指定一个文件夹，一般也是用bind mount的方式mapping到容器内即可。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;64-dashboard&quot;&gt;6.4 Dashboard&lt;/h2&gt;
+&lt;p&gt;Grafana的灵活和强大在Dashboard上体现无疑，关键好用在于不仅仅界面美观、功能强大，而且还可以模板化，可导入导出，做到一次编写后续自动安装、更新。官方还有一个&lt;a href=&quot;https://grafana.com/dashboards&quot;&gt;Grafana Labs &amp;gt; Dashboards&lt;/a&gt;，类似于插件中心的地方，方便社区将做好的Dashboard进行分享。&lt;/p&gt;
+
+&lt;p&gt;一般常用的组件，只要简单搜索下就可以找到可用的Dashboard，大大降低了监控的难度，加速了研发的进程。&lt;/p&gt;
+
+&lt;h3 id=&quot;641-variables&quot;&gt;6.4.1 Variables&lt;/h3&gt;
+&lt;p&gt;这里简单说下在进行Dashboard模板化的时候常见的variables设置问题。一般来说，在一个系统中，同角色的设备不会只有单个节点，大多数情况都会有多个节点，比如说web服务器、数据库服务器等。在进行监控的时候，只需要制作一份Grafana Dashboard，将里面的参数变量化，就可以将这个Dashboard模板化，方便后续使用。&lt;/p&gt;
+
+&lt;p&gt;而模板化最关键就是要将节点做成可配置的变量，这里就需要进行Dashboard的variables设置。进入到Dashboard的Setting中，左边列表里就有variables设置的入口，设置方法可以参见下图：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/04/grafana-note/grafana-dashboard-variables.png&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;7-todo&quot;&gt;7. TODO&lt;/h1&gt;
 &lt;p&gt;囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：&lt;/p&gt;
 
 &lt;ul&gt;
@@ -5811,7 +5872,7 @@ tools               # 忽略
   &lt;li&gt;ELK结合使用范例&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&quot;7-写在最后&quot;&gt;7. 写在最后&lt;/h1&gt;
+&lt;h1 id=&quot;8-写在最后&quot;&gt;8. 写在最后&lt;/h1&gt;
 &lt;p&gt;了解Metrics的含义才是最关键的，就像我在写Prometheus Notes说的，很多exporter会吐出巨量的Metrics数据，你都了解这些Metrics代表的意义吗？如果不了解的话，那些数据即便采集进去了，你又会去用了？说到底Prometheus和Grafana不过就是个工具，关键还是在于工程师想要了解什么，对自己的系统的监控需求是什么。&lt;/p&gt;
 
 &lt;p&gt;监控相关工作的第一步是梳理当前系统的组成组件，将每一个都列出来，将它们负责的职责明确清楚，然后将需要监控的Metrics都枚举出来，将这些Metrics需要做成的表类型都想清楚，最后才是使用Prometheus采集数据，使用Grafana制图。&lt;/p&gt;

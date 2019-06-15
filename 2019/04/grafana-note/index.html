@@ -187,8 +187,18 @@
   <li><a href="#42-数据保存--导出" id="markdown-toc-42-数据保存--导出">4.2 数据保存 &amp; 导出</a></li>
   <li><a href="#43-数据源" id="markdown-toc-43-数据源">4.3 数据源</a></li>
   <li><a href="#5-监控指标" id="markdown-toc-5-监控指标">5. 监控指标</a></li>
-  <li><a href="#6-todo" id="markdown-toc-6-todo">6. TODO</a></li>
-  <li><a href="#7-写在最后" id="markdown-toc-7-写在最后">7. 写在最后</a></li>
+  <li><a href="#6-docker实践" id="markdown-toc-6-docker实践">6. Docker实践</a>    <ul>
+      <li><a href="#61-docker安装" id="markdown-toc-61-docker安装">6.1 Docker安装</a></li>
+      <li><a href="#62-compose配置" id="markdown-toc-62-compose配置">6.2 Compose配置</a></li>
+      <li><a href="#63-provisioning" id="markdown-toc-63-provisioning">6.3 Provisioning</a></li>
+      <li><a href="#64-dashboard" id="markdown-toc-64-dashboard">6.4 Dashboard</a>        <ul>
+          <li><a href="#641-variables" id="markdown-toc-641-variables">6.4.1 Variables</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#7-todo" id="markdown-toc-7-todo">7. TODO</a></li>
+  <li><a href="#8-写在最后" id="markdown-toc-8-写在最后">8. 写在最后</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
       <li><a href="#ID_APP_GRAFANA_HELP" id="markdown-toc-ID_APP_GRAFANA_HELP">grafana -h</a></li>
@@ -400,7 +410,58 @@ tools               # 忽略
 
 <p>我在本文中也留了一份，有必要可以研究下里面的内容：<a href="#ID_APP_SELF_METRICS">grafana/metrics</a>。</p>
 
-<h1 id="6-todo">6. TODO</h1>
+<h1 id="6-docker实践">6. Docker实践</h1>
+<p>接下来的章节会从实践的角度来尝试在容器中安装和使用Grafana。数据源皆为Prometheus，此后不再备注。</p>
+
+<h2 id="61-docker安装">6.1 Docker安装</h2>
+<p>在容器内安装官方有指导文档：<a href="https://grafana.com/docs/installation/docker/" target="_blank">Installing using Docker</a>。主要了解几个重点：</p>
+
+<ul>
+  <li>配置文件中的选项如何使用env参数来进行调整，如何进行配置名字映射：<a href="https://grafana.com/docs/installation/docker/#configuration" target="_blank">Configuration</a></li>
+  <li>容器内的一些路径，以及如何调整这些默认路径：<a href="https://grafana.com/docs/installation/docker/#default-paths" target="_blank">Default Paths</a></li>
+  <li>如何在启动时就自动安装插件（保证启动完成立即可用）：<a href="https://grafana.com/docs/installation/docker/#installing-plugins-for-grafana" target="_blank">Installing Plugins for Grafana</a></li>
+  <li>映射volume，保证数据不会被清除：<a href="https://grafana.com/docs/installation/docker/#grafana-container-with-persistent-storage-recommended" target="_blank">Grafana container with persistent storage </a></li>
+</ul>
+
+<h2 id="62-compose配置">6.2 Compose配置</h2>
+<p>可运行的docker compose配置文件范例，参见：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/prometheus-cluster.yaml" target="_blank">dist-system-practice/conf/dev/prometheus-cluster.yaml</a>。</p>
+
+<p>重点是<code>environment</code>部分。</p>
+
+<h2 id="63-provisioning">6.3 Provisioning</h2>
+<p>既然已经要求Grafana在容器内使用，那么一般也就要做到启动即可用。Grafana在使用之前一般需要几步配置：</p>
+
+<ul>
+  <li>用户、密码管理</li>
+  <li>数据源配置</li>
+  <li>Dashboard配置</li>
+</ul>
+
+<p>用户和密码之类的设置，可用通过容器的env配置解决，而数据源和Dashboard就比较麻烦了。Grafana官方提供了一个解决方案，非常好用：<a href="https://grafana.com/docs/administration/provisioning/" target="_blank">Provisioning Grafana</a>。简单来说就是提供两个配置文件，一个用来告诉Grafana启动时需要输入的数据源有哪些，另一个告诉Grafana启动时候需要导入的Dashboard有哪些。</p>
+
+<p>存储provisioning配置文件的指定路径在之前6.1中提到的默认路径中有，一般使用bind mount的方式将本地的provisioning配置文件导入到容器中。</p>
+
+<pre><code>GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+</code></pre>
+
+<ul>
+  <li>数据源配置文件范例，参见：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/prometheus/grafana/provisioning/datasources/datasource.yaml" target="_blank">dist-system-practice/prometheus/grafana/provisioning/datasources/datasource.yaml</a></li>
+  <li>Dashboard配置文件范例，参见：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/prometheus/grafana/provisioning/dashboards/providers.yaml" target="_blank">dist-system-practice/prometheus/grafana/provisioning/dashboards/providers.yaml</a>。实际上就是指定一个文件夹，一般也是用bind mount的方式mapping到容器内即可。</li>
+</ul>
+
+<h2 id="64-dashboard">6.4 Dashboard</h2>
+<p>Grafana的灵活和强大在Dashboard上体现无疑，关键好用在于不仅仅界面美观、功能强大，而且还可以模板化，可导入导出，做到一次编写后续自动安装、更新。官方还有一个<a href="https://grafana.com/dashboards">Grafana Labs &gt; Dashboards</a>，类似于插件中心的地方，方便社区将做好的Dashboard进行分享。</p>
+
+<p>一般常用的组件，只要简单搜索下就可以找到可用的Dashboard，大大降低了监控的难度，加速了研发的进程。</p>
+
+<h3 id="641-variables">6.4.1 Variables</h3>
+<p>这里简单说下在进行Dashboard模板化的时候常见的variables设置问题。一般来说，在一个系统中，同角色的设备不会只有单个节点，大多数情况都会有多个节点，比如说web服务器、数据库服务器等。在进行监控的时候，只需要制作一份Grafana Dashboard，将里面的参数变量化，就可以将这个Dashboard模板化，方便后续使用。</p>
+
+<p>而模板化最关键就是要将节点做成可配置的变量，这里就需要进行Dashboard的variables设置。进入到Dashboard的Setting中，左边列表里就有variables设置的入口，设置方法可以参见下图：</p>
+
+<p><img src="/resources/2019/04/grafana-note/grafana-dashboard-variables.png" alt="" /></p>
+
+<h1 id="7-todo">7. TODO</h1>
 <p>囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：</p>
 
 <ul>
@@ -413,7 +474,7 @@ tools               # 忽略
   <li>ELK结合使用范例</li>
 </ul>
 
-<h1 id="7-写在最后">7. 写在最后</h1>
+<h1 id="8-写在最后">8. 写在最后</h1>
 <p>了解Metrics的含义才是最关键的，就像我在写Prometheus Notes说的，很多exporter会吐出巨量的Metrics数据，你都了解这些Metrics代表的意义吗？如果不了解的话，那些数据即便采集进去了，你又会去用了？说到底Prometheus和Grafana不过就是个工具，关键还是在于工程师想要了解什么，对自己的系统的监控需求是什么。</p>
 
 <p>监控相关工作的第一步是梳理当前系统的组成组件，将每一个都列出来，将它们负责的职责明确清楚，然后将需要监控的Metrics都枚举出来，将这些Metrics需要做成的表类型都想清楚，最后才是使用Prometheus采集数据，使用Grafana制图。</p>
