@@ -1470,7 +1470,11 @@ yourapp
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#5-kafka监控--高可用&quot; id=&quot;markdown-toc-5-kafka监控--高可用&quot;&gt;5. Kafka监控 &amp;amp; 高可用&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#51-监控&quot; id=&quot;markdown-toc-51-监控&quot;&gt;5.1 监控&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#51-监控&quot; id=&quot;markdown-toc-51-监控&quot;&gt;5.1 监控&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#511-exporter--grafana-dashboard&quot; id=&quot;markdown-toc-511-exporter--grafana-dashboard&quot;&gt;5.1.1 Exporter &amp;amp; Grafana Dashboard&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#512-docker实践&quot; id=&quot;markdown-toc-512-docker实践&quot;&gt;5.1.2 Docker实践&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#52-高可用&quot; id=&quot;markdown-toc-52-高可用&quot;&gt;5.2 高可用&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
@@ -1768,9 +1772,111 @@ yourapp
   &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/collecting-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P2&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;当然，Kafka也有Prometheus的exporter：&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;详细的指标列表及其含义，可以看这篇：&lt;a href=&quot;https://docs.confluent.io/current/kafka/monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;如果只需要可检索的指标列表，可以直接看这篇：&lt;a href=&quot;https://docs.confluent.io/current/kafka/monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka&lt;/a&gt;。&lt;/p&gt;
+&lt;h3 id=&quot;511-exporter--grafana-dashboard&quot;&gt;5.1.1 Exporter &amp;amp; Grafana Dashboard&lt;/h3&gt;
+&lt;p&gt;Prometheus的Exporter分为两块：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;以Java为runtime的通用监控：prometheus/jmx_exporter
+    &lt;ul&gt;
+      &lt;li&gt;代码：&lt;a href=&quot;https://github.com/prometheus/jmx_exporter&quot; target=&quot;_blank&quot;&gt;prometheus/jmx_exporter&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;镜像：&lt;a href=&quot;https://hub.docker.com/r/sscaling/jmx-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;sscaling/jmx-prometheus-exporter&lt;/a&gt;
+        &lt;ul&gt;
+          &lt;li&gt;sscaling/jmx-prometheus-exporter:0.11.0&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Dashboard：
+        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;https://grafana.com/dashboards/721&quot; target=&quot;_blank&quot;&gt;Kafka Overview&lt;/a&gt;，这个dashboard相当老了，一直没有更新，而且仅只有6个Panel，和kafka有关的panel更只有3个，基本没什么用；但未能找到更近一点的kafka专用dashboard&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;https://grafana.com/dashboards/8563&quot;&gt;JVM dashboard&lt;/a&gt;，jmx通用dashboard，看上去更好点；但这个dashboard变量设置的是job，所以在设置Prometheus的时候就需要将多个kafka的数据采集到同一个job里，而不是分开&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;https://grafana.com/dashboards/7727&quot;&gt;JMX exporter prometheus&lt;/a&gt;，另一款jmx通用dashboard；这个dashboard是为了在k8s中使用而特化的，也不够灵活&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;列在Prometheus官方列表上的第三方Exporter：danielqsj/kafka_exporter
+    &lt;ul&gt;
+      &lt;li&gt;代码：&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;镜像：&lt;a href=&quot;https://hub.docker.com/r/danielqsj/kafka-exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka-exporter&lt;/a&gt;
+        &lt;ul&gt;
+          &lt;li&gt;danielqsj/kafka-exporter:v1.2.0&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Dashboard：&lt;a href=&quot;https://grafana.com/dashboards/7589&quot; target=&quot;_blank&quot;&gt;Kafka Exporter Overview&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;该Exporter使用Golang编写，更专注于部分Kafka业务相关metrics，对于核心的Java runtime metrics仍旧需要jmx_exporter&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;此外，还有一个confluent公司的grafana dashboard配置，没找到对应的labs dashboard地址，但该配置文件本身也有参考价值：&lt;a href=&quot;https://github.com/kubernauts/kafka-confluent-platform/blob/master/grafana-kafka-dashboard.json&quot; target=&quot;_blank&quot;&gt;kafka-confluent-platform/grafana-kafka-dashboard.json&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;可参考的jmx_exporter配置：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/oded-dd/prometheus-jmx-kafka&quot; target=&quot;_blank&quot;&gt;oded-dd/prometheus-jmx-kafka&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/Mousavi310/kafka-grafana&quot; target=&quot;_blank&quot;&gt;Mousavi310/kafka-grafana&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;512-docker实践&quot;&gt;5.1.2 Docker实践&lt;/h3&gt;
+&lt;p&gt;实际运行范例参见：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/kafka-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/kafka-cluster.yaml&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/prometheus-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/prometheus-cluster.yaml&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/kafka/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/prometheus/grafana/dashboards&quot; target=&quot;_blank&quot;&gt;dist-system-practice/prometheus/grafana/dashboards/&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Exporter方面，jmx_exporter和kafka_exporter同时使用，两者侧重不同。jmx_exporter主要用来进行JVM监控，针对java runtime自身的状态进行监控，而kafka_exporter则针对kafka运行状况进行监控（其实只要不怕麻烦自己处理dashboard，则jmx_exporter就完全足够了）。&lt;/p&gt;
+
+&lt;p&gt;jmx_exporter的部署有两种选择，一是独立的容器进行部署，好处是可观察性强，且不会对kafka容器造成影响，缺点是部署更繁杂，配置内容更多；二是修改kafka容器，添加几项配置项，就可以直接在kafka容器内启动一个java进程，进行metrics输出。这里实践使用的是第二种方法，配置修改如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kafka_1&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx_prometheus_javaagent-0.9.jar:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx-kafka-2_0_0.yaml:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;19092:9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;17071:7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;expose&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9093&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# internal traffic&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9991&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*KAFKA_LOGGING_DEFAULTS&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;JMX_PORT&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;9991&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_OPTS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-javaagent:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar=7071:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*KAFKA_ENV_DEFAULTS&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;code&gt;JMX_PORT&lt;/code&gt;告知kafka在启动的时候需要一并启动jmx，&lt;code&gt;KAFKA_OPTS&lt;/code&gt;告知kafka在启动时一并需要启动jmx_exporter，而这个exporter的jar包以及配置文件则是通过bind mount放入容器内的。&lt;/p&gt;
+
+&lt;p&gt;配置文件主要来自于：&lt;a href=&quot;https://github.com/Mousavi310/kafka-grafana/blob/master/jmx-exporter/kafka-2_0_0.yml&quot; target=&quot;_blank&quot;&gt;kafka-grafana/jmx-exporter/kafka-2_0_0.yml&lt;/a&gt;。此外，因为使用通用jmx dashboard：&lt;a href=&quot;https://grafana.com/dashboards/8563&quot; target=&quot;_blank&quot;&gt;JVM dashboard&lt;/a&gt;来进行数据展示，该配置文件中也放入了部分这个dashboard要求的数据转换规则：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;lowercaseOutputLabelNames&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;rules&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# JMX common&lt;/span&gt;
+&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;java.lang&amp;lt;type=OperatingSystem&amp;gt;&amp;lt;&amp;gt;(committed_virtual_memory|free_physical_memory|free_swap_space|total_physical_memory|total_swap_space)_size:&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os_$1_bytes&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;GAUGE&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;attrNameSnakeCase&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;java.lang&amp;lt;type=OperatingSystem&amp;gt;&amp;lt;&amp;gt;((?!process_cpu_time)\w+):&amp;#39;&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os_$1&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;GAUGE&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;attrNameSnakeCase&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;nn&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;此外还有prometheus集群采集添加以及grafana dashboard导入，都是常规操作，就不多说了。&lt;/p&gt;
 
 &lt;h2 id=&quot;52-高可用&quot;&gt;5.2 高可用&lt;/h2&gt;
 &lt;p&gt;在之前的&lt;a href=&quot;#ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;中，已经介绍过了Kafka的集群模式，可以看到Kafka天然就是分布式的，而且在设计之初就考虑到了集群的高可用。本文之前章节内关于集群的内容偏简单了，只介绍了大致的设计。如有需要更深入了解分布式和高可用的细节，则可以阅读唯品会的：&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;，这篇讲解非常透彻，基本上可以当经典来看了。&lt;/p&gt;
@@ -2049,25 +2155,38 @@ yourapp
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kafka_1&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 使用这个名字来让同network的其他服务进行访问&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
       &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;zookeeper&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 保证启动先后顺序&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx_prometheus_javaagent-0.9.jar:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx-kafka-2_0_0.yaml:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kafka_vol_1:/tmp/kafka/data&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kafka-net&amp;quot;&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;net&amp;quot;&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;19092:19092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 保证非同一network的其他服务也能访问，但这么做要求每个kafka service都监听不同的端口，相互不能冲突&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;19092:9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port # 保证非同一network的其他服务也能访问，但这么做要求每个kafka service都监听不同的端口，相互不能冲突&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;17071:7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;expose&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;19093&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka集群内部流量走的端口号&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 保证container存活&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9093&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# internal traffic # kafka集群内部流量走的端口号&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9991&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx # jmx进程本身监听的地址，提供给jmx_exporter连接用&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics # jmx_exporter监听的地址，提供给prometheus抓取metrics&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
       &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;json-file&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 日志输出以json格式，容易让聚合工具使用&lt;/span&gt;
       &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
         &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;max-size&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;512m&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 保证日志最大尺寸不会过大占用过多系统磁盘&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://0.0.0.0:19093,OUTSIDE://0.0.0.0:19092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka的实际监听地址，一般不是0.0.0.0就是容器名&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ADVERTISED_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://kafka_1:19093,OUTSIDE://127.0.0.1:19092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka发布到zookeeper，让客户端获取并凭之连接kafka的地址，一定需要是客户端能访问到的地址，INSIDE部分供集群内部流量使用，OUTSIDE供客户端使用&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka的实际监听地址，一般不是0.0.0.0就是容器名&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ADVERTISED_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://kafka_1:9093,OUTSIDE://127.0.0.1:19092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka发布到zookeeper，让客户端获取并凭之连接kafka的地址，一定需要是客户端能访问到的地址，INSIDE部分供集群内部流量使用，OUTSIDE供客户端使用&lt;/span&gt;
       &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENER_SECURITY_PROTOCOL_MAP&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 明确内部外部的通讯协议&lt;/span&gt;
       &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_INTER_BROKER_LISTENER_NAME&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;INSIDE&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 告诉kafka集群上面的INSIDE和OUTSIDE配置哪个才是供集群内部流量使用的，按语义一般是INSIDE&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_BROKER_ID&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 必须每个kafka service单独一个，不可重复&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ZOOKEEPER_CONNECT&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;zookeeper:2181&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 告知kafka zookeeper的访问地址&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LOG_DIRS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/tmp/kafka-logs&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka实际的数据存放位置，推荐使用volume进行该地址的local映射&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_BROKER_ID&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 必须每个kafka broker单独一个，不可重复&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;JMX_PORT&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;9991&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx监听的地址&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_OPTS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-javaagent:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar=7071:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka在启动时一并会给予启动&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ZOOKEEPER_CONNECT&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;zookeeper:2181&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 告知kafka zookeeper的地址&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LOG_DIRS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/tmp/kafka-logs&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka实际的数据存放位置，推荐使用volume进行该地址的local映射&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka内部用来保存topic的offset的数据，其replication数量&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka内部用来保存transaction state log的数据，其replication数量&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_MIN_INSYNC_REPLICAS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# partition的leader节点要求当前在线的replica节点的数量&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;关于&lt;code&gt;LISTENER&lt;/code&gt;相关的几个配置（用于集群访问）更多的可以看下：&lt;a href=&quot;#DOCKER_OUT_NET&quot;&gt;8.2 对容器外应用提供服务&lt;/a&gt;。&lt;/p&gt;
 
@@ -2084,8 +2203,8 @@ yourapp
 
 &lt;p&gt;所以对于需要向容器外部环境的应用提供服务的情况来说，需要做好几项配置的调整（这里说的配置都是kafka的配置，不涉及到zookeeper的配置，事实上集群部署的配置中zookeeper相关的内容非常简单）：&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://0.0.0.0:19093,OUTSIDE://0.0.0.0:19092&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ADVERTISED_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://kafka_1:19093,OUTSIDE://127.0.0.1:19092&amp;quot;&lt;/span&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ADVERTISED_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://kafka_1:9093,OUTSIDE://127.0.0.1:19092&amp;quot;&lt;/span&gt;
 &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENER_SECURITY_PROTOCOL_MAP&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT&amp;quot;&lt;/span&gt;
 &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_INTER_BROKER_LISTENER_NAME&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;INSIDE&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
@@ -2216,6 +2335,12 @@ yourapp
   &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/47388267&quot; target=&quot;_blank&quot;&gt;比拼Kafka，大数据分析新秀Pulsar到底好在哪&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/merlimat/high-performance-messaging-with-apache-pulsar&quot; target=&quot;_blank&quot;&gt;High performance messaging with Apache Pulsar&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/Us*a8umKXT9LpV9hA6tF&quot; target=&quot;_blank&quot;&gt;选择 Pulsar 而不是 Kafka 的 7 大理由&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/prometheus/jmx_exporter&quot; target=&quot;_blank&quot;&gt;prometheus/jmx_exporter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/sscaling/jmx-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;sscaling/jmx-prometheus-exporter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/danielqsj/kafka-exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka-exporter&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/oded-dd/prometheus-jmx-kafka&quot; target=&quot;_blank&quot;&gt;oded-dd/prometheus-jmx-kafka&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/Mousavi310/kafka-grafana&quot; target=&quot;_blank&quot;&gt;Mousavi310/kafka-grafana&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;blockquote&gt;

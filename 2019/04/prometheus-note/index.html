@@ -218,6 +218,7 @@
       <li><a href="#81-prometheus" id="markdown-toc-81-prometheus">8.1 Prometheus</a></li>
       <li><a href="#82-host-machine" id="markdown-toc-82-host-machine">8.2 Host Machine</a></li>
       <li><a href="#83-memcached" id="markdown-toc-83-memcached">8.3 Memcached</a></li>
+      <li><a href="#84-jmx-exporter" id="markdown-toc-84-jmx-exporter">8.4 JMX Exporter</a></li>
     </ul>
   </li>
   <li><a href="#9-todo" id="markdown-toc-9-todo">9. TODO</a></li>
@@ -658,6 +659,27 @@ INFO[0000]  - time                                       source="node_exporter.g
     </ul>
   </li>
   <li>Dashboard：<a href="https://grafana.com/dashboards/37" target="_blank">Prometheus memcached</a></li>
+</ul>
+
+<h2 id="84-jmx-exporter">8.4 JMX Exporter</h2>
+<p>官方介绍：</p>
+
+<blockquote>
+  <p>JMX to Prometheus exporter: a collector that can configurably scrape and expose mBeans of a JMX target.</p>
+
+  <p>This exporter is intended to be run as a Java Agent, exposing a HTTP server and serving metrics of the local JVM. It can be also run as an independent HTTP server and scrape remote JMX targets, but this has various disadvantages, such as being harder to configure and being unable to expose process metrics (e.g., memory and CPU usage). Running the exporter as a Java Agent is thus strongly encouraged.</p>
+</blockquote>
+
+<p>大部分以JAVA为runtime的应用程序在进行监控的时候都需要使用到这个组件，因此使用频度还是相当高的。</p>
+
+<ul>
+  <li>Exporter代码：<a href="https://github.com/prometheus/jmx_exporter" target="_blank">prometheus/jmx_exporter</a></li>
+  <li>Exporter镜像：<a href="https://hub.docker.com/r/sscaling/jmx-prometheus-exporter" target="_blank">sscaling/jmx-prometheus-exporter</a>
+    <ul>
+      <li>sscaling/jmx-prometheus-exporter:0.11.0</li>
+    </ul>
+  </li>
+  <li>Dashboard：通用的dashboard在这里比较没意义，因为使用java作为runtime的应用程序可能是web、可能是存储，多种多样，使用时需要根据应用程序进行适配的dashboard查找</li>
 </ul>
 
 <h1 id="9-todo">9. TODO</h1>
