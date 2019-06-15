@@ -213,13 +213,14 @@
   </li>
   <li><a href="#5-prometheus监控指标" id="markdown-toc-5-prometheus监控指标">5. Prometheus监控指标</a></li>
   <li><a href="#6-范例" id="markdown-toc-6-范例">6. 范例</a></li>
-  <li><a href="#7-常用监控" id="markdown-toc-7-常用监控">7. 常用监控</a>    <ul>
-      <li><a href="#71-prometheus" id="markdown-toc-71-prometheus">7.1 Prometheus</a></li>
-      <li><a href="#72-host-machine" id="markdown-toc-72-host-machine">7.2 Host Machine</a></li>
-      <li><a href="#73-memcached" id="markdown-toc-73-memcached">7.3 Memcached</a></li>
+  <li><a href="#7-docker实践" id="markdown-toc-7-docker实践">7. Docker实践</a></li>
+  <li><a href="#8-常用监控" id="markdown-toc-8-常用监控">8. 常用监控</a>    <ul>
+      <li><a href="#81-prometheus" id="markdown-toc-81-prometheus">8.1 Prometheus</a></li>
+      <li><a href="#82-host-machine" id="markdown-toc-82-host-machine">8.2 Host Machine</a></li>
+      <li><a href="#83-memcached" id="markdown-toc-83-memcached">8.3 Memcached</a></li>
     </ul>
   </li>
-  <li><a href="#8-todo" id="markdown-toc-8-todo">8. TODO</a></li>
+  <li><a href="#9-todo" id="markdown-toc-9-todo">9. TODO</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
       <li><a href="#ID_APP_SELF_METRICS" id="markdown-toc-ID_APP_SELF_METRICS">prometheus/metrics</a></li>
@@ -612,11 +613,18 @@ INFO[0000]  - time                                       source="node_exporter.g
 <h1 id="6-范例">6. 范例</h1>
 <p>实际的可运行范例可以查看：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment/prometheus/federation" target="_blank">dist-system-practice/experiment/prometheus/federation/</a>。</p>
 
-<h1 id="7-常用监控">7. 常用监控</h1>
-<h2 id="71-prometheus">7.1 Prometheus</h2>
+<h1 id="7-docker实践">7. Docker实践</h1>
+<p>Prometheus在容器内运行有些难点，主要是配置上的，官方不支持在env中覆写配置文件中的内容，只允许使用bind mount的方式将配置文件加载进容器：<a href="https://github.com/prometheus/prometheus/issues/2357" target="_blank">Support for environment variable substitution in configuration file #2357</a>。</p>
+
+<p>这样一来所有的配置就必须使用配置文件的方式来生效，对于需要动态运行以及容器内集群支持的部署者来说就非常不友好，但官方维护者比较独裁，也没什么办法。</p>
+
+<p>可运行范例参见：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/prometheus-cluster.yaml" target="_blank">dist-system-practice/conf/dev/prometheus-cluster.yaml</a>。</p>
+
+<h1 id="8-常用监控">8. 常用监控</h1>
+<h2 id="81-prometheus">8.1 Prometheus</h2>
 <p>Prometheus自带metrics输出，自己采集自己即可，当然也可以用一个节点的prometheus将整个集群的metrics都采集起来。Grafana这边有一个2.0的Dashboard可以开箱即用，非常方便：<a href="https://grafana.com/dashboards/3662" target="_blank">Prometheus 2.0 Overview</a>。</p>
 
-<h2 id="72-host-machine">7.2 Host Machine</h2>
+<h2 id="82-host-machine">8.2 Host Machine</h2>
 <p>主机监控需要使用node_exporter：</p>
 
 <ul>
@@ -641,7 +649,7 @@ INFO[0000]  - time                                       source="node_exporter.g
   <p>depends: grafana-cli plugins install grafana-piechart-panel</p>
 </blockquote>
 
-<h2 id="73-memcached">7.3 Memcached</h2>
+<h2 id="83-memcached">8.3 Memcached</h2>
 <ul>
   <li>Exporter代码：<a href="https://github.com/prometheus/memcached_exporter" target="_blank">prometheus/memcached_exporter</a></li>
   <li>Exporter镜像：<a href="https://hub.docker.com/r/prom/memcached-exporter/" target="_blank">prom/memcached-exporter</a>
@@ -652,7 +660,7 @@ INFO[0000]  - time                                       source="node_exporter.g
   <li>Dashboard：<a href="https://grafana.com/dashboards/37" target="_blank">Prometheus memcached</a></li>
 </ul>
 
-<h1 id="8-todo">8. TODO</h1>
+<h1 id="9-todo">9. TODO</h1>
 <p>囿于当前使用的深度及项目调研的时间限制，有部分内容做的还不够深入，后续可以考虑补全：</p>
 
 <ul>
