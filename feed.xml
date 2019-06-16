@@ -2948,7 +2948,8 @@ yourapp
       &lt;li&gt;&lt;a href=&quot;#ID_ARC_CLUSTER&quot; id=&quot;markdown-toc-ID_ARC_CLUSTER&quot;&gt;4.4 集群&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#45-监控--高可用&quot; id=&quot;markdown-toc-45-监控--高可用&quot;&gt;4.5 监控 &amp;amp; 高可用&lt;/a&gt;        &lt;ul&gt;
           &lt;li&gt;&lt;a href=&quot;#451-监控&quot; id=&quot;markdown-toc-451-监控&quot;&gt;4.5.1 监控&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#452-高可用&quot; id=&quot;markdown-toc-452-高可用&quot;&gt;4.5.2 高可用&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#452-监控实践&quot; id=&quot;markdown-toc-452-监控实践&quot;&gt;4.5.2 监控实践&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#453-高可用&quot; id=&quot;markdown-toc-453-高可用&quot;&gt;4.5.3 高可用&lt;/a&gt;&lt;/li&gt;
         &lt;/ul&gt;
       &lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#46-性能调优&quot; id=&quot;markdown-toc-46-性能调优&quot;&gt;4.6 性能调优&lt;/a&gt;&lt;/li&gt;
@@ -3324,7 +3325,26 @@ Document：&lt;/p&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/vvanholl/elasticsearch-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;Prometheus Exporter Plugin for Elasticsearch&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;452-高可用&quot;&gt;4.5.2 高可用&lt;/h3&gt;
+&lt;h3 id=&quot;452-监控实践&quot;&gt;4.5.2 监控实践&lt;/h3&gt;
+&lt;p&gt;除了官方插件之外，还有更好用的Prometheus集成工具，由justwatch提供的一整套：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Exporter：
+    &lt;ul&gt;
+      &lt;li&gt;代码：&lt;a href=&quot;https://github.com/justwatchcom/elasticsearch_exporter&quot; target=&quot;_blank&quot;&gt;justwatchcom/elasticsearch_exporter&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;镜像：&lt;a href=&quot;https://hub.docker.com/r/justwatch/elasticsearch_exporter&quot; target=&quot;_blank&quot;&gt;justwatch/elasticsearch_exporter&lt;/a&gt;
+        &lt;ul&gt;
+          &lt;li&gt;justwatch/elasticsearch_exporter:1.1.0rc1&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Dashboard：&lt;a href=&quot;https://grafana.com/dashboards/2322&quot; target=&quot;_blank&quot;&gt;ElasticSearch&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;只需要在Elasticsearch集群之外启动一个Exporter镜像，并提供Elasticsearch集群的访问地址即可获得所有的metrics，然后在Grafana内导入justwatch提供的Dashboard就可以将数据可视化。整个过程不需要代码介入，直接使用即可，非常完美。&lt;/p&gt;
+
+&lt;h3 id=&quot;453-高可用&quot;&gt;4.5.3 高可用&lt;/h3&gt;
 &lt;p&gt;&lt;strong&gt;数据节点数量选择&lt;/strong&gt;&lt;/p&gt;
 
 &lt;ul&gt;
@@ -3963,7 +3983,7 @@ filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/sp
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
       &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*ES_LOGGING_DEFAULTS&lt;/span&gt;
     &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ES_HOSTS=es_1:9201,es_2:9202,es_3:9203&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ES_HOSTS=es_1:9200,es_2:9200,es_3:9200&lt;/span&gt;
       &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;LOGGING_LEVEL=debug&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# error, warning, info, debug&lt;/span&gt;
       &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;NUM_OF_OUTPUT_WORKERS=9&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# workers会均匀分配到node：如果有3个ES的node，那么每个node会分到3个workers&lt;/span&gt;
       &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;NUM_OF_SHARDS=3&lt;/span&gt;

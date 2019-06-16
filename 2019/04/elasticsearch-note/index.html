@@ -209,7 +209,8 @@
       <li><a href="#ID_ARC_CLUSTER" id="markdown-toc-ID_ARC_CLUSTER">4.4 集群</a></li>
       <li><a href="#45-监控--高可用" id="markdown-toc-45-监控--高可用">4.5 监控 &amp; 高可用</a>        <ul>
           <li><a href="#451-监控" id="markdown-toc-451-监控">4.5.1 监控</a></li>
-          <li><a href="#452-高可用" id="markdown-toc-452-高可用">4.5.2 高可用</a></li>
+          <li><a href="#452-监控实践" id="markdown-toc-452-监控实践">4.5.2 监控实践</a></li>
+          <li><a href="#453-高可用" id="markdown-toc-453-高可用">4.5.3 高可用</a></li>
         </ul>
       </li>
       <li><a href="#46-性能调优" id="markdown-toc-46-性能调优">4.6 性能调优</a></li>
@@ -585,7 +586,26 @@ Document：</p>
   <li><a href="https://github.com/vvanholl/elasticsearch-prometheus-exporter" target="_blank">Prometheus Exporter Plugin for Elasticsearch</a></li>
 </ul>
 
-<h3 id="452-高可用">4.5.2 高可用</h3>
+<h3 id="452-监控实践">4.5.2 监控实践</h3>
+<p>除了官方插件之外，还有更好用的Prometheus集成工具，由justwatch提供的一整套：</p>
+
+<ul>
+  <li>Exporter：
+    <ul>
+      <li>代码：<a href="https://github.com/justwatchcom/elasticsearch_exporter" target="_blank">justwatchcom/elasticsearch_exporter</a></li>
+      <li>镜像：<a href="https://hub.docker.com/r/justwatch/elasticsearch_exporter" target="_blank">justwatch/elasticsearch_exporter</a>
+        <ul>
+          <li>justwatch/elasticsearch_exporter:1.1.0rc1</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Dashboard：<a href="https://grafana.com/dashboards/2322" target="_blank">ElasticSearch</a></li>
+</ul>
+
+<p>只需要在Elasticsearch集群之外启动一个Exporter镜像，并提供Elasticsearch集群的访问地址即可获得所有的metrics，然后在Grafana内导入justwatch提供的Dashboard就可以将数据可视化。整个过程不需要代码介入，直接使用即可，非常完美。</p>
+
+<h3 id="453-高可用">4.5.3 高可用</h3>
 <p><strong>数据节点数量选择</strong></p>
 
 <ul>
@@ -1224,7 +1244,7 @@ filebeat-7.0.0-2019.05.29-000001        <span class="m">0</span> r STARTED <span
     <span class="l l-Scalar l-Scalar-Plain">logging</span><span class="p p-Indicator">:</span>
       <span class="l l-Scalar l-Scalar-Plain">&lt;&lt;</span><span class="p p-Indicator">:</span> <span class="nv">*ES_LOGGING_DEFAULTS</span>
     <span class="l l-Scalar l-Scalar-Plain">environment</span><span class="p p-Indicator">:</span>
-      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ES_HOSTS=es_1:9201,es_2:9202,es_3:9203</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">ES_HOSTS=es_1:9200,es_2:9200,es_3:9200</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">LOGGING_LEVEL=debug</span> <span class="c1"># error, warning, info, debug</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">NUM_OF_OUTPUT_WORKERS=9</span> <span class="c1"># workers会均匀分配到node：如果有3个ES的node，那么每个node会分到3个workers</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">NUM_OF_SHARDS=3</span>
