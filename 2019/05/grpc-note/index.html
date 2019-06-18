@@ -212,6 +212,7 @@
   <li><a href="#5-状态检查" id="markdown-toc-5-状态检查">5. 状态检查</a></li>
   <li><a href="#6-interceptor" id="markdown-toc-6-interceptor">6. Interceptor</a></li>
   <li><a href="#7-debug" id="markdown-toc-7-debug">7. Debug</a></li>
+  <li><a href="#8-监控" id="markdown-toc-8-监控">8. 监控</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
       <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
     </ul>
@@ -518,6 +519,16 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   <li><a href="https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go" target="_blank">server/main.go</a></li>
 </ul>
 
+<p>在使用中可能会遇到多个Interceptor同时存在的情况，在编码的时候就需要使用工具对其进行组合：<a href="https://github.com/grpc-ecosystem/go-grpc-middleware/blob/master/chain.go" target="_blank">go-grpc-middleware/chain.go</a>：</p>
+
+<figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="nx">s</span> <span class="o">:=</span> <span class="nx">grpc</span><span class="p">.</span><span class="nx">NewServer</span><span class="p">(</span>
+	<span class="nx">grpc_middleware</span><span class="p">.</span><span class="nx">WithUnaryServerChain</span><span class="p">(</span>
+		<span class="nx">grpc_opentracing</span><span class="p">.</span><span class="nx">UnaryServerInterceptor</span><span class="p">(),</span>
+		<span class="nx">grpc_prometheus</span><span class="p">.</span><span class="nx">UnaryServerInterceptor</span><span class="p">,</span>
+	<span class="p">),</span>
+	<span class="nx">grpc</span><span class="p">.</span><span class="nx">StreamInterceptor</span><span class="p">(</span><span class="nx">grpc_prometheus</span><span class="p">.</span><span class="nx">StreamServerInterceptor</span><span class="p">),</span>
+<span class="p">)</span></code></pre></figure>
+
 <h1 id="7-debug">7. Debug</h1>
 <p>官方的指引：<a href="https://github.com/grpc/grpc-go/tree/master/examples/features/debugging" target="_blank">Debugging</a>，包括了一份范例代码：</p>
 
@@ -536,6 +547,11 @@ GRPC_GO_LOG_VERBOSITY_LEVEL=99 \
 GRPC_GO_LOG_SEVERITY_LEVEL=info \
 yourapp
 </code></pre>
+
+<h1 id="8-监控">8. 监控</h1>
+<p>Grpc go自身也有监控用的Interceptor：<a href="https://github.com/grpc-ecosystem/go-grpc-prometheus" target="_blank">grpc-ecosystem/go-grpc-prometheus</a>，和HTTP服务器无关，主要是grpc自身的指标。</p>
+
+<p>范例代码可以参见README中的说明，服务端和客户端代码都有提供。</p>
 
 <h1 id="资料">资料</h1>
 <h2 id="链接">链接</h2>

@@ -1111,6 +1111,7 @@ envoy_http_downstream_cx_length_ms_count&lt;span class=&quot;o&quot;&gt;{&lt;/sp
   &lt;li&gt;&lt;a href=&quot;#5-状态检查&quot; id=&quot;markdown-toc-5-状态检查&quot;&gt;5. 状态检查&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#6-interceptor&quot; id=&quot;markdown-toc-6-interceptor&quot;&gt;6. Interceptor&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#7-debug&quot; id=&quot;markdown-toc-7-debug&quot;&gt;7. Debug&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#8-监控&quot; id=&quot;markdown-toc-8-监控&quot;&gt;8. 监控&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
@@ -1417,6 +1418,16 @@ CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
   &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go&quot; target=&quot;_blank&quot;&gt;server/main.go&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;p&gt;在使用中可能会遇到多个Interceptor同时存在的情况，在编码的时候就需要使用工具对其进行组合：&lt;a href=&quot;https://github.com/grpc-ecosystem/go-grpc-middleware/blob/master/chain.go&quot; target=&quot;_blank&quot;&gt;go-grpc-middleware/chain.go&lt;/a&gt;：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;grpc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;NewServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+	&lt;span class=&quot;nx&quot;&gt;grpc_middleware&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;WithUnaryServerChain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+		&lt;span class=&quot;nx&quot;&gt;grpc_opentracing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UnaryServerInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
+		&lt;span class=&quot;nx&quot;&gt;grpc_prometheus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UnaryServerInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+	&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+	&lt;span class=&quot;nx&quot;&gt;grpc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;StreamInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;grpc_prometheus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;StreamServerInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
 &lt;h1 id=&quot;7-debug&quot;&gt;7. Debug&lt;/h1&gt;
 &lt;p&gt;官方的指引：&lt;a href=&quot;https://github.com/grpc/grpc-go/tree/master/examples/features/debugging&quot; target=&quot;_blank&quot;&gt;Debugging&lt;/a&gt;，包括了一份范例代码：&lt;/p&gt;
 
@@ -1435,6 +1446,11 @@ GRPC_GO_LOG_VERBOSITY_LEVEL=99 \
 GRPC_GO_LOG_SEVERITY_LEVEL=info \
 yourapp
 &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h1 id=&quot;8-监控&quot;&gt;8. 监控&lt;/h1&gt;
+&lt;p&gt;Grpc go自身也有监控用的Interceptor：&lt;a href=&quot;https://github.com/grpc-ecosystem/go-grpc-prometheus&quot; target=&quot;_blank&quot;&gt;grpc-ecosystem/go-grpc-prometheus&lt;/a&gt;，和HTTP服务器无关，主要是grpc自身的指标。&lt;/p&gt;
+
+&lt;p&gt;范例代码可以参见README中的说明，服务端和客户端代码都有提供。&lt;/p&gt;
 
 &lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
 &lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;

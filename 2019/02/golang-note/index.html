@@ -185,9 +185,10 @@
   <li><a href="#6-cpu" id="markdown-toc-6-cpu">6. CPU</a></li>
   <li><a href="#7-go程" id="markdown-toc-7-go程">7. Go程</a></li>
   <li><a href="#8-debug" id="markdown-toc-8-debug">8. Debug</a></li>
-  <li><a href="#9-advanced" id="markdown-toc-9-advanced">9. Advanced</a></li>
-  <li><a href="#10-常见问题" id="markdown-toc-10-常见问题">10. 常见问题</a></li>
-  <li><a href="#11-工具" id="markdown-toc-11-工具">11. 工具</a></li>
+  <li><a href="#9-监控" id="markdown-toc-9-监控">9. 监控</a></li>
+  <li><a href="#10-advanced" id="markdown-toc-10-advanced">10. Advanced</a></li>
+  <li><a href="#11-常见问题" id="markdown-toc-11-常见问题">11. 常见问题</a></li>
+  <li><a href="#12-工具" id="markdown-toc-12-工具">12. 工具</a></li>
 </ul>
 
 <h1 id="1-前言">1. 前言</h1>
@@ -232,7 +233,12 @@ go version go1.12 darwin/amd64</code></pre></figure>
 <h1 id="8-debug">8. Debug</h1>
 <p>Go程序Debug有点类似于C语言，拥有一款和GDB相似的工具Delve。详见：<a href="/2019/03/golang-debug/" target="_blank">Golang Debug</a>。</p>
 
-<h1 id="9-advanced">9. Advanced</h1>
+<h1 id="9-监控">9. 监控</h1>
+<p>Go进程的基础监控可以使用：<a href="https://github.com/prometheus/client_golang" target="_blank">prometheus/client_golang</a>。此外，可以使用该库拓展其功能，添加应用级别的自定义metrics，可以说是相当通用。</p>
+
+<p>出乎意料的是，Grafana Dashboard竟然没有找到比较通用可靠的Go进程基本监控面板。一个热度如此之高的编程语言，其基本监控面板居然在Grafana Labs中缺失，简直不可想象。</p>
+
+<h1 id="10-advanced">10. Advanced</h1>
 <ul>
   <li>通道管线：
     <ul>
@@ -262,12 +268,12 @@ go version go1.12 darwin/amd64</code></pre></figure>
   </li>
 </ul>
 
-<h1 id="10-常见问题">10. 常见问题</h1>
+<h1 id="11-常见问题">11. 常见问题</h1>
 <ul>
   <li><a href="https://stackoverflow.com/questions/32815400/how-to-perform-division-in-go" target="_blank">How to perform division in Go</a></li>
 </ul>
 
-<h1 id="11-工具">11. 工具</h1>
+<h1 id="12-工具">12. 工具</h1>
 <ul>
   <li>ORM：<a href="https://github.com/jinzhu/gorm" target="_blank">jinzhu/gorm</a>
     <ul>
