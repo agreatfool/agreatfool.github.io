@@ -298,21 +298,23 @@
       <li><a href="#查看容器运行状态" id="markdown-toc-查看容器运行状态">查看容器运行状态</a></li>
     </ul>
   </li>
-  <li><a href="#11-swarm集群解决方案" id="markdown-toc-11-swarm集群解决方案">11. Swarm集群解决方案</a></li>
-  <li><a href="#111-overview" id="markdown-toc-111-overview">11.1 Overview</a></li>
-  <li><a href="#112-network" id="markdown-toc-112-network">11.2 Network</a></li>
-  <li><a href="#113-中文系列博文" id="markdown-toc-113-中文系列博文">11.3 中文系列博文</a></li>
-  <li><a href="#114-实际操作经验" id="markdown-toc-114-实际操作经验">11.4 实际操作经验</a>    <ul>
-      <li><a href="#1141-创建远程docker环境" id="markdown-toc-1141-创建远程docker环境">11.4.1 创建远程docker环境</a></li>
-      <li><a href="#1142-抹除远程docker环境" id="markdown-toc-1142-抹除远程docker环境">11.4.2 抹除远程docker环境</a></li>
-      <li><a href="#1143-远程命令执行" id="markdown-toc-1143-远程命令执行">11.4.3 远程命令执行</a></li>
-      <li><a href="#1144-swarm集群管理" id="markdown-toc-1144-swarm集群管理">11.4.4 Swarm集群管理</a></li>
-      <li><a href="#1145-service" id="markdown-toc-1145-service">11.4.5 Service</a></li>
-      <li><a href="#1146-stack" id="markdown-toc-1146-stack">11.4.6 Stack</a></li>
-      <li><a href="#114x-状态查看命令" id="markdown-toc-114x-状态查看命令">11.4.x 状态查看命令</a></li>
+  <li><a href="#11-swarm集群解决方案" id="markdown-toc-11-swarm集群解决方案">11. Swarm集群解决方案</a>    <ul>
+      <li><a href="#111-overview" id="markdown-toc-111-overview">11.1 Overview</a></li>
+      <li><a href="#112-network" id="markdown-toc-112-network">11.2 Network</a></li>
+      <li><a href="#113-中文系列博文" id="markdown-toc-113-中文系列博文">11.3 中文系列博文</a></li>
+      <li><a href="#114-实际操作经验" id="markdown-toc-114-实际操作经验">11.4 实际操作经验</a>        <ul>
+          <li><a href="#1141-创建远程docker环境" id="markdown-toc-1141-创建远程docker环境">11.4.1 创建远程docker环境</a></li>
+          <li><a href="#1142-抹除远程docker环境" id="markdown-toc-1142-抹除远程docker环境">11.4.2 抹除远程docker环境</a></li>
+          <li><a href="#1143-远程命令执行" id="markdown-toc-1143-远程命令执行">11.4.3 远程命令执行</a></li>
+          <li><a href="#1144-swarm集群管理" id="markdown-toc-1144-swarm集群管理">11.4.4 Swarm集群管理</a></li>
+          <li><a href="#1145-service" id="markdown-toc-1145-service">11.4.5 Service</a></li>
+          <li><a href="#1146-stack" id="markdown-toc-1146-stack">11.4.6 Stack</a></li>
+          <li><a href="#1147-状态查看命令" id="markdown-toc-1147-状态查看命令">11.4.7 状态查看命令</a></li>
+        </ul>
+      </li>
+      <li><a href="#115-issues" id="markdown-toc-115-issues">11.5 Issues</a></li>
     </ul>
   </li>
-  <li><a href="#115-issues" id="markdown-toc-115-issues">11.5 Issues</a></li>
   <li><a href="#12-其他" id="markdown-toc-12-其他">12. 其他</a>    <ul>
       <li><a href="#121-什么是docker-host" id="markdown-toc-121-什么是docker-host">12.1 什么是docker host</a></li>
       <li><a href="#122-comdockerhyperkit-x00-cpu-consumption-mac" id="markdown-toc-122-comdockerhyperkit-x00-cpu-consumption-mac">12.2 com.docker.hyperkit X00% cpu consumption MAC</a></li>
@@ -1500,7 +1502,7 @@ $ docker stats --no-stream --format <span class="se">\</span>
 </ul>
 
 <h1 id="11-swarm集群解决方案">11. Swarm集群解决方案</h1>
-<h1 id="111-overview">11.1 Overview</h1>
+<h2 id="111-overview">11.1 Overview</h2>
 <p>如今在集群解决方案方面执牛耳的无疑是Kubernetes以及Mesh解决方案Istio，但docker自身也具备集群管理和部署的能力。在Docker中这被称为Swarm，具体使用上来说：</p>
 
 <ul>
@@ -1528,7 +1530,7 @@ $ docker stats --no-stream --format <span class="se">\</span>
   </li>
 </ul>
 
-<h1 id="112-network">11.2 Network</h1>
+<h2 id="112-network">11.2 Network</h2>
 <p>Swarm集群使用的网络不再是简单的bridge类型的driver，而是overlay类型的driver。如果仅只是在单一一台物理机上部署docker container，并能够让他们相互感知并进行通讯的话，只需要使用bridge类型的driver network，而这样的网络类型是不能让两台相互物理隔离的服务器上的container相互通讯的。要做到在swarm集群内各容器相互之间能够进行通讯，则必须使用overlay类型的driver的network。</p>
 
 <ul>
@@ -1536,7 +1538,7 @@ $ docker stats --no-stream --format <span class="se">\</span>
   <li>官方架构阐释：<a href="https://github.com/docker/labs/blob/master/networking/concepts/06-overlay-networks.md">Overlay Driver Network Architecture</a>，想要了解原理的话必须深度理解这篇博文</li>
 </ul>
 
-<h1 id="113-中文系列博文">11.3 中文系列博文</h1>
+<h2 id="113-中文系列博文">11.3 中文系列博文</h2>
 <p>有作者做了一个系列的博文，虽然细节上来说并不算特别好，但看看还行了：<a href="http://www.spring4all.com/article/1254" target="_blank">Docker Swarm 系列教程</a>。最主要是三篇：</p>
 
 <ul>
@@ -1545,12 +1547,12 @@ $ docker stats --no-stream --format <span class="se">\</span>
   <li><a href="https://www.jianshu.com/p/31db684deeba" target="_blank">MongoDB 集群构建：分片+副本+选举</a></li>
 </ul>
 
-<h1 id="114-实际操作经验">11.4 实际操作经验</h1>
+<h2 id="114-实际操作经验">11.4 实际操作经验</h2>
 <p>我这里也做了点实践进行试验：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment/swarm" target="_blank">dist-system-practice/experiment/swarm/</a>。</p>
 
 <p>下面一步步进行解释。</p>
 
-<h2 id="1141-创建远程docker环境">11.4.1 创建远程docker环境</h2>
+<h3 id="1141-创建远程docker环境">11.4.1 创建远程docker环境</h3>
 <p><strong>虚拟机</strong></p>
 
 <p>docker-machine可以使用远程物理host进行docker环境部署和操控，也可以在本地进行虚拟机的制作，并进行控制和部署。虚拟机需要单独下载并安装<code>virtualbox</code>。</p>
@@ -1640,7 +1642,7 @@ $ docker-machine ls
 NAME      ACTIVE   DRIVER       STATE     URL                       SWARM   DOCKER     ERRORS
 vultr     -        generic      Running   tcp://x.x.x.x:2376                v18.09.6</code></pre></figure>
 
-<h2 id="1142-抹除远程docker环境">11.4.2 抹除远程docker环境</h2>
+<h3 id="1142-抹除远程docker环境">11.4.2 抹除远程docker环境</h3>
 <p>其实主要是在本地控制记录中将对象删除：</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker-machine rm vultr
@@ -1649,7 +1651,7 @@ WARNING: This action will delete both <span class="nb">local</span> reference an
 Are you sure? <span class="o">(</span>y/n<span class="o">)</span>: y
 Successfully removed vultr</code></pre></figure>
 
-<h2 id="1143-远程命令执行">11.4.3 远程命令执行</h2>
+<h3 id="1143-远程命令执行">11.4.3 远程命令执行</h3>
 <p>当远程实例创建完成之后，在管理者机器上形成记录，并能够远程进行命令的执行。远程命令执行有两种方法：</p>
 
 <p><strong>ssh</strong></p>
@@ -1662,7 +1664,7 @@ Successfully removed vultr</code></pre></figure>
 
 <p>如果要退出远程机器的会话，则需要执行：<code>eval "$(docker-machine env -u)"</code>。</p>
 
-<h2 id="1144-swarm集群管理">11.4.4 Swarm集群管理</h2>
+<h3 id="1144-swarm集群管理">11.4.4 Swarm集群管理</h3>
 <p>Swarm集群由一个Manager节点，多个备用Manager节点，以及大量Worker节点组成。官方文档：<a href="https://docs.docker.com/engine/reference/commandline/swarm/" target="_blank">docker swarm</a>。</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker node ls
@@ -1706,7 +1708,7 @@ Node left the swarm.</code></pre></figure>
 
 <p>Manager节点必须要带上<code>--force</code>option，Worker节点则不需要。</p>
 
-<h2 id="1145-service">11.4.5 Service</h2>
+<h3 id="1145-service">11.4.5 Service</h3>
 <p>在Swarm集群中，一个容器被称为<code>服务 Service</code>，实际上还是个容器，只不过叫法不一样而已。官方文档：<a href="https://docs.docker.com/engine/reference/commandline/service/" target="_blank">docker service</a>。</p>
 
 <p><strong>创建服务</strong></p>
@@ -1743,7 +1745,7 @@ memcached</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service --help</code></pre></figure>
 
-<h2 id="1146-stack">11.4.6 Stack</h2>
+<h3 id="1146-stack">11.4.6 Stack</h3>
 <p>类似于docker service就是docker run的Swarm版本，stack可以理解为Swarm版本的compose。一样需要指定一个compose.yaml配置文件，然后开始stack的部署。这里需要注意，一般compose的部分选项在Swarm的stack中是不可用的，当然大部分都是通用的。</p>
 
 <p><strong>启动stack</strong></p>
@@ -1760,7 +1762,7 @@ Removing service dist_memcache_admin
 Removing service dist_memcached
 Removing network dist_net</code></pre></figure>
 
-<h2 id="114x-状态查看命令">11.4.x 状态查看命令</h2>
+<h3 id="1147-状态查看命令">11.4.7 状态查看命令</h3>
 <p><strong>查看所有远程主机</strong></p>
 
 <p>该命令需要在管理者机器上执行，不是远程主机，注意。</p>
@@ -1843,7 +1845,7 @@ kscj4niatj9n        dist_memcached.1        memcached:1.5.14-alpine             
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service logs <span class="nv">$name</span></code></pre></figure>
 
-<h1 id="115-issues">11.5 Issues</h1>
+<h2 id="115-issues">11.5 Issues</h2>
 <p>从compose.yaml进行docker stack deploy出来的服务总是会遇到：<code>getaddrinfo(): name does not resolve</code>，启动的服务无法解析域名，一直都没有查到问题。</p>
 
 <p>一开始以为是dns问题：</p>
