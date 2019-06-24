@@ -1840,8 +1840,8 @@ yourapp
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/kafka-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/kafka-cluster.yaml&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/prometheus-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/prometheus-cluster.yaml&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/kafka/&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/prometheus/grafana/dashboards&quot; target=&quot;_blank&quot;&gt;dist-system-practice/prometheus/grafana/dashboards/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/vendors/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/vendors/kafka/&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/vendors/prometheus/grafana/dashboards&quot; target=&quot;_blank&quot;&gt;dist-system-practice/vendors/prometheus/grafana/dashboards/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;Exporter方面，jmx_exporter和kafka_exporter同时使用，两者侧重不同。jmx_exporter主要用来进行JVM监控，针对java runtime自身的状态进行监控，而kafka_exporter则针对kafka运行状况进行监控（其实只要不怕麻烦自己处理dashboard，则jmx_exporter就完全足够了）。&lt;/p&gt;
@@ -2156,7 +2156,7 @@ yourapp
 &lt;p&gt;实验使用的还是下载下来的Kafka，版本如头部申明的是&lt;code&gt;2.2.0&lt;/code&gt;。范例代码可以在Github查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/experiment/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/experiment/kafka/&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h1 id=&quot;8-在docker内部署集群&quot;&gt;8. 在Docker内部署集群&lt;/h1&gt;
-&lt;p&gt;一般来说部署一个以上的docker容器组成集群，可以使用bash脚本的方法，自己编写命令一个个启动，但更好的方法是使用&lt;code&gt;docker-compose&lt;/code&gt;命令，读取配置文件，将整个集群按设定的模式启动起来。可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/kafka-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/kafka-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;一般来说部署一个以上的docker容器组成集群，可以使用bash脚本的方法，自己编写命令一个个启动，但更好的方法是使用&lt;code&gt;docker-compose&lt;/code&gt;命令，读取配置文件，将整个集群按设定的模式启动起来。可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/kafka-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/kafka-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;启动脚本：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/dev/docker_kafka.sh&quot; target=&quot;_blank&quot;&gt;dist-system-practice/bash/dev/docker_kafka.sh&lt;/a&gt;。&lt;/p&gt;
 
@@ -3778,7 +3778,7 @@ filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/sp
 &lt;p&gt;这则例子非常简单，基本上没有涉及任何比较核心的使用，粗略看下启动还是可以的。&lt;/p&gt;
 
 &lt;h1 id=&quot;8-docker集群部署&quot;&gt;8. Docker集群部署&lt;/h1&gt;
-&lt;p&gt;仍旧是使用docker-compose进行群组的编辑和启动，可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/elk-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/elk-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;仍旧是使用docker-compose进行群组的编辑和启动，可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/elk-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/elk-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;启动脚本：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/dev/docker_elasticsearch.sh&quot; target=&quot;_blank&quot;&gt;dist-system-practice/bash/dev/docker_elasticsearch.sh&lt;/a&gt;。&lt;/p&gt;
 
@@ -6004,8 +6004,8 @@ tools               # 忽略
 &lt;/code&gt;&lt;/pre&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;数据源配置文件范例，参见：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/prometheus/grafana/provisioning/datasources/datasource.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/prometheus/grafana/provisioning/datasources/datasource.yaml&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Dashboard配置文件范例，参见：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/prometheus/grafana/provisioning/dashboards/providers.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/prometheus/grafana/provisioning/dashboards/providers.yaml&lt;/a&gt;。实际上就是指定一个文件夹，一般也是用bind mount的方式mapping到容器内即可。&lt;/li&gt;
+  &lt;li&gt;数据源配置文件范例，参见：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/vendors/prometheus/grafana/provisioning/datasources/datasource.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/vendors/prometheus/grafana/provisioning/datasources/datasource.yaml&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;Dashboard配置文件范例，参见：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/vendors/prometheus/grafana/provisioning/dashboards/providers.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/vendors/prometheus/grafana/provisioning/dashboards/providers.yaml&lt;/a&gt;。实际上就是指定一个文件夹，一般也是用bind mount的方式mapping到容器内即可。&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;64-dashboard&quot;&gt;6.4 Dashboard&lt;/h2&gt;

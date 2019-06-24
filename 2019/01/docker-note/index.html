@@ -298,9 +298,24 @@
       <li><a href="#查看容器运行状态" id="markdown-toc-查看容器运行状态">查看容器运行状态</a></li>
     </ul>
   </li>
-  <li><a href="#11-其他" id="markdown-toc-11-其他">11. 其他</a>    <ul>
-      <li><a href="#111-什么是docker-host" id="markdown-toc-111-什么是docker-host">11.1 什么是docker host</a></li>
-      <li><a href="#112-comdockerhyperkit-x00-cpu-consumption-mac" id="markdown-toc-112-comdockerhyperkit-x00-cpu-consumption-mac">11.2 com.docker.hyperkit X00% cpu consumption MAC</a></li>
+  <li><a href="#11-swarm集群解决方案" id="markdown-toc-11-swarm集群解决方案">11. Swarm集群解决方案</a></li>
+  <li><a href="#111-overview" id="markdown-toc-111-overview">11.1 Overview</a></li>
+  <li><a href="#112-network" id="markdown-toc-112-network">11.2 Network</a></li>
+  <li><a href="#113-中文系列博文" id="markdown-toc-113-中文系列博文">11.3 中文系列博文</a></li>
+  <li><a href="#114-实际操作经验" id="markdown-toc-114-实际操作经验">11.4 实际操作经验</a>    <ul>
+      <li><a href="#1141-创建远程docker环境" id="markdown-toc-1141-创建远程docker环境">11.4.1 创建远程docker环境</a></li>
+      <li><a href="#1142-抹除远程docker环境" id="markdown-toc-1142-抹除远程docker环境">11.4.2 抹除远程docker环境</a></li>
+      <li><a href="#1143-远程命令执行" id="markdown-toc-1143-远程命令执行">11.4.3 远程命令执行</a></li>
+      <li><a href="#1144-swarm集群管理" id="markdown-toc-1144-swarm集群管理">11.4.4 Swarm集群管理</a></li>
+      <li><a href="#1145-service" id="markdown-toc-1145-service">11.4.5 Service</a></li>
+      <li><a href="#1146-stack" id="markdown-toc-1146-stack">11.4.6 Stack</a></li>
+      <li><a href="#114x-状态查看命令" id="markdown-toc-114x-状态查看命令">11.4.x 状态查看命令</a></li>
+    </ul>
+  </li>
+  <li><a href="#115-issues" id="markdown-toc-115-issues">11.5 Issues</a></li>
+  <li><a href="#12-其他" id="markdown-toc-12-其他">12. 其他</a>    <ul>
+      <li><a href="#121-什么是docker-host" id="markdown-toc-121-什么是docker-host">12.1 什么是docker host</a></li>
+      <li><a href="#122-comdockerhyperkit-x00-cpu-consumption-mac" id="markdown-toc-122-comdockerhyperkit-x00-cpu-consumption-mac">12.2 com.docker.hyperkit X00% cpu consumption MAC</a></li>
     </ul>
   </li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a>    <ul>
@@ -341,6 +356,8 @@ Server: Docker Engine - Community
 </code></pre>
 
 <p>此外，<a href="#ID_APP_DOCKER_INFO">docker info</a>比较长，就不贴这里了，放在下面的资料部分。简单看了下应该是不带敏感信息的，这部分应该是做了剔除的。</p>
+
+<p>这里顺道加一个非常重要的文档：<a href="https://github.com/docker/labs" target="_blank">Docker Tutorials and Labs</a>。这个文档库里存放的是docker官方的tutorial以及一些架构设计等的资料。对于想要深入的读者来说是非常重要的资料。</p>
 
 <h1 id="2-安装">2. 安装</h1>
 <p>MAC下的安装比较简单，直接下载Docker官方的桌面版本即可：<a href="https://hub.docker.com/editions/community/docker-ce-desktop-mac" target="_blank">Docker Desktop for Mac</a>。文档在：<a href="https://docs.docker.com/docker-for-mac/" target="_blank">Get started with Docker Desktop for Mac</a>。</p>
@@ -1482,8 +1499,385 @@ $ docker stats --no-stream --format <span class="se">\</span>
   <li><a href="https://www.cnblogs.com/sparkdev/p/7821376.html" target="_blank">查看 docker 容器使用的资源</a></li>
 </ul>
 
-<h1 id="11-其他">11. 其他</h1>
-<h2 id="111-什么是docker-host">11.1 什么是docker host</h2>
+<h1 id="11-swarm集群解决方案">11. Swarm集群解决方案</h1>
+<h1 id="111-overview">11.1 Overview</h1>
+<p>如今在集群解决方案方面执牛耳的无疑是Kubernetes以及Mesh解决方案Istio，但docker自身也具备集群管理和部署的能力。在Docker中这被称为Swarm，具体使用上来说：</p>
+
+<ul>
+  <li>docker-machine：在远程主机上安装docker engine守护进程，保证远程主机作为docker环境可用，并将远程机器记录在操作者机器上，形成记录，以便后续远程控制</li>
+  <li>docker swarm：系列命令可以用来构建一个swarm集群，其中有一台作为master机，所有的集群操作都必须在master机上执行</li>
+  <li>docker stack：集群部署相关命令，使用compose配置文件，swarm版的docker compose命令</li>
+  <li>docker service：单独服务管理命令，swarm版的docker run命令</li>
+</ul>
+
+<p>相关官方文档：</p>
+
+<ul>
+  <li>docker machine：
+    <ul>
+      <li><a href="https://docs.docker.com/machine/overview/" target="_blank">Docker Machine Overview</a></li>
+      <li><a href="https://docs.docker.com/machine/get-started/" target="_blank">Get started with Docker Machine and a local VM</a></li>
+      <li><a href="https://docs.docker.com/machine/examples/aws/" target="_blank">Amazon Web Services (AWS) EC2 example</a></li>
+      <li><a href="https://docs.docker.com/machine/drivers/generic/" target="_blank">Generic</a></li>
+    </ul>
+  </li>
+  <li>docker swarm：
+    <ul>
+      <li><a href="https://docs.docker.com/engine/swarm/" target="_blank">Swarm mode overview</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="112-network">11.2 Network</h1>
+<p>Swarm集群使用的网络不再是简单的bridge类型的driver，而是overlay类型的driver。如果仅只是在单一一台物理机上部署docker container，并能够让他们相互感知并进行通讯的话，只需要使用bridge类型的driver network，而这样的网络类型是不能让两台相互物理隔离的服务器上的container相互通讯的。要做到在swarm集群内各容器相互之间能够进行通讯，则必须使用overlay类型的driver的network。</p>
+
+<ul>
+  <li>官方tutorial：<a href="https://github.com/docker/labs/blob/master/networking/A3-overlay-networking.md" target="_blank">Overlay networking and service discovery</a>，使用上看这篇就OK了</li>
+  <li>官方架构阐释：<a href="https://github.com/docker/labs/blob/master/networking/concepts/06-overlay-networks.md">Overlay Driver Network Architecture</a>，想要了解原理的话必须深度理解这篇博文</li>
+</ul>
+
+<h1 id="113-中文系列博文">11.3 中文系列博文</h1>
+<p>有作者做了一个系列的博文，虽然细节上来说并不算特别好，但看看还行了：<a href="http://www.spring4all.com/article/1254" target="_blank">Docker Swarm 系列教程</a>。最主要是三篇：</p>
+
+<ul>
+  <li><a href="https://www.jianshu.com/p/3251f2991d5c" target="_blank">Docker Swarm - 单机创建 Swarm 集群</a></li>
+  <li><a href="https://www.jianshu.com/p/48dd5fff7150" target="_blank">Docker Swarm - 节点管理</a></li>
+  <li><a href="https://www.jianshu.com/p/31db684deeba" target="_blank">MongoDB 集群构建：分片+副本+选举</a></li>
+</ul>
+
+<h1 id="114-实际操作经验">11.4 实际操作经验</h1>
+<p>我这里也做了点实践进行试验：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment/swarm" target="_blank">dist-system-practice/experiment/swarm/</a>。</p>
+
+<p>下面一步步进行解释。</p>
+
+<h2 id="1141-创建远程docker环境">11.4.1 创建远程docker环境</h2>
+<p><strong>虚拟机</strong></p>
+
+<p>docker-machine可以使用远程物理host进行docker环境部署和操控，也可以在本地进行虚拟机的制作，并进行控制和部署。虚拟机需要单独下载并安装<code>virtualbox</code>。</p>
+
+<p>MAC下安装：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ brew cask install virtualbox</code></pre></figure>
+
+<p>此外需要下载virtualbox的镜像，并放到对应的文件夹下，下载releases：<a href="https://github.com/boot2docker/boot2docker/releases/" target="_blank">boot2docker/boot2docker</a>。下载完成后放到：<code>~/.docker/machine/cache</code>。</p>
+
+<p>虚拟机的创建，driver类型为<code>virtualbox</code>：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker-machine create -d virtualbox --help <span class="c1"># 帮助选项查看</span>
+
+$ docker-machine create -d virtualbox <span class="se">\</span>
+    --virtualbox-boot2docker-url ~/.docker/machine/cache/boot2docker.iso <span class="se">\</span>
+    --virtualbox-hostonly-cidr <span class="s2">&quot;192.168.99.1/24&quot;</span> <span class="se">\</span>
+    --engine-opt <span class="nv">dns</span><span class="o">=</span><span class="m">192</span>.168.99.1 <span class="se">\</span>
+    host1
+Running pre-create checks...
+<span class="o">(</span>host1<span class="o">)</span> Boot2Docker URL was explicitly <span class="nb">set</span> to <span class="s2">&quot;/Users/xxx/.docker/machine/cache/boot2docker.iso&quot;</span> at create time, so Docker Machine cannot upgrade this machine to the latest version.
+Creating machine...
+<span class="o">(</span>host1<span class="o">)</span> Boot2Docker URL was explicitly <span class="nb">set</span> to <span class="s2">&quot;/Users/xxx/.docker/machine/cache/boot2docker.iso&quot;</span> at create time, so Docker Machine cannot upgrade this machine to the latest version.
+<span class="o">(</span>host1<span class="o">)</span> Downloading /Users/xxx/.docker/machine/cache/boot2docker.iso from /Users/xxx/.docker/machine/cache/boot2docker.iso...
+<span class="o">(</span>host1<span class="o">)</span> Creating VirtualBox VM...
+<span class="o">(</span>host1<span class="o">)</span> Creating SSH key...
+<span class="o">(</span>host1<span class="o">)</span> Starting the VM...
+<span class="o">(</span>host1<span class="o">)</span> Check network to re-create <span class="k">if</span> needed...
+<span class="o">(</span>host1<span class="o">)</span> Waiting <span class="k">for</span> an IP...
+Waiting <span class="k">for</span> machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting <span class="k">for</span> SSH to be available...
+Detecting the provisioner...
+Provisioning with boot2docker...
+Copying certs to the <span class="nb">local</span> machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Docker is up and running!
+To see how to connect your Docker Client to the Docker Engine running on this virtual machine, run: docker-machine env host1
+
+$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+host1     -        virtualbox   Running   tcp://192.168.99.100:2376           v18.09.2
+host2     -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.2</code></pre></figure>
+
+<p><strong>远程host</strong></p>
+
+<p>远程物理host创建，driver类型为<code>generic</code>（文档：<a href="https://docs.docker.com/machine/drivers/generic/" target="_blank">Generic</a>）。如果要创建某些受官方支持的云服务的远程环境，可以参考：<a href="https://docs.docker.com/machine/drivers/" target="_blank">Machine drivers</a>。如果创建的只是普通的远程host实例，则选择driver为<code>generic</code>即可。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker-machine create -d generic --help <span class="c1"># 帮助选项查看</span>
+
+$ docker-machine create -d generic <span class="se">\</span>
+    --generic-ip-address<span class="o">=</span>x.x.x.x <span class="se">\</span>
+    --generic-ssh-port <span class="m">22</span> <span class="se">\</span>
+    --generic-ssh-key ~/.ssh/id_rsa <span class="se">\</span>
+    --generic-ssh-user root <span class="se">\</span>
+    vultr
+Running pre-create checks...
+Creating machine...
+<span class="o">(</span>vultr<span class="o">)</span> No SSH key specified. Assuming an existing key at the default location.
+Waiting <span class="k">for</span> machine to be running, this may take a few minutes...
+Detecting operating system of created instance...
+Waiting <span class="k">for</span> SSH to be available...
+Detecting the provisioner...
+Provisioning with ubuntu<span class="o">(</span>systemd<span class="o">)</span>...
+Installing Docker...
+Copying certs to the <span class="nb">local</span> machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+Checking connection to Docker...
+Error creating machine: Error checking the host: Error checking and/or regenerating the certs: There was an error validating certificates <span class="k">for</span> host <span class="s2">&quot;x.x.x.x:2376&quot;</span>: tls: DialWithDialer timed out
+You can attempt to regenerate them using <span class="s1">&#39;docker-machine regenerate-certs [name]&#39;</span>.
+Be advised that this will trigger a Docker daemon restart which might stop running containers.
+
+$ docker-machine regenerate-certs vultr
+Regenerate TLS machine certs?  Warning: this is irreversible. <span class="o">(</span>y/n<span class="o">)</span>: y
+Regenerating TLS certificates
+Waiting <span class="k">for</span> SSH to be available...
+Detecting the provisioner...
+Installing Docker...
+Copying certs to the <span class="nb">local</span> machine directory...
+Copying certs to the remote machine...
+Setting Docker configuration on the remote daemon...
+
+$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                       SWARM   DOCKER     ERRORS
+vultr     -        generic      Running   tcp://x.x.x.x:2376                v18.09.6</code></pre></figure>
+
+<h2 id="1142-抹除远程docker环境">11.4.2 抹除远程docker环境</h2>
+<p>其实主要是在本地控制记录中将对象删除：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker-machine rm vultr
+About to remove vultr
+WARNING: This action will delete both <span class="nb">local</span> reference and remote instance.
+Are you sure? <span class="o">(</span>y/n<span class="o">)</span>: y
+Successfully removed vultr</code></pre></figure>
+
+<h2 id="1143-远程命令执行">11.4.3 远程命令执行</h2>
+<p>当远程实例创建完成之后，在管理者机器上形成记录，并能够远程进行命令的执行。远程命令执行有两种方法：</p>
+
+<p><strong>ssh</strong></p>
+
+<p>使用<code>docker-machine ssh $name "$command"</code>的方式可以执行远程命令，如果使用<code>docker-machine ssh $name</code>则可以直接登录到远程机器环境。</p>
+
+<p><strong>env</strong></p>
+
+<p>ssh方法可以做很多事情，但打命令会比较繁琐，毕竟每条命令都需要带上docker-machine前缀。另一种方法则是使用<code>eval "$(docker-machine env $name)"</code>命令，来将当前会话窗口的执行环境切换到<code>$name</code>机器，即当上述命令执行完毕后，当前会话内的所有命令都是在<code>$name</code>机器上执行的，而不是管理者机器。</p>
+
+<p>如果要退出远程机器的会话，则需要执行：<code>eval "$(docker-machine env -u)"</code>。</p>
+
+<h2 id="1144-swarm集群管理">11.4.4 Swarm集群管理</h2>
+<p>Swarm集群由一个Manager节点，多个备用Manager节点，以及大量Worker节点组成。官方文档：<a href="https://docs.docker.com/engine/reference/commandline/swarm/" target="_blank">docker swarm</a>。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS
+3fff9l59dvn5jvot2s27gf9n2 *   ManagerX            Ready               Active              Leader
+4byjmtcm1ag8qffxjwnhwsf4l     WorkerA             Ready               Active
+sks1qb0zqlaetmpsqfj5tfx56     WorkerB             Ready               Active</code></pre></figure>
+
+<p>Manager状态正常为<code>Leader</code>，备选为<code>Reachable</code>。Worker节点正常状态为<code>Active</code>。</p>
+
+<p><strong>创建Swarm集群</strong>  <br />
+记住，所有的Swarm集群操作都必须要到远程机器上执行，而不是在管理者机器上执行。也就是说必须使用<code>docker-machine ssh ...</code>或<code>eval "$(docker-machine env ...)"</code>来操作。</p>
+
+<p>如果要创建一个Swarm集群，需要到被选为Manager的节点上：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker swarm init --advertise-addr <span class="m">192</span>.168.99.100
+Swarm initialized: current node <span class="o">(</span>lvfnka9mz92699ke3j189dznd<span class="o">)</span> is now a manager.
+
+To add a worker to this swarm, run the following command:
+
+    docker swarm join --token SWMTKN-1-4zc49exg8u9vh9nsasua10xzu2a5qaxahmgblxkejltw6v6mt0-aadqrk196sgi97z4nkn6eagjl <span class="m">192</span>.168.99.100:2377
+
+To add a manager to this swarm, run <span class="s1">&#39;docker swarm join-token manager&#39;</span> and follow the instructions.</code></pre></figure>
+
+<p>后面的IP地址为被选为Manager的机器的自机IP。</p>
+
+<p><strong>添加Worker节点</strong></p>
+
+<p>要向一个只有Manager的Swarm集群添加Worker节点：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker swarm join --token SWMTKN-1-4zc49exg8u9vh9nsasua10xzu2a5qaxahmgblxkejltw6v6mt0-aadqrk196sgi97z4nkn6eagjl <span class="m">192</span>.168.99.100:2377
+This node joined a swarm as a worker.</code></pre></figure>
+
+<p>这句命令在刚才Manager创建Swarm集群的时候已经被打印出来了，照做即可。不要忘记该命令必须到被要求加入Swarm集群的Worker节点上执行。</p>
+
+<p><strong>离开集群</strong>  <br />
+如果需要将某个节点剔除出集群，则需要到该节点上执行：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker swarm leave --force
+Node left the swarm.</code></pre></figure>
+
+<p>Manager节点必须要带上<code>--force</code>option，Worker节点则不需要。</p>
+
+<h2 id="1145-service">11.4.5 Service</h2>
+<p>在Swarm集群中，一个容器被称为<code>服务 Service</code>，实际上还是个容器，只不过叫法不一样而已。官方文档：<a href="https://docs.docker.com/engine/reference/commandline/service/" target="_blank">docker service</a>。</p>
+
+<p><strong>创建服务</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service create <span class="se">\</span>
+    --name memcached <span class="se">\</span>
+    --network dist_net <span class="se">\</span>
+    --replicas <span class="m">1</span> <span class="se">\</span>
+    -p <span class="m">11211</span>:11211 <span class="se">\</span>
+    --constraint node.hostname<span class="o">==</span>host1 <span class="se">\</span>
+    memcached:1.5.14-alpine <span class="se">\</span>
+    -l <span class="m">0</span>.0.0.0 <span class="se">\</span>
+    -p <span class="m">11211</span> <span class="se">\</span>
+    -m <span class="m">64</span>
+uezlg3xa9ku412l4la8i8tue7
+overall progress: <span class="m">1</span> out of <span class="m">1</span> tasks
+<span class="m">1</span>/1: running   <span class="o">[==================================================</span>&gt;<span class="o">]</span>
+verify: Service converged</code></pre></figure>
+
+<p>大部分的option和使用docker run的时候没有差别，这里需要注意的是：</p>
+
+<ul>
+  <li>replicas：在整个集群中，指定的服务需要启动多少个，如果是类似于web server这样的无状态角色，就很容易理解，一般和<code>constraint</code>结合使用，指定部署的节点范围</li>
+  <li>constraint：限制部署的对象节点，范例中<code>node.hostname</code>指定的是被命令的单个节点，该服务只允许部署到这个节点上</li>
+</ul>
+
+<p><strong>停止服务</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service rm memcached
+memcached</code></pre></figure>
+
+<p><strong>其他命令</strong>  <br />
+其他服务相关命令可以查看：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service --help</code></pre></figure>
+
+<h2 id="1146-stack">11.4.6 Stack</h2>
+<p>类似于docker service就是docker run的Swarm版本，stack可以理解为Swarm版本的compose。一样需要指定一个compose.yaml配置文件，然后开始stack的部署。这里需要注意，一般compose的部分选项在Swarm的stack中是不可用的，当然大部分都是通用的。</p>
+
+<p><strong>启动stack</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker stack deploy ./cluster.yaml dist
+Creating network dist_net
+Creating service dist_memcache_admin
+Creating service dist_memcached</code></pre></figure>
+
+<p><strong>停止stack</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker stack rm dist
+Removing service dist_memcache_admin
+Removing service dist_memcached
+Removing network dist_net</code></pre></figure>
+
+<h2 id="114x-状态查看命令">11.4.x 状态查看命令</h2>
+<p><strong>查看所有远程主机</strong></p>
+
+<p>该命令需要在管理者机器上执行，不是远程主机，注意。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker-machine ls
+NAME      ACTIVE   DRIVER       STATE     URL                         SWARM   DOCKER     ERRORS
+host1     -        virtualbox   Running   tcp://192.168.99.100:2376           v18.09.2
+host2     -        virtualbox   Running   tcp://192.168.99.101:2376           v18.09.2</code></pre></figure>
+
+<p><strong>查看Swarm集群所有节点</strong></p>
+
+<p>需要到Swarm集群Manager节点上执行命令。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker node ls
+ID                            HOSTNAME            STATUS              AVAILABILITY        MANAGER STATUS      ENGINE VERSION
+z70e57nrkfpbcs33j5pyzzaqi *   host1               Ready               Active              Leader              <span class="m">18</span>.09.2
+x2f6tereq1btochykl18lrrtv     host2               Ready               Active                                  <span class="m">18</span>.09.2</code></pre></figure>
+
+<p><strong>查看Swarm单个节点细节</strong></p>
+
+<p>需要到对应节点上执行命令。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker node inspect host1 --pretty
+ID:                 un1mkdvkh814oehap89wna4zw
+Hostname:           host1
+Joined at:          <span class="m">2019</span>-06-24 <span class="m">08</span>:04:35.836543206 +0000 utc
+Status:
+ State:             Ready
+ Availability:      Active
+ Address:           <span class="m">192</span>.168.99.116
+Manager Status:
+ Address:           <span class="m">192</span>.168.99.116:2377
+ Raft Status:       Reachable
+ Leader:            Yes
+Platform:
+ Operating System:  linux
+ Architecture:      x86_64
+Resources:
+ CPUs:              <span class="m">1</span>
+ Memory:            <span class="m">989</span>.4MiB
+Plugins:
+ Log:               awslogs, fluentd, gcplogs, gelf, journald, json-file, local, logentries, splunk, syslog
+ Network:           bridge, host, macvlan, null, overlay
+ Volume:            <span class="nb">local</span>
+Engine Version:     <span class="m">18</span>.09.2</code></pre></figure>
+
+<p><strong>查看Swarm集群所有服务</strong></p>
+
+<p>需要到Swarm集群Manager节点上执行命令。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service ls
+ID                  NAME                MODE                REPLICAS            IMAGE                                PORTS
+b3ozvdgrgudv        memcache_admin      replicated          <span class="m">1</span>/1                 plopix/docker-memcacheadmin:latest   *:9083-&gt;9083/tcp
+yujhl39733lg        memcached           replicated          <span class="m">1</span>/1                 memcached:1.5.14-alpine              *:11211-&gt;11211/tcp</code></pre></figure>
+
+<p><strong>查看Swarm集群单个服务</strong></p>
+
+<p>需要到Swarm集群Manager节点上执行命令。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service ps memcached
+ID                  NAME                IMAGE                     NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
+oe41a6ioom9r        memcached.1         memcached:1.5.14-alpine   host1               Running             Running about a minute ago
+
+$ docker service ps memcache_admin
+ID                  NAME                IMAGE                                NODE                DESIRED STATE       CURRENT STATE                ERROR               PORTS
+w9y6zhukra0w        memcache_admin.1    plopix/docker-memcacheadmin:latest   host2               Running             </code></pre></figure>
+
+<p><strong>查看Swarm集群Stack细节</strong></p>
+
+<p>需要到Swarm集群Manager节点上执行命令。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker stack ps dist
+ID                  NAME                    IMAGE                                NODE                DESIRED STATE       CURRENT STATE            ERROR                        PORTS
+kscj4niatj9n        dist_memcached.1        memcached:1.5.14-alpine              host1               Running             Running <span class="m">1</span> second ago
+4hcwv6ni3elv        dist_memcache_admin.1   plopix/docker-memcacheadmin:latest   host2               Running             Running <span class="m">31</span> seconds ago</code></pre></figure>
+
+<p><strong>查看Swarm单个服务的日志</strong></p>
+
+<p>需要到Swarm集群Manager节点上执行命令。服务日志其实就是容器日志。</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker service logs <span class="nv">$name</span></code></pre></figure>
+
+<h1 id="115-issues">11.5 Issues</h1>
+<p>从compose.yaml进行docker stack deploy出来的服务总是会遇到：<code>getaddrinfo(): name does not resolve</code>，启动的服务无法解析域名，一直都没有查到问题。</p>
+
+<p>一开始以为是dns问题：</p>
+
+<ul>
+  <li><a href="https://stackoverflow.com/questions/34296230/how-to-change-default-docker-machines-dns-settings" target="_blank">How to change “default” docker-machine’s dns settings</a></li>
+  <li><a href="https://github.com/moby/moby/issues/34259" target="_blank">docker stack deploy completely ignores dns settings #34259</a></li>
+</ul>
+
+<p>然后根据stackoverflow的讨论进行machine create的options设定，发现<code>--engine-opt dns=8.8.8.8</code>会被docker-machine create忽略：</p>
+
+<pre><code>cat ~/.docker/machine/machines/cache/config.json
+    "HostOptions": {
+        "Driver": "",
+        "Memory": 0,
+        "Disk": 0,
+        "EngineOptions": {
+            "ArbitraryFlags": [
+                "dns=192.168.99.1"
+            ],
+            "Dns": null,
+            ...
+</code></pre>
+
+<p>Dns选项为null，而要求的内容则出现在了EngineOptions &gt; ArbitraryFlags里。</p>
+
+<p>最后抛开DNS不管，直接不使用compose配置文件，也不使用docker stack deploy命令，直接使用docker service create命令，和compose配置文件中一模一样的option却发现启动成功。估计是stack命令内部实现有点问题。</p>
+
+<p>Swarm因为与K8S竞争失败，最近已经很久听不到消息了，官方的资料以及社区的讨论都是非常老的资料，有问题什么都查不到。此外，很简单的一个容器服务，在Swarm集群中以Service启动非常非常慢，好几十秒才把很简单的一个memcached启动起来。实际使用如果也是这种性能的话是完全不能接受的。</p>
+
+<p>总之，Swarm的现状来看，完全不适合使用在生产环境。应用风险非常之高。</p>
+
+<h1 id="12-其他">12. 其他</h1>
+<h2 id="121-什么是docker-host">12.1 什么是docker host</h2>
 <p>在很多docker的文档里都提到了<code>docker host</code>这个概念。至于什么是docker host，可以参见链接：<a href="https://forums.docker.com/t/clarify-what-is-the-host/29640/2" target="_blank">Clarify what is the host</a>。</p>
 
 <blockquote>
@@ -1492,7 +1886,7 @@ $ docker stats --no-stream --format <span class="se">\</span>
   <p>Docker machine is basically the second option. When you do a docker-machine create it creates a new virtual machine with Docker already installed. This means that to access any containers running on this machine you’ll have to use the IP address of the virtual machine. Also, to give Docker access to a file you’ll either have to copy it to the VM that’s running Docker, or share a directory between your OS and the VM that’s running Docker.</p>
 </blockquote>
 
-<h2 id="112-comdockerhyperkit-x00-cpu-consumption-mac">11.2 com.docker.hyperkit X00% cpu consumption MAC</h2>
+<h2 id="122-comdockerhyperkit-x00-cpu-consumption-mac">12.2 com.docker.hyperkit X00% cpu consumption MAC</h2>
 <p>在MAC上使用docker，如果放一些有真实负载的container，一般都会遇到这个问题（甚至是没什么负载，只是搭建环境都会）。</p>
 
 <p>官方论坛有一个issue：<a href="https://github.com/docker/for-mac/issues/1759#issuecomment-481742599" target="_blank">High CPU Utilization of Hyperkit in Mac #1759</a>，到现在还是<code>open状态</code>，且看起来解决遥遥无期。</p>
