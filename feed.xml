@@ -3920,6 +3920,22 @@ filebeat-7.0.0-2019.05.29-000001        &lt;span class=&quot;m&quot;&gt;0&lt;/sp
   &lt;p&gt;It is intentional. This setting does not denote a hostname, but the node name or the advertised publish address. In particular, it is not an address that is resolved or actively connected to. The discovery.seed_hosts setting is used for that. The cluster.initial_master_nodes setting is used to determine the identities of the subset of master-eligible nodes that participate in the bootstrapping process after discovery.seed_hosts has established a connection to the nodes.&lt;/p&gt;
 &lt;/blockquote&gt;
 
+&lt;p&gt;&lt;strong&gt;UPDATE&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;在后续的实践中遇到了新问题，之前测试因为都一直使用一个物理机，并将所有的es节点都部署在同一个docker network下，因此没有发现问题。&lt;/p&gt;
+
+&lt;p&gt;问题描述：如果将不同的容器放入并非同一个而是分开的单独network中，集群的组建就不能依赖docker network当中内部的host，而是需要手动设定，否则集群无法组建起来。&lt;/p&gt;
+
+&lt;p&gt;这个问题和kafka集群的INSIDE、OUTSIDE设置，需要配置不同的HOST是一样的道理。为了让es集群各节点能在隔离的网络下互相访问，需要在设置中指明内部流量应该通过什么地址进行相互发现。上文中关于集群组建的相关配置一个都不能少，也不需要改动，这里需要做的配置改动是引进一个新的配置项：&lt;code&gt;network.publish_host&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;参见：&lt;a href=&quot;https://www.elastic.co/cn/blog/docker-networking&quot; target=&quot;_blank&quot;&gt;Docker Networking&lt;/a&gt;：&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;When running Elasticsearch, you will need to ensure it publishes to an IP address that is reachable from outside the container; this can be configured via the setting network.publish_host.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;这个配置项配置为：&lt;code&gt;${物理主机HOST/IP}:${内部流量PORT}&lt;/code&gt;即可，e.g &lt;code&gt;192.168.3.111:9300&lt;/code&gt;。这样集群里的各节点就可以相互发现并组成集群了。&lt;/p&gt;
+
 &lt;h2 id=&quot;82-kibana配置&quot;&gt;8.2 Kibana配置&lt;/h2&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
