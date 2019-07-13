@@ -191,6 +191,7 @@
       <li><a href="#replace指令" id="markdown-toc-replace指令">replace指令</a></li>
     </ul>
   </li>
+  <li><a href="#8-实际经验" id="markdown-toc-8-实际经验">8. 实际经验</a></li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a></li>
 </ul>
 
@@ -434,6 +435,57 @@ replace golang.org/x/net <span class="o">=</span>&gt; github.com/golang/net v0.0
 	<span class="nx">fmt</span><span class="p">.</span><span class="nx">Println</span><span class="p">(</span><span class="nx">z</span><span class="p">)</span>
 <span class="p">}</span></code></pre></figure>
 
+<h1 id="8-实际经验">8. 实际经验</h1>
+<p>如果定义一个模块名为<code>test-module</code>（一般不会这么干，都是以代码仓库为模块名，e.g <code>github.com/gin-gonic/gin</code>）。</p>
+
+<p>则：</p>
+
+<ul>
+  <li>go.mod文件第一行为：<code>module test-module</code></li>
+  <li>该模块代码文件必须存放在<code>$GOPATH/src/test-module</code>下</li>
+  <li>代码包申明及引用相关：
+    <ul>
+      <li>代码文件的物理文件夹位置即包名</li>
+      <li>源码文件中的包名申明只需要路径的最后一段在代码中写明，不需要完整路径
+        <ul>
+          <li>e.g</li>
+          <li><code>test-module/lib/dao</code></li>
+          <li>代码中的包为<code>package dao</code></li>
+        </ul>
+      </li>
+      <li>其他代码引用的时候永远以模块名为起始，不能使用相对路径，即便是同模块的其他代码，e.g <code>import "test-module/lib/dao"</code></li>
+      <li>正因此，go项目的源码总是散在根目录下面的，不可以自行组织子文件夹
+        <ul>
+          <li>✗ <code>$GOPATH/src/test-module/src/lib/dao</code></li>
+          <li>✗ <code>$GOPATH/src/test-module/dao/lib/dao</code></li>
+          <li>√ <code>$GOPATH/src/test-module/lib/dao</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>这也是为什么我的<a href="https://github.com/agreatfool/dist-system-practice" target="_blank">分布式实践项目代码库</a>不能作为一个go模块来使用，因为我的实践代码库中，源代码相关内容并不是存放在根目录下面的。</p>
+
+<pre><code>dist-system-practice /-
+                      | ... # 其他大量资料
+                      | golang /- # 自定义的$GOPATH
+                                | src /-
+                                       | dist-system-practice # 这里才是真正的项目代码
+</code></pre>
+
+<p>而要作为一个go模块来使用，则文件结构只能是：</p>
+
+<pre><code>dist-system-practice /-
+                      | # 这里直接就是源码了
+                      | lib 
+                      | vendors
+                      | web
+                      | ...
+</code></pre>
+
+<p>代码直接放在代码库根目录下。</p>
+
 <h1 id="资料">资料</h1>
 <ul>
   <li><a href="https://github.com/golang/go/wiki/Modules" target="_blank">Go 1.11 Modules</a></li>
@@ -460,6 +512,8 @@ replace golang.org/x/net <span class="o">=</span>&gt; github.com/golang/net v0.0
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2019/07/dist-system-practice/">分布式系统实战</a></li>
+    
     <li><a href="/2019/05/memcached-note/">Memcached Notes</a></li>
     
     <li><a href="/2019/05/golang-pipeline/">Golang Pipeline</a></li>
@@ -467,8 +521,6 @@ replace golang.org/x/net <span class="o">=</span>&gt; github.com/golang/net v0.0
     <li><a href="/2019/05/envoy-note/">Envoy Notes</a></li>
     
     <li><a href="/2019/05/grpc-note/">gRPC Notes</a></li>
-    
-    <li><a href="/2019/04/kafka-note/">Kafka Notes</a></li>
     
   </ul>
 </div>
@@ -558,6 +610,8 @@ replace golang.org/x/net <span class="o">=</span>&gt; github.com/golang/net v0.0
       <li><a href="/category/gRPC">gRPC</a></li>
     
       <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
     
   </ul>
 </div>

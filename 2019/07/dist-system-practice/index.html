@@ -1,0 +1,1945 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>分布式系统实战 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/07/dist-system-practice/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/07/dist-system-practice/">分布式系统实战</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>13 Jul 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DistributedSystem">DistributedSystem</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Docker">Docker</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Kubernetes">Kubernetes</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Envoy">Envoy</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Istio">Istio</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/gRPC">gRPC</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Golang">Golang</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Monitor">Monitor</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Metrics">Metrics</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Performance">Performance</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Benchmark">Benchmark</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Prometheus">Prometheus</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Grafana">Grafana</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Jaeger">Jaeger</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/TimeSeriesDB">TimeSeriesDB</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DevOps">DevOps</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Kafka">Kafka</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MessageQueue">MessageQueue</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/OpenTracing">OpenTracing</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Elasticsearch">Elasticsearch</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/AlibabaCloud">AlibabaCloud</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Keynote">Keynote</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a>    <ul>
+      <li><a href="#11-相关资源清单" id="markdown-toc-11-相关资源清单">1.1 相关资源清单</a>        <ul>
+          <li><a href="#PRACTICE_CODE" id="markdown-toc-PRACTICE_CODE">1.1.1 实践代码</a></li>
+          <li><a href="#112-组件实验代码" id="markdown-toc-112-组件实验代码">1.1.2 组件实验代码</a></li>
+          <li><a href="#113-go语言实验代码" id="markdown-toc-113-go语言实验代码">1.1.3 go语言实验代码</a></li>
+          <li><a href="#114-组件专题" id="markdown-toc-114-组件专题">1.1.4 组件专题</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#COMPONENT_LIST" id="markdown-toc-COMPONENT_LIST">2. 组件清单</a></li>
+  <li><a href="#3-架构" id="markdown-toc-3-架构">3. 架构</a>    <ul>
+      <li><a href="#31-组件列表" id="markdown-toc-31-组件列表">3.1 组件列表</a></li>
+      <li><a href="#311-部分未实践组件" id="markdown-toc-311-部分未实践组件">3.1.1 部分未实践组件</a></li>
+      <li><a href="#32-数据模型" id="markdown-toc-32-数据模型">3.2 数据模型</a></li>
+      <li><a href="#33-业务流程" id="markdown-toc-33-业务流程">3.3 业务流程</a></li>
+      <li><a href="#34-系统架构" id="markdown-toc-34-系统架构">3.4 系统架构</a></li>
+      <li><a href="#35-部署拓扑" id="markdown-toc-35-部署拓扑">3.5 部署拓扑</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-测试" id="markdown-toc-4-测试">4. 测试</a>    <ul>
+      <li><a href="#TEST_TARGET" id="markdown-toc-TEST_TARGET">4.1 测试目标</a></li>
+      <li><a href="#42-测试硬件" id="markdown-toc-42-测试硬件">4.2 测试硬件</a></li>
+      <li><a href="#43-测试规划" id="markdown-toc-43-测试规划">4.3 测试规划</a></li>
+      <li><a href="#44-观测清单" id="markdown-toc-44-观测清单">4.4 观测清单</a></li>
+      <li><a href="#45-部署工程" id="markdown-toc-45-部署工程">4.5 部署工程</a></li>
+      <li><a href="#46-测试执行--报告制作" id="markdown-toc-46-测试执行--报告制作">4.6 测试执行 &amp; 报告制作</a>        <ul>
+          <li><a href="#461-获取elasticsearchkibana数据" id="markdown-toc-461-获取elasticsearchkibana数据">4.6.1 获取Elasticsearch（Kibana）数据</a></li>
+          <li><a href="#462-获取jaeger数据" id="markdown-toc-462-获取jaeger数据">4.6.2 获取Jaeger数据</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#5-报告" id="markdown-toc-5-报告">5. 报告</a>    <ul>
+      <li><a href="#51-第一次测试" id="markdown-toc-51-第一次测试">5.1 第一次测试</a></li>
+      <li><a href="#52-第二次测试" id="markdown-toc-52-第二次测试">5.2 第二次测试</a></li>
+    </ul>
+  </li>
+  <li><a href="#appendix" id="markdown-toc-appendix">Appendix</a>    <ul>
+      <li><a href="#MONITORING_LIST" id="markdown-toc-MONITORING_LIST">观测清单</a>        <ul>
+          <li><a href="#host" id="markdown-toc-host">Host</a></li>
+          <li><a href="#container" id="markdown-toc-container">Container</a></li>
+          <li><a href="#memcached" id="markdown-toc-memcached">Memcached</a></li>
+          <li><a href="#mysql" id="markdown-toc-mysql">MySQL</a></li>
+          <li><a href="#prometheus" id="markdown-toc-prometheus">Prometheus</a></li>
+          <li><a href="#kafka-jmx" id="markdown-toc-kafka-jmx">Kafka JMX</a></li>
+          <li><a href="#kafka-exporter" id="markdown-toc-kafka-exporter">Kafka Exporter</a></li>
+          <li><a href="#jaeger-agent" id="markdown-toc-jaeger-agent">Jaeger Agent</a></li>
+          <li><a href="#jaeger-collector" id="markdown-toc-jaeger-collector">Jaeger Collector</a></li>
+          <li><a href="#filebeat" id="markdown-toc-filebeat">Filebeat</a></li>
+          <li><a href="#elasticsearch" id="markdown-toc-elasticsearch">Elasticsearch</a></li>
+          <li><a href="#golang" id="markdown-toc-golang">Golang</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>分布式系统因其使用的组件较多，复杂度较高，较难掌握。常说，写出一个能跑的东西很简单，但要全面掌握一门技术，并能够在任何情况下解决其发生的问题，则要难得多得多。分布式系统的难，更多的在于使用的组件多，每一个组件如果都需要掌握其从设计到运行的一系列技术细节就非常困难。此外，分布式系统的监控和分析也很难，也是因其组件多造成的，一个请求流转于多个组件之间，就很难定位当问题发生的时候其源头何在。</p>
+
+<p>在长期的工作中，一直都没有实地进行实践的机会（公司体量、投入、团队管理等各种因素），因此就萌生了自己做一个实践项目，然后在云服务器上部署进行测试实验的念头。在此付诸实行。</p>
+
+<h2 id="11-相关资源清单">1.1 相关资源清单</h2>
+<p>下面将大量资料进行清单整理，方便后续取用。</p>
+
+<h3 id="PRACTICE_CODE">1.1.1 实践代码</h3>
+<p>该项目的实际实践代码在：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice" target="_blank">dist-system-practice/golang/src/dist-system-practice/</a>。该处的README主要提供了：</p>
+
+<ul>
+  <li>应用程序（Web、Service、Consumer）的环境变量清单</li>
+  <li>开发环境的组件清单及端口描述</li>
+  <li>开发环境的部署及启动命令</li>
+  <li>代码文件结构描述</li>
+</ul>
+
+<p>线上环境的部署、启动、测试、导出数据等功能的相关实现在脚本：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/prod/cluster/src/index.ts" target="_blank">cluster/src/index.ts</a>。其功能及使用描述在：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/prod/cluster/README.md" target="_blank">README.md</a>。</p>
+
+<p>线上服务器拓扑及服务网格相关的配置在：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/prod/cluster/src/index.ts#L22">index.ts#L22</a>。</p>
+
+<p>Grafana数据导出相关配置在：<a href="https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/prod/cluster/src/index.ts#L147" target="_blank">index.ts#L147</a>。</p>
+
+<h3 id="112-组件实验代码">1.1.2 组件实验代码</h3>
+<p>部分组件的简单实验代码在：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/experiment" target="_blank">dist-system-practice/experiment/</a>。</p>
+
+<h3 id="113-go语言实验代码">1.1.3 go语言实验代码</h3>
+<p>go语言的简单实验代码在：<a href="https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment" target="_blank">dist-system-practice/golang/src/experiment/</a>。</p>
+
+<h3 id="114-组件专题">1.1.4 组件专题</h3>
+<p>对于项目中使用到的一系列组件，我这里都做过比较深入的使用测试及调研，并制作了一系列的专题博文。可以参见列表：<a href="#COMPONENT_LIST">2. 组件清单</a>。</p>
+
+<h1 id="COMPONENT_LIST">2. 组件清单</h1>
+<p>实践项目中（计划）使用到了如下组件：</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: left">组件</th>
+      <th style="text-align: left">角色</th>
+      <th style="text-align: left">专题</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: left">Golang</td>
+      <td style="text-align: left">应用程序</td>
+      <td style="text-align: left"><a href="/2019/02/golang-note/" target="_blank">Golang Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">MySQL</td>
+      <td style="text-align: left">数据库</td>
+      <td style="text-align: left">Draft</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Memcached</td>
+      <td style="text-align: left">缓存</td>
+      <td style="text-align: left"><a href="/2019/05/memcached-note/" target="_blank">Memcached Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Docker</td>
+      <td style="text-align: left">底层容器</td>
+      <td style="text-align: left"><a href="/2019/01/docker-note/" target="_blank">Docker Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Envoy</td>
+      <td style="text-align: left">代理入口</td>
+      <td style="text-align: left"><a href="/2019/02/envoy-note/" target="_blank">Envoy Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">gRPC</td>
+      <td style="text-align: left">组件通讯</td>
+      <td style="text-align: left"><a href="/2019/05/grpc-note/" target="_blank">gRPC Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Kafka</td>
+      <td style="text-align: left">消息队列</td>
+      <td style="text-align: left"><a href="/2019/04/kafka-note/" target="_blank">Kafka Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Prometheus</td>
+      <td style="text-align: left">监控系统</td>
+      <td style="text-align: left"><a href="/2019/04/prometheus-note/" target="_blank">Prometheus Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Grafana</td>
+      <td style="text-align: left">监控UI</td>
+      <td style="text-align: left"><a href="/2019/04/grafana-note/" target="_blank">Grafana Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Jaeger</td>
+      <td style="text-align: left">链路追踪</td>
+      <td style="text-align: left"><a href="/2019/04/jaeger-note/" target="_blank">Jaeger Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Cassandra</td>
+      <td style="text-align: left">数据库</td>
+      <td style="text-align: left">Draft</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Elasticsearch</td>
+      <td style="text-align: left">聚合分析</td>
+      <td style="text-align: left"><a href="/2019/04/elasticsearch-note/" target="_blank">Elasticsearch Notes</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Kubernetes</td>
+      <td style="text-align: left">容器管理</td>
+      <td style="text-align: left">TODO</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Istio</td>
+      <td style="text-align: left">服务编排</td>
+      <td style="text-align: left">TODO</td>
+    </tr>
+    <tr>
+      <td style="text-align: left">Linux</td>
+      <td style="text-align: left">操作系统</td>
+      <td style="text-align: left">Draft</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>201902之前，Golang、Docker、Kafka、Elasticsearch、Grafana、Prometheus、Jaeger于我的相关积累基本为0，基本上完全没直接接触过（实践），而到了6月底，我已经可以很熟练启动、使用这些组件，更重要的是完全理解它们的设计、架构，以及性能和部分调优手段。</p>
+
+<p>对于”程序”的理解，以及超快的学习速度和学习能力，才是程序员能够在软件行业一直活下去的关键，我一直如此深信。</p>
+
+<h1 id="3-架构">3. 架构</h1>
+<p>因为是一个实验性项目，应用程序的逻辑和架构做的非常简单。</p>
+
+<h2 id="31-组件列表">3.1 组件列表</h2>
+
+<ul>
+  <li>Web：go语言编写的web服务器，整个集群的入口</li>
+  <li>Service：go语言编写的gRPC服务器，web收到请求后不进行任何业务实际处理，直接通过gRPC发到Service，由Service处理完成后返回</li>
+  <li>Consumer：go语言编写的Kafka消费者，处理部分Service安排到Kafka的异步任务</li>
+  <li>Kafka：负责将部分Service的运算进行消息入队，并分发给Consumer处理（异步、解耦）</li>
+  <li>MySQL：应用程序的存储服务</li>
+  <li>Memcached：应用程序的缓存服务</li>
+  <li>Filebeat：负责将Web、Service、Consumer产生的有用日志（过滤）上传到Elasticsearch集群</li>
+  <li>Elasticsearch、Kibana：负责将Web、Service、Consumer产生的业务日志索引入库，以便后续查询</li>
+  <li>Cassandra：Jaeger Tracing的存储服务</li>
+  <li>Jaeger（Agent、Collector、Query）：负责接收Web、Service、Consumer发出的Span、Trace数据，入库以便后续查询</li>
+  <li>*Exporter：负责将各组件的状态以HTTP的方式输出出来</li>
+  <li>Prometheus：将 *Exporter 输出的数据采集，并录入到时序数据库中，以便后续查询</li>
+  <li>Grafana：负责将各组件的观察需求固定化，对Prometheus时序数据库进行查询，绘制图表</li>
+</ul>
+
+<h2 id="311-部分未实践组件">3.1.1 部分未实践组件</h2>
+<p>部分列在<a href="#COMPONENT_LIST">2. 组件清单</a>中的组件实际上并未实际使用。因时间和精力的原因，只能割舍掉了。</p>
+
+<ul>
+  <li>Envoy：整体业务过于简单，不存在在Web服务器之前架设Envoy的必要性；而内部架构也过于简单，不存在架设Envoy作为内部流量控制入口的必要性</li>
+  <li>Kubernetes：实践复杂度过高，因精力原因放弃</li>
+  <li>Istio：实践复杂度过高，因精力原因放弃</li>
+</ul>
+
+<h2 id="32-数据模型">3.2 数据模型</h2>
+
+<p>整个业务流程中只涉及到一个数据模型：</p>
+
+<figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="kd">type</span> <span class="nx">Work</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Id</span>            <span class="kt">uint32</span>
+	<span class="nx">Viewed</span>        <span class="kt">uint32</span>
+	<span class="nx">AchievedCount</span> <span class="kt">uint32</span>
+	<span class="nx">Achievement</span>   <span class="kt">string</span>
+	<span class="nx">IsPlanned</span>     <span class="kt">bool</span>
+	<span class="nx">PlannedAt</span>     <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+	<span class="nx">AchievedAt</span>    <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+	<span class="nx">Created</span>       <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+	<span class="nx">Updated</span>       <span class="nx">time</span><span class="p">.</span><span class="nx">Time</span>
+<span class="p">}</span></code></pre></figure>
+
+<ul>
+  <li>Id：自增长主键，每一条Work数据唯一</li>
+  <li>Viewed：是一个累加的int型，每次<code>/viewed</code>API访问，该值+1</li>
+  <li>AchievedCount：是一个累加的int型，每次完成<code>/plan</code>API的任务推送及Consumer的achievement更新之后，该值+1</li>
+  <li>Achievement：该值由Service的<code>/plan</code>API推送任务到Kafka，然后由Consumer获取任务之后进行运算并更新</li>
+  <li>IsPlanned：状态标识，当<code>/plan</code>API完成之后标记为true，当Consumer运算并更新完成后标记为false</li>
+  <li>PlannedAt：时间</li>
+  <li>AchievedAt：时间</li>
+  <li>Created：时间</li>
+  <li>Updated：时间</li>
+</ul>
+
+<h2 id="33-业务流程">3.3 业务流程</h2>
+
+<p><strong>Web服务器</strong></p>
+
+<p>应用程序的入口为go语言编写的web服务器（Web），提供5个API（所有的API都不要求提供WorkId，会在API内部自行随机一个WorkId进行处理，方便后续自动化测试）：</p>
+
+<ul>
+  <li><code>/work</code>：获取Work数据，并返回</li>
+  <li><code>/viewed</code>：获取Work数据，并返回Viewed值</li>
+  <li><code>/achievement</code>：获取Work数据，并返回Achievement值</li>
+  <li><code>/plan</code>：获取Work数据，并将任务安排到Kafka队列，更新IsPlanned以及PlannedAt字段的值</li>
+  <li><code>/api</code>：根据设置好的概率（可配置）抽取上述4个接口中的一个进行执行，实际上的性能测试入口</li>
+</ul>
+
+<p><strong>Consumer消费者</strong></p>
+
+<p>Kafka的消费者为go语言编写的服务器，对消息进行处理：从Kafka中获取任务，根据Id获取Work数据，根据计算因子计算出Achievement字符串值，更新IsPlanned、AchievedAt、Achievement字段的值。</p>
+
+<h2 id="34-系统架构">3.4 系统架构</h2>
+<p><img src="/resources/2019/07/dist-system-practice/logic_flow.png" alt="" target="_blank" /></p>
+
+<p><code>*Exporter</code>这部分比较简略，因为基本上每个组件都有自己的Exporter，要详实还原实际的架构这图就没法看了。因此就只简单列出了go app相关的几条线。</p>
+
+<h2 id="35-部署拓扑">3.5 部署拓扑</h2>
+<p><img src="/resources/2019/07/dist-system-practice/topology.png" alt="" target="_blank" /></p>
+
+<p>因预算关系，Elasticsearch和Kafka集群的分布并不是特别理想，不过也只能这样了。此外，图中还少了一个<code>Client</code>节点，专门用来运行Vegeta压测客户端的，因比较简单这里就没有绘制上去。</p>
+
+<h1 id="4-测试">4. 测试</h1>
+<h2 id="TEST_TARGET">4.1 测试目标</h2>
+<p>制定测试目标一般需要以下步骤：</p>
+
+<ul>
+  <li>固定拓扑架构：尽量按线上真实情景的拓扑架构进行测试，如果规模过大的话，可以按比缩小（虽然会失真）</li>
+  <li>设定业务指标：同时在线100万、PV10亿等</li>
+  <li>将业务指标转化为可测试的程序指标：QPS、DB Transaction/s</li>
+</ul>
+
+<p>这样就可以针对可测试的程序指标进行测试了。</p>
+
+<p>而更进一步的测试目标可以细分为两类：</p>
+
+<ul>
+  <li>测试指标达标：当前系统可以负载起目标需求，在此基础上还可以找出系统的最高负载瓶颈点，并提出优化方案</li>
+  <li>测试指标未达标：当前系统未可以负载起目标需求，需要找出系统的瓶颈，并提出优化方案；后续需要多轮测试以验证优化的执行情况</li>
+</ul>
+
+<p>就当前的项目来说，因为是纯粹的模拟测试项目，所以不存在真实的业务需求和业务指标，因此无法设定具体的程序指标，也就无从谈起是否达标的问题。只能说通过测试慢慢摸索当前架构的性能峰值，以及瓶颈点：</p>
+
+<blockquote>
+  <p>在固定硬件规格、程序拓扑架构之后，逐步提升客户端的QPS，查看系统负载的上升情况，找出系统最高负载值，并找出系统整体的瓶颈点</p>
+</blockquote>
+
+<h2 id="42-测试硬件">4.2 测试硬件</h2>
+<p>这次的测试选用的是Linode的云服务器，在选择的时候首先考虑的当然是国内的服务商，但发现像我这样只需要短期使用资源的客户（几个小时到1天左右）国内的服务商的付费方式太糟糕了。一般来说国内的服务商都是按月付费，所谓的按时收费其单价换算下来要比按月付费高得多得多，因此实际上是不可用的。</p>
+
+<p>海外服务商一开始考虑使用Vultr，毕竟性价比是最高的，但后来发现Vultr对客户有非常严格的限制，如果需要租用大量机器或高性能机器的话，需要发Ticket进行人工审核。不出意外，我这样短期租用的客户被拒了。最后只能选用Linode，Linode在这方面倒是没有额外的限制，隋开随用。</p>
+
+<p>实际使用的是Linode的16G机型：6 CPU、16G RAM、320G Storage。简单Benchmark结果如下：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ wget -qO- bench.sh <span class="p">|</span> bash
+
+----------------------------------------------------------------------
+CPU model            : AMD EPYC <span class="m">7601</span> <span class="m">32</span>-Core Processor
+Number of cores      : <span class="m">6</span>
+CPU frequency        : <span class="m">2199</span>.996 MHz
+Total size of Disk   : <span class="m">315</span>.0 GB <span class="o">(</span><span class="m">2</span>.2 GB Used<span class="o">)</span>
+Total amount of Mem  : <span class="m">16040</span> MB <span class="o">(</span><span class="m">120</span> MB Used<span class="o">)</span>
+Total amount of Swap : <span class="m">511</span> MB <span class="o">(</span><span class="m">0</span> MB Used<span class="o">)</span>
+System uptime        : <span class="m">0</span> days, <span class="m">0</span> hour <span class="m">2</span> min
+Load average         : <span class="m">0</span>.29, <span class="m">0</span>.22, <span class="m">0</span>.09
+OS                   : Ubuntu <span class="m">18</span>.04.2 LTS
+Arch                 : x86_64 <span class="o">(</span><span class="m">64</span> Bit<span class="o">)</span>
+Kernel               : <span class="m">4</span>.15.0-50-generic
+----------------------------------------------------------------------
+I/O speed<span class="o">(</span>1st run<span class="o">)</span>   : <span class="m">892</span> MB/s
+I/O speed<span class="o">(</span>2nd run<span class="o">)</span>   : <span class="m">1</span>.1 GB/s
+I/O speed<span class="o">(</span>3rd run<span class="o">)</span>   : <span class="m">1</span>.0 GB/s
+Average I/O speed    : <span class="m">1014</span>.1 MB/s
+----------------------------------------------------------------------
+Node Name                       IPv4 address            Download Speed
+CacheFly                        <span class="m">205</span>.234.175.175         144MB/s
+Linode, Tokyo, JP               <span class="m">106</span>.187.96.148          <span class="m">20</span>.7MB/s
+Linode, Singapore, SG           <span class="m">139</span>.162.23.4            <span class="m">6</span>.48MB/s
+Linode, London, UK              <span class="m">176</span>.58.107.39           <span class="m">9</span>.71MB/s
+Linode, Frankfurt, DE           <span class="m">139</span>.162.130.8           <span class="m">15</span>.4MB/s
+Linode, Fremont, CA             <span class="m">50</span>.116.14.9             205MB/s
+Softlayer, Dallas, TX           <span class="m">173</span>.192.68.18           <span class="m">44</span>.9MB/s
+Softlayer, Seattle, WA          <span class="m">67</span>.228.112.250          <span class="m">44</span>.8MB/s
+Softlayer, Frankfurt, DE        <span class="m">159</span>.122.69.4            <span class="m">4</span>.92MB/s
+Softlayer, Singapore, SG        <span class="m">119</span>.81.28.170           <span class="m">8</span>.21MB/s
+Softlayer, HongKong, CN         <span class="m">119</span>.81.130.170          <span class="m">10</span>.4MB/s
+----------------------------------------------------------------------
+Node Name                       IPv6 address            Download Speed
+Linode, Atlanta, GA             <span class="m">2600</span>:3c02::4b           <span class="m">39</span>.3MB/s
+Linode, Dallas, TX              <span class="m">2600</span>:3c00::4b           <span class="m">28</span>.9MB/s
+Linode, Newark, NJ              <span class="m">2600</span>:3c03::4b           <span class="m">18</span>.3MB/s
+Linode, Singapore, SG           <span class="m">2400</span>:8901::4b           <span class="m">5</span>.36MB/s
+Linode, Tokyo, JP               <span class="m">2400</span>:8900::4b           <span class="m">20</span>.5MB/s
+Softlayer, San Jose, CA         <span class="m">2607</span>:f0d0:2601:2a::4    <span class="m">95</span>.4MB/s
+...
+----------------------------------------------------------------------</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ <span class="o">(</span>curl -s wget.racing/nench.sh <span class="p">|</span> bash<span class="o">)</span> <span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span> <span class="p">|</span> tee nench.log
+
+-------------------------------------------------
+nench.sh v2019.06.29 -- https://git.io/nench.sh
+benchmark timestamp:    <span class="m">2019</span>-07-12 <span class="m">05</span>:48:17 UTC
+-------------------------------------------------
+
+Processor:    AMD EPYC <span class="m">7601</span> <span class="m">32</span>-Core Processor
+CPU cores:    <span class="m">6</span>
+Frequency:    <span class="m">2199</span>.996 MHz
+RAM:          15G
+Swap:         511M
+Kernel:       Linux <span class="m">4</span>.15.0-50-generic x86_64
+
+Disks:
+sda  <span class="m">319</span>.5G  HDD
+sdb    512M  HDD
+
+CPU: SHA256-hashing <span class="m">500</span> MB
+<span class="m">2</span>.962 seconds
+CPU: bzip2-compressing <span class="m">500</span> MB
+<span class="m">6</span>.310 seconds
+CPU: AES-encrypting <span class="m">500</span> MB
+<span class="m">1</span>.362 seconds
+
+ioping: seek rate
+min/avg/max/mdev <span class="o">=</span> <span class="m">62</span>.2 us / <span class="m">112</span>.5 us / <span class="m">2</span>.94 ms / <span class="m">75</span>.5 us
+ioping: sequential <span class="nb">read</span> speed
+generated <span class="m">16</span>.5 k requests in <span class="m">5</span>.00 s, <span class="m">4</span>.03 GiB, <span class="m">3</span>.30 k iops, <span class="m">824</span>.3 MiB/s
+
+dd: sequential write speed
+1st run:    <span class="m">855</span>.45 MiB/s
+2nd run:    <span class="m">1049</span>.04 MiB/s
+3rd run:    <span class="m">1049</span>.04 MiB/s
+average:    <span class="m">984</span>.51 MiB/s
+
+IPv4 speedtests
+your IPv4:    <span class="m">173</span>.255.252.xxxx
+
+Cachefly CDN:         <span class="m">175</span>.13 MiB/s
+Leaseweb <span class="o">(</span>NL<span class="o">)</span>:        <span class="m">13</span>.85 MiB/s
+Softlayer DAL <span class="o">(</span>US<span class="o">)</span>:   <span class="m">38</span>.74 MiB/s
+Online.net <span class="o">(</span>FR<span class="o">)</span>:      <span class="m">11</span>.06 MiB/s
+OVH BHS <span class="o">(</span>CA<span class="o">)</span>:         <span class="m">16</span>.75 MiB/s
+
+IPv6 speedtests
+your IPv6:    <span class="m">2600</span>:3c01::xxxx
+
+Leaseweb <span class="o">(</span>NL<span class="o">)</span>:        <span class="m">7</span>.77 MiB/s
+Softlayer DAL <span class="o">(</span>US<span class="o">)</span>:   <span class="m">0</span>.00 MiB/s
+Online.net <span class="o">(</span>FR<span class="o">)</span>:      <span class="m">8</span>.44 MiB/s
+OVH BHS <span class="o">(</span>CA<span class="o">)</span>:         <span class="m">17</span>.60 MiB/s
+-------------------------------------------------</code></pre></figure>
+
+<p>我是很想把CPU上到至少8个核，但囿于预算，还是降了一档。</p>
+
+<h2 id="43-测试规划">4.3 测试规划</h2>
+<p>上面在<a href="#TEST_TARGET">4.1 测试目标</a>的时候提到了设定目标需要固定程序拓扑架构，但即便在程序架构固定的情况下，仍旧有大量细节（参数、配置）是可以微调变动的：</p>
+
+<ul>
+  <li>客户端连接数量：最大连接数，越大的最大连接数意味着越高的并发请求可能，而提升并发意味着负载的显著上升</li>
+  <li>客户端请求速率：同时到达服务器的请求数量，即并发请求数量，并发数量的上升最终体现在这个指标的提升上</li>
+  <li>数据库表量级：不同数据量的数据库表，其性能也会显著不同，因此在测试的时候也可以变动下表数据量再进行测试</li>
+  <li>数据库连接：少量的连接不足以处理请求，但过大的连接数也会显著降低性能，这方面也是一个测试点</li>
+  <li>gRPC连接池容量：虽然gRPC的Go客户端对于并发的处理非常好，但连接池仍旧在某些情况下有其作用，如何找出合理的并发池容量也是可选的测试条目之一</li>
+  <li>Kafka目标Topic的分片数量：提升分片数量会降低写入的性能，但更多的分片意味着更多的消费者，消息的处理速度会上升</li>
+  <li>Elasticsearch集群的Node数量：提升节点会降低写入性能，但会提升查询性能</li>
+  <li>JVM设置：各个用到JVM的软件一般都需要很精细地对JVM进行配置和调优，才能很好地发挥性能，而这方面的配置变化对测试的影响也很大</li>
+  <li>消费者计算因子：随着因子数值的调大，计算量会显著上升，最终会体现在Consumer角色的负载上升，以及Kafka队列的堆积不能及时消费等</li>
+</ul>
+
+<p>测试的规划制定需要固定大部分的变量、配置，仅修改少部分，然后进行多次测试，横向比较性能的变化，就可以找出当前架构的最佳性能表现设置。</p>
+
+<h2 id="44-观测清单">4.4 观测清单</h2>
+<p>下面是一份当前程序架构中需要进行重点观测的程序指标清单。这部分太长了，我放到最后的<a href="#MONITORING_LIST">Appendix</a>里，不影响阅读。</p>
+
+<h2 id="45-部署工程">4.5 部署工程</h2>
+<p>部署工作：</p>
+
+<ul>
+  <li>在Linode服务商这里申请开服务器</li>
+  <li>因Linode不支持在开服务器的时候直接部署SSH Key，需要使用命令来部署：ssh-copy-id -i ~/.ssh/id_rsa.pub root@xxx.xxx.xxx.xxx</li>
+  <li>使用<a href="#PRACTICE_CODE">1.1.1 实践代码</a>提到的线上部署脚本进行部署：
+    <ul>
+      <li>./cluster.sh –machine</li>
+      <li>./cluster.sh –image</li>
+      <li>./cluster.sh –deploy –machine-type=all</li>
+    </ul>
+  </li>
+  <li>使用 ./cluster.sh –docker-ps –machine-type=all 来观察是否启动正常</li>
+  <li>打开 MONITER_IP:9090 来查看是否所有的监控节点都正常在线</li>
+  <li>打开 MONITER_IP:5601 来设置ES内的Index Pattern</li>
+  <li>使用 curl -v http://WEB_IP:8000/work 等入口测试是否正常运行</li>
+</ul>
+
+<h2 id="46-测试执行--报告制作">4.6 测试执行 &amp; 报告制作</h2>
+<p>部署完成之后：</p>
+
+<ul>
+  <li>记录测试开始时间</li>
+  <li>修改cluster.sh内相关配置</li>
+  <li>运行 ./cluster.sh –stress –machine-type=all 获得测试命令</li>
+  <li>在Client Host上执行测试命令开始测试，并观察实时报表中的报错数及响应时长变化（如有大量错误和大量超时，需要中断测试，并查找原因）</li>
+  <li>打开 MONITER_IP:9090 观察监控节点是否正常在线</li>
+  <li>打开 MONITER_IP:3000 观察监控指标变化</li>
+  <li>在测试完成前，使用pprof获取30秒间隔的两份堆内存dump（Web、Service、Consumer都需要）：
+    <ul>
+      <li>go tool pprof http://HOST:PORT/debug/pprof/heap
+        <ul>
+          <li>Saved profile in /Users/XXX/pprof/pprof.web.alloc_objects.alloc_space.inuse_objects.inuse_space.001.pb.gz</li>
+        </ul>
+      </li>
+      <li>go tool pprof -png /Users/XXX/pprof/pprof.web.alloc_objects.alloc_space.inuse_objects.inuse_space.001.pb.gz &gt; web_heap.png</li>
+    </ul>
+  </li>
+  <li>在测试完成之前，使用pprof获取30秒的CPU dump（Web、Service、Consumer都需要）：
+    <ul>
+      <li>go tool pprof http://HOST:PORT/debug/pprof/profile?seconds=30
+        <ul>
+          <li>Saved profile in /Users/XXX/pprof/pprof.web.samples.cpu.001.pb.gz</li>
+        </ul>
+      </li>
+      <li>go tool pprof -png /Users/XXX/pprof/pprof.web.samples.cpu.001.pb.gz &gt; web_cpu.png</li>
+    </ul>
+  </li>
+</ul>
+
+<p>测试完成后：</p>
+
+<ul>
+  <li>记录测试结束时间</li>
+  <li>修改cluster.sh内相关配置</li>
+  <li>使用 ./cluster.sh –report 导出测试结果数据</li>
+  <li>手动获取Elasticsearch数据，并填入到报表模板中
+    <ul>
+      <li>获取时间段内所有Web请求数量，与客户端报表中数值进行比对是否匹配</li>
+      <li>获取时间段内所有的Consumer请求数量，与Web请求中的 /plan 数量进行比对是否匹配</li>
+      <li>获取时间段内所有Web请求API类型的配比，与配置项中的数值进行比对是否匹配</li>
+    </ul>
+  </li>
+  <li>手动获取Jaeger数据，并填入到报表模板中
+    <ul>
+      <li>时间段内各Web API的耗时图表</li>
+    </ul>
+  </li>
+  <li>将压测执行客户端的报表数据填入到报表模板中</li>
+  <li>将之前导出的CPU和堆内存Profiling数据以图片形式导出，并填入到报表模板中</li>
+  <li>修改导出的报表模板，添加测试实际配置数据，并编写结论板块内容</li>
+  <li>将完工的所有内容提交到代码库中：
+    <ul>
+      <li>cluster/report/XXXXX/images</li>
+      <li>cluster/report/XXXXX/report_XXXXX.md</li>
+      <li>cluster/report/XXXXX/pprof/* 导出的CPU和堆内存dump</li>
+      <li>cluster/output/*</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="461-获取elasticsearchkibana数据">4.6.1 获取Elasticsearch（Kibana）数据</h3>
+
+<ul>
+  <li>获取所有Web请求数：
+    <ul>
+      <li>打开Discover &gt; dist-web-web-7.0.0-*</li>
+      <li>调整时间成绝对时间</li>
+      <li>查看左上角的Hit数：1,552 hits</li>
+    </ul>
+  </li>
+  <li>获取所有Consumer请求数：
+    <ul>
+      <li>打开Discover &gt; dist-consumer-consumer-7.0.0-*</li>
+      <li>调整时间成绝对时间</li>
+      <li>查看左上角的Hit数：81 hits</li>
+      <li>比率验证：81 / 1552 = 5.21%；OK</li>
+    </ul>
+  </li>
+  <li>获取API GetWork请求数：
+    <ul>
+      <li>打开Discover &gt; dist-web-web-7.0.0-*</li>
+      <li>调整时间成绝对时间</li>
+      <li>在Filter中输入：<code>api: apiGetWork</code></li>
+      <li>查看左上角的Hit数：704 hits</li>
+      <li>比率验证：704 / 1552 = 45.36%；OK</li>
+    </ul>
+  </li>
+  <li>获取API UpdateViewed请求数：
+    <ul>
+      <li>打开Discover &gt; dist-web-web-7.0.0-*</li>
+      <li>调整时间成绝对时间</li>
+      <li>在Filter中输入：<code>api: apiUpdateViewed</code></li>
+      <li>查看左上角的Hit数：364 hits</li>
+      <li>比率验证：364 / 1552 = 23.45%；OK</li>
+    </ul>
+  </li>
+  <li>获取API GetAchievement请求数：
+    <ul>
+      <li>打开Discover &gt; dist-web-web-7.0.0-*</li>
+      <li>调整时间成绝对时间</li>
+      <li>在Filter中输入：<code>api: apiGetAchievement</code></li>
+      <li>查看左上角的Hit数：403 hits</li>
+      <li>比率验证：403 / 1552 = 25.96%；OK</li>
+    </ul>
+  </li>
+  <li>获取API PlanWork请求数：
+    <ul>
+      <li>打开Discover &gt; dist-web-web-7.0.0-*</li>
+      <li>调整时间成绝对时间</li>
+      <li>在Filter中输入：<code>api: apiPlanWork</code></li>
+      <li>查看左上角的Hit数：81 hits</li>
+      <li>数量验证：与Consumer计数匹配；OK</li>
+    </ul>
+  </li>
+</ul>
+
+<p>P.S 使用<code>level: error</code>过滤条件查找错误日志，如果是没有上传日志的service服务等，则需要：</p>
+
+<ul>
+  <li>docker-machine ssh service</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>docker logs –tail 1000 app_service</td>
+          <td>grep ERROR</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h3 id="462-获取jaeger数据">4.6.2 获取Jaeger数据</h3>
+
+<ul>
+  <li>打开Jaeger Query</li>
+  <li>将Lookback设置为：Custom Time Range</li>
+  <li>设置Start Time和End Time</li>
+  <li>设置Service为：app.web</li>
+  <li>设置Operation为：
+    <ul>
+      <li>Web.HandleApi.apiGetWork</li>
+      <li>Web.HandleApi.apiUpdateViewed</li>
+      <li>Web.HandleApi.apiGetAchievement</li>
+      <li>Web.HandleApi.apiPlanWork</li>
+    </ul>
+  </li>
+  <li>设置Limit Results为最大值1500</li>
+  <li>查看右上角的耗时分布图以及查询数</li>
+  <li>选择几个耗时比较大的个例，点击观察原因</li>
+</ul>
+
+<h1 id="5-报告">5. 报告</h1>
+<p>经过实机测试，报告如下，有兴趣的可以打开看看：</p>
+
+<h2 id="51-第一次测试">5.1 第一次测试</h2>
+<p>1000qps测试发现瓶颈点（预设瓶颈，意料之中）Consumer CPU消耗过于剧烈。</p>
+
+<p>报告：<img src="/resources/2019/07/dist-system-practice/report_1562948039960.pdf" alt="" target="_blank" /></p>
+
+<h2 id="52-第二次测试">5.2 第二次测试</h2>
+<p>解决Consumer的瓶颈问题，并对其进行验证。</p>
+
+<p>报告：<img src="/resources/2019/07/dist-system-practice/report_1562981458710.pdf" alt="" target="_blank" /></p>
+
+<p>因预算和时间等原因，后续并没有展开更多的测试，仅两次，一次演示问题的发现，一次演示问题的解决和验证。</p>
+
+<h1 id="appendix">Appendix</h1>
+<h2 id="MONITORING_LIST">观测清单</h2>
+<h3 id="host">Host</h3>
+<p>Dashboard uid: 9CWBz0bik</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-interval=5s 调整图表的采样间隔，最低5s</li>
+  <li>var-env=All 固定值</li>
+  <li>var-name=All 固定值</li>
+  <li>var-node=192.168.3.111%3A9100 label_values(node_exporter_build_info,instance)</li>
+  <li>var-maxmount= 固定值</li>
+  <li>panelId=13 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/9CWBz0bik/nodes?orgId=1&amp;var-interval=5s&amp;var-env=All&amp;var-name=All&amp;var-node=192.168.3.111%3A9100&amp;var-maxmount=&amp;from=1562202150372&amp;to=1562205750372&amp;panelId=13&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>系统运行时间
+    <ul>
+      <li>panelId=15</li>
+    </ul>
+  </li>
+  <li>CPU 核数
+    <ul>
+      <li>panelId=14</li>
+    </ul>
+  </li>
+  <li>内存总量
+    <ul>
+      <li>panelId=75</li>
+    </ul>
+  </li>
+  <li>CPU使用率（5m）
+    <ul>
+      <li>panelId=167</li>
+    </ul>
+  </li>
+  <li>CPU iowait（5m）
+    <ul>
+      <li>panelId=20</li>
+    </ul>
+  </li>
+  <li>内存使用率
+    <ul>
+      <li>panelId=172</li>
+    </ul>
+  </li>
+  <li>当前打开的文件描述符
+    <ul>
+      <li>panelId=16</li>
+    </ul>
+  </li>
+  <li>根分区使用率
+    <ul>
+      <li>panelId=166</li>
+    </ul>
+  </li>
+  <li>系统平均负载
+    <ul>
+      <li>panelId=13</li>
+    </ul>
+  </li>
+  <li>磁盘总空间
+    <ul>
+      <li>panelId=171</li>
+    </ul>
+  </li>
+  <li>各分区可用空间
+    <ul>
+      <li>panelId=164</li>
+    </ul>
+  </li>
+  <li>CPU使用率、磁盘每秒的I/O操作耗费时间（%）
+    <ul>
+      <li>panelId=7</li>
+    </ul>
+  </li>
+  <li>内存信息
+    <ul>
+      <li>panelId=156</li>
+    </ul>
+  </li>
+  <li>磁盘读写速率（IOPS）
+    <ul>
+      <li>panelId=161</li>
+    </ul>
+  </li>
+  <li>磁盘读写容量大小
+    <ul>
+      <li>panelId=168</li>
+    </ul>
+  </li>
+  <li>磁盘IO读写时间
+    <ul>
+      <li>panelId=160</li>
+    </ul>
+  </li>
+  <li>网络流量
+    <ul>
+      <li>panelId=157</li>
+    </ul>
+  </li>
+  <li>TCP 连接情况
+    <ul>
+      <li>panelId=158</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="container">Container</h3>
+<p>Dashboard uid: PV1XyHnWz</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>refresh=30s 不生效，但建议保留</li>
+  <li>var-containergroup=All 固定值</li>
+  <li>var-interval=30s 调整图表的采样间隔，最低30s</li>
+  <li>var-server=192.168.3.111 label_values(node_boot_time_seconds, instance) /([^:]+):.*/ 去掉了instance的port</li>
+  <li>var-name=prometheus 容器名</li>
+  <li>panelId=8 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/PV1XyHnWz/docker-and-system-monitoring?orgId=1&amp;from=1562200204905&amp;to=1562203804906&amp;refresh=30s&amp;var-containergroup=All&amp;var-interval=30s&amp;var-server=192.168.3.111&amp;var-name=prometheus&amp;panelId=8&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Received Network Traffic per Container
+    <ul>
+      <li>容器收到的网络流量</li>
+      <li>panelId=8</li>
+    </ul>
+  </li>
+  <li>Sent Network Traffic per Container
+    <ul>
+      <li>容器发送的网络流量</li>
+      <li>panelId=9</li>
+    </ul>
+  </li>
+  <li>CPU Usage per Container
+    <ul>
+      <li>容器消耗的CPU</li>
+      <li>panelId=1</li>
+    </ul>
+  </li>
+  <li>Memory Usage per Container
+    <ul>
+      <li>容器消耗的内存</li>
+      <li>panelId=10</li>
+    </ul>
+  </li>
+  <li>Memory Swap per Container
+    <ul>
+      <li>容器的交换内存</li>
+      <li>panelId=34</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="memcached">Memcached</h3>
+<p>Dashboard uid: NgzwcO7Zz</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-node=memcached-exporter%3A9150 label_values(memcached_up, instance)</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/NgzwcO7Zz/prometheus-memcached?orgId=1&amp;from=1562203120775&amp;to=1562206720775&amp;var-node=memcached-exporter%3A9150&amp;panelId=1&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>% Hit ratio
+    <ul>
+      <li>命中率</li>
+      <li>panelId=1</li>
+    </ul>
+  </li>
+  <li>Connections
+    <ul>
+      <li>连接数</li>
+      <li>panelId=4</li>
+    </ul>
+  </li>
+  <li>Get / Set ratio
+    <ul>
+      <li>Get Set比率</li>
+      <li>panelId=3</li>
+    </ul>
+  </li>
+  <li>Commands
+    <ul>
+      <li>按种类显示命令执行的数量</li>
+      <li>panelId=2</li>
+    </ul>
+  </li>
+  <li>evicts / reclaims
+    <ul>
+      <li>Key驱逐数量</li>
+      <li>panelId=8</li>
+    </ul>
+  </li>
+  <li>Read / written bytes
+    <ul>
+      <li>网络流量</li>
+      <li>panelId=6</li>
+    </ul>
+  </li>
+  <li>Total memory usage
+    <ul>
+      <li>内存使用率</li>
+      <li>panelId=7</li>
+    </ul>
+  </li>
+  <li>Items in cache
+    <ul>
+      <li>内存中Key数量</li>
+      <li>panelId=5</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="mysql">MySQL</h3>
+<p>Dashboard uid: MQWgroiiz</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-interval=1m 调整图表的采样间隔，最低1s</li>
+  <li>var-host=mysqld-exporter%3A9104 label_values(mysql_up, instance)</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/MQWgroiiz/mysql-overview?orgId=1&amp;from=1562165395404&amp;to=1562208595404&amp;var-interval=1m&amp;var-host=mysqld-exporter%3A9104&amp;panelId=92&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>MySQL Connections
+    <ul>
+      <li>连接状态</li>
+      <li>panelId=92</li>
+    </ul>
+  </li>
+  <li>MySQL Aborted Connections
+    <ul>
+      <li>退出的连接统计</li>
+      <li>panelId=47</li>
+    </ul>
+  </li>
+  <li>MySQL Client Thread Activity
+    <ul>
+      <li>线程活动状态</li>
+      <li>panelId=10</li>
+    </ul>
+  </li>
+  <li>MySQL Thread Cache
+    <ul>
+      <li>线程池状态</li>
+      <li>panelId=11</li>
+    </ul>
+  </li>
+  <li>MySQL Questions
+    <ul>
+      <li>查询数量</li>
+      <li>panelId=53</li>
+    </ul>
+  </li>
+  <li>MySQL Slow Queries
+    <ul>
+      <li>慢查询数量</li>
+      <li>panelId=48</li>
+    </ul>
+  </li>
+  <li>MySQL Table Locks
+    <ul>
+      <li>表锁状态</li>
+      <li>panelId=32</li>
+    </ul>
+  </li>
+  <li>MySQL Network Traffic
+    <ul>
+      <li>网络流量统计</li>
+      <li>panelId=9</li>
+    </ul>
+  </li>
+  <li>MySQL Network Usage Hourly
+    <ul>
+      <li>网络流量统计/小时</li>
+      <li>panelId=381</li>
+    </ul>
+  </li>
+  <li>MySQL Internal Memory Overview
+    <ul>
+      <li>内部内存使用状态</li>
+      <li>panelId=50</li>
+    </ul>
+  </li>
+  <li>Top Command Counters
+    <ul>
+      <li>执行命令按种类分类数量</li>
+      <li>panelId=14</li>
+    </ul>
+  </li>
+  <li>Top Command Counters Hourly
+    <ul>
+      <li>命令数量/小时</li>
+      <li>panelId=39</li>
+    </ul>
+  </li>
+  <li>MySQL Query Cache Memory
+    <ul>
+      <li>缓存使用量</li>
+      <li>panelId=46</li>
+    </ul>
+  </li>
+  <li>MySQL Query Cache Activity
+    <ul>
+      <li>缓存命中状态</li>
+      <li>panelId=45</li>
+    </ul>
+  </li>
+  <li>MySQL File Openings
+    <ul>
+      <li>实时打开的文件数量</li>
+      <li>panelId=43</li>
+    </ul>
+  </li>
+  <li>MySQL Open Files
+    <ul>
+      <li>打开文件统计</li>
+      <li>panelId=41</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="prometheus">Prometheus</h3>
+<p>Dashboard uid: 54e7hO7Wk</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-job=prometheus 固定值</li>
+  <li>var-instance=prometheus 固定值</li>
+  <li>var-interval=1h 调整图表的采样间隔，最低1h</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/54e7hO7Wk/prometheus-2-0-overview?orgId=1&amp;panelId=33&amp;var-job=prometheus&amp;var-instance=prometheus%3A9090&amp;var-interval=1h&amp;from=1562307966107&amp;to=1562311566107&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Series Count
+    <ul>
+      <li>时序数量</li>
+      <li>panelId=3</li>
+    </ul>
+  </li>
+  <li>Failures and Errors
+    <ul>
+      <li>采样出错</li>
+      <li>panelId=33</li>
+    </ul>
+  </li>
+  <li>Appended Samples per Second
+    <ul>
+      <li>每秒采样数量</li>
+      <li>panelId=4</li>
+    </ul>
+  </li>
+  <li>Scrape Duration
+    <ul>
+      <li>采样耗时</li>
+      <li>panelId=29</li>
+      <li>该图表按instance进行显示，因此如果需要查询某个特定服务的采样抓取耗时，需要调整该参数，不能固定使用prometheus</li>
+    </ul>
+  </li>
+  <li>Prometheus Engine Query Duration Seconds
+    <ul>
+      <li>查询耗时情况</li>
+      <li>panelId=15</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="kafka-jmx">Kafka JMX</h3>
+<p>Dashboard uid: chanjarster-jvm-dashboard</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-datasource=Prometheus 固定值</li>
+  <li>var-job=kafka 固定值</li>
+  <li>var-instance=kafka_1%3A7071 label_values(jvm_info{job=”$job”},instance)</li>
+  <li>var-mempool=All 固定值</li>
+  <li>var-memarea=All 固定值</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/chanjarster-jvm-dashboard/kafka-jmx-dashboard?orgId=1&amp;panelId=29&amp;from=1562309167160&amp;to=1562312767160&amp;var-datasource=Prometheus&amp;var-job=kafka&amp;var-instance=kafka_1%3A7071&amp;var-mempool=All&amp;var-memarea=All&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Open file descriptors
+    <ul>
+      <li>文件打开情况</li>
+      <li>panelId=38</li>
+    </ul>
+  </li>
+  <li>CPU load
+    <ul>
+      <li>CPU使用情况，含JVM的统计区分</li>
+      <li>panelId=29</li>
+    </ul>
+  </li>
+  <li>Memory area [heap]
+    <ul>
+      <li>堆内存使用情况</li>
+      <li>panelId=8</li>
+    </ul>
+  </li>
+  <li>Memory area [nonheap]
+    <ul>
+      <li>堆外内存使用情况</li>
+      <li>panelId=45</li>
+    </ul>
+  </li>
+  <li>GC count increase
+    <ul>
+      <li>GC数量</li>
+      <li>panelId=6</li>
+    </ul>
+  </li>
+  <li>GC time
+    <ul>
+      <li>GC耗时</li>
+      <li>panelId=5</li>
+    </ul>
+  </li>
+  <li>Threads used
+    <ul>
+      <li>线程数量</li>
+      <li>panelId=3</li>
+    </ul>
+  </li>
+  <li>Physical memory
+    <ul>
+      <li>物理内存情况</li>
+      <li>panelId=44</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="kafka-exporter">Kafka Exporter</h3>
+<p>Dashboard uid: jwPKIsniz</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-job=kafka-exporter 固定值</li>
+  <li>var-instance=kafka_exporter%3A9308 label_values(kafka_consumergroup_current_offset{job=~”$job”}, instance)</li>
+  <li>var-topic=All 固定值，可调整</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/jwPKIsniz/kafka-exporter-overview?orgId=1&amp;panelId=14&amp;from=1562309984557&amp;to=1562313584557&amp;var-job=kafka-exporter&amp;var-instance=kafka_exporter%3A9308&amp;var-topic=All&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Message in per second
+    <ul>
+      <li>每秒消息数量</li>
+      <li>panelId=14</li>
+    </ul>
+  </li>
+  <li>Lag by Consumer Group
+    <ul>
+      <li>消费组延迟</li>
+      <li>panelId=12</li>
+    </ul>
+  </li>
+  <li>Message in per minute
+    <ul>
+      <li>每分钟消息数量</li>
+      <li>panelId=16</li>
+    </ul>
+  </li>
+  <li>Message consume per minute
+    <ul>
+      <li>每分钟消息消费</li>
+      <li>panelId=18</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="jaeger-agent">Jaeger Agent</h3>
+<p>Dashboard uid: Z8ieXpnWk</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-node=jagent_web%3A5778 label_values(jaeger_agent_thrift_udp_server_queue_size, instance)</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/Z8ieXpnWk/jaeger-agent?tab=advanced&amp;orgId=1&amp;panelId=6&amp;from=1562311474404&amp;to=1562315074404&amp;var-node=jagent_web%3A5778&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Reporter batches submitted
+    <ul>
+      <li>Reporter批量提交数（提交至collector）</li>
+      <li>panelId=6</li>
+    </ul>
+  </li>
+  <li>Reporter batches failures
+    <ul>
+      <li>Reporter批量提交失败数</li>
+      <li>panelId=8</li>
+    </ul>
+  </li>
+  <li>Reporter spans submitted
+    <ul>
+      <li>Reporter span提交数量</li>
+      <li>panelId=10</li>
+    </ul>
+  </li>
+  <li>Reporter spans failures
+    <ul>
+      <li>Reporter span提交失败数</li>
+      <li>panelId=12</li>
+    </ul>
+  </li>
+  <li>Queue size
+    <ul>
+      <li>Receiver等待队列（从app过来）</li>
+      <li>panelId=24</li>
+    </ul>
+  </li>
+  <li>Read errors
+    <ul>
+      <li>ReceiverUDP读取错误数</li>
+      <li>panelId=26</li>
+    </ul>
+  </li>
+  <li>Packets processed
+    <ul>
+      <li>Receiver处理的包数量</li>
+      <li>panelId=20</li>
+    </ul>
+  </li>
+  <li>Packets dropped
+    <ul>
+      <li>Receiver丢弃的包数量</li>
+      <li>panelId=22</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="jaeger-collector">Jaeger Collector</h3>
+<p>Dashboard uid: mb6-JR5iz</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-node=jcollector_1%3A14268 label_values(jaeger_collector_queue_length, instance)</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/mb6-JR5iz/jaeger-collector?orgId=1&amp;var-node=jcollector_1%3A14268&amp;from=1562312765270&amp;to=1562316365270&amp;panelId=20&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Traces received
+    <ul>
+      <li>收到的trace数量</li>
+      <li>panelId=20</li>
+    </ul>
+  </li>
+  <li>Traces rejected
+    <ul>
+      <li>拒绝的trace数量</li>
+      <li>panelId=22</li>
+    </ul>
+  </li>
+  <li>Spans received
+    <ul>
+      <li>收到的span数量</li>
+      <li>panelId=18</li>
+    </ul>
+  </li>
+  <li>Spans dropped
+    <ul>
+      <li>丢弃的span数量</li>
+      <li>panelId=4</li>
+    </ul>
+  </li>
+  <li>Spans rejected
+    <ul>
+      <li>拒绝的span数量</li>
+      <li>panelId=24</li>
+    </ul>
+  </li>
+  <li>Queue length
+    <ul>
+      <li>队列长度</li>
+      <li>panelId=2</li>
+    </ul>
+  </li>
+  <li>Span queue latency - 95 percentile
+    <ul>
+      <li>span处理时长 95%</li>
+      <li>panelId=10</li>
+    </ul>
+  </li>
+  <li>Save latency - 95 percentile
+    <ul>
+      <li>数据库存储时长 95%</li>
+      <li>panelId=26</li>
+    </ul>
+  </li>
+  <li>Cassandra attempts
+    <ul>
+      <li>cassandra数据库请求数量</li>
+      <li>panelId=16</li>
+    </ul>
+  </li>
+  <li>Cassandra errors
+    <ul>
+      <li>cassandra数据库报错</li>
+      <li>panelId=12</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="filebeat">Filebeat</h3>
+<p>Dashboard uid: oF_Qr14Zz</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-node=filebeat_exporter%3A9479 label_values(filebeat_uptime_seconds, instance)</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/oF_Qr14Zz/filebeat?orgId=1&amp;from=1562313566558&amp;to=1562317166558&amp;var-node=filebeat_exporter%3A9479&amp;panelId=2&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Harvester
+    <ul>
+      <li>追踪文件的状态</li>
+      <li>panelId=2</li>
+    </ul>
+  </li>
+  <li>IO errors
+    <ul>
+      <li>IO错误</li>
+      <li>panelId=8</li>
+    </ul>
+  </li>
+  <li>Filebeat events
+    <ul>
+      <li>filebeat事件</li>
+      <li>panelId=4</li>
+    </ul>
+  </li>
+  <li>Output events
+    <ul>
+      <li>输出事件</li>
+      <li>panelId=6</li>
+    </ul>
+  </li>
+  <li>Pipeline events
+    <ul>
+      <li>管线事件</li>
+      <li>panelId=10</li>
+    </ul>
+  </li>
+  <li>Pipeline queue
+    <ul>
+      <li>管线队列</li>
+      <li>panelId=12</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="elasticsearch">Elasticsearch</h3>
+<p>Dashboard uid: FNysokSWk</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-interval=5m 调整图表的采样间隔，最低5m</li>
+  <li>var-cluster=es_cluster 固定值</li>
+  <li>var-name=es_1 label_values(elasticsearch_indices_docs{cluster=”$cluster”, name!=””},name)</li>
+  <li>var-instance=es_exporter%3A9114 固定值</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/FNysokSWk/elasticsearch?orgId=1&amp;from=1562315066925&amp;to=1562318666925&amp;var-interval=5m&amp;var-cluster=docker-cluster&amp;var-name=es_1&amp;var-instance=es_exporter%3A9114&amp;panelId=50&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Pending tasks
+    <ul>
+      <li>集群未完成工作数</li>
+      <li>panelId=16</li>
+    </ul>
+  </li>
+  <li>Load average
+    <ul>
+      <li>节点负载</li>
+      <li>panelId=30</li>
+    </ul>
+  </li>
+  <li>CPU usage
+    <ul>
+      <li>节点CPU使用</li>
+      <li>panelId=88</li>
+    </ul>
+  </li>
+  <li>JVM memory usage
+    <ul>
+      <li>节点内存使用</li>
+      <li>panelId=31</li>
+    </ul>
+  </li>
+  <li>GC count
+    <ul>
+      <li>GC次数</li>
+      <li>panelId=7</li>
+    </ul>
+  </li>
+  <li>GC time
+    <ul>
+      <li>GC耗时</li>
+      <li>panelId=27</li>
+    </ul>
+  </li>
+  <li>Total translog operations
+    <ul>
+      <li>持久化操作数</li>
+      <li>panelId=77</li>
+    </ul>
+  </li>
+  <li>Total translog size in bytes
+    <ul>
+      <li>持久化容量</li>
+      <li>panelId=78</li>
+    </ul>
+  </li>
+  <li>Tripped for breakers
+    <ul>
+      <li>断路器触发次数</li>
+      <li>panelId=79</li>
+    </ul>
+  </li>
+  <li>Estimated size in bytes of breaker
+    <ul>
+      <li>断路器触发限制</li>
+      <li>panelId=80</li>
+    </ul>
+  </li>
+  <li>Disk usage
+    <ul>
+      <li>磁盘用量</li>
+      <li>panelId=32</li>
+    </ul>
+  </li>
+  <li>Network usage
+    <ul>
+      <li>网络用量</li>
+      <li>panelId=47</li>
+    </ul>
+  </li>
+  <li>Documents count on node
+    <ul>
+      <li>文档数量</li>
+      <li>panelId=1</li>
+    </ul>
+  </li>
+  <li>Documents indexed rate
+    <ul>
+      <li>文档索引数</li>
+      <li>panelId=24</li>
+    </ul>
+  </li>
+  <li>Documents merged rate
+    <ul>
+      <li>文档合并率</li>
+      <li>panelId=26</li>
+    </ul>
+  </li>
+  <li>Documents merged bytes
+    <ul>
+      <li>文档合并量</li>
+      <li>panelId=52</li>
+    </ul>
+  </li>
+  <li>Query time
+    <ul>
+      <li>查询耗时</li>
+      <li>panelId=33</li>
+    </ul>
+  </li>
+  <li>Indexing time
+    <ul>
+      <li>索引耗时</li>
+      <li>panelId=5</li>
+    </ul>
+  </li>
+  <li>Merging time
+    <ul>
+      <li>合并耗时</li>
+      <li>panelId=3</li>
+    </ul>
+  </li>
+  <li>Total Operations rate
+    <ul>
+      <li>所有操作速率</li>
+      <li>panelId=48</li>
+    </ul>
+  </li>
+  <li>Total Operations time
+    <ul>
+      <li>所有操作耗时</li>
+      <li>panelId=49</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="golang">Golang</h3>
+<p>Dashboard uid: ypFZFgvmz</p>
+
+<p>Graph params:</p>
+
+<ul>
+  <li>var-job=go-apps 固定值</li>
+  <li>var-interval=1m 调整图表的采样间隔，最低1m</li>
+  <li>var-node=192.168.3.111%3A8000 label_values(go_memstats_alloc_bytes, instance)</li>
+  <li>panelId=1 根据图表，编号各自不同</li>
+  <li>width=1000&amp;height=500 图表大小</li>
+  <li>tz=Asia%2FShanghai 用户时区</li>
+</ul>
+
+<p>Sample graph link: <a href="http://127.0.0.1:3000/render/d-solo/ypFZFgvmz/go-processes?orgId=1&amp;from=1562314327587&amp;to=1562317927587&amp;var-job=go-apps&amp;var-interval=1m&amp;var-node=192.168.3.111%3A8000&amp;panelId=1&amp;width=1000&amp;height=500&amp;tz=Asia%2FShanghai" target="_blank">link</a></p>
+
+<p>Monitoring items:</p>
+
+<ul>
+  <li>Heap memory
+    <ul>
+      <li>堆内存用量</li>
+      <li>panelId=1</li>
+    </ul>
+  </li>
+  <li>Heap memory trends
+    <ul>
+      <li>堆内存申请和释放情况</li>
+      <li>panelId=4</li>
+    </ul>
+  </li>
+  <li>Heap objects
+    <ul>
+      <li>堆内存对象数量</li>
+      <li>panelId=2</li>
+    </ul>
+  </li>
+  <li>Heap system alloc
+    <ul>
+      <li>堆内存向系统申请和释放情况</li>
+      <li>panelId=5</li>
+    </ul>
+  </li>
+  <li>GC rate
+    <ul>
+      <li>GC频次</li>
+      <li>panelId=3</li>
+    </ul>
+  </li>
+  <li>Next gc target
+    <ul>
+      <li>下次GC触发容量</li>
+      <li>panelId=6</li>
+    </ul>
+  </li>
+  <li>GC duration quantiles
+    <ul>
+      <li>GC耗时情况，分25% 50% 90%三段</li>
+      <li>panelId=8</li>
+    </ul>
+  </li>
+  <li>Goroutines count
+    <ul>
+      <li>goroutine数量</li>
+      <li>panelId=7</li>
+    </ul>
+  </li>
+  <li>Threads count
+    <ul>
+      <li>线程数量</li>
+      <li>panelId=10</li>
+    </ul>
+  </li>
+</ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/07/dist-system-practice/">分布式系统实战</a></li>
+    
+    <li><a href="/2019/05/memcached-note/">Memcached Notes</a></li>
+    
+    <li><a href="/2019/05/golang-pipeline/">Golang Pipeline</a></li>
+    
+    <li><a href="/2019/05/envoy-note/">Envoy Notes</a></li>
+    
+    <li><a href="/2019/05/grpc-note/">gRPC Notes</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/07/dist-system-practice/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
