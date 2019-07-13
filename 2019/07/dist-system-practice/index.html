@@ -771,16 +771,7 @@ OVH BHS <span class="o">(</span>CA<span class="o">)</span>:         <span class=
 
 <ul>
   <li>docker-machine ssh service</li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>docker logs –tail 1000 app_service</td>
-          <td>grep ERROR</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
+  <li>docker logs –tail 1000 app_service | grep ERROR</li>
 </ul>
 
 <h3 id="462-获取jaeger数据">4.6.2 获取Jaeger数据</h3>

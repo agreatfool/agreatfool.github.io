@@ -574,16 +574,7 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
 
 &lt;ul&gt;
   &lt;li&gt;docker-machine ssh service&lt;/li&gt;
-  &lt;li&gt;
-    &lt;table&gt;
-      &lt;tbody&gt;
-        &lt;tr&gt;
-          &lt;td&gt;docker logs –tail 1000 app_service&lt;/td&gt;
-          &lt;td&gt;grep ERROR&lt;/td&gt;
-        &lt;/tr&gt;
-      &lt;/tbody&gt;
-    &lt;/table&gt;
-  &lt;/li&gt;
+  &lt;li&gt;docker logs –tail 1000 app_service | grep ERROR&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;462-获取jaeger数据&quot;&gt;4.6.2 获取Jaeger数据&lt;/h3&gt;
