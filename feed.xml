@@ -34,7 +34,7 @@
       &lt;li&gt;&lt;a href=&quot;#TEST_TARGET&quot; id=&quot;markdown-toc-TEST_TARGET&quot;&gt;4.1 测试目标&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#42-测试硬件&quot; id=&quot;markdown-toc-42-测试硬件&quot;&gt;4.2 测试硬件&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#43-测试规划&quot; id=&quot;markdown-toc-43-测试规划&quot;&gt;4.3 测试规划&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#44-观测清单&quot; id=&quot;markdown-toc-44-观测清单&quot;&gt;4.4 观测清单&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#44-监控清单&quot; id=&quot;markdown-toc-44-监控清单&quot;&gt;4.4 监控清单&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#45-部署工程&quot; id=&quot;markdown-toc-45-部署工程&quot;&gt;4.5 部署工程&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#46-测试执行--报告制作&quot; id=&quot;markdown-toc-46-测试执行--报告制作&quot;&gt;4.6 测试执行 &amp;amp; 报告制作&lt;/a&gt;        &lt;ul&gt;
           &lt;li&gt;&lt;a href=&quot;#461-获取elasticsearchkibana数据&quot; id=&quot;markdown-toc-461-获取elasticsearchkibana数据&quot;&gt;4.6.1 获取Elasticsearch（Kibana）数据&lt;/a&gt;&lt;/li&gt;
@@ -49,7 +49,7 @@
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#appendix&quot; id=&quot;markdown-toc-appendix&quot;&gt;Appendix&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#MONITORING_LIST&quot; id=&quot;markdown-toc-MONITORING_LIST&quot;&gt;观测清单&lt;/a&gt;        &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#MONITORING_LIST&quot; id=&quot;markdown-toc-MONITORING_LIST&quot;&gt;监控清单&lt;/a&gt;        &lt;ul&gt;
           &lt;li&gt;&lt;a href=&quot;#host&quot; id=&quot;markdown-toc-host&quot;&gt;Host&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#container&quot; id=&quot;markdown-toc-container&quot;&gt;Container&lt;/a&gt;&lt;/li&gt;
           &lt;li&gt;&lt;a href=&quot;#memcached&quot; id=&quot;markdown-toc-memcached&quot;&gt;Memcached&lt;/a&gt;&lt;/li&gt;
@@ -429,8 +429,8 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
 
 &lt;p&gt;测试的规划制定需要固定大部分的变量、配置，仅修改少部分，然后进行多次测试，横向比较性能的变化，就可以找出当前架构的最佳性能表现设置。&lt;/p&gt;
 
-&lt;h2 id=&quot;44-观测清单&quot;&gt;4.4 观测清单&lt;/h2&gt;
-&lt;p&gt;下面是一份当前程序架构中需要进行重点观测的程序指标清单。这部分太长了，我放到最后的&lt;a href=&quot;#MONITORING_LIST&quot;&gt;Appendix&lt;/a&gt;里，不影响阅读。&lt;/p&gt;
+&lt;h2 id=&quot;44-监控清单&quot;&gt;4.4 监控清单&lt;/h2&gt;
+&lt;p&gt;下面是一份当前程序架构中需要进行重点监控的程序指标清单。这部分太长了，我放到最后的&lt;a href=&quot;#MONITORING_LIST&quot;&gt;Appendix &amp;gt; 监控清单&lt;/a&gt;里，以便不影响下文的阅读。&lt;/p&gt;
 
 &lt;h2 id=&quot;45-部署工程&quot;&gt;4.5 部署工程&lt;/h2&gt;
 &lt;p&gt;部署工作：&lt;/p&gt;
@@ -622,7 +622,7 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
 &lt;p&gt;因预算和时间等原因，后续并没有展开更多的测试，仅两次，一次演示问题的发现，一次演示问题的解决和验证。&lt;/p&gt;
 
 &lt;h1 id=&quot;appendix&quot;&gt;Appendix&lt;/h1&gt;
-&lt;h2 id=&quot;MONITORING_LIST&quot;&gt;观测清单&lt;/h2&gt;
+&lt;h2 id=&quot;MONITORING_LIST&quot;&gt;监控清单&lt;/h2&gt;
 &lt;h3 id=&quot;host&quot;&gt;Host&lt;/h3&gt;
 &lt;p&gt;Dashboard uid: 9CWBz0bik&lt;/p&gt;
 
