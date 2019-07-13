@@ -90,7 +90,7 @@
 
 &lt;p&gt;线上服务器拓扑及服务网格相关的配置在：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/prod/cluster/src/index.ts#L22&quot;&gt;index.ts#L22&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;Grafana数据导出相关配置在：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/prod/cluster/src/index.ts#L147&quot; target=&quot;_blank&quot;&gt;index.ts#L147&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;Grafana数据导出相关配置在：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/prod/cluster/src/index.ts#L151&quot; target=&quot;_blank&quot;&gt;index.ts#L151&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h3 id=&quot;112-组件实验代码&quot;&gt;1.1.2 组件实验代码&lt;/h3&gt;
 &lt;p&gt;部分组件的简单实验代码在：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/experiment&quot; target=&quot;_blank&quot;&gt;dist-system-practice/experiment/&lt;/a&gt;。&lt;/p&gt;
