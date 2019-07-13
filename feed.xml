@@ -603,12 +603,12 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
 &lt;h2 id=&quot;51-第一次测试&quot;&gt;5.1 第一次测试&lt;/h2&gt;
 &lt;p&gt;1000qps测试发现瓶颈点（预设瓶颈，意料之中）Consumer CPU消耗过于剧烈。&lt;/p&gt;
 
-&lt;p&gt;报告：&lt;img src=&quot;/resources/2019/07/dist-system-practice/report_1562948039960.pdf&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;报告：&lt;a href=&quot;/resources/2019/07/dist-system-practice/report_1562948039960.pdf&quot; target=&quot;_blank&quot;&gt;report_1562948039960.pdf&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;52-第二次测试&quot;&gt;5.2 第二次测试&lt;/h2&gt;
 &lt;p&gt;解决Consumer的瓶颈问题，并对其进行验证。&lt;/p&gt;
 
-&lt;p&gt;报告：&lt;img src=&quot;/resources/2019/07/dist-system-practice/report_1562981458710.pdf&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;报告：&lt;a href=&quot;/resources/2019/07/dist-system-practice/report_1562981458710.pdf&quot; target=&quot;_blank&quot;&gt;report_1562981458710.pdf&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;因预算和时间等原因，后续并没有展开更多的测试，仅两次，一次演示问题的发现，一次演示问题的解决和验证。&lt;/p&gt;
 
