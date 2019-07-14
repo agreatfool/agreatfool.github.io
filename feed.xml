@@ -440,12 +440,12 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
   &lt;li&gt;因Linode不支持在开服务器的时候直接部署SSH Key，需要使用命令来部署：ssh-copy-id -i ~/.ssh/id_rsa.pub root@xxx.xxx.xxx.xxx&lt;/li&gt;
   &lt;li&gt;使用&lt;a href=&quot;#PRACTICE_CODE&quot;&gt;1.1.1 实践代码&lt;/a&gt;提到的线上部署脚本进行部署：
     &lt;ul&gt;
-      &lt;li&gt;./cluster.sh –machine&lt;/li&gt;
-      &lt;li&gt;./cluster.sh –image&lt;/li&gt;
-      &lt;li&gt;./cluster.sh –deploy –machine-type=all&lt;/li&gt;
+      &lt;li&gt;./cluster.sh --machine&lt;/li&gt;
+      &lt;li&gt;./cluster.sh --image&lt;/li&gt;
+      &lt;li&gt;./cluster.sh --deploy --machine-type=all&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;使用 ./cluster.sh –docker-ps –machine-type=all 来观察是否启动正常&lt;/li&gt;
+  &lt;li&gt;使用 ./cluster.sh --docker-ps --machine-type=all 来观察是否启动正常&lt;/li&gt;
   &lt;li&gt;打开 MONITER_IP:9090 来查看是否所有的监控节点都正常在线&lt;/li&gt;
   &lt;li&gt;打开 MONITER_IP:5601 来设置ES内的Index Pattern&lt;/li&gt;
   &lt;li&gt;使用 curl -v http://WEB_IP:8000/work 等入口测试是否正常运行&lt;/li&gt;
@@ -457,7 +457,7 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
 &lt;ul&gt;
   &lt;li&gt;记录测试开始时间&lt;/li&gt;
   &lt;li&gt;修改cluster.sh内相关配置&lt;/li&gt;
-  &lt;li&gt;运行 ./cluster.sh –stress –machine-type=all 获得测试命令&lt;/li&gt;
+  &lt;li&gt;运行 ./cluster.sh --stress --machine-type=all 获得测试命令&lt;/li&gt;
   &lt;li&gt;在Client Host上执行测试命令开始测试，并观察实时报表中的报错数及响应时长变化（如有大量错误和大量超时，需要中断测试，并查找原因）&lt;/li&gt;
   &lt;li&gt;打开 MONITER_IP:9090 观察监控节点是否正常在线&lt;/li&gt;
   &lt;li&gt;打开 MONITER_IP:3000 观察监控指标变化&lt;/li&gt;
@@ -488,7 +488,7 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
 &lt;ul&gt;
   &lt;li&gt;记录测试结束时间&lt;/li&gt;
   &lt;li&gt;修改cluster.sh内相关配置&lt;/li&gt;
-  &lt;li&gt;使用 ./cluster.sh –report 导出测试结果数据&lt;/li&gt;
+  &lt;li&gt;使用 ./cluster.sh --report 导出测试结果数据&lt;/li&gt;
   &lt;li&gt;手动获取Elasticsearch数据，并填入到报表模板中
     &lt;ul&gt;
       &lt;li&gt;获取时间段内所有Web请求数量，与客户端报表中数值进行比对是否匹配&lt;/li&gt;
@@ -574,7 +574,7 @@ OVH BHS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;CA&lt;span class=&quot;o&q
 
 &lt;ul&gt;
   &lt;li&gt;docker-machine ssh service&lt;/li&gt;
-  &lt;li&gt;docker logs –tail 1000 app_service | grep ERROR&lt;/li&gt;
+  &lt;li&gt;docker logs --tail 1000 app_service | grep ERROR&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h3 id=&quot;462-获取jaeger数据&quot;&gt;4.6.2 获取Jaeger数据&lt;/h3&gt;
