@@ -1,0 +1,427 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>在VirtualBox中安装Tor | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/09/virtualbox-tor/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/09/virtualbox-tor/">在VirtualBox中安装Tor</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>20 Sep 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/VirtualBox">VirtualBox</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Tor">Tor</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-virtualbox" id="markdown-toc-2-virtualbox">2. VirtualBox</a></li>
+  <li><a href="#3-linux" id="markdown-toc-3-linux">3. Linux</a></li>
+  <li><a href="#4-tor" id="markdown-toc-4-tor">4. Tor</a></li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>就是一篇简单的笔记。</p>
+
+<h1 id="2-virtualbox">2. VirtualBox</h1>
+<p>这块不需要很详细的讲解，基本上只要从官网下载binary直接使用即可。镜像需要提前下载好，VirtualBox安装比较奇怪的一点是，虚拟机的创建和操作系统的安装是分开的，会先创建出虚拟机实例，然后才是加载镜像进行虚拟机操作系统的安装。这点有点和其他的虚拟机不太相同。</p>
+
+<p>VirtualBox虚拟机的显示自适应需要额外设置，比较麻烦。显示设置的屏幕里，需要把显卡控制器改成：<code>VBoxSVGA</code>。</p>
+
+<h1 id="3-linux">3. Linux</h1>
+<p>这里使用的是Ubuntu Desktop版本，因为后续安装和使用Tor最简单的做法就是直接使用官方的Tor Browser，也正因此需要桌面版本的操作系统。如果对安全有更高的要求，可以使用FreeBSD操作系统。</p>
+
+<p>软件安装：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ sudo apt-get install build-essential
+$ sudo apt-get install wget vim</code></pre></figure>
+
+<p>安装virtualbox的辅助程序<code>Devices &gt; Insert Guest Additions CD Image</code>。</p>
+
+<p>按个人喜好，可选安装：<a href="https://linuxize.com/post/how-to-install-sublime-text-3-on-ubuntu-18-04/" target="_blank">sublime text3</a>。</p>
+
+<p>安装privoxy，用来给需要HTTP代理的应用程序做前置入口，将这些HTTP流量转为socks5流量，进入到tor：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ sudo apt-get install privoxy</code></pre></figure>
+
+<p>修改配置文件<code>/etc/privoxy/config</code>：添加<code>forward-socks5 / localhost:9150 .</code>。</p>
+
+<p>后续可以在命令行下设置：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="nb">export</span> <span class="nv">http_proxy</span><span class="o">=</span>http://127.0.0.1:8118
+<span class="nb">export</span> <span class="nv">https_proxy</span><span class="o">=</span>http://127.0.0.1:8118</code></pre></figure>
+
+<p>命令行流量就全走tor了。命令行下，可以使用<code>curl ipinfo.io</code>来查看当前IP的位置。</p>
+
+<p>在tor安装成功之前，虚拟机肯定也是需要代理的，否则tor软件根本下不下来。可以通过Linux操作系统<code>网络配置</code>设置代理：</p>
+
+<p>将所有的HTTP(s)代理设置成：192.168.xx.xx:xxxx，socks设置成192.168.xx.xx:xxxx。</p>
+
+<p>命令行下则：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="nb">export</span> <span class="nv">http_proxy</span><span class="o">=</span>http://192.168.xx.xx:xxxx
+<span class="nb">export</span> <span class="nv">https_proxy</span><span class="o">=</span>http://192.168.xx.xx:xxxx</code></pre></figure>
+
+<h1 id="4-tor">4. Tor</h1>
+<p>安装就直接从官网上下载Tor Browser，解压即可使用。配置文件位置：<code>Browser/TorBrowser/Data/Tor/torrc</code>。</p>
+
+<p>国内使用的时候必须使用网桥，按软件提示直接选一个可用的网桥，或从数据库申请一个网桥即可。注意，从数据库申请下来的网桥不一定就是可用的，还是需要连接测试。如果有条件的话，可以在Tor Browser之前再自己做一个跳板，这样效果会好很多，无论是从隐匿性上来说，还是从可用性上来说。</p>
+
+<p>Tor Browser在连接完成之后，会在本地打开一个端口<code>9150</code>，提供本地的socks5连接。但软件并不提供HTTP和HTTPS代理，需要之前提到过的privoxy软件进行转换即可。</p>
+
+<p>对Tor的节点进行限制，直接在之前提到的配置文件里添加内容即可，注意不要修改网桥相关的配置内容，那些是软件自动生成添加的：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="c1">## 以下为排除的节点(StrictNodes 1为坚决执行)</span>
+ExcludeNodes <span class="o">{</span>cn<span class="o">}</span>,<span class="o">{</span>hk<span class="o">}</span>,<span class="o">{</span>mo<span class="o">}</span>,<span class="o">{</span>kp<span class="o">}</span>,<span class="o">{</span>ir<span class="o">}</span>,<span class="o">{</span>cu<span class="o">}</span>,<span class="o">{</span>vn<span class="o">}</span>,<span class="o">{</span>ru<span class="o">}</span>,<span class="o">{</span>by<span class="o">}</span>,<span class="o">{</span>sd<span class="o">}</span>,<span class="o">{</span>kz<span class="o">}</span>,<span class="o">{</span>uz<span class="o">}</span>,<span class="o">{</span>pk<span class="o">}</span>,<span class="o">{</span>kg<span class="o">}</span>,<span class="o">{</span>tj<span class="o">}</span>,<span class="o">{</span>tm<span class="o">}</span>,<span class="o">{</span>tr<span class="o">}</span>,<span class="o">{</span>sy<span class="o">}</span>,<span class="o">{</span>sg<span class="o">}</span>,<span class="o">{</span>th<span class="o">}</span>,<span class="o">{</span>ph<span class="o">}</span>,<span class="o">{</span>my<span class="o">}</span>,<span class="o">{</span>lk<span class="o">}</span>
+ExcludeExitNodes <span class="o">{</span>cn<span class="o">}</span>,<span class="o">{</span>hk<span class="o">}</span>,<span class="o">{</span>mo<span class="o">}</span>,<span class="o">{</span>kp<span class="o">}</span>,<span class="o">{</span>ir<span class="o">}</span>,<span class="o">{</span>cu<span class="o">}</span>,<span class="o">{</span>vn<span class="o">}</span>,<span class="o">{</span>ru<span class="o">}</span>,<span class="o">{</span>by<span class="o">}</span>,<span class="o">{</span>sd<span class="o">}</span>,<span class="o">{</span>kz<span class="o">}</span>,<span class="o">{</span>uz<span class="o">}</span>,<span class="o">{</span>pk<span class="o">}</span>,<span class="o">{</span>kg<span class="o">}</span>,<span class="o">{</span>tj<span class="o">}</span>,<span class="o">{</span>tm<span class="o">}</span>,<span class="o">{</span>tr<span class="o">}</span>,<span class="o">{</span>sy<span class="o">}</span>,<span class="o">{</span>sg<span class="o">}</span>,<span class="o">{</span>th<span class="o">}</span>,<span class="o">{</span>ph<span class="o">}</span>,<span class="o">{</span>my<span class="o">}</span>,<span class="o">{</span>lk<span class="o">}</span>
+<span class="c1">#ExcludeNodes 是指排除节点，即把括号中的国家的节点从tor链路上除去</span>
+<span class="c1">#ExcludeExitNodes 是指“排除“出口”节点”，即tor的出口节点要排除括号中的国家的节点</span>
+
+<span class="c1">## 指定出口节点：</span>
+StrictNodes <span class="m">1</span>
+ExitNodes <span class="o">{</span>us<span class="o">}</span>
+<span class="c1">#这里us是指限定美国的ip为出口ip，你可以改为任何国家，国家代码请参考：https://zh.wikipedia.org/zh-cn/ISO_3166-1</span></code></pre></figure>
+
+<p>轻量级过滤：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>ExcludeNodes <span class="o">{</span>cn<span class="o">}</span>,<span class="o">{</span>hk<span class="o">}</span>,<span class="o">{</span>mo<span class="o">}</span>
+ExcludeExitNodes <span class="o">{</span>cn<span class="o">}</span>,<span class="o">{</span>hk<span class="o">}</span>,<span class="o">{</span>mo<span class="o">}</span>,<span class="o">{</span>kp<span class="o">}</span>,<span class="o">{</span>ir<span class="o">}</span>,<span class="o">{</span>cu<span class="o">}</span>,<span class="o">{</span>vn<span class="o">}</span>,<span class="o">{</span>sd<span class="o">}</span>,<span class="o">{</span>pk<span class="o">}</span>,<span class="o">{</span>sy<span class="o">}</span>
+StrictNodes <span class="m">1</span></code></pre></figure>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/09/virtualbox-tor/">在VirtualBox中安装Tor</a></li>
+    
+    <li><a href="/2019/07/dist-system-practice/">分布式系统实战</a></li>
+    
+    <li><a href="/2019/05/memcached-note/">Memcached Notes</a></li>
+    
+    <li><a href="/2019/05/golang-pipeline/">Golang Pipeline</a></li>
+    
+    <li><a href="/2019/05/envoy-note/">Envoy Notes</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+      <li><a href="/category/Tor">Tor</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/09/virtualbox-tor/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
