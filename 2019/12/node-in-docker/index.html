@@ -253,7 +253,7 @@ docker tag <span class="si">${</span><span class="nv">ORIGIN_TAG</span><span cla
 docker push <span class="si">${</span><span class="nv">TARGET_TAG</span><span class="si">}</span></code></pre></figure>
 
 <h2 id="23-镜像stage">2.3 镜像stage</h2>
-<p>node的镜像在制作过程中，需要一些命令进行辅助，而这些命令在基准的node镜像上是不存在的，因此就需要在Dockerfile中先npm安装它们。比如说typescript、yarn等。而这些安装行为都会显著增大镜像的体力，因此这里就需要使用到按stage进行构建的技术。</p>
+<p>node的镜像在制作过程中，需要一些命令进行辅助，而这些命令在基准的node镜像上是不存在的，因此就需要在Dockerfile中先npm安装它们。比如说typescript、yarn等。而这些安装行为都会显著增大镜像的体积，因此这里就需要使用到按stage进行构建的技术。</p>
 
 <p>官方文档在：<a href="https://docs.docker.com/develop/develop-images/multistage-build/" target="_blank">Use multi-stage builds</a>。</p>
 

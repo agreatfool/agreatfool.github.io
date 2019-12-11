@@ -98,7 +98,7 @@ docker tag &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;
 docker push &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TARGET_TAG&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h2 id=&quot;23-镜像stage&quot;&gt;2.3 镜像stage&lt;/h2&gt;
-&lt;p&gt;node的镜像在制作过程中，需要一些命令进行辅助，而这些命令在基准的node镜像上是不存在的，因此就需要在Dockerfile中先npm安装它们。比如说typescript、yarn等。而这些安装行为都会显著增大镜像的体力，因此这里就需要使用到按stage进行构建的技术。&lt;/p&gt;
+&lt;p&gt;node的镜像在制作过程中，需要一些命令进行辅助，而这些命令在基准的node镜像上是不存在的，因此就需要在Dockerfile中先npm安装它们。比如说typescript、yarn等。而这些安装行为都会显著增大镜像的体积，因此这里就需要使用到按stage进行构建的技术。&lt;/p&gt;
 
 &lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.docker.com/develop/develop-images/multistage-build/&quot; target=&quot;_blank&quot;&gt;Use multi-stage builds&lt;/a&gt;。&lt;/p&gt;
 
