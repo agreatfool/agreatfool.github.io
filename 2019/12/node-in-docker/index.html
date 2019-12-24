@@ -438,7 +438,7 @@ server <span class="o">{</span>
 
 <figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
 <span class="l l-Scalar l-Scalar-Plain">healthcheck</span><span class="p p-Indicator">:</span>
-  <span class="l l-Scalar l-Scalar-Plain">test</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">wget http://127.0.0.1:3000/login -q -O - &gt; /dev/null 2&gt;&amp;1</span>
+  <span class="l l-Scalar l-Scalar-Plain">test</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">wget http://127.0.0.1:3000/health -q -O - &gt; /dev/null 2&gt;&amp;1</span>
   <span class="l l-Scalar l-Scalar-Plain">interval</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10s</span>
   <span class="l l-Scalar l-Scalar-Plain">timeout</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20s</span>
   <span class="l l-Scalar l-Scalar-Plain">retries</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span></code></pre></figure>
@@ -462,6 +462,8 @@ server <span class="o">{</span>
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2019/12/drone-ci/">使用Drone进行CI支持</a></li>
+    
     <li><a href="/2019/12/node-in-docker/">在Docker中使用Node</a></li>
     
     <li><a href="/2019/09/virtualbox-tor/">在VirtualBox中安装Tor</a></li>
@@ -469,8 +471,6 @@ server <span class="o">{</span>
     <li><a href="/2019/07/dist-system-practice/">分布式系统实战</a></li>
     
     <li><a href="/2019/05/memcached-note/">Memcached Notes</a></li>
-    
-    <li><a href="/2019/05/golang-pipeline/">Golang Pipeline</a></li>
     
   </ul>
 </div>
@@ -566,6 +566,8 @@ server <span class="o">{</span>
       <li><a href="/category/Tor">Tor</a></li>
     
       <li><a href="/category/Node.js">Node.js</a></li>
+    
+      <li><a href="/category/CI">CI</a></li>
     
   </ul>
 </div>
