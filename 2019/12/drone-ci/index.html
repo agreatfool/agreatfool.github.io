@@ -206,7 +206,6 @@
       </li>
     </ul>
   </li>
-  <li><a href="#5-其他资源" id="markdown-toc-5-其他资源">5. 其他资源</a></li>
 </ul>
 
 <h1 id="1-前言">1. 前言</h1>
@@ -467,6 +466,8 @@
 <h2 id="42-runner安装--运行">4.2 Runner：安装 &amp; 运行</h2>
 <h3 id="421-安装">4.2.1 安装</h3>
 <p>服务器设置完成后，如果没有单独安装和运行runner，服务器上所有触发的事件都会是<code>Pending</code>状态，而且没有任何日志。</p>
+
+<p>关于Pending的debug，可以看下官方的一篇帖子：<a href="https://discourse.drone.io/t/builds-are-stuck-in-pending-status/4437" target="_blank">Builds are Stuck in Pending Status</a>。</p>
 
 <p>Runner的安装见官方文档：<a href="https://docs.drone.io/installation/runners/" target="_blank">Drone Documentation &gt; Installation &gt; Runners</a>。Runner也分不同的类型，一般常用的是：</p>
 
@@ -745,11 +746,6 @@ Webhook <span class="m">1</span>
 <p>另一个非正常思路就是定义一个pipeline，仅在指定的runner上运行，然后命令中执行脚本，查询私有registry，看目标仓库（镜像）的目标tag是否存在，存在的话就进行部署。而在其他的runner上进行构建和镜像推送操作。</p>
 
 <p>这样就能做到一开始提的需求，虽然恶心了点。</p>
-
-<h1 id="5-其他资源">5. 其他资源</h1>
-<ul>
-  <li><a href="https://discourse.drone.io/t/builds-are-stuck-in-pending-status/4437" target="_blank">Builds are Stuck in Pending Status</a></li>
-</ul>
 
 <blockquote>
   <p>EOF</p>

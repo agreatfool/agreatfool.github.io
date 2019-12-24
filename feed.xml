@@ -51,7 +51,6 @@
       &lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-其他资源&quot; id=&quot;markdown-toc-5-其他资源&quot;&gt;5. 其他资源&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
@@ -312,6 +311,8 @@
 &lt;h2 id=&quot;42-runner安装--运行&quot;&gt;4.2 Runner：安装 &amp;amp; 运行&lt;/h2&gt;
 &lt;h3 id=&quot;421-安装&quot;&gt;4.2.1 安装&lt;/h3&gt;
 &lt;p&gt;服务器设置完成后，如果没有单独安装和运行runner，服务器上所有触发的事件都会是&lt;code&gt;Pending&lt;/code&gt;状态，而且没有任何日志。&lt;/p&gt;
+
+&lt;p&gt;关于Pending的debug，可以看下官方的一篇帖子：&lt;a href=&quot;https://discourse.drone.io/t/builds-are-stuck-in-pending-status/4437&quot; target=&quot;_blank&quot;&gt;Builds are Stuck in Pending Status&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;Runner的安装见官方文档：&lt;a href=&quot;https://docs.drone.io/installation/runners/&quot; target=&quot;_blank&quot;&gt;Drone Documentation &amp;gt; Installation &amp;gt; Runners&lt;/a&gt;。Runner也分不同的类型，一般常用的是：&lt;/p&gt;
 
@@ -590,11 +591,6 @@ Webhook &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
 &lt;p&gt;另一个非正常思路就是定义一个pipeline，仅在指定的runner上运行，然后命令中执行脚本，查询私有registry，看目标仓库（镜像）的目标tag是否存在，存在的话就进行部署。而在其他的runner上进行构建和镜像推送操作。&lt;/p&gt;
 
 &lt;p&gt;这样就能做到一开始提的需求，虽然恶心了点。&lt;/p&gt;
-
-&lt;h1 id=&quot;5-其他资源&quot;&gt;5. 其他资源&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://discourse.drone.io/t/builds-are-stuck-in-pending-status/4437&quot; target=&quot;_blank&quot;&gt;Builds are Stuck in Pending Status&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
