@@ -416,7 +416,7 @@ Exec Runner需要手动在&lt;code&gt;~/.drone-runner-exec/config&lt;/code&gt;�
   
   OPTIONS:
      --param value, -p value  custom parameters to be injected into the job environment. Format: &lt;span class=&quot;nv&quot;&gt;KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;value
-     --format value           format output &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: &lt;span class=&quot;s2&quot;&gt;&amp;quot;Number: \nStatus: \nEvent: \nCommit: \nBranch: \nRef: \nAuthor:  &amp;lt;&amp;gt;\nMessage: \n&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+     --format value           format output &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: &lt;span class=&quot;s2&quot;&gt;&amp;quot;...&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;结合&lt;code&gt;.drone.yml&lt;/code&gt;使用：&lt;/p&gt;
 
