@@ -479,7 +479,7 @@
 <p>Runner的类型和pipeline的类型并不要求一致，runner只是pipeline的运行者，不管是什么类型的pipeline，都可以在任何类型的runner上运作。举例来说，一个docker类型的pipeline，在exec runner上就会在主机上启动docker容器并运行，而docker runner则是直接在docker容器内运行。</p>
 
 <h3 id="422-运行">4.2.2 运行</h3>
-<p><strong>Exec Runner</strong>
+<p><strong>Exec Runner</strong>  <br />
 Exec Runner需要手动在<code>~/.drone-runner-exec/config</code>创建一个配置文件：</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span><span class="nv">DRONE_DEBUG</span><span class="o">=</span><span class="nb">true</span>
@@ -502,7 +502,7 @@ Exec Runner需要手动在<code>~/.drone-runner-exec/config</code>创建一个�
 
 <p>举例来说，存放在<code>$HOME/.docker</code>下的凭证在exec runner运行的时候是不可访问的（<code>~</code>会定位到workspace而不是<code>$HOME</code>），这会导致私有registry的访问失败。同样的，pipeline运行时的PATH也不同于用户自身的PATH，需要在配置文件中设置好<code>DRONE_RUNNER_PATH</code>。</p>
 
-<p><strong>Docker Runner</strong>
+<p><strong>Docker Runner</strong>  <br />
 这部分就非常简单了，无非就是一个docker容器，直接使用对应的官方镜像即可：<a href="https://hub.docker.com/r/drone/drone-runner-docker" target="_blank">drone/drone-runner-docker</a>。</p>
 
 <p>相关配置项可以查阅官方文档：<a href="https://docker-runner.docs.drone.io/installation/reference/" target="_blank">Docker Runner &gt; Installation &gt; Configuration Reference</a>。</p>

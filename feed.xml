@@ -324,7 +324,7 @@
 &lt;p&gt;Runner的类型和pipeline的类型并不要求一致，runner只是pipeline的运行者，不管是什么类型的pipeline，都可以在任何类型的runner上运作。举例来说，一个docker类型的pipeline，在exec runner上就会在主机上启动docker容器并运行，而docker runner则是直接在docker容器内运行。&lt;/p&gt;
 
 &lt;h3 id=&quot;422-运行&quot;&gt;4.2.2 运行&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Exec Runner&lt;/strong&gt;
+&lt;p&gt;&lt;strong&gt;Exec Runner&lt;/strong&gt;  &lt;br /&gt;
 Exec Runner需要手动在&lt;code&gt;~/.drone-runner-exec/config&lt;/code&gt;创建一个配置文件：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DRONE_DEBUG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
@@ -347,7 +347,7 @@ Exec Runner需要手动在&lt;code&gt;~/.drone-runner-exec/config&lt;/code&gt;�
 
 &lt;p&gt;举例来说，存放在&lt;code&gt;$HOME/.docker&lt;/code&gt;下的凭证在exec runner运行的时候是不可访问的（&lt;code&gt;~&lt;/code&gt;会定位到workspace而不是&lt;code&gt;$HOME&lt;/code&gt;），这会导致私有registry的访问失败。同样的，pipeline运行时的PATH也不同于用户自身的PATH，需要在配置文件中设置好&lt;code&gt;DRONE_RUNNER_PATH&lt;/code&gt;。&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Docker Runner&lt;/strong&gt;
+&lt;p&gt;&lt;strong&gt;Docker Runner&lt;/strong&gt;  &lt;br /&gt;
 这部分就非常简单了，无非就是一个docker容器，直接使用对应的官方镜像即可：&lt;a href=&quot;https://hub.docker.com/r/drone/drone-runner-docker&quot; target=&quot;_blank&quot;&gt;drone/drone-runner-docker&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;相关配置项可以查阅官方文档：&lt;a href=&quot;https://docker-runner.docs.drone.io/installation/reference/&quot; target=&quot;_blank&quot;&gt;Docker Runner &amp;gt; Installation &amp;gt; Configuration Reference&lt;/a&gt;。&lt;/p&gt;
