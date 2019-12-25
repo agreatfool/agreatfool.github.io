@@ -45,7 +45,7 @@
   &lt;p&gt;Consul is a service mesh solution providing a full featured control plane with service discovery, configuration, and segmentation functionality. Each of these features can be used individually as needed, or they can be used together to build a full service mesh. Consul requires a data plane and supports both a proxy and native integration model. Consul ships with a simple built-in proxy so that everything works out of the box, but also supports 3rd party proxy integrations such as Envoy.&lt;/p&gt;
 &lt;/blockquote&gt;
 
-&lt;p&gt;相关资料：&lt;/p&gt;
+&lt;p&gt;文档资料：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.consul.io/&quot; target=&quot;_blank&quot;&gt;consul.io&lt;/a&gt;&lt;/li&gt;
@@ -55,9 +55,11 @@
 &lt;/ul&gt;
 
 &lt;h1 id=&quot;2-选型&quot;&gt;2. 选型&lt;/h1&gt;
-&lt;p&gt;市面上常用的开源服务发现软件主要有：&lt;a href=&quot;https://github.com/hashicorp/consul&quot; target=&quot;_blank&quot;&gt;consul&lt;/a&gt;、&lt;a href=&quot;https://github.com/etcd-io/etcd&quot; target=&quot;_blank&quot;&gt;etcd&lt;/a&gt;、&lt;a href=&quot;https://github.com/apache/zookeeper&quot; target=&quot;_blank&quot;&gt;zookeeper&lt;/a&gt;。前两者都是用golang研发的，而zookeeper则是java研发的，你懂我意思吧。&lt;/p&gt;
+&lt;p&gt;市面上常用的开源服务发现软件主要有：&lt;a href=&quot;https://github.com/hashicorp/consul&quot; target=&quot;_blank&quot;&gt;consul&lt;/a&gt;、&lt;a href=&quot;https://github.com/etcd-io/etcd&quot; target=&quot;_blank&quot;&gt;etcd&lt;/a&gt;、&lt;a href=&quot;https://github.com/apache/zookeeper&quot; target=&quot;_blank&quot;&gt;zookeeper&lt;/a&gt;。前两者都是用golang研发的，而zookeeper则是java研发的（你懂我意思吧）。&lt;/p&gt;
 
-&lt;p&gt;这里就有选型的问题了，不过了解下来相互之间的差异不能说很大，基本上都在可接受范围内。特别是consul和etcd都使用raft作为分布式一致性协议，可以说非常趋同了。etcd关注度更高（特别是K8S官方使用了它），功能简单，主要在大型系统中作为分布式K/V存储使用；而consul的功能更强大（完整、开箱即用）且易用性更高。相关资料：&lt;/p&gt;
+&lt;p&gt;这里就有选型的问题了，不过了解下来相互之间的差异不能说很大，基本上都在可接受范围内。特别是consul和etcd都使用raft作为分布式一致性协议，可以说非常趋同了。etcd关注度更高（特别是K8S官方使用了它），功能简单，主要在大型系统中作为分布式K/V存储使用；而consul的功能更强大（完整、开箱即用）且易用性更高。&lt;/p&gt;
+
+&lt;p&gt;相关资料：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.consul.io/intro/vs/zookeeper.html&quot; target=&quot;_blank&quot;&gt;Consul vs. ZooKeeper, doozerd, etcd&lt;/a&gt;：这篇是consul官方的，不过我觉得讲得其实不多，没什么价值&lt;/li&gt;
@@ -84,15 +86,17 @@
 &lt;h2 id=&quot;41-启动&quot;&gt;4.1 启动&lt;/h2&gt;
 &lt;p&gt;一般直接使用docker镜像：&lt;a href=&quot;https://hub.docker.com/_/consul&quot; target=&quot;_blank&quot;&gt;consul&lt;/a&gt;。&lt;/p&gt;
 
-&lt;p&gt;启动方面非常简单，全部都是用&lt;code&gt;agent&lt;/code&gt;命令，参数细节放在后面的附录部分，太长了：&lt;a href=&quot;#ID_APP_AGENT_HELP&quot;&gt;consul agent –help&lt;/a&gt;。常用参数：&lt;/p&gt;
+&lt;p&gt;启动方面非常简单，全部都是用&lt;code&gt;agent&lt;/code&gt;命令，参数细节放在后面的附录部分，太长了：&lt;a href=&quot;#ID_APP_AGENT_HELP&quot;&gt;consul agent –help&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;常用参数：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;&lt;code&gt;--node=$name&lt;/code&gt;指定节点名称&lt;/li&gt;
   &lt;li&gt;&lt;code&gt;--server&lt;/code&gt;表示节点是server节点&lt;/li&gt;
   &lt;li&gt;&lt;code&gt;--bootstrap&lt;/code&gt;表示节点以bootstrap模式启动&lt;/li&gt;
   &lt;li&gt;&lt;code&gt;--ui&lt;/code&gt;表示当前节点会提供管理UI界面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;--client=0.0.0.0&lt;/code&gt;表示监听地址&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;--join=$host&lt;/code&gt;表示启动时尝试加入集群时连接的目标节点&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;--client=0.0.0.0&lt;/code&gt;指定监听地址&lt;/li&gt;
+  &lt;li&gt;&lt;code&gt;--join=$host&lt;/code&gt;指定启动时尝试加入集群时连接的目标节点&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;下面给个例子，集群3个server节点，2个client节点：&lt;/p&gt;
@@ -299,7 +303,7 @@
 &lt;p&gt;&lt;img src=&quot;/resources/2019/12/consul-note/nodes.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;42-api&quot;&gt;4.2 API&lt;/h2&gt;
-&lt;p&gt;官方API文档在：&lt;a href=&quot;https://www.consul.io/api/index.html&quot; target=&quot;_blank&quot;&gt;API Introduction&lt;/a&gt;。Consul使用RESTful的HTTP请求来提供服务，所有的客户端或命令行工具无非就是RESTful API的封装。所有如果有需要，可以直接使用curl来发送HTTP请求调用接口。&lt;/p&gt;
+&lt;p&gt;官方API文档在：&lt;a href=&quot;https://www.consul.io/api/index.html&quot; target=&quot;_blank&quot;&gt;API Introduction&lt;/a&gt;。Consul使用RESTful的HTTP请求来提供服务，所有的客户端或命令行工具无非就是RESTful API的封装。所以如果有需要，可以直接使用curl来发送HTTP请求调用接口。&lt;/p&gt;
 
 &lt;p&gt;下面的例子中会涉及到一些demo应用程序的节点：&lt;/p&gt;
 
@@ -676,45 +680,46 @@ $ curl http://fullstack_consul_client2:8500/v1/agent/service/1fw20hk4kq30n8 &lt;
 
 &lt;p&gt;范例nginx配置模板，文件位置：&lt;code&gt;./vendor/consul/nginx&lt;/code&gt;&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-nginx&quot; data-lang=&quot;nginx&quot;&gt;&lt;span&gt;&lt;/span&gt;   
-&lt;span class=&quot;k&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;gateway&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;max_fails=3&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;fail_timeout=60&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;weight=1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;127.0.0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;65535&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# force a 502&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;  
+&lt;pre&gt;&lt;code&gt;   
+upstream gateway {
+    server : max_fails=3 fail_timeout=60 weight=1;
+    server 127.0.0.1:65535; # force a 502
+}  
 
-&lt;span class=&quot;k&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;localhost&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+server {
+    listen 80;
+    server_name localhost;
 
-    &lt;span class=&quot;kn&quot;&gt;access_log&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/var/log/nginx/fullstack.access.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;error_log&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/var/log/nginx/fullstack.error.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    access_log /var/log/nginx/fullstack.access.log;
+    error_log /var/log/nginx/fullstack.error.log;
 
-    &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/usr/share/nginx/html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    root /usr/share/nginx/html;
 
-    &lt;span class=&quot;kn&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;index.html&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;index.htm&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;index.nginx-debian.html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    index index.html index.htm index.nginx-debian.html;
 
-    &lt;span class=&quot;kn&quot;&gt;error_page&lt;/span&gt;   &lt;span class=&quot;mi&quot;&gt;500&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;502&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;503&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;504&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;/50x.html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/50x.html&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;root&lt;/span&gt;   &lt;span class=&quot;s&quot;&gt;/usr/share/nginx/html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
 
-    &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;x-Forwarded-For&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;HOST&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$http_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;X-Forwarded-Proto&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_redirect&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;https://&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_connect_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;240&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_send_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;240&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_read_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;240&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;http://gateway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+    location / {
+        proxy_set_header x-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header HOST $http_host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_redirect http:// https://;
+        proxy_connect_timeout 240;
+        proxy_send_timeout 240;
+        proxy_read_timeout 240;
+        proxy_pass http://gateway;
+    }
+}
+&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;template启动：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run --rm -it --name templateX &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -v ./vendor/consul/nginx:/tmp/nginx.ctmpl &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# 将配置文件映射到容器内&lt;/span&gt;
-    -v /tmp/template:/consul-template/data &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 将主机的临时文件夹映射出来，方便查看生成的配置文件&lt;/span&gt;
+    -v ./vendor/consul/nginx:/tmp/nginx.ctmpl &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# 将模板配置文件映射到容器内&lt;/span&gt;
+    -v /tmp/template:/consul-template/data &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 将主机的临时文件夹映射到容器内配置文件的生成位置，方便后续在主机上直接查看生成的配置文件&lt;/span&gt;
     hashicorp/consul-template:0.22.1-alpine &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
     -dry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
     -log-level&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;debug &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
@@ -818,7 +823,7 @@ $ curl http://fullstack_consul_client2:8500/v1/agent/service/1fw20hk4kq30n8 &lt;
 &lt;span class=&quot;c1&quot;&gt;// start&lt;/span&gt;
 &lt;span class=&quot;nx&quot;&gt;startServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;startWeb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;register&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()).&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;在服务启动的时候进行注册，并且记得要处理程序退出，退出的时候需要将注册信息删除，否则即便应用程序退出了，在consul里那个服务还是存在的。&lt;/p&gt;
+&lt;p&gt;在服务启动的时候进行注册，并且记得要&lt;code&gt;处理程序退出&lt;/code&gt;，退出的时候需要将注册信息删除，否则即便应用程序退出了，在consul里那个服务还是存在的。&lt;/p&gt;
 
 &lt;p&gt;客户端获取&lt;code&gt;可用节点&lt;/code&gt;：&lt;/p&gt;
 

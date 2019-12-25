@@ -204,7 +204,7 @@
   <p>Consul is a service mesh solution providing a full featured control plane with service discovery, configuration, and segmentation functionality. Each of these features can be used individually as needed, or they can be used together to build a full service mesh. Consul requires a data plane and supports both a proxy and native integration model. Consul ships with a simple built-in proxy so that everything works out of the box, but also supports 3rd party proxy integrations such as Envoy.</p>
 </blockquote>
 
-<p>相关资料：</p>
+<p>文档资料：</p>
 
 <ul>
   <li><a href="https://www.consul.io/" target="_blank">consul.io</a></li>
@@ -214,9 +214,11 @@
 </ul>
 
 <h1 id="2-选型">2. 选型</h1>
-<p>市面上常用的开源服务发现软件主要有：<a href="https://github.com/hashicorp/consul" target="_blank">consul</a>、<a href="https://github.com/etcd-io/etcd" target="_blank">etcd</a>、<a href="https://github.com/apache/zookeeper" target="_blank">zookeeper</a>。前两者都是用golang研发的，而zookeeper则是java研发的，你懂我意思吧。</p>
+<p>市面上常用的开源服务发现软件主要有：<a href="https://github.com/hashicorp/consul" target="_blank">consul</a>、<a href="https://github.com/etcd-io/etcd" target="_blank">etcd</a>、<a href="https://github.com/apache/zookeeper" target="_blank">zookeeper</a>。前两者都是用golang研发的，而zookeeper则是java研发的（你懂我意思吧）。</p>
 
-<p>这里就有选型的问题了，不过了解下来相互之间的差异不能说很大，基本上都在可接受范围内。特别是consul和etcd都使用raft作为分布式一致性协议，可以说非常趋同了。etcd关注度更高（特别是K8S官方使用了它），功能简单，主要在大型系统中作为分布式K/V存储使用；而consul的功能更强大（完整、开箱即用）且易用性更高。相关资料：</p>
+<p>这里就有选型的问题了，不过了解下来相互之间的差异不能说很大，基本上都在可接受范围内。特别是consul和etcd都使用raft作为分布式一致性协议，可以说非常趋同了。etcd关注度更高（特别是K8S官方使用了它），功能简单，主要在大型系统中作为分布式K/V存储使用；而consul的功能更强大（完整、开箱即用）且易用性更高。</p>
+
+<p>相关资料：</p>
 
 <ul>
   <li><a href="https://www.consul.io/intro/vs/zookeeper.html" target="_blank">Consul vs. ZooKeeper, doozerd, etcd</a>：这篇是consul官方的，不过我觉得讲得其实不多，没什么价值</li>
@@ -243,15 +245,17 @@
 <h2 id="41-启动">4.1 启动</h2>
 <p>一般直接使用docker镜像：<a href="https://hub.docker.com/_/consul" target="_blank">consul</a>。</p>
 
-<p>启动方面非常简单，全部都是用<code>agent</code>命令，参数细节放在后面的附录部分，太长了：<a href="#ID_APP_AGENT_HELP">consul agent –help</a>。常用参数：</p>
+<p>启动方面非常简单，全部都是用<code>agent</code>命令，参数细节放在后面的附录部分，太长了：<a href="#ID_APP_AGENT_HELP">consul agent –help</a>。</p>
+
+<p>常用参数：</p>
 
 <ul>
   <li><code>--node=$name</code>指定节点名称</li>
   <li><code>--server</code>表示节点是server节点</li>
   <li><code>--bootstrap</code>表示节点以bootstrap模式启动</li>
   <li><code>--ui</code>表示当前节点会提供管理UI界面</li>
-  <li><code>--client=0.0.0.0</code>表示监听地址</li>
-  <li><code>--join=$host</code>表示启动时尝试加入集群时连接的目标节点</li>
+  <li><code>--client=0.0.0.0</code>指定监听地址</li>
+  <li><code>--join=$host</code>指定启动时尝试加入集群时连接的目标节点</li>
 </ul>
 
 <p>下面给个例子，集群3个server节点，2个client节点：</p>
@@ -458,7 +462,7 @@
 <p><img src="/resources/2019/12/consul-note/nodes.png" alt="" target="_blank" /></p>
 
 <h2 id="42-api">4.2 API</h2>
-<p>官方API文档在：<a href="https://www.consul.io/api/index.html" target="_blank">API Introduction</a>。Consul使用RESTful的HTTP请求来提供服务，所有的客户端或命令行工具无非就是RESTful API的封装。所有如果有需要，可以直接使用curl来发送HTTP请求调用接口。</p>
+<p>官方API文档在：<a href="https://www.consul.io/api/index.html" target="_blank">API Introduction</a>。Consul使用RESTful的HTTP请求来提供服务，所有的客户端或命令行工具无非就是RESTful API的封装。所以如果有需要，可以直接使用curl来发送HTTP请求调用接口。</p>
 
 <p>下面的例子中会涉及到一些demo应用程序的节点：</p>
 
@@ -835,45 +839,46 @@ $ curl http://fullstack_consul_client2:8500/v1/agent/service/1fw20hk4kq30n8 <spa
 
 <p>范例nginx配置模板，文件位置：<code>./vendor/consul/nginx</code></p>
 
-<figure class="highlight"><pre><code class="language-nginx" data-lang="nginx"><span></span>   
-<span class="k">upstream</span> <span class="s">gateway</span> <span class="p">{</span>
-    <span class="kn">server</span> <span class="p">:</span> <span class="s">max_fails=3</span> <span class="s">fail_timeout=60</span> <span class="s">weight=1</span><span class="p">;</span>
-    <span class="kn">server</span> <span class="n">127.0.0.1</span><span class="p">:</span><span class="mi">65535</span><span class="p">;</span> <span class="c1"># force a 502</span>
-<span class="p">}</span>  
+<pre><code>   
+upstream gateway {
+    server : max_fails=3 fail_timeout=60 weight=1;
+    server 127.0.0.1:65535; # force a 502
+}  
 
-<span class="k">server</span> <span class="p">{</span>
-    <span class="kn">listen</span> <span class="mi">80</span><span class="p">;</span>
-    <span class="kn">server_name</span> <span class="s">localhost</span><span class="p">;</span>
+server {
+    listen 80;
+    server_name localhost;
 
-    <span class="kn">access_log</span> <span class="s">/var/log/nginx/fullstack.access.log</span><span class="p">;</span>
-    <span class="kn">error_log</span> <span class="s">/var/log/nginx/fullstack.error.log</span><span class="p">;</span>
+    access_log /var/log/nginx/fullstack.access.log;
+    error_log /var/log/nginx/fullstack.error.log;
 
-    <span class="kn">root</span> <span class="s">/usr/share/nginx/html</span><span class="p">;</span>
+    root /usr/share/nginx/html;
 
-    <span class="kn">index</span> <span class="s">index.html</span> <span class="s">index.htm</span> <span class="s">index.nginx-debian.html</span><span class="p">;</span>
+    index index.html index.htm index.nginx-debian.html;
 
-    <span class="kn">error_page</span>   <span class="mi">500</span> <span class="mi">502</span> <span class="mi">503</span> <span class="mi">504</span>  <span class="s">/50x.html</span><span class="p">;</span>
-    <span class="kn">location</span> <span class="p">=</span> <span class="s">/50x.html</span> <span class="p">{</span>
-        <span class="kn">root</span>   <span class="s">/usr/share/nginx/html</span><span class="p">;</span>
-    <span class="p">}</span>
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
 
-    <span class="kn">location</span> <span class="s">/</span> <span class="p">{</span>
-        <span class="kn">proxy_set_header</span> <span class="s">x-Forwarded-For</span> <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
-        <span class="kn">proxy_set_header</span> <span class="s">HOST</span> <span class="nv">$http_host</span><span class="p">;</span>
-        <span class="kn">proxy_set_header</span> <span class="s">X-Forwarded-Proto</span> <span class="s">https</span><span class="p">;</span>
-        <span class="kn">proxy_redirect</span> <span class="s">http://</span> <span class="s">https://</span><span class="p">;</span>
-        <span class="kn">proxy_connect_timeout</span> <span class="mi">240</span><span class="p">;</span>
-        <span class="kn">proxy_send_timeout</span> <span class="mi">240</span><span class="p">;</span>
-        <span class="kn">proxy_read_timeout</span> <span class="mi">240</span><span class="p">;</span>
-        <span class="kn">proxy_pass</span> <span class="s">http://gateway</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span></code></pre></figure>
+    location / {
+        proxy_set_header x-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header HOST $http_host;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_redirect http:// https://;
+        proxy_connect_timeout 240;
+        proxy_send_timeout 240;
+        proxy_read_timeout 240;
+        proxy_pass http://gateway;
+    }
+}
+</code></pre>
 
 <p>template启动：</p>
 
 <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker run --rm -it --name templateX <span class="se">\</span>
-    -v ./vendor/consul/nginx:/tmp/nginx.ctmpl <span class="se">\ </span><span class="c1"># 将配置文件映射到容器内</span>
-    -v /tmp/template:/consul-template/data <span class="se">\ </span>   <span class="c1"># 将主机的临时文件夹映射出来，方便查看生成的配置文件</span>
+    -v ./vendor/consul/nginx:/tmp/nginx.ctmpl <span class="se">\ </span><span class="c1"># 将模板配置文件映射到容器内</span>
+    -v /tmp/template:/consul-template/data <span class="se">\ </span>   <span class="c1"># 将主机的临时文件夹映射到容器内配置文件的生成位置，方便后续在主机上直接查看生成的配置文件</span>
     hashicorp/consul-template:0.22.1-alpine <span class="se">\</span>
     -dry <span class="se">\</span>
     -log-level<span class="o">=</span>debug <span class="se">\</span>
@@ -977,7 +982,7 @@ $ curl http://fullstack_consul_client2:8500/v1/agent/service/1fw20hk4kq30n8 <spa
 <span class="c1">// start</span>
 <span class="nx">startServer</span><span class="p">().</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">startWeb</span><span class="p">()).</span><span class="nx">then</span><span class="p">(()</span> <span class="o">=&gt;</span> <span class="nx">register</span><span class="p">()).</span><span class="k">catch</span><span class="p">((</span><span class="nx">err</span><span class="p">)</span> <span class="o">=&gt;</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">));</span></code></pre></figure>
 
-<p>在服务启动的时候进行注册，并且记得要处理程序退出，退出的时候需要将注册信息删除，否则即便应用程序退出了，在consul里那个服务还是存在的。</p>
+<p>在服务启动的时候进行注册，并且记得要<code>处理程序退出</code>，退出的时候需要将注册信息删除，否则即便应用程序退出了，在consul里那个服务还是存在的。</p>
 
 <p>客户端获取<code>可用节点</code>：</p>
 
