@@ -187,7 +187,7 @@
 
 <p>在这个领域，名气最响的应该是Gitlab。但实际使用中Gitlab也有点问题，首先就是资源占用。Gitlab是使用ruby编写的，好几年之前刚出来的时候，一台1G内存的虚拟主机连安装运行都做不到，着实震惊。时至今日都已经发展到了以docker镜像分发，gitlab仍旧会有体积和运行时资源占用的问题。另一点就是功能，对于一般标准团队来说，gitlab的功能太过于丰富，这是往好的地方说，往坏的地方说就是它包含了太多不需要的东西，而这些东西还占用磁盘和运行时资源。</p>
 
-<p>于是着手查看开源的alternative方案，很快就找到了golang研发的gitea。使用golang研发的软件分发都很容易，体积小，安装使用简单，运行时占用资源少。且gitea的功能很完毕，某些自身不具备的功能也能通过第三方来解决，比如CI就可以结合同样是golang研发的drone来实施。</p>
+<p>于是着手查看开源的alternative方案，很快就找到了golang研发的gitea。使用golang研发的软件分发都很容易，体积小，安装使用简单，运行时占用资源少。且gitea的功能很完备，某些自身不具备的功能也能通过第三方来解决，比如CI就可以结合同样是golang研发的drone来实施。</p>
 
 <p>相关资源：</p>
 
@@ -223,9 +223,9 @@
     <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span>
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./vendor/gitea:/data</span></code></pre></figure>
 
-<p>关于启动时的设置相关，官方有一个讨论帖：<a href="https://github.com/go-gitea/gitea/issues/350" target="_blank">Configure with env variables #350</a>，但貌似还没有任何结论，当前最佳实践是做好配置文件之后映射到容器内。</p>
+<p>关于启动时的环境变量相关，官方有一个讨论帖：<a href="https://github.com/go-gitea/gitea/issues/350" target="_blank">Configure with env variables #350</a>，但貌似还没有任何结论，当前最佳实践是做好配置文件之后映射到容器内。</p>
 
-<p>关于gitea使用的数据库，如果是默认配置的话，是会使用Postgre数据库，存放在容器内的<code>/data/gitea/gitea.db</code>。</p>
+<p>关于gitea使用的数据库，如果是默认配置的话，是会使用Postgre数据库，存放在容器内的<code>/data/gitea/gitea.db</code>位置。</p>
 
 <p>gitea的数据全部都放在容器内的<code>/data</code>文件夹下，一般需要将这个文件夹映射出来。</p>
 
