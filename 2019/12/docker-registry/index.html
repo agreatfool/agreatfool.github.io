@@ -1,0 +1,620 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Docker Registry 的简单使用 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/12/docker-registry/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/12/docker-registry/">Docker Registry 的简单使用</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>26 Dec 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Docker">Docker</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Registry">Registry</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DevOps">DevOps</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-安装--启动" id="markdown-toc-2-安装--启动">2. 安装 &amp; 启动</a></li>
+  <li><a href="#3-访问限制" id="markdown-toc-3-访问限制">3. 访问限制</a></li>
+  <li><a href="#3-api" id="markdown-toc-3-api">3. API</a></li>
+  <li><a href="#4-删除镜像" id="markdown-toc-4-删除镜像">4. 删除镜像</a></li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>Docker和镜像在工作中是越来越常见了，而镜像仓库的需求也变得越来越常见。Docker官方给的解决方案是私有Registry仓库，官方也给了镜像进行对应的使用。但不得不说Docker的Registry是真的不好用：</p>
+
+<ul>
+  <li>没有UI界面</li>
+  <li>只有很弱的访问权限限制</li>
+  <li>所有接口都必须通过HTTP请求方式进行，没有提供命令行工具等简化操作</li>
+  <li>没有删除镜像的手段</li>
+</ul>
+
+<p>此外还有很多，这里就不一并列举了。</p>
+
+<p>因此，市面上也有不少alternative替代方案，做的最好的应该是<a href="https://goharbor.io/" target="_blank">harbor</a>。如果是大型企业或者是有比较严谨的权限控制需求的话，推荐使用harbor。</p>
+
+<p>但针对小公司来说，更简单快速的部署和更简单的运维是相对来说更重要的事情，因此Docker Registry的使用也是有市场的。这里就简单做下使用上的介绍。</p>
+
+<h1 id="2-安装--启动">2. 安装 &amp; 启动</h1>
+<p>使用的还是官方的镜像：<a href="https://hub.docker.com/_/registry" target="_blank">registry</a>。</p>
+
+<p>官方文档在：<a href="https://docs.docker.com/registry/deploying/" target="_blank">Deploy a registry server</a>。</p>
+
+<p>启动命令：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker network create registry
+
+$ docker run -d <span class="se">\</span>
+    --name docker_registry <span class="se">\</span>
+    --network registry <span class="se">\</span>
+    --restart<span class="o">=</span>always <span class="se">\</span>
+    -p <span class="m">15000</span>:5000 <span class="se">\</span>
+    -v /tmp/registry/auth:/data/registry/auth <span class="se">\</span>
+    -v /tmp/registry/data:/var/lib/registry <span class="se">\</span>
+    -v /tmp/registry/config.yml:/etc/docker/registry/config.yml <span class="se">\</span>
+    -e <span class="nv">REGISTRY_AUTH</span><span class="o">=</span>htpasswd <span class="se">\</span>
+    -e <span class="nv">REGISTRY_AUTH_HTPASSWD_REALM</span><span class="o">=</span><span class="s2">&quot;Registry Realm&quot;</span> <span class="se">\</span>
+    -e <span class="nv">REGISTRY_AUTH_HTPASSWD_PATH</span><span class="o">=</span>/data/registry/auth/htpasswd <span class="se">\</span>
+    registry:2.7.1</code></pre></figure>
+
+<p>容器内配置文件的位置：<code>/etc/docker/registry/config.yml</code>。</p>
+
+<p>当前例子中使用的是没有前置proxy，并且仅设置了最简单的用户名密码访问限制的情况。关于这块的访问限制相关，更详细的内容可以查看官方文档：<a href="https://docs.docker.com/registry/deploying/#restricting-access" target="_blank">Restricting access</a>。</p>
+
+<p>生成秘钥可以使用命令：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker run --rm <span class="se">\</span>
+    --entrypoint htpasswd <span class="se">\</span>
+    registry:2.7.1 <span class="se">\</span>
+    -Bbn username password &gt; /tmp/registry/auth/htpasswd</code></pre></figure>
+
+<p>如果需要结合nginx使用的话（一般推荐这样做），需要参见：<a href="https://docs.docker.com/registry/recipes/nginx/" target="_blank">Authenticate proxy with nginx</a>。</p>
+
+<p>参考配置文件：</p>
+
+<figure class="highlight"><pre><code class="language-nginx" data-lang="nginx"><span></span><span class="k">events</span> <span class="p">{</span>
+    <span class="kn">worker_connections</span>  <span class="mi">1024</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">http</span> <span class="p">{</span>
+
+  <span class="kn">upstream</span> <span class="s">docker-registry</span> <span class="p">{</span>
+    <span class="kn">server</span> <span class="n">registry</span><span class="p">:</span><span class="mi">5000</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="c1">## Set a variable to help us decide if we need to add the</span>
+  <span class="c1">## &#39;Docker-Distribution-Api-Version&#39; header.</span>
+  <span class="c1">## The registry always sets this header.</span>
+  <span class="c1">## In the case of nginx performing auth, the header is unset</span>
+  <span class="c1">## since nginx is auth-ing before proxying.</span>
+  <span class="kn">map</span> <span class="nv">$upstream_http_docker_distribution_api_version</span> <span class="nv">$docker_distribution_api_version</span> <span class="p">{</span>
+    <span class="kn">&#39;&#39;</span> <span class="s">&#39;registry/2.0&#39;</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="kn">server</span> <span class="p">{</span>
+    <span class="kn">listen</span> <span class="mi">443</span> <span class="s">ssl</span><span class="p">;</span>
+    <span class="kn">server_name</span> <span class="s">myregistrydomain.com</span><span class="p">;</span>
+
+    <span class="c1"># SSL</span>
+    <span class="kn">ssl_certificate</span> <span class="s">/etc/nginx/conf.d/domain.crt</span><span class="p">;</span>
+    <span class="kn">ssl_certificate_key</span> <span class="s">/etc/nginx/conf.d/domain.key</span><span class="p">;</span>
+
+    <span class="c1"># Recommendations from https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html</span>
+    <span class="kn">ssl_protocols</span> <span class="s">TLSv1.1</span> <span class="s">TLSv1.2</span><span class="p">;</span>
+    <span class="kn">ssl_ciphers</span> <span class="s">&#39;EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH&#39;</span><span class="p">;</span>
+    <span class="kn">ssl_prefer_server_ciphers</span> <span class="no">on</span><span class="p">;</span>
+    <span class="kn">ssl_session_cache</span> <span class="s">shared:SSL:10m</span><span class="p">;</span>
+
+    <span class="c1"># disable any limits to avoid HTTP 413 for large image uploads</span>
+    <span class="kn">client_max_body_size</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="c1"># required to avoid HTTP 411: see Issue #1486 (https://github.com/moby/moby/issues/1486)</span>
+    <span class="kn">chunked_transfer_encoding</span> <span class="no">on</span><span class="p">;</span>
+
+    <span class="kn">location</span> <span class="s">/v2/</span> <span class="p">{</span>
+      <span class="c1"># Do not allow connections from docker 1.5 and earlier</span>
+      <span class="c1"># docker pre-1.6.0 did not properly set the user agent on ping, catch &quot;Go *&quot; user agents</span>
+      <span class="kn">if</span> <span class="s">(</span><span class="nv">$http_user_agent</span> <span class="p">~</span> <span class="sr">&quot;^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go</span> <span class="s">).*</span><span class="nv">$&quot;</span> <span class="s">)</span> <span class="p">{</span>
+        <span class="kn">return</span> <span class="mi">404</span><span class="p">;</span>
+      <span class="p">}</span>
+
+      <span class="c1"># To add basic authentication to v2 use auth_basic setting.</span>
+      <span class="kn">auth_basic</span> <span class="s">&quot;Registry</span> <span class="s">realm&quot;</span><span class="p">;</span>
+      <span class="kn">auth_basic_user_file</span> <span class="s">/etc/nginx/conf.d/nginx.htpasswd</span><span class="p">;</span>
+
+      <span class="c1">## If $docker_distribution_api_version is empty, the header is not added.</span>
+      <span class="c1">## See the map directive above where this variable is defined.</span>
+      <span class="kn">add_header</span> <span class="s">&#39;Docker-Distribution-Api-Version&#39;</span> <span class="nv">$docker_distribution_api_version</span> <span class="s">always</span><span class="p">;</span>
+
+      <span class="kn">proxy_pass</span>                          <span class="s">http://docker-registry</span><span class="p">;</span>
+      <span class="kn">proxy_set_header</span>  <span class="s">Host</span>              <span class="nv">$http_host</span><span class="p">;</span>   <span class="c1"># required for docker client&#39;s sake</span>
+      <span class="kn">proxy_set_header</span>  <span class="s">X-Real-IP</span>         <span class="nv">$remote_addr</span><span class="p">;</span> <span class="c1"># pass on real client&#39;s IP</span>
+      <span class="kn">proxy_set_header</span>  <span class="s">X-Forwarded-For</span>   <span class="nv">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+      <span class="kn">proxy_set_header</span>  <span class="s">X-Forwarded-Proto</span> <span class="nv">$scheme</span><span class="p">;</span>
+      <span class="kn">proxy_read_timeout</span>                  <span class="mi">900</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<h1 id="3-访问限制">3. 访问限制</h1>
+<p>在刚才的启动命令部分已经提到了<code>如何制作用户名和密码的访问限制秘钥</code>。而作为用户访问Registry则是另一回事。</p>
+
+<p>私有Registry如果架设的是HTTP，而不是HTTPS的话，访问的客户端需要修改配置，将该Registry的地址列入允许的不安全访问列表内，才可以正常访问。一般来说这个配置文件是在：<code>~/.docker/daemon.json</code>。</p>
+
+<p>范例：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+  <span class="nt">&quot;insecure-registries&quot;</span> <span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;127.0.0.1:15000&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>修改完成之后必须重启本地的docker进程，该配置才会生效。</p>
+
+<p>然后使用<code>docker login 127.0.0.1:15000</code>进行登录，这会在<code>~/.docker/config.json</code>文件中生成一个登录项。但访问凭证一般不会直接存储在这里，OSX操作系统是使用keychain来进行存储。参见：<a href="https://docs.docker.com/engine/reference/commandline/login/#credentials-store" target="_blank">Credentials store</a>。</p>
+
+<p>在某些场合，需求预先生成访问凭证，而不是到实际运行的主机上进行docker login。这时候使用命令来生成凭证，并手动生成对应的登录项配置文件，放到指定的位置来生效。</p>
+
+<p>根据用户名和密码来生成凭证：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ <span class="nb">echo</span> -n <span class="s2">&quot;</span><span class="nv">$username</span><span class="s2">:</span><span class="nv">$password</span><span class="s2">&quot;</span> <span class="p">|</span> base64
+<span class="c1"># dGVzdDphYmMxMjNf</span></code></pre></figure>
+
+<p>生成登录项配置文件<code>~/.docker/config.json</code>：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;auths&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;127.0.0.1:15000&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="nt">&quot;auth&quot;</span><span class="p">:</span> <span class="s2">&quot;dGVzdDphYmMxMjNf&quot;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>这样后续的使用就没有问题了，当然这样做是非常不安全的，不推荐使用。</p>
+
+<h1 id="3-api">3. API</h1>
+<p>因为registry没有提供UI界面，所有的操作都必须通过RESTful API来进行。</p>
+
+<p>官方文档在：<a href="https://docs.docker.com/registry/spec/api/" target="_blank">HTTP API V2</a>。</p>
+
+<p>常用API范例：</p>
+
+<p><strong>查看所有的仓库清单</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ curl -u <span class="nv">$username</span>:<span class="nv">$password</span> http://127.0.0.1:15000/v2/_catalog <span class="p">|</span> jq .</code></pre></figure>
+
+<p>结果：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+  <span class="nt">&quot;repositories&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;fullstack/builder&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fullstack/common&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fullstack/gateway&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fullstack/runner&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;fullstack/server&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>查看某个仓库的所有tag</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ curl -u <span class="nv">$username</span>:<span class="nv">$password</span> http://127.0.0.1:15000/v2/fullstack/common/tags/list <span class="p">|</span> jq .</code></pre></figure>
+
+<p>结果：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+  <span class="nt">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;fullstack/common&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;tags&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;0.0.42&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;0.0.43&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;0.0.35&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;0.0.32&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;0.0.33&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;0.0.34&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+<p><strong>查看某个仓库某个tag的digest</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ curl -u <span class="nv">$username</span>:<span class="nv">$password</span> http://127.0.0.1:15000/v2/fullstack/common/manifests/0.0.43 <span class="se">\</span>
+    --header <span class="s2">&quot;Accept: application/vnd.docker.distribution.manifest.v2+json&quot;</span> <span class="p">|</span> jq <span class="s1">&#39;.config|.digest&#39;</span></code></pre></figure>
+
+<p>结果：</p>
+
+<p><code>"sha256:23ffb64a5f8c7bf748eb80830d7f3be7f5de613ba9d37817fe7771180b59fdc5"</code></p>
+
+<p><strong>根据digest删除某个仓库的某个tag</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ curl <span class="nv">$username</span>:<span class="nv">$password</span> -I -X DELETE <span class="s2">&quot;http://127.0.0.1:15000/v2/fullstack/common/manifests/sha256:23ffb64a5f8c7bf748eb80830d7f3be7f5de613ba9d37817fe7771180b59fdc5&quot;</span></code></pre></figure>
+
+<p>结果：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>HTTP/1.1 <span class="m">202</span> Accepted
+Docker-Distribution-Api-Version: registry/2.0
+X-Content-Type-Options: nosniff
+Date: Thu, <span class="m">26</span> Dec <span class="m">2019</span> <span class="m">09</span>:17:51 GMT
+Content-Length: <span class="m">0</span></code></pre></figure>
+
+<p>只要返回的CODE是<code>202</code>，说明就是没问题的，正常删除。</p>
+
+<h1 id="4-删除镜像">4. 删除镜像</h1>
+<p>刚才在API中已经提到了根据digest删除某个tag，但是这时候镜像的真实数据还并没有被删除。还需要做几步操作。</p>
+
+<p>首先需要修改Registry的配置文件，允许删除操作。注意下面范例的：<code>storage.delete.enabled: true</code>。</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span><span class="l l-Scalar l-Scalar-Plain">version</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">0.1</span>
+<span class="l l-Scalar l-Scalar-Plain">log</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">fields</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">service</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">registry</span>
+<span class="l l-Scalar l-Scalar-Plain">storage</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">cache</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">blobdescriptor</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">inmemory</span>
+  <span class="l l-Scalar l-Scalar-Plain">filesystem</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">rootdirectory</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">/var/lib/registry</span>
+  <span class="l l-Scalar l-Scalar-Plain">delete</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="l l-Scalar l-Scalar-Plain">http</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">addr</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">:5000</span>
+  <span class="l l-Scalar l-Scalar-Plain">headers</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">X-Content-Type-Options</span><span class="p p-Indicator">:</span> <span class="p p-Indicator">[</span><span class="nv">nosniff</span><span class="p p-Indicator">]</span>
+<span class="l l-Scalar l-Scalar-Plain">health</span><span class="p p-Indicator">:</span>
+  <span class="l l-Scalar l-Scalar-Plain">storagedriver</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">enabled</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="l l-Scalar l-Scalar-Plain">interval</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10s</span>
+    <span class="l l-Scalar l-Scalar-Plain">threshold</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span></code></pre></figure>
+
+<p>然后需要进入容器内部进行删除操作：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ docker <span class="nb">exec</span> -it /bin/sh
+/# /bin/registry garbage-collect /etc/docker/registry/config.yml</code></pre></figure>
+
+<p>即便这样，被删除的tag仍旧会出现在tag列表API的结果里。Docker官方对删除就完全没做好支持。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/12/docker-registry/">Docker Registry 的简单使用</a></li>
+    
+    <li><a href="/2019/12/gitea-note/">Gitea简单介绍及使用</a></li>
+    
+    <li><a href="/2019/12/consul-note/">Consul Notes</a></li>
+    
+    <li><a href="/2019/12/drone-ci/">使用Drone进行CI支持</a></li>
+    
+    <li><a href="/2019/12/node-in-docker/">在Docker中使用Node</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+      <li><a href="/category/Tor">Tor</a></li>
+    
+      <li><a href="/category/Node.js">Node.js</a></li>
+    
+      <li><a href="/category/CI">CI</a></li>
+    
+      <li><a href="/category/ServiceDiscovery">ServiceDiscovery</a></li>
+    
+      <li><a href="/category/Git">Git</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/12/docker-registry/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

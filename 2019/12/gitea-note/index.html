@@ -1,0 +1,501 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Gitea简单介绍及使用 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/12/gitea-note/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/12/gitea-note/">Gitea简单介绍及使用</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>26 Dec 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Git">Git</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Gitea">Gitea</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/DevOps">DevOps</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-使用" id="markdown-toc-2-使用">2. 使用</a>    <ul>
+      <li><a href="#21-安装启动" id="markdown-toc-21-安装启动">2.1 安装启动</a></li>
+      <li><a href="#22-配置" id="markdown-toc-22-配置">2.2 配置</a></li>
+      <li><a href="#23-command-line" id="markdown-toc-23-command-line">2.3 Command Line</a></li>
+      <li><a href="#24-api" id="markdown-toc-24-api">2.4 API</a></li>
+      <li><a href="#25-访问授权" id="markdown-toc-25-访问授权">2.5 访问授权</a>        <ul>
+          <li><a href="#251-token授权" id="markdown-toc-251-token授权">2.5.1 Token授权</a></li>
+          <li><a href="#252-oauth2授权" id="markdown-toc-252-oauth2授权">2.5.2 OAuth2授权</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>Gitea是一款使用Golang编写的可自运营的代码管理工具。</p>
+
+<p>在这个领域，名气最响的应该是Gitlab。但实际使用中Gitlab也有点问题，首先就是资源占用。Gitlab是使用ruby编写的，好几年之前刚出来的时候，一台1G内存的虚拟主机连安装运行都做不到，着实震惊。时至今日都已经发展到了以docker镜像分发，gitlab仍旧会有体积和运行时资源占用的问题。另一点就是功能，对于一般标准团队来说，gitlab的功能太过于丰富，这是往好的地方说，往坏的地方说就是它包含了太多不需要的东西，而这些东西还占用磁盘和运行时资源。</p>
+
+<p>于是着手查看开源的alternative方案，很快就找到了golang研发的gitea。使用golang研发的软件分发都很容易，体积小，安装使用简单，运行时占用资源少。且gitea的功能很完毕，某些自身不具备的功能也能通过第三方来解决，比如CI就可以结合同样是golang研发的drone来实施。</p>
+
+<p>相关资源：</p>
+
+<ul>
+  <li><a href="https://gitea.io/zh-cn/" target="_blank">官网</a></li>
+  <li><a href="https://try.gitea.io/" target="_blank">线上实例</a></li>
+  <li><a href="https://docs.gitea.io/zh-cn/" target="_blank">文档</a></li>
+</ul>
+
+<h1 id="2-使用">2. 使用</h1>
+<h2 id="21-安装启动">2.1 安装启动</h2>
+<p>安装使用仍旧推荐使用官方镜像：<a href="https://hub.docker.com/r/gitea/gitea/" target="_blank">gitea/gitea</a>。官方指引：<a href="https://docs.gitea.io/zh-cn/install-with-docker/" target="_blank">从Docker安装</a>。</p>
+
+<figure class="highlight"><pre><code class="language-yaml" data-lang="yaml"><span></span>  <span class="l l-Scalar l-Scalar-Plain">localbuild_gitea</span><span class="p p-Indicator">:</span>
+    <span class="l l-Scalar l-Scalar-Plain">image</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">gitea/gitea:1.10.0</span>
+    <span class="l l-Scalar l-Scalar-Plain">container_name</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">localbuild_gitea</span>
+    <span class="l l-Scalar l-Scalar-Plain">hostname</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">localbuild_gitea</span>
+    <span class="l l-Scalar l-Scalar-Plain">networks</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">net</span>
+    <span class="l l-Scalar l-Scalar-Plain">ports</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">13000:13000</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">122:122</span>
+    <span class="l l-Scalar l-Scalar-Plain">logging</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">driver</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">json-file</span>
+      <span class="l l-Scalar l-Scalar-Plain">options</span><span class="p p-Indicator">:</span>
+        <span class="l l-Scalar l-Scalar-Plain">max-size</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">512m</span>
+    <span class="l l-Scalar l-Scalar-Plain">restart</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">always</span>
+    <span class="l l-Scalar l-Scalar-Plain">healthcheck</span><span class="p p-Indicator">:</span>
+      <span class="l l-Scalar l-Scalar-Plain">test</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">wget http://127.0.0.1:13000 -q -O - &gt; /dev/null 2&gt;&amp;1</span>
+      <span class="l l-Scalar l-Scalar-Plain">interval</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10s</span>
+      <span class="l l-Scalar l-Scalar-Plain">timeout</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">20s</span>
+      <span class="l l-Scalar l-Scalar-Plain">retries</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">10</span>
+    <span class="l l-Scalar l-Scalar-Plain">volumes</span><span class="p p-Indicator">:</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">./vendor/gitea:/data</span></code></pre></figure>
+
+<p>关于启动时的设置相关，官方有一个讨论帖：<a href="https://github.com/go-gitea/gitea/issues/350" target="_blank">Configure with env variables #350</a>，但貌似还没有任何结论，当前最佳实践是做好配置文件之后映射到容器内。</p>
+
+<p>关于gitea使用的数据库，如果是默认配置的话，是会使用Postgre数据库，存放在容器内的<code>/data/gitea/gitea.db</code>。</p>
+
+<p>gitea的数据全部都放在容器内的<code>/data</code>文件夹下，一般需要将这个文件夹映射出来。</p>
+
+<p><code>/data</code>文件夹内部文件结构如下：</p>
+
+<pre><code>/-
+ | git /-                                           # 存放所有git仓库数据
+ |      | repositories /-                           # 代码库存放位置
+ |      |               | fullstack /-              # 组织
+ |      |               |            | common.git   # 组织下的代码库
+ |      |               |            | gateway.git
+ |      |               |            | server.git
+ | gitea /-                                         # 存放gitea自身的系统文件
+ |        | conf /-
+ |        |       | app.ini                         # gitea配置文件
+ |        | log                                     # gitea日志文件
+ |        | gitea.db                                # Postgre数据库文件
+ | ssh                                              # 秘钥文件
+</code></pre>
+
+<p><img src="/resources/2019/12/gitea-note/home.png" alt="" target="_blank" /></p>
+
+<h2 id="22-配置">2.2 配置</h2>
+<p>官方文档在：<a href="https://docs.gitea.io/zh-cn/config-cheat-sheet/" target="_blank">配置说明</a>。</p>
+
+<p>映射路径在容器内的<code>/data/gitea/conf/app.ini</code>。一般主要是URL和端口之类的需要调整下，还有就是数据库的访问方式。</p>
+
+<h2 id="23-command-line">2.3 Command Line</h2>
+<p>gitea还可以作为一个命令行工具来执行CLI命令，官方文档在：<a href="https://docs.gitea.io/zh-cn/command-line/" target="_blank">Command Line</a>。执行的时候可能还会需要用到部分环境变量，见：<a href="https://docs.gitea.io/zh-cn/specific-variables/" target="_blank">环境变量清单</a>。</p>
+
+<p>不过作为命令行工具来使用的机会比较少见。</p>
+
+<h2 id="24-api">2.4 API</h2>
+<p>gitea提供RESTful的API，这块是自动化的主力，需要好好看下如何使用。</p>
+
+<p>官方API文档在：<a href="https://docs.gitea.io/zh-cn/api-usage/" target="_blank">Gitea API 使用指南</a>。这篇指引主要是阐明了如何使用API，如何处理访问控制之类的。具体的API调用参数和返回值，以及API列表，可以查看官方的swagger：<a href="https://try.gitea.io/api/swagger#/" target="_blank">Gitea API.</a>。</p>
+
+<p>给几个curl调用的例子：</p>
+
+<p><strong>在fullstack组织下，创建代码库common</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ curl -X POST <span class="s2">&quot;http://127.0.0.1:13000/api/v1/admin/users/fullstack/repos&quot;</span> <span class="se">\</span>
+    -H <span class="s2">&quot;accept: application/json&quot;</span> <span class="se">\</span>
+    -H <span class="s2">&quot;Authorization: token 752e305de4936a769d2ed962b3e019f8866e510a&quot;</span> <span class="se">\</span>
+    -H <span class="s2">&quot;Content-Type: application/json&quot;</span> -d <span class="s2">&quot;{ \&quot;name\&quot;: \&quot;common\&quot;, \&quot;auto_init\&quot;: false, \&quot;private\&quot;: true }&quot;</span></code></pre></figure>
+
+<p><strong>删除fullstack组织下的代码库common</strong></p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ curl -X DELETE <span class="s2">&quot;http://127.0.0.1:13000/api/v1/repos/fullstack/common&quot;</span> <span class="se">\</span>
+    -H <span class="s2">&quot;accept: application/json&quot;</span> <span class="se">\</span>
+    -H <span class="s2">&quot;Authorization: token 752e305de4936a769d2ed962b3e019f8866e510a&quot;</span></code></pre></figure>
+
+<h2 id="25-访问授权">2.5 访问授权</h2>
+<p>授权主要有两种方式。</p>
+
+<h3 id="251-token授权">2.5.1 Token授权</h3>
+<p>Token授权是最简单的。通过发行token，让拥有token的终端可以直接调用API进行操作。</p>
+
+<p>发行Token也很简单：</p>
+
+<ul>
+  <li>点击右上角<code>用户头像</code></li>
+  <li>点击下拉菜单的<code>设置</code></li>
+  <li>点击新页面导航栏中间的<code>应用</code></li>
+  <li>在<code>管理Access Tokens</code>部分输入Token名，点击<code>生成令牌</code></li>
+</ul>
+
+<p>需要注意的是，令牌生成之后内容只会展现一次，后续就只有删除操作。如果遗忘的话就只能删除然后申请新的了。</p>
+
+<h3 id="252-oauth2授权">2.5.2 OAuth2授权</h3>
+<p>OAuth2也算是现在比较常见的授权方法，和Token不同的是两者的应用场景：</p>
+
+<ul>
+  <li>Token：更多的用在自动化部署等，需要简单访问权限的场景</li>
+  <li>OAuth2：更多的用在第三方应用程序和gitea的整合，比如CI工具等</li>
+</ul>
+
+<p>操作上也很简单，在Token同一界面上的<code>管理 OAuth2 应用程序</code>界面部分，按提示操作即可。一样的，秘钥只会在创建完成后展示一次，后续秘钥只能重置，不能再次展示。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/12/docker-registry/">Docker Registry 的简单使用</a></li>
+    
+    <li><a href="/2019/12/gitea-note/">Gitea简单介绍及使用</a></li>
+    
+    <li><a href="/2019/12/consul-note/">Consul Notes</a></li>
+    
+    <li><a href="/2019/12/drone-ci/">使用Drone进行CI支持</a></li>
+    
+    <li><a href="/2019/12/node-in-docker/">在Docker中使用Node</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+      <li><a href="/category/Tor">Tor</a></li>
+    
+      <li><a href="/category/Node.js">Node.js</a></li>
+    
+      <li><a href="/category/CI">CI</a></li>
+    
+      <li><a href="/category/ServiceDiscovery">ServiceDiscovery</a></li>
+    
+      <li><a href="/category/Git">Git</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/12/gitea-note/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

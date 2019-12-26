@@ -7,6 +7,427 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>Docker Registry 的简单使用</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-安装--启动&quot; id=&quot;markdown-toc-2-安装--启动&quot;&gt;2. 安装 &amp;amp; 启动&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-访问限制&quot; id=&quot;markdown-toc-3-访问限制&quot;&gt;3. 访问限制&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-api&quot; id=&quot;markdown-toc-3-api&quot;&gt;3. API&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#4-删除镜像&quot; id=&quot;markdown-toc-4-删除镜像&quot;&gt;4. 删除镜像&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;Docker和镜像在工作中是越来越常见了，而镜像仓库的需求也变得越来越常见。Docker官方给的解决方案是私有Registry仓库，官方也给了镜像进行对应的使用。但不得不说Docker的Registry是真的不好用：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;没有UI界面&lt;/li&gt;
+  &lt;li&gt;只有很弱的访问权限限制&lt;/li&gt;
+  &lt;li&gt;所有接口都必须通过HTTP请求方式进行，没有提供命令行工具等简化操作&lt;/li&gt;
+  &lt;li&gt;没有删除镜像的手段&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;此外还有很多，这里就不一并列举了。&lt;/p&gt;
+
+&lt;p&gt;因此，市面上也有不少alternative替代方案，做的最好的应该是&lt;a href=&quot;https://goharbor.io/&quot; target=&quot;_blank&quot;&gt;harbor&lt;/a&gt;。如果是大型企业或者是有比较严谨的权限控制需求的话，推荐使用harbor。&lt;/p&gt;
+
+&lt;p&gt;但针对小公司来说，更简单快速的部署和更简单的运维是相对来说更重要的事情，因此Docker Registry的使用也是有市场的。这里就简单做下使用上的介绍。&lt;/p&gt;
+
+&lt;h1 id=&quot;2-安装--启动&quot;&gt;2. 安装 &amp;amp; 启动&lt;/h1&gt;
+&lt;p&gt;使用的还是官方的镜像：&lt;a href=&quot;https://hub.docker.com/_/registry&quot; target=&quot;_blank&quot;&gt;registry&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.docker.com/registry/deploying/&quot; target=&quot;_blank&quot;&gt;Deploy a registry server&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;启动命令：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker network create registry
+
+$ docker run -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --name docker_registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --network registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -p &lt;span class=&quot;m&quot;&gt;15000&lt;/span&gt;:5000 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -v /tmp/registry/auth:/data/registry/auth &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -v /tmp/registry/data:/var/lib/registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -v /tmp/registry/config.yml:/etc/docker/registry/config.yml &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -e &lt;span class=&quot;nv&quot;&gt;REGISTRY_AUTH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;htpasswd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -e &lt;span class=&quot;nv&quot;&gt;REGISTRY_AUTH_HTPASSWD_REALM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Registry Realm&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -e &lt;span class=&quot;nv&quot;&gt;REGISTRY_AUTH_HTPASSWD_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/data/registry/auth/htpasswd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    registry:2.7.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;容器内配置文件的位置：&lt;code&gt;/etc/docker/registry/config.yml&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;当前例子中使用的是没有前置proxy，并且仅设置了最简单的用户名密码访问限制的情况。关于这块的访问限制相关，更详细的内容可以查看官方文档：&lt;a href=&quot;https://docs.docker.com/registry/deploying/#restricting-access&quot; target=&quot;_blank&quot;&gt;Restricting access&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;生成秘钥可以使用命令：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run --rm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --entrypoint htpasswd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    registry:2.7.1 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -Bbn username password &amp;gt; /tmp/registry/auth/htpasswd&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;如果需要结合nginx使用的话（一般推荐这样做），需要参见：&lt;a href=&quot;https://docs.docker.com/registry/recipes/nginx/&quot; target=&quot;_blank&quot;&gt;Authenticate proxy with nginx&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;参考配置文件：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-nginx&quot; data-lang=&quot;nginx&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;events&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;worker_connections&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+
+  &lt;span class=&quot;kn&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;docker-registry&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;## Set a variable to help us decide if we need to add the&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## &amp;#39;Docker-Distribution-Api-Version&amp;#39; header.&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## The registry always sets this header.&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## In the case of nginx performing auth, the header is unset&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;## since nginx is auth-ing before proxying.&lt;/span&gt;
+  &lt;span class=&quot;kn&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$upstream_http_docker_distribution_api_version&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$docker_distribution_api_version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;registry/2.0&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+  &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;443&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ssl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;myregistrydomain.com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# SSL&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;ssl_certificate&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/etc/nginx/conf.d/domain.crt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;ssl_certificate_key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/etc/nginx/conf.d/domain.key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# Recommendations from https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;ssl_protocols&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;TLSv1.1&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;TLSv1.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;ssl_ciphers&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;ssl_prefer_server_ciphers&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;ssl_session_cache&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;shared:SSL:10m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# disable any limits to avoid HTTP 413 for large image uploads&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;client_max_body_size&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;c1&quot;&gt;# required to avoid HTTP 411: see Issue #1486 (https://github.com/moby/moby/issues/1486)&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;chunked_transfer_encoding&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/v2/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# Do not allow connections from docker 1.5 and earlier&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# docker pre-1.6.0 did not properly set the user agent on ping, catch &amp;quot;Go *&amp;quot; user agents&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$http_user_agent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;&amp;quot;^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;).*&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;kn&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;404&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;# To add basic authentication to v2 use auth_basic setting.&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;auth_basic&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Registry&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;realm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;auth_basic_user_file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/etc/nginx/conf.d/nginx.htpasswd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;## If $docker_distribution_api_version is empty, the header is not added.&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;## See the map directive above where this variable is defined.&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;Docker-Distribution-Api-Version&amp;#39;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$docker_distribution_api_version&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+      &lt;span class=&quot;kn&quot;&gt;proxy_pass&lt;/span&gt;                          &lt;span class=&quot;s&quot;&gt;http://docker-registry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;Host&lt;/span&gt;              &lt;span class=&quot;nv&quot;&gt;$http_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# required for docker client&amp;#39;s sake&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;X-Real-IP&lt;/span&gt;         &lt;span class=&quot;nv&quot;&gt;$remote_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# pass on real client&amp;#39;s IP&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;X-Forwarded-For&lt;/span&gt;   &lt;span class=&quot;nv&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;X-Forwarded-Proto&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$scheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;kn&quot;&gt;proxy_read_timeout&lt;/span&gt;                  &lt;span class=&quot;mi&quot;&gt;900&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h1 id=&quot;3-访问限制&quot;&gt;3. 访问限制&lt;/h1&gt;
+&lt;p&gt;在刚才的启动命令部分已经提到了&lt;code&gt;如何制作用户名和密码的访问限制秘钥&lt;/code&gt;。而作为用户访问Registry则是另一回事。&lt;/p&gt;
+
+&lt;p&gt;私有Registry如果架设的是HTTP，而不是HTTPS的话，访问的客户端需要修改配置，将该Registry的地址列入允许的不安全访问列表内，才可以正常访问。一般来说这个配置文件是在：&lt;code&gt;~/.docker/daemon.json&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;范例：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;insecure-registries&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;127.0.0.1:15000&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;修改完成之后必须重启本地的docker进程，该配置才会生效。&lt;/p&gt;
+
+&lt;p&gt;然后使用&lt;code&gt;docker login 127.0.0.1:15000&lt;/code&gt;进行登录，这会在&lt;code&gt;~/.docker/config.json&lt;/code&gt;文件中生成一个登录项。但访问凭证一般不会直接存储在这里，OSX操作系统是使用keychain来进行存储。参见：&lt;a href=&quot;https://docs.docker.com/engine/reference/commandline/login/#credentials-store&quot; target=&quot;_blank&quot;&gt;Credentials store&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;在某些场合，需求预先生成访问凭证，而不是到实际运行的主机上进行docker login。这时候使用命令来生成凭证，并手动生成对应的登录项配置文件，放到指定的位置来生效。&lt;/p&gt;
+
+&lt;p&gt;根据用户名和密码来生成凭证：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -n &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; base64
+&lt;span class=&quot;c1&quot;&gt;# dGVzdDphYmMxMjNf&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;生成登录项配置文件&lt;code&gt;~/.docker/config.json&lt;/code&gt;：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nt&quot;&gt;&amp;quot;auths&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nt&quot;&gt;&amp;quot;127.0.0.1:15000&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nt&quot;&gt;&amp;quot;auth&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;dGVzdDphYmMxMjNf&amp;quot;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这样后续的使用就没有问题了，当然这样做是非常不安全的，不推荐使用。&lt;/p&gt;
+
+&lt;h1 id=&quot;3-api&quot;&gt;3. API&lt;/h1&gt;
+&lt;p&gt;因为registry没有提供UI界面，所有的操作都必须通过RESTful API来进行。&lt;/p&gt;
+
+&lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.docker.com/registry/spec/api/&quot; target=&quot;_blank&quot;&gt;HTTP API V2&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;常用API范例：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;查看所有的仓库清单&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -u &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; http://127.0.0.1:15000/v2/_catalog &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;repositories&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/builder&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/common&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/gateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/runner&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/server&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;查看某个仓库的所有tag&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -u &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; http://127.0.0.1:15000/v2/fullstack/common/tags/list &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/common&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.42&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.43&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.35&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.32&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.33&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.34&amp;quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;查看某个仓库某个tag的digest&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -u &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; http://127.0.0.1:15000/v2/fullstack/common/manifests/0.0.43 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    --header &lt;span class=&quot;s2&quot;&gt;&amp;quot;Accept: application/vnd.docker.distribution.manifest.v2+json&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq &lt;span class=&quot;s1&quot;&gt;&amp;#39;.config|.digest&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;&quot;sha256:23ffb64a5f8c7bf748eb80830d7f3be7f5de613ba9d37817fe7771180b59fdc5&quot;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;根据digest删除某个仓库的某个tag&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; -I -X DELETE &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://127.0.0.1:15000/v2/fullstack/common/manifests/sha256:23ffb64a5f8c7bf748eb80830d7f3be7f5de613ba9d37817fe7771180b59fdc5&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;结果：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;HTTP/1.1 &lt;span class=&quot;m&quot;&gt;202&lt;/span&gt; Accepted
+Docker-Distribution-Api-Version: registry/2.0
+X-Content-Type-Options: nosniff
+Date: Thu, &lt;span class=&quot;m&quot;&gt;26&lt;/span&gt; Dec &lt;span class=&quot;m&quot;&gt;2019&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;09&lt;/span&gt;:17:51 GMT
+Content-Length: &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;只要返回的CODE是&lt;code&gt;202&lt;/code&gt;，说明就是没问题的，正常删除。&lt;/p&gt;
+
+&lt;h1 id=&quot;4-删除镜像&quot;&gt;4. 删除镜像&lt;/h1&gt;
+&lt;p&gt;刚才在API中已经提到了根据digest删除某个tag，但是这时候镜像的真实数据还并没有被删除。还需要做几步操作。&lt;/p&gt;
+
+&lt;p&gt;首先需要修改Registry的配置文件，允许删除操作。注意下面范例的：&lt;code&gt;storage.delete.enabled: true&lt;/code&gt;。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;0.1&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;registry&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;storage&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;blobdescriptor&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;inmemory&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;filesystem&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;rootdirectory&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/var/lib/registry&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;addr&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;:5000&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;X-Content-Type-Options&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p p-Indicator&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;nosniff&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;health&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;storagedriver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;10s&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;threshold&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;然后需要进入容器内部进行删除操作：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; -it /bin/sh
+/# /bin/registry garbage-collect /etc/docker/registry/config.yml&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;即便这样，被删除的tag仍旧会出现在tag列表API的结果里。Docker官方对删除就完全没做好支持。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Thu, 26 Dec 2019 11:36:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2019/12/docker-registry/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2019/12/docker-registry/</guid>
+			</item>
+		
+			<item>
+				<title>Gitea简单介绍及使用</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-使用&quot; id=&quot;markdown-toc-2-使用&quot;&gt;2. 使用&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#21-安装启动&quot; id=&quot;markdown-toc-21-安装启动&quot;&gt;2.1 安装启动&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#22-配置&quot; id=&quot;markdown-toc-22-配置&quot;&gt;2.2 配置&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#23-command-line&quot; id=&quot;markdown-toc-23-command-line&quot;&gt;2.3 Command Line&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#24-api&quot; id=&quot;markdown-toc-24-api&quot;&gt;2.4 API&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#25-访问授权&quot; id=&quot;markdown-toc-25-访问授权&quot;&gt;2.5 访问授权&lt;/a&gt;        &lt;ul&gt;
+          &lt;li&gt;&lt;a href=&quot;#251-token授权&quot; id=&quot;markdown-toc-251-token授权&quot;&gt;2.5.1 Token授权&lt;/a&gt;&lt;/li&gt;
+          &lt;li&gt;&lt;a href=&quot;#252-oauth2授权&quot; id=&quot;markdown-toc-252-oauth2授权&quot;&gt;2.5.2 OAuth2授权&lt;/a&gt;&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
+&lt;p&gt;Gitea是一款使用Golang编写的可自运营的代码管理工具。&lt;/p&gt;
+
+&lt;p&gt;在这个领域，名气最响的应该是Gitlab。但实际使用中Gitlab也有点问题，首先就是资源占用。Gitlab是使用ruby编写的，好几年之前刚出来的时候，一台1G内存的虚拟主机连安装运行都做不到，着实震惊。时至今日都已经发展到了以docker镜像分发，gitlab仍旧会有体积和运行时资源占用的问题。另一点就是功能，对于一般标准团队来说，gitlab的功能太过于丰富，这是往好的地方说，往坏的地方说就是它包含了太多不需要的东西，而这些东西还占用磁盘和运行时资源。&lt;/p&gt;
+
+&lt;p&gt;于是着手查看开源的alternative方案，很快就找到了golang研发的gitea。使用golang研发的软件分发都很容易，体积小，安装使用简单，运行时占用资源少。且gitea的功能很完毕，某些自身不具备的功能也能通过第三方来解决，比如CI就可以结合同样是golang研发的drone来实施。&lt;/p&gt;
+
+&lt;p&gt;相关资源：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://gitea.io/zh-cn/&quot; target=&quot;_blank&quot;&gt;官网&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://try.gitea.io/&quot; target=&quot;_blank&quot;&gt;线上实例&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://docs.gitea.io/zh-cn/&quot; target=&quot;_blank&quot;&gt;文档&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h1 id=&quot;2-使用&quot;&gt;2. 使用&lt;/h1&gt;
+&lt;h2 id=&quot;21-安装启动&quot;&gt;2.1 安装启动&lt;/h2&gt;
+&lt;p&gt;安装使用仍旧推荐使用官方镜像：&lt;a href=&quot;https://hub.docker.com/r/gitea/gitea/&quot; target=&quot;_blank&quot;&gt;gitea/gitea&lt;/a&gt;。官方指引：&lt;a href=&quot;https://docs.gitea.io/zh-cn/install-with-docker/&quot; target=&quot;_blank&quot;&gt;从Docker安装&lt;/a&gt;。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;localbuild_gitea&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;gitea/gitea:1.10.0&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;localbuild_gitea&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;localbuild_gitea&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;net&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;13000:13000&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;122:122&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;json-file&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;max-size&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;512m&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;always&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;healthcheck&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;wget http://127.0.0.1:13000 -q -O - &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;10s&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;20s&lt;/span&gt;
+      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;retries&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;10&lt;/span&gt;
+    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;./vendor/gitea:/data&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;关于启动时的设置相关，官方有一个讨论帖：&lt;a href=&quot;https://github.com/go-gitea/gitea/issues/350&quot; target=&quot;_blank&quot;&gt;Configure with env variables #350&lt;/a&gt;，但貌似还没有任何结论，当前最佳实践是做好配置文件之后映射到容器内。&lt;/p&gt;
+
+&lt;p&gt;关于gitea使用的数据库，如果是默认配置的话，是会使用Postgre数据库，存放在容器内的&lt;code&gt;/data/gitea/gitea.db&lt;/code&gt;。&lt;/p&gt;
+
+&lt;p&gt;gitea的数据全部都放在容器内的&lt;code&gt;/data&lt;/code&gt;文件夹下，一般需要将这个文件夹映射出来。&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;/data&lt;/code&gt;文件夹内部文件结构如下：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;/-
+ | git /-                                           # 存放所有git仓库数据
+ |      | repositories /-                           # 代码库存放位置
+ |      |               | fullstack /-              # 组织
+ |      |               |            | common.git   # 组织下的代码库
+ |      |               |            | gateway.git
+ |      |               |            | server.git
+ | gitea /-                                         # 存放gitea自身的系统文件
+ |        | conf /-
+ |        |       | app.ini                         # gitea配置文件
+ |        | log                                     # gitea日志文件
+ |        | gitea.db                                # Postgre数据库文件
+ | ssh                                              # 秘钥文件
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2019/12/gitea-note/home.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;22-配置&quot;&gt;2.2 配置&lt;/h2&gt;
+&lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.gitea.io/zh-cn/config-cheat-sheet/&quot; target=&quot;_blank&quot;&gt;配置说明&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;映射路径在容器内的&lt;code&gt;/data/gitea/conf/app.ini&lt;/code&gt;。一般主要是URL和端口之类的需要调整下，还有就是数据库的访问方式。&lt;/p&gt;
+
+&lt;h2 id=&quot;23-command-line&quot;&gt;2.3 Command Line&lt;/h2&gt;
+&lt;p&gt;gitea还可以作为一个命令行工具来执行CLI命令，官方文档在：&lt;a href=&quot;https://docs.gitea.io/zh-cn/command-line/&quot; target=&quot;_blank&quot;&gt;Command Line&lt;/a&gt;。执行的时候可能还会需要用到部分环境变量，见：&lt;a href=&quot;https://docs.gitea.io/zh-cn/specific-variables/&quot; target=&quot;_blank&quot;&gt;环境变量清单&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;不过作为命令行工具来使用的机会比较少见。&lt;/p&gt;
+
+&lt;h2 id=&quot;24-api&quot;&gt;2.4 API&lt;/h2&gt;
+&lt;p&gt;gitea提供RESTful的API，这块是自动化的主力，需要好好看下如何使用。&lt;/p&gt;
+
+&lt;p&gt;官方API文档在：&lt;a href=&quot;https://docs.gitea.io/zh-cn/api-usage/&quot; target=&quot;_blank&quot;&gt;Gitea API 使用指南&lt;/a&gt;。这篇指引主要是阐明了如何使用API，如何处理访问控制之类的。具体的API调用参数和返回值，以及API列表，可以查看官方的swagger：&lt;a href=&quot;https://try.gitea.io/api/swagger#/&quot; target=&quot;_blank&quot;&gt;Gitea API.&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;给几个curl调用的例子：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;在fullstack组织下，创建代码库common&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -X POST &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://127.0.0.1:13000/api/v1/admin/users/fullstack/repos&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -H &lt;span class=&quot;s2&quot;&gt;&amp;quot;accept: application/json&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -H &lt;span class=&quot;s2&quot;&gt;&amp;quot;Authorization: token 752e305de4936a769d2ed962b3e019f8866e510a&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -H &lt;span class=&quot;s2&quot;&gt;&amp;quot;Content-Type: application/json&amp;quot;&lt;/span&gt; -d &lt;span class=&quot;s2&quot;&gt;&amp;quot;{ \&amp;quot;name\&amp;quot;: \&amp;quot;common\&amp;quot;, \&amp;quot;auto_init\&amp;quot;: false, \&amp;quot;private\&amp;quot;: true }&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;&lt;strong&gt;删除fullstack组织下的代码库common&lt;/strong&gt;&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -X DELETE &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://127.0.0.1:13000/api/v1/repos/fullstack/common&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -H &lt;span class=&quot;s2&quot;&gt;&amp;quot;accept: application/json&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+    -H &lt;span class=&quot;s2&quot;&gt;&amp;quot;Authorization: token 752e305de4936a769d2ed962b3e019f8866e510a&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;25-访问授权&quot;&gt;2.5 访问授权&lt;/h2&gt;
+&lt;p&gt;授权主要有两种方式。&lt;/p&gt;
+
+&lt;h3 id=&quot;251-token授权&quot;&gt;2.5.1 Token授权&lt;/h3&gt;
+&lt;p&gt;Token授权是最简单的。通过发行token，让拥有token的终端可以直接调用API进行操作。&lt;/p&gt;
+
+&lt;p&gt;发行Token也很简单：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;点击右上角&lt;code&gt;用户头像&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;点击下拉菜单的&lt;code&gt;设置&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;点击新页面导航栏中间的&lt;code&gt;应用&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;在&lt;code&gt;管理Access Tokens&lt;/code&gt;部分输入Token名，点击&lt;code&gt;生成令牌&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;需要注意的是，令牌生成之后内容只会展现一次，后续就只有删除操作。如果遗忘的话就只能删除然后申请新的了。&lt;/p&gt;
+
+&lt;h3 id=&quot;252-oauth2授权&quot;&gt;2.5.2 OAuth2授权&lt;/h3&gt;
+&lt;p&gt;OAuth2也算是现在比较常见的授权方法，和Token不同的是两者的应用场景：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Token：更多的用在自动化部署等，需要简单访问权限的场景&lt;/li&gt;
+  &lt;li&gt;OAuth2：更多的用在第三方应用程序和gitea的整合，比如CI工具等&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;操作上也很简单，在Token同一界面上的&lt;code&gt;管理 OAuth2 应用程序&lt;/code&gt;界面部分，按提示操作即可。一样的，秘钥只会在创建完成后展示一次，后续秘钥只能重置，不能再次展示。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Thu, 26 Dec 2019 10:36:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2019/12/gitea-note/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2019/12/gitea-note/</guid>
+			</item>
+		
+			<item>
 				<title>Consul Notes</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -4698,1306 +5119,6 @@ envoy_http_downstream_cx_length_ms_count&lt;span class=&quot;o&quot;&gt;{&lt;/sp
 				<pubDate>Wed, 08 May 2019 10:01:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/05/envoy-note/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/05/envoy-note/</guid>
-			</item>
-		
-			<item>
-				<title>gRPC Notes</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-基本资料及网络问题&quot; id=&quot;markdown-toc-2-基本资料及网络问题&quot;&gt;2. 基本资料及网络问题&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-go-support-for-protocol-buffers&quot; id=&quot;markdown-toc-21-go-support-for-protocol-buffers&quot;&gt;2.1 Go support for Protocol Buffers&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-grpc-basics-go&quot; id=&quot;markdown-toc-22-grpc-basics-go&quot;&gt;2.2 gRPC Basics: Go&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#23-grpc-enhanced-example&quot; id=&quot;markdown-toc-23-grpc-enhanced-example&quot;&gt;2.3 gRPC enhanced example&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#24-网络问题&quot; id=&quot;markdown-toc-24-网络问题&quot;&gt;2.4 网络问题&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-并发编程&quot; id=&quot;markdown-toc-3-并发编程&quot;&gt;3. 并发编程&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-go语言的grpc并发&quot; id=&quot;markdown-toc-31-go语言的grpc并发&quot;&gt;3.1 Go语言的gRPC并发&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID_CONCURRENCY_DOC&quot; id=&quot;markdown-toc-ID_CONCURRENCY_DOC&quot;&gt;3.2 并发相关官方文档&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#concurrency&quot; id=&quot;markdown-toc-concurrency&quot;&gt;Concurrency&lt;/a&gt;            &lt;ul&gt;
-              &lt;li&gt;&lt;a href=&quot;#clients&quot; id=&quot;markdown-toc-clients&quot;&gt;Clients&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#streams&quot; id=&quot;markdown-toc-streams&quot;&gt;Streams&lt;/a&gt;&lt;/li&gt;
-              &lt;li&gt;&lt;a href=&quot;#servers&quot; id=&quot;markdown-toc-servers&quot;&gt;Servers&lt;/a&gt;&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#33-并发范例&quot; id=&quot;markdown-toc-33-并发范例&quot;&gt;3.3 并发范例&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#331-代码差异&quot; id=&quot;markdown-toc-331-代码差异&quot;&gt;3.3.1 代码差异&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#332-顺序执行&quot; id=&quot;markdown-toc-332-顺序执行&quot;&gt;3.3.2 顺序执行&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#333-并发执行&quot; id=&quot;markdown-toc-333-并发执行&quot;&gt;3.3.3 并发执行&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#34-连接池&quot; id=&quot;markdown-toc-34-连接池&quot;&gt;3.4 连接池&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#35-benchmark&quot; id=&quot;markdown-toc-35-benchmark&quot;&gt;3.5 Benchmark&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#测试硬件&quot; id=&quot;markdown-toc-测试硬件&quot;&gt;测试硬件&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#客户端及服务器启动命令&quot; id=&quot;markdown-toc-客户端及服务器启动命令&quot;&gt;客户端及服务器启动命令&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#测试结果&quot; id=&quot;markdown-toc-测试结果&quot;&gt;测试结果&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#结论&quot; id=&quot;markdown-toc-结论&quot;&gt;结论&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-负载均衡&quot; id=&quot;markdown-toc-4-负载均衡&quot;&gt;4. 负载均衡&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-状态检查&quot; id=&quot;markdown-toc-5-状态检查&quot;&gt;5. 状态检查&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-interceptor&quot; id=&quot;markdown-toc-6-interceptor&quot;&gt;6. Interceptor&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-debug&quot; id=&quot;markdown-toc-7-debug&quot;&gt;7. Debug&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#8-监控&quot; id=&quot;markdown-toc-8-监控&quot;&gt;8. 监控&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;首先需要申明本文并不是通泛的对gRPC的讲解，而是以Golang为基础的一篇gRPC偏应用方向的博文。因此后面的所有技术点和使用范例都会以Go语言为基础。此外，本文中对gRPC偏基础方面的内容不会涉猎过多，而是更多讲解gRPC偏设计方向的技术点。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-基本资料及网络问题&quot;&gt;2. 基本资料及网络问题&lt;/h1&gt;
-&lt;h2 id=&quot;21-go-support-for-protocol-buffers&quot;&gt;2.1 Go support for Protocol Buffers&lt;/h2&gt;
-&lt;p&gt;关于使用Go语言的情况下的一系列protobuf相关技术点，可以参阅：&lt;a href=&quot;https://github.com/golang/protobuf&quot; target=&quot;_blank&quot;&gt;golang/protobuf&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;主要需要关注的点有几个：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;安装：除了标准的protobuf（protoc）之外，还需要安装go的插件：&lt;code&gt;protoc-gen-go&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;插件：protoc如果要使用go的插件，且需要生成service相关代码的话，需要在&lt;code&gt;go_out&lt;/code&gt;中附带上&lt;code&gt;plugins=grpc:&lt;/code&gt;字符串，e.g：&lt;code&gt;--go_out=plugins=grpc:${OUTPUT_PATH}&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;包管理：protobuf的包定义和go语言的习惯用法有不少差异，使用前建议阅读：&lt;a href=&quot;https://github.com/golang/protobuf#packages-and-input-paths&quot; target=&quot;_blank&quot;&gt;Packages and input paths&lt;/a&gt;
-    &lt;ul&gt;
-      &lt;li&gt;默认的包名不会转换成相对文件夹，e.g：&lt;code&gt;package com.book&lt;/code&gt;会生成&lt;code&gt;com_book&lt;/code&gt;文件夹，而不是&lt;code&gt;com/book&lt;/code&gt;这样的嵌套文件夹&lt;/li&gt;
-      &lt;li&gt;go的包路径可以使用：&lt;code&gt;option go_package = ...&lt;/code&gt;来设定&lt;/li&gt;
-      &lt;li&gt;在某些全局编译的情况下，可以：&lt;code&gt;--go_out=$GOPATH&lt;/code&gt;，直接输出到GOPATH&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;生成出来的代码相关规范：&lt;a href=&quot;https://github.com/golang/protobuf#generated-code&quot; target=&quot;_blank&quot;&gt;Generated code&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;protoc插件的额外参数：&lt;a href=&quot;https://github.com/golang/protobuf#parameters&quot; target=&quot;_blank&quot;&gt;Parameters&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;22-grpc-basics-go&quot;&gt;2.2 gRPC Basics: Go&lt;/h2&gt;
-&lt;p&gt;初次使用Go语言来编写gRPC代码，请阅读文档：&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/gotutorial.md&quot; target=&quot;_blank&quot;&gt;grpc-go/examples/gotutorial.md&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;对于gRPC非常熟悉的程序员可以跳过这个文档，基本上这个文档是面向新手的指引，但是范例代码都使用的是Go语言。&lt;/p&gt;
-
-&lt;h2 id=&quot;23-grpc-enhanced-example&quot;&gt;2.3 gRPC enhanced example&lt;/h2&gt;
-&lt;p&gt;进阶的Go语言gRPC代码可以阅读范例：&lt;a href=&quot;https://github.com/grpc/grpc-go/tree/master/examples/route_guide&quot; target=&quot;_blank&quot;&gt;grpc-go/examples/route_guide/&lt;/a&gt;。这个范例代码里加入了单向和双向流的范例，算是比较进阶和完整的范例代码了。&lt;/p&gt;
-
-&lt;p&gt;我的实验项目中也有比较完整的应用范例代码，相对官方的范例来说少了点不伦不类的业务逻辑，对于只需要了解技术的读者来说更友好：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/book&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/book/&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;24-网络问题&quot;&gt;2.4 网络问题&lt;/h2&gt;
-&lt;p&gt;因国情原因，Go的包安装会遇到一些网络问题：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/1959&quot; target=&quot;_blank&quot;&gt;go get not working unrecognized import path “google.golang.org/grpc” #1959&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/1780&quot; target=&quot;_blank&quot;&gt;go get -u google.golang.org/grpc i/o timeout #1780&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;这种情况的最佳对应方法是在命令行下设置HTTP和HTTPS代理：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;http_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://127.0.0.1:6152
-&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;https_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://127.0.0.1:6152
-go get -u ...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;3-并发编程&quot;&gt;3. 并发编程&lt;/h1&gt;
-&lt;h2 id=&quot;31-go语言的grpc并发&quot;&gt;3.1 Go语言的gRPC并发&lt;/h2&gt;
-&lt;p&gt;关于在Go语言中使用gRPC的并发问题在官方的issues中已经有很多了：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/682&quot; target=&quot;_blank&quot;&gt;Best practices for reusing connections, concurrency #682&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/85&quot; target=&quot;_blank&quot;&gt;Concurrency #85&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/issues/1345&quot; target=&quot;_blank&quot;&gt;Add section on concurrency to documentation #1345&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;上述的三个issues都可以仔细阅读下，提出的问题都非常有代表性。从一系列的问题中可以看出，官方对于gRPC的并发其实是有一些指导意见的，但并没有很好的文档化（至少之前如此）。而目前对这些问题已经有部分解答了，请继续阅读下去。&lt;/p&gt;
-
-&lt;h2 id=&quot;ID_CONCURRENCY_DOC&quot;&gt;3.2 并发相关官方文档&lt;/h2&gt;
-&lt;p&gt;在&lt;a href=&quot;https://github.com/grpc/grpc-go/pull/2034/files&quot; target=&quot;_blank&quot;&gt;这个提交&lt;/a&gt;中，官方添加了对于并发相关的官方指引。正式的文档地址是在：&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/Documentation/concurrency.md&quot; target=&quot;_blank&quot;&gt;grpc-go/Documentation/concurrency.md&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;这里做下简单翻译：&lt;/p&gt;
-
-&lt;h3 id=&quot;concurrency&quot;&gt;Concurrency&lt;/h3&gt;
-&lt;p&gt;一般来说，gRPC-go提供了对并发友好的API。下文是一些指引。&lt;/p&gt;
-
-&lt;h4 id=&quot;clients&quot;&gt;Clients&lt;/h4&gt;
-&lt;p&gt;一个&lt;a href=&quot;https://godoc.org/google.golang.org/grpc#ClientConn&quot; target=&quot;_blank&quot;&gt;ClientConn&lt;/a&gt;可以被安全地并发访问。以&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/helloworld/greeter_client/main.go#L43&quot; target=&quot;_blank&quot;&gt;helloworld&lt;/a&gt;作为范例，程序员可以在多个goroutine之间共享一个ClientConn来创建多个GreeterClient客户端类型。在这种使用情况下，RPCs会并行传输。&lt;/p&gt;
-
-&lt;h4 id=&quot;streams&quot;&gt;Streams&lt;/h4&gt;
-&lt;p&gt;当使用&lt;a href=&quot;https://godoc.org/google.golang.org/grpc#Stream&quot; target=&quot;_blank&quot;&gt;Stream&lt;/a&gt;的时候，程序员必须小心避免从不同的goroutine向同一个stream发送多次&lt;code&gt;SendMsg&lt;/code&gt;或&lt;code&gt;RecvMsg&lt;/code&gt;请求。换句话来说，如果有一个goroutine向stream中发送SendMsg，然后在同一时间有另一个goroutine向stream中发送RecvMsg，这样做是安全的。但在不同的goroutine中同时向同一个stream发送SendMsg，或是RecvMsg则是不安全的。&lt;/p&gt;
-
-&lt;h4 id=&quot;servers&quot;&gt;Servers&lt;/h4&gt;
-&lt;p&gt;每个被附到已注册服务器上的RPC处理器都会在其自身的goroutine中运作。举例来说，&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/helloworld/greeter_server/main.go#L41&quot; target=&quot;_blank&quot;&gt;SayHello&lt;/a&gt;会在其自身的goroutine中被调用到。同样的，streaming RPC也是一样，route guide例子可以在&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/route_guide/server/server.go#L126&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;看得到。&lt;/p&gt;
-
-&lt;h2 id=&quot;33-并发范例&quot;&gt;3.3 并发范例&lt;/h2&gt;
-&lt;p&gt;我在实验项目中做了点并发的范例，可以看下：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/concurrency&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/concurrency/&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h3 id=&quot;331-代码差异&quot;&gt;3.3.1 代码差异&lt;/h3&gt;
-&lt;p&gt;服务端代码是一致的，根据&lt;a href=&quot;#ID_CONCURRENCY_DOC&quot;&gt;3.2 并发相关官方文档&lt;/a&gt;，服务端的所有请求都是自然并发的，无需代码特殊处理。但客户端则需要自行编码处理。&lt;/p&gt;
-
-&lt;p&gt;顺序执行：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Echo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;EchoRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)});&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Fatalf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnSequence: err: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnSequence: response: %v, consumed: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;并发执行：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;WaitGroup&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Add&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;go&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Echo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pb&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;EchoRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;int64&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)});&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Fatalf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnConcurrency: err: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;end&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Sub&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Printf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;[Client] singleConnConcurrency: response: %v, consumed: %v&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;elapsed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Done&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;waitgroup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Wait&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;332-顺序执行&quot;&gt;3.3.2 顺序执行&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;# 启动服务器
-DELAY_NO_5=true go run server.go
-
-# 启动客户端，发送请求
-MODE=CONN_ONE_SEQUENCE go run client.go
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;# 客户端输出
-2019/05/03 13:58:23 [Client] singleConnSequence: response: id:1 , consumed: 4.284231ms
-2019/05/03 13:58:23 [Client] singleConnSequence: response: id:2 , consumed: 381.818µs
-2019/05/03 13:58:23 [Client] singleConnSequence: response: id:3 , consumed: 361.608µs
-2019/05/03 13:58:23 [Client] singleConnSequence: response: id:4 , consumed: 332.662µs
-2019/05/03 13:58:24 [Client] singleConnSequence: response: id:5 , consumed: 1.004485058s
-2019/05/03 13:58:24 [Client] singleConnSequence: response: id:6 , consumed: 470.532µs
-2019/05/03 13:58:24 [Client] singleConnSequence: response: id:7 , consumed: 468.148µs
-2019/05/03 13:58:24 [Client] singleConnSequence: response: id:8 , consumed: 389.214µs
-2019/05/03 13:58:24 [Client] singleConnSequence: response: id:9 , consumed: 418.01µs
-2019/05/03 13:58:25 [Client] singleConnSequence: response: id:10 , consumed: 1.003602442s
-
-# 服务器输出
-2019/05/03 13:58:23 [Server] Echo: request: id:1
-2019/05/03 13:58:23 [Server] Echo: response: id:1
-2019/05/03 13:58:23 [Server] Echo: request: id:2
-2019/05/03 13:58:23 [Server] Echo: response: id:2
-2019/05/03 13:58:23 [Server] Echo: request: id:3
-2019/05/03 13:58:23 [Server] Echo: response: id:3
-2019/05/03 13:58:23 [Server] Echo: request: id:4
-2019/05/03 13:58:23 [Server] Echo: response: id:4
-2019/05/03 13:58:23 [Server] Echo: request: id:5
-2019/05/03 13:58:24 [Server] Echo: response: id:5
-2019/05/03 13:58:24 [Server] Echo: request: id:6
-2019/05/03 13:58:24 [Server] Echo: response: id:6
-2019/05/03 13:58:24 [Server] Echo: request: id:7
-2019/05/03 13:58:24 [Server] Echo: response: id:7
-2019/05/03 13:58:24 [Server] Echo: request: id:8
-2019/05/03 13:58:24 [Server] Echo: response: id:8
-2019/05/03 13:58:24 [Server] Echo: request: id:9
-2019/05/03 13:58:24 [Server] Echo: response: id:9
-2019/05/03 13:58:24 [Server] Echo: request: id:10
-2019/05/03 13:58:25 [Server] Echo: response: id:10
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h3 id=&quot;333-并发执行&quot;&gt;3.3.3 并发执行&lt;/h3&gt;
-&lt;pre&gt;&lt;code&gt;# 启动服务器
-DELAY_NO_5=true go run server.go
-
-# 启动客户端，发送请求
-MODE=CONN_ONE_CONCURRENCY go run client.go
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;pre&gt;&lt;code&gt;# 客户端输出
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:9 , consumed: 5.651184ms
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:6 , consumed: 5.595945ms
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:2 , consumed: 5.693124ms
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:4 , consumed: 5.637734ms
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:1 , consumed: 5.592096ms
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:3 , consumed: 5.58596ms
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:7 , consumed: 5.652258ms
-2019/05/03 13:54:41 [Client] singleConnConcurrency: response: id:8 , consumed: 5.658945ms
-2019/05/03 13:54:42 [Client] singleConnConcurrency: response: id:10 , consumed: 1.008472004s
-2019/05/03 13:54:42 [Client] singleConnConcurrency: response: id:5 , consumed: 1.008440948s
-
-# 服务器输出
-2019/05/03 13:54:41 [Server] Echo: request: id:3
-2019/05/03 13:54:41 [Server] Echo: response: id:3
-2019/05/03 13:54:41 [Server] Echo: request: id:1
-2019/05/03 13:54:41 [Server] Echo: response: id:1
-2019/05/03 13:54:41 [Server] Echo: request: id:6
-2019/05/03 13:54:41 [Server] Echo: response: id:6
-2019/05/03 13:54:41 [Server] Echo: request: id:10
-2019/05/03 13:54:41 [Server] Echo: request: id:8
-2019/05/03 13:54:41 [Server] Echo: response: id:8
-2019/05/03 13:54:41 [Server] Echo: request: id:9
-2019/05/03 13:54:41 [Server] Echo: response: id:9
-2019/05/03 13:54:41 [Server] Echo: request: id:5
-2019/05/03 13:54:41 [Server] Echo: request: id:2
-2019/05/03 13:54:41 [Server] Echo: response: id:2
-2019/05/03 13:54:41 [Server] Echo: request: id:4
-2019/05/03 13:54:41 [Server] Echo: response: id:4
-2019/05/03 13:54:41 [Server] Echo: request: id:7
-2019/05/03 13:54:41 [Server] Echo: response: id:7
-2019/05/03 13:54:42 [Server] Echo: response: id:10
-2019/05/03 13:54:42 [Server] Echo: response: id:5
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;服务端对ID逢5的请求sleep 1秒进行反馈，因此并发的客户端请求中，5和10就是最后返回打印出来的，耗时也是1秒多。&lt;/p&gt;
-
-&lt;h2 id=&quot;34-连接池&quot;&gt;3.4 连接池&lt;/h2&gt;
-&lt;p&gt;虽然单连接也是可以进行并发编程的，但在某些极端情况下，数据包可能达到网络吞吐的极限。众所周知Go语言天生对并发编程友好，因此CPU的利用必然是非常充分的，如果RPC服务的类型是低CPU消耗而高网络消耗的情况就有可能出现之前提到的问题。这种情况就需要创建多个连接了。&lt;/p&gt;
-
-&lt;p&gt;在多连接管理方面，官方的类库并没有连接池的功能，第三方倒是有：&lt;a href=&quot;https://github.com/processout/grpc-go-pool/blob/master/pool_test.go&quot; target=&quot;_blank&quot;&gt;grpc-go-pool/pool_test.go&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;此外，可以拓展阅读：&lt;a href=&quot;https://mycodesmells.com/post/pooling-grpc-connections&quot; target=&quot;_blank&quot;&gt;Pooling gRPC Connections&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;范例可以看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/pool&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/pool/&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;35-benchmark&quot;&gt;3.5 Benchmark&lt;/h2&gt;
-&lt;p&gt;范例代码在：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/experiment/grpc/samples/throughput&quot; target=&quot;_blank&quot;&gt;dist-system-practice/golang/src/experiment/grpc/samples/throughput/&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h3 id=&quot;测试硬件&quot;&gt;测试硬件&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;rMBP 2014 mid
-CPU：2.5GHz 四核 Intel Core i7 处理器 (Turbo Boost 3.7GHz)
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;测试的时候一些在系统使用中的软件我并没有清空，因此可能有稍许干扰，但总体问题不大。&lt;/p&gt;
-
-&lt;h3 id=&quot;客户端及服务器启动命令&quot;&gt;客户端及服务器启动命令&lt;/h3&gt;
-
-&lt;pre&gt;&lt;code&gt;CORE_NUM=3 go run server.go
-CORE_NUM=4 ROUTINES_PER_CORE=50 go run client.go
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;使用&lt;code&gt;CORE_NUM&lt;/code&gt;来控制使用到的物理核心数量，客户端使用&lt;code&gt;ROUTINES_PER_CORE&lt;/code&gt;来决定启动的routine总量：&lt;code&gt;CORE_NUM * ROUTINES_PER_CORE&lt;/code&gt;。&lt;/p&gt;
-
-&lt;h3 id=&quot;测试结果&quot;&gt;测试结果&lt;/h3&gt;
-&lt;p&gt;请求数量/s：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;2019/05/04 14:19:33 [Client] 73065 requests in 1s
-2019/05/04 14:19:34 [Client] 68826 requests in 1s
-2019/05/04 14:19:35 [Client] 73655 requests in 1s
-2019/05/04 14:19:36 [Client] 70973 requests in 1s
-2019/05/04 14:19:37 [Client] 73645 requests in 1s
-2019/05/04 14:19:38 [Client] 70616 requests in 1s
-2019/05/04 14:19:39 [Client] 72252 requests in 1s
-2019/05/04 14:19:40 [Client] 69342 requests in 1s
-2019/05/04 14:19:41 [Client] 69745 requests in 1s
-2019/05/04 14:19:42 [Client] 62251 requests in 1s
-2019/05/04 14:19:43 [Client] 58043 requests in 1s
-2019/05/04 14:19:44 [Client] 69316 requests in 1s
-2019/05/04 14:19:45 [Client] 69796 requests in 1s
-2019/05/04 14:19:46 [Client] 57246 requests in 1s
-2019/05/04 14:19:47 [Client] 72265 requests in 1s
-2019/05/04 14:19:48 [Client] 72940 requests in 1s
-2019/05/04 14:19:49 [Client] 70237 requests in 1s
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;CPU：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/05/grpc-note/cpu.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;Network：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/05/grpc-note/network-low.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/05/grpc-note/network-high.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;结论&quot;&gt;结论&lt;/h3&gt;
-&lt;p&gt;因硬件环境的限制，没有使用通过网卡的测试方案，而是使用了127.0.0.1的环回请求方案。此外，测试期间MAC上的一些软件进程也并没有进行清理，因此可能有部分干扰。结论就不做了，这样简单且限制资源的benchmark实际意义不大，列几点可以观测到的状态：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;请求数量/s&lt;/code&gt;符合预期&lt;/li&gt;
-  &lt;li&gt;CPU占用基本满&lt;/li&gt;
-  &lt;li&gt;提升核心使用数量，提升routine数量，能观察到rps提升&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;4-负载均衡&quot;&gt;4. 负载均衡&lt;/h1&gt;
-&lt;p&gt;官方有一篇关于负载均衡设计的文档，可以读下：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/doc/load-balancing.md&quot; target=&quot;_blank&quot;&gt;Load Balancing in gRPC&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;意义不大，可以了解一些简单的负载均衡概念，以及一些设计上的思路。&lt;/p&gt;
-
-&lt;h1 id=&quot;5-状态检查&quot;&gt;5. 状态检查&lt;/h1&gt;
-&lt;p&gt;官方对于如何设计及暴露服务端状态检查接口的一份文档：&lt;a href=&quot;https://github.com/grpc/grpc/blob/master/doc/health-checking.md&quot; target=&quot;_blank&quot;&gt;GRPC Health Checking Protocol&lt;/a&gt;。可以说是一份guideline。同样意义不大。&lt;/p&gt;
-
-&lt;h1 id=&quot;6-interceptor&quot;&gt;6. Interceptor&lt;/h1&gt;
-&lt;p&gt;所谓的interceptor，写过gin或者koa的可以直接理解为gRPC里的&lt;code&gt;middleware&lt;/code&gt;。官方文档：&lt;a href=&quot;https://github.com/grpc/grpc-go/tree/master/examples/features/interceptor&quot; target=&quot;_blank&quot;&gt;Interceptor&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;虽然gRPC本身的rpc调用分为多种不同的可能：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;请求响应皆为unary&lt;/li&gt;
-  &lt;li&gt;请求unary响应stream&lt;/li&gt;
-  &lt;li&gt;请求stream响应unary&lt;/li&gt;
-  &lt;li&gt;请求响应皆为stream&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;但interceptor的签名则只有&lt;code&gt;unary&lt;/code&gt;和&lt;code&gt;stream&lt;/code&gt;这两种。&lt;/p&gt;
-
-&lt;p&gt;范例代码可以查看官方的：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/client/main.go&quot; target=&quot;_blank&quot;&gt;client/main.go&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/interceptor/server/main.go&quot; target=&quot;_blank&quot;&gt;server/main.go&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;在使用中可能会遇到多个Interceptor同时存在的情况，在编码的时候就需要使用工具对其进行组合：&lt;a href=&quot;https://github.com/grpc-ecosystem/go-grpc-middleware/blob/master/chain.go&quot; target=&quot;_blank&quot;&gt;go-grpc-middleware/chain.go&lt;/a&gt;：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-go&quot; data-lang=&quot;go&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;grpc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;NewServer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-	&lt;span class=&quot;nx&quot;&gt;grpc_middleware&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;WithUnaryServerChain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-		&lt;span class=&quot;nx&quot;&gt;grpc_opentracing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UnaryServerInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-		&lt;span class=&quot;nx&quot;&gt;grpc_prometheus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;UnaryServerInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-	&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-	&lt;span class=&quot;nx&quot;&gt;grpc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;StreamInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;grpc_prometheus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;StreamServerInterceptor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;7-debug&quot;&gt;7. Debug&lt;/h1&gt;
-&lt;p&gt;官方的指引：&lt;a href=&quot;https://github.com/grpc/grpc-go/tree/master/examples/features/debugging&quot; target=&quot;_blank&quot;&gt;Debugging&lt;/a&gt;，包括了一份范例代码：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/debugging/client/main.go&quot; target=&quot;_blank&quot;&gt;client/main.go&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/grpc/grpc-go/blob/master/examples/features/debugging/server/main.go&quot; target=&quot;_blank&quot;&gt;server/main.go&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;也可以使用go的trace包，做简单的观察：&lt;a href=&quot;https://segmentfault.com/a/1190000008087436&quot; target=&quot;_blank&quot;&gt;Golang gRPC实践 连载六 内置Trace&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;几个环境变量可以大量输出程序执行的细节：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;GODEBUG=http2debug=1 \
-GODEBUG=http2debug=2 \
-GRPC_GO_LOG_VERBOSITY_LEVEL=99 \
-GRPC_GO_LOG_SEVERITY_LEVEL=info \
-yourapp
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h1 id=&quot;8-监控&quot;&gt;8. 监控&lt;/h1&gt;
-&lt;p&gt;Grpc go自身也有监控用的Interceptor：&lt;a href=&quot;https://github.com/grpc-ecosystem/go-grpc-prometheus&quot; target=&quot;_blank&quot;&gt;grpc-ecosystem/go-grpc-prometheus&lt;/a&gt;，和HTTP服务器无关，主要是grpc自身的指标。&lt;/p&gt;
-
-&lt;p&gt;范例代码可以参见README中的说明，服务端和客户端代码都有提供。&lt;/p&gt;
-
-&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
-&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/processout/grpc-go-pool/blob/master/pool_test.go&quot; target=&quot;_blank&quot;&gt;grpc-go-pool/pool_test.go&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://mycodesmells.com/post/pooling-grpc-connections&quot; target=&quot;_blank&quot;&gt;Pooling gRPC Connections&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Mon, 06 May 2019 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/05/grpc-note/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/05/grpc-note/</guid>
-			</item>
-		
-			<item>
-				<title>Kafka Notes</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-消息队列&quot; id=&quot;markdown-toc-2-消息队列&quot;&gt;2. 消息队列&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-消息队列选型比较&quot; id=&quot;markdown-toc-3-消息队列选型比较&quot;&gt;3. 消息队列选型比较&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-apache-pulsar&quot; id=&quot;markdown-toc-31-apache-pulsar&quot;&gt;3.1 Apache Pulsar&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-kafka架构&quot; id=&quot;markdown-toc-4-kafka架构&quot;&gt;4. Kafka架构&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-概念&quot; id=&quot;markdown-toc-41-概念&quot;&gt;4.1 概念&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#ID_CLUSTER&quot; id=&quot;markdown-toc-ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#43-分布式痛点offset&quot; id=&quot;markdown-toc-43-分布式痛点offset&quot;&gt;4.3 分布式痛点（offset）&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#44-临时消费压力应急&quot; id=&quot;markdown-toc-44-临时消费压力应急&quot;&gt;4.4 临时消费压力应急&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-kafka监控--高可用&quot; id=&quot;markdown-toc-5-kafka监控--高可用&quot;&gt;5. Kafka监控 &amp;amp; 高可用&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#51-监控&quot; id=&quot;markdown-toc-51-监控&quot;&gt;5.1 监控&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#511-exporter--grafana-dashboard&quot; id=&quot;markdown-toc-511-exporter--grafana-dashboard&quot;&gt;5.1.1 Exporter &amp;amp; Grafana Dashboard&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#512-docker实践&quot; id=&quot;markdown-toc-512-docker实践&quot;&gt;5.1.2 Docker实践&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#52-高可用&quot; id=&quot;markdown-toc-52-高可用&quot;&gt;5.2 高可用&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-kafka-benchmark&quot; id=&quot;markdown-toc-6-kafka-benchmark&quot;&gt;6. Kafka Benchmark&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#61-测试环境&quot; id=&quot;markdown-toc-61-测试环境&quot;&gt;6.1 测试环境&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#62-不同场景测试&quot; id=&quot;markdown-toc-62-不同场景测试&quot;&gt;6.2 不同场景测试&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#621-场景1&quot; id=&quot;markdown-toc-621-场景1&quot;&gt;6.2.1 场景1&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#622-场景2&quot; id=&quot;markdown-toc-622-场景2&quot;&gt;6.2.2 场景2&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#623-场景3&quot; id=&quot;markdown-toc-623-场景3&quot;&gt;6.2.3 场景3&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#ID_BENCHMARK_SCEN4&quot; id=&quot;markdown-toc-ID_BENCHMARK_SCEN4&quot;&gt;6.2.4 场景4&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#625-场景5&quot; id=&quot;markdown-toc-625-场景5&quot;&gt;6.2.5 场景5&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#626-场景6&quot; id=&quot;markdown-toc-626-场景6&quot;&gt;6.2.6 场景6&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#63-各场景测试总结&quot; id=&quot;markdown-toc-63-各场景测试总结&quot;&gt;6.3 各场景测试总结&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-kafka使用范例&quot; id=&quot;markdown-toc-7-kafka使用范例&quot;&gt;7. Kafka使用范例&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#8-在docker内部署集群&quot; id=&quot;markdown-toc-8-在docker内部署集群&quot;&gt;8. 在Docker内部署集群&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#81-重要配置项&quot; id=&quot;markdown-toc-81-重要配置项&quot;&gt;8.1 重要配置项&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#DOCKER_OUT_NET&quot; id=&quot;markdown-toc-DOCKER_OUT_NET&quot;&gt;8.2 对容器外应用提供服务&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#83-docker-compose-scale&quot; id=&quot;markdown-toc-83-docker-compose-scale&quot;&gt;8.3 docker-compose scale&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#84-yaml配置重用&quot; id=&quot;markdown-toc-84-yaml配置重用&quot;&gt;8.4 yaml配置重用&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#84-相关参考&quot; id=&quot;markdown-toc-84-相关参考&quot;&gt;8.4 相关参考&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#9-写性能与安全性&quot; id=&quot;markdown-toc-9-写性能与安全性&quot;&gt;9. 写性能与安全性&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#10-todo&quot; id=&quot;markdown-toc-10-todo&quot;&gt;10. TODO&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;Kafka是现在业界选择比较多的一种消息队列解决方案。我这里主要也是选Kafka作为消息队列这块需求的解决方案。下面的技术调研会先从消息队列本身开始，然后做一个横向比较，最后再聚焦到Kafka本身上。&lt;/p&gt;
-
-&lt;p&gt;调研用的Kafka版本为：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;2.2.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;官方文档：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;官方介绍：&lt;a href=&quot;https://kafka.apache.org/intro&quot; target=&quot;_blank&quot;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;官方新手入门：&lt;a href=&quot;https://kafka.apache.org/quickstart&quot; target=&quot;_blank&quot;&gt;Quickstart&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;官方应用场景介绍：&lt;a href=&quot;https://kafka.apache.org/uses&quot; target=&quot;_blank&quot;&gt;Use cases&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;官方文档：&lt;a href=&quot;https://kafka.apache.org/documentation/&quot; target=&quot;_blank&quot;&gt;Documentation&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;Docker Hub：&lt;a href=&quot;https://hub.docker.com/r/wurstmeister/kafka&quot; target=&quot;_blank&quot;&gt;wurstmeister/kafka&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;一本中文手册，版本较老，看看范例代码尚可：&lt;a href=&quot;http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html&quot; target=&quot;_blank&quot;&gt;Apache kafka中文手册&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-消息队列&quot;&gt;2. 消息队列&lt;/h1&gt;
-&lt;p&gt;在聊Kafka之前，其实更需要关注下消息队列本身。什么需求下需要使用消息队列、消息队列的功能点有哪些、消息队列的模式有哪些、消息队列的实现难点有哪些，等等。如果什么都不了解，那技术选型就无从谈起了，也没办法理解为什么消息队列要做好是非常困难的一件事情。展开了说，也就没办法举一反三，理解其他软件系统的设计精髓了。&lt;/p&gt;
-
-&lt;p&gt;下面会简单列举下消息队列的一系列知识点，细节内容这里就不展开了，篇幅太大。&lt;/p&gt;
-
-&lt;p&gt;消息队列的需求：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;解耦&lt;/li&gt;
-  &lt;li&gt;最终一致性&lt;/li&gt;
-  &lt;li&gt;广播&lt;/li&gt;
-  &lt;li&gt;错峰与流控&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;消息队列的模型：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;点对点：单生产、单队列、单消费&lt;/li&gt;
-  &lt;li&gt;生产者消费者模型：多生产、单队列、多消费&lt;/li&gt;
-  &lt;li&gt;发布订阅模型：根据topic分队列，多生产、多队列、多消费&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;消息队列的投递模式：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Push：消息队列主动推送（e.g RocketMQ可选）&lt;/li&gt;
-  &lt;li&gt;Pull：消费者主动抓取（e.g Kafka）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;消息队列的性能指标：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;吞吐量（Throughput）&lt;/li&gt;
-  &lt;li&gt;响应时间（Latency）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;消息队列的投递策略：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;最多一次（At most Once）：消息可能会丢，但绝不会重复传输&lt;/li&gt;
-  &lt;li&gt;最少一次（At least Once）：消息绝不会丢，但可能会重复传输&lt;/li&gt;
-  &lt;li&gt;仅有一次（Exactly Once）：每条消息肯定会被传输一次且仅传输一次&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;消息队列的功能性：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;优先级队列&lt;/li&gt;
-  &lt;li&gt;延迟队列&lt;/li&gt;
-  &lt;li&gt;死信队列&lt;/li&gt;
-  &lt;li&gt;重试队列&lt;/li&gt;
-  &lt;li&gt;消息回溯&lt;/li&gt;
-  &lt;li&gt;消息堆积 + 持久化&lt;/li&gt;
-  &lt;li&gt;消息追踪&lt;/li&gt;
-  &lt;li&gt;消息过滤&lt;/li&gt;
-  &lt;li&gt;多租户&lt;/li&gt;
-  &lt;li&gt;多协议支持&lt;/li&gt;
-  &lt;li&gt;跨语言支持&lt;/li&gt;
-  &lt;li&gt;流量控制&lt;/li&gt;
-  &lt;li&gt;可靠投递&lt;/li&gt;
-  &lt;li&gt;消费确认&lt;/li&gt;
-  &lt;li&gt;消息顺序性&lt;/li&gt;
-  &lt;li&gt;安全机制&lt;/li&gt;
-  &lt;li&gt;消息幂等性&lt;/li&gt;
-  &lt;li&gt;事务性消息&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;几篇值得一读的博文：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/2019/04/message-queue-design/&quot; target=&quot;_blank&quot;&gt;消息队列设计精要 - 美团点评技术团队&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;一篇通论形式的消息队列设计博文，讲解了一些消息队列通用的知识点，值得一读。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-01.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.infoq.cn/article/distributed-queue-programme-model-actual-combat-optimization&quot; target=&quot;_blank&quot;&gt;分布式队列编程：从模型、实战到优化&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;本质上也是一篇对于消息队列进行设计和讲解的博文，但结合了美团公司内部的实际项目经验，对于大型系统的设计者有更好的贴近应用场景的指导作用。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;amp;mid=2651745361&amp;amp;idx=1&amp;amp;sn=5f0f67484a0de4b0dd2796848ef9cc94&quot; target=&quot;_blank&quot;&gt;分布式队列编程优化篇&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;接上一篇的博文，更多讲到了性能和高级功能相关的实现以及性能的优化。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.jianshu.com/p/7a6deaba34d2&quot; target=&quot;_blank&quot;&gt;如何保证消息队列的高可用和幂等性以及数据丢失，顺序一致性&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;排版比较粗糙，但内容非常不错。以贴近项目经验的内容讲解了RabbitMQ和Kafka的：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;高可用性&lt;/li&gt;
-  &lt;li&gt;消息幂等性&lt;/li&gt;
-  &lt;li&gt;消息可靠性&lt;/li&gt;
-  &lt;li&gt;消息顺序性&lt;/li&gt;
-  &lt;li&gt;消息积压场景处理&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;3-消息队列选型比较&quot;&gt;3. 消息队列选型比较&lt;/h1&gt;
-&lt;p&gt;消息队列的选型一直都是比较困难的，业界现在比较主流的选择有：ActiveMQ、RabbitMQ、Kafka、RocketMQ、ZeroMQ 这几种。&lt;/p&gt;
-
-&lt;p&gt;有几篇不错的博文可以看下：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.infoq.cn/article/kafka-vs-rabbitmq&quot; target=&quot;_blank&quot;&gt;消息中间件选型分析：从 Kafka 与 RabbitMQ 的对比看全局&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;这篇时间还算比较接近&lt;code&gt;2018年5月2日&lt;/code&gt;，主要是以Kafka和RabbitMQ为范例进行了消息队列选型的要点讲解。虽然讲解的时候使用了Kafka以及RabbitMQ作为范例，但实际上讲解的是通用的消息队列选型要点。结合本文上一节所讲到的消息队列的一系列知识点，应该能有更深刻的理解。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-02.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-03.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-04.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.infoq.cn/article/dXJ3EYIp*WaHfmVwlMeu&quot; target=&quot;_blank&quot;&gt;滴滴出行基于 RocketMQ 构建企业级消息队列服务的实践&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;这篇时间稍微有点久，文中提到的Kafka版本还是0.8左右的（虽然文章的发布时间倒是不久之前），所以文中提到的性能指标之类的仅可作为参考。这篇文章是对Kafka和RocketMQ做的一个技术选型比较，文章中有相当多的性能指标比较，并结合滴滴公司的实际情况讲解了下消息队列系统进行替换时候所做的Migration工作，非常有借鉴价值。此外，文中还有一小节讲解了下RocketMQ使用的经验。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/39586635/why-is-kafka-pull-based-instead-of-push-based&quot; target=&quot;_blank&quot;&gt;Why is Kafka pull-based instead of push-based?&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;为什么Kafka消息队列使用的是Pull投递模式。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5&quot; target=&quot;_blank&quot;&gt;Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;老外写的一篇，提到了不少国内较少提到的开源项目，可以作为参考。&lt;/p&gt;
-
-&lt;h2 id=&quot;31-apache-pulsar&quot;&gt;3.1 Apache Pulsar&lt;/h2&gt;
-&lt;p&gt;关于Kafka和后起新秀Pulsar的横向比较，可以看：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/47388267&quot; target=&quot;_blank&quot;&gt;比拼Kafka，大数据分析新秀Pulsar到底好在哪&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/merlimat/high-performance-messaging-with-apache-pulsar&quot; target=&quot;_blank&quot;&gt;High performance messaging with Apache Pulsar&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/Us*a8umKXT9LpV9hA6tF&quot; target=&quot;_blank&quot;&gt;选择 Pulsar 而不是 Kafka 的 7 大理由&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;大略的要点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;功能性上Pulsar要比Kafka更好，且这是在不牺牲性能的前提下的，就更加难能可贵&lt;/li&gt;
-  &lt;li&gt;解决了Kafka单partition只能单consumer消费的问题&lt;/li&gt;
-  &lt;li&gt;将Broker和存储解耦，做到更好的错误恢复，在Broker宕机之后可以做到无损耗恢复&lt;/li&gt;
-  &lt;li&gt;存储方面的功能交付给Bookie，更细粒度的存储，更好的错误恢复和同步性能&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;4-kafka架构&quot;&gt;4. Kafka架构&lt;/h1&gt;
-&lt;h2 id=&quot;41-概念&quot;&gt;4.1 概念&lt;/h2&gt;
-&lt;p&gt;老样子从基本的概念开始梳理：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;broker&lt;/code&gt;：kafka集群中的任意一台提供服务的物理服务器即被称为broker&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;topic&lt;/code&gt;：消息队列的一个队列，一般做架构的时候按需求将不同的消息分别派送到不同的管道里，而其中的任意一个管道在kafka里就是一个topic&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;partition&lt;/code&gt;：topic下的概念，任意一个topic根据启动时的设定，会分成多个partition，而每个partition会由集群安排在某一台物理机broker上，以此做到集群的横向扩展&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;offset&lt;/code&gt;：partition下的概念，topic被分为很多partition，而每个partition则都会存储消息，每个partition存储的消息都是从0开始进行标号，而这个每条消息一个的标号，即为offset；可以理解为消息在partition里的唯一id；不同的partition都是从0开始标号，因此offset只对其自身的partition生效，不可混用&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;replica&lt;/code&gt;：某个partition的完整备份（在接收写入请求时数据可能会落后于leader），用在集群的高可用服务上，同时也可以提供partition读操作的负载均衡&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;producer&lt;/code&gt;：向topic里输入消息数据的角色&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;consumer&lt;/code&gt;：从topic里消费消息数据的角色&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;consumer group&lt;/code&gt;：可扩展且具有容错性的consumer机制，多个consumer共享一个group id，组内的所有consumer一起来消费topic的所有partition；但一个partition仍旧只能由一个consumer进行消费；主要是为了解决consumer和partition配对balance的问题，将consumer做成组由集群自动进行平衡并分配到partition&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;关于consumer group，更多的可以看：&lt;a href=&quot;https://www.cnblogs.com/huxi2b/p/6223228.html&quot; target=&quot;_blank&quot;&gt;Kafka消费组(consumer group)&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;ID_CLUSTER&quot;&gt;4.2 集群&lt;/h2&gt;
-&lt;p&gt;一张图基本上就能说明问题：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-05.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;kafka集群由多台broker（物理机）组成&lt;/li&gt;
-  &lt;li&gt;图示中有&lt;code&gt;四台&lt;/code&gt;broker&lt;/li&gt;
-  &lt;li&gt;每个topic会根据配置，生成固定数量的partition，均匀分配到物理机上&lt;/li&gt;
-  &lt;li&gt;图示中的topic被分成了&lt;code&gt;3个&lt;/code&gt;partition：&lt;code&gt;P1_leader&lt;/code&gt;（broker1）、&lt;code&gt;P2_leader&lt;/code&gt;（broker2）、&lt;code&gt;P3_leader&lt;/code&gt;（broker4）&lt;/li&gt;
-  &lt;li&gt;每个partition根据配置，会拥有固定数量的follower（replica），分别分配到各个物理机上&lt;/li&gt;
-  &lt;li&gt;图示中即：&lt;code&gt;P1_follower&lt;/code&gt;（broker2、broker3）、&lt;code&gt;P2_follower&lt;/code&gt;（broker3、broker4）、&lt;code&gt;P3_follower&lt;/code&gt;（broker1、broker2）&lt;/li&gt;
-  &lt;li&gt;当有broker宕机的时候：
-    &lt;ul&gt;
-      &lt;li&gt;丢失的follower会由集群重新寻找节点进行备份&lt;code&gt;恢复&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;丢失的leader会由集群自现存的follower中&lt;code&gt;选举&lt;/code&gt;产生，成为新的leader&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;43-分布式痛点offset&quot;&gt;4.3 分布式痛点（offset）&lt;/h2&gt;
-&lt;p&gt;Kafka在分布式解决方案上也有痛点，主要是每个partition的offset问题。&lt;/p&gt;
-
-&lt;p&gt;为了性能，kafka将一个partition视作一个管道，拥有一个从0开始的offset。这样做的好处就是不再需要在每一个消息体上做metadata存放该消息是否被消费掉等信息，而是通过partition的offset来标记整个管道中的消息被消费到了哪里。消息体更简单，流程上也更简单，不会出现乱序的消费情况。但也正是因为这种设计，导致每个partition无法由多个consumer并发消费，每个partition绑定只能同时允许一个consumer消费。&lt;/p&gt;
-
-&lt;p&gt;因此，从机制上来说，kafka并不适合用来做consumer重消耗（CPU）类型的消息通道。虽然partition可以做很多，极端点来说可以做到和consumer实际需求1：1的配比，但超过适配当前需求的partition数量设置也会造成吞吐量的下降（参见：&lt;a href=&quot;#ID_BENCHMARK_SCEN4&quot;&gt;6.2.4 场景4&lt;/a&gt;）。&lt;/p&gt;
-
-&lt;p&gt;consumer和partition在进行消息是否被消费掉的确认行为上，有两种方式：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;自动提交：
-    &lt;ul&gt;
-      &lt;li&gt;设置&lt;code&gt;enable.auto.commit=true&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;更新的频率根据参数&lt;code&gt;auto.commit.interval.ms&lt;/code&gt;来定，这种方式被称为&lt;code&gt;at most once&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;consumer fetch到消息后，partition就会更新offset，无论是否消费成功&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;手动提交：
-    &lt;ul&gt;
-      &lt;li&gt;设置&lt;code&gt;enable.auto.commit=false&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;这种方式被称为&lt;code&gt;at least once&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;consumer fetch到消息后，必须在消费成功后调用方法&lt;code&gt;consumer.commitSync()&lt;/code&gt;，手动通知partition更新offset&lt;/li&gt;
-      &lt;li&gt;如果消费失败，则offset不会更新，此条消息会被重复消费一次&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;关于partition和consumer之间的关系，更多可以看下：&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://stackoverflow.com/questions/45175424/how-multiple-consumer-group-consumers-work-across-partition-on-the-same-topic-in&quot; target=&quot;_blank&quot;&gt;How multiple consumer group consumers work across partition on the same topic in Kafka?&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;If you want to have more consumers than partitions and still have performance enhancement and process only each message once, then you should increase the number of partitions in the topics so that there are at least as many partitions as consumers. Often topics are created with 2 times as many partitions needed to start, just so more consumers can be added later if needed without having to repartition the topic.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://blog.csdn.net/pursuer211/article/details/79799478&quot; target=&quot;_blank&quot;&gt;kafka中partition和消费者对应关系&lt;/a&gt;&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;1个partition只能被同组的一个consumer消费，同组的consumer则起到均衡效果&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;以及自动提交相关：&lt;a href=&quot;https://medium.com/@danieljameskay/understanding-the-enable-auto-commit-kafka-consumer-property-12fa0ade7b65&quot; target=&quot;_blank&quot;&gt;Understanding the ‘enable.auto.commit’ Kafka Consumer property&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;44-临时消费压力应急&quot;&gt;4.4 临时消费压力应急&lt;/h2&gt;
-&lt;p&gt;如果因某些原因，之前设计的partition分片数量不够导致能够上工的consumer数量不够，且consumer的消费速率跟不上的时候，就会发生消息堆积。如果堆积的情况比较严重的话，就需要程序介入处理。&lt;/p&gt;
-
-&lt;p&gt;思路如下：&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;老的partition以及老的topic肯定不能动，就算重新进行repartition整个集群重新平衡耗费的时间也是难以忍受的&lt;/li&gt;
-  &lt;li&gt;创建新的topic&lt;/li&gt;
-  &lt;li&gt;将新的topic的partition设到consumer消费速率能跟上的数量&lt;/li&gt;
-  &lt;li&gt;将新的consumer部署上去，消费新设置的topic和partition&lt;/li&gt;
-  &lt;li&gt;将老的topic以及partition上挂载的consumer全部停止&lt;/li&gt;
-  &lt;li&gt;在老的topic以及partition上挂载临时consumer，这批consumer不做任何逻辑处理，只是将老的topic内的消息全部读取出来，并输入到新的topic里&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;这样老的topic里的消息就全部分发到新的topic里了，且新的topic的partition数量很高，可以挂载很多consumer处理堆积的消息。&lt;/p&gt;
-
-&lt;h1 id=&quot;5-kafka监控--高可用&quot;&gt;5. Kafka监控 &amp;amp; 高可用&lt;/h1&gt;
-&lt;h2 id=&quot;51-监控&quot;&gt;5.1 监控&lt;/h2&gt;
-&lt;p&gt;监控方面，datadog的几篇文章非常不错，值得一读，不过版本有点老了，文章是2016年的：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P1&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/collecting-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P2&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;详细的指标列表及其含义，可以看这篇：&lt;a href=&quot;https://docs.confluent.io/current/kafka/monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h3 id=&quot;511-exporter--grafana-dashboard&quot;&gt;5.1.1 Exporter &amp;amp; Grafana Dashboard&lt;/h3&gt;
-&lt;p&gt;Prometheus的Exporter分为两块：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;以Java为runtime的通用监控：prometheus/jmx_exporter
-    &lt;ul&gt;
-      &lt;li&gt;代码：&lt;a href=&quot;https://github.com/prometheus/jmx_exporter&quot; target=&quot;_blank&quot;&gt;prometheus/jmx_exporter&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;镜像：&lt;a href=&quot;https://hub.docker.com/r/sscaling/jmx-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;sscaling/jmx-prometheus-exporter&lt;/a&gt;
-        &lt;ul&gt;
-          &lt;li&gt;sscaling/jmx-prometheus-exporter:0.11.0&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;Dashboard：
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;https://grafana.com/dashboards/721&quot; target=&quot;_blank&quot;&gt;Kafka Overview&lt;/a&gt;，这个dashboard相当老了，一直没有更新，而且仅只有6个Panel，和kafka有关的panel更只有3个，基本没什么用；但未能找到更近一点的kafka专用dashboard&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;https://grafana.com/dashboards/8563&quot;&gt;JVM dashboard&lt;/a&gt;，jmx通用dashboard，看上去更好点；但这个dashboard变量设置的是job，所以在设置Prometheus的时候就需要将多个kafka的数据采集到同一个job里，而不是分开&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;https://grafana.com/dashboards/7727&quot;&gt;JMX exporter prometheus&lt;/a&gt;，另一款jmx通用dashboard；这个dashboard是为了在k8s中使用而特化的，也不够灵活&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;列在Prometheus官方列表上的第三方Exporter：danielqsj/kafka_exporter
-    &lt;ul&gt;
-      &lt;li&gt;代码：&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;镜像：&lt;a href=&quot;https://hub.docker.com/r/danielqsj/kafka-exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka-exporter&lt;/a&gt;
-        &lt;ul&gt;
-          &lt;li&gt;danielqsj/kafka-exporter:v1.2.0&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;Dashboard：&lt;a href=&quot;https://grafana.com/dashboards/7589&quot; target=&quot;_blank&quot;&gt;Kafka Exporter Overview&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;该Exporter使用Golang编写，更专注于部分Kafka业务相关metrics，对于核心的Java runtime metrics仍旧需要jmx_exporter&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;此外，还有一个confluent公司的grafana dashboard配置，没找到对应的labs dashboard地址，但该配置文件本身也有参考价值：&lt;a href=&quot;https://github.com/kubernauts/kafka-confluent-platform/blob/master/grafana-kafka-dashboard.json&quot; target=&quot;_blank&quot;&gt;kafka-confluent-platform/grafana-kafka-dashboard.json&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;可参考的jmx_exporter配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/oded-dd/prometheus-jmx-kafka&quot; target=&quot;_blank&quot;&gt;oded-dd/prometheus-jmx-kafka&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/Mousavi310/kafka-grafana&quot; target=&quot;_blank&quot;&gt;Mousavi310/kafka-grafana&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;512-docker实践&quot;&gt;5.1.2 Docker实践&lt;/h3&gt;
-&lt;p&gt;实际运行范例参见：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/kafka-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/kafka-cluster.yaml&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/prometheus-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/prometheus-cluster.yaml&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/vendors/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/vendors/kafka/&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/golang/src/dist-system-practice/vendors/prometheus/grafana/dashboards&quot; target=&quot;_blank&quot;&gt;dist-system-practice/vendors/prometheus/grafana/dashboards/&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Exporter方面，jmx_exporter和kafka_exporter同时使用，两者侧重不同。jmx_exporter主要用来进行JVM监控，针对java runtime自身的状态进行监控，而kafka_exporter则针对kafka运行状况进行监控（其实只要不怕麻烦自己处理dashboard，则jmx_exporter就完全足够了）。&lt;/p&gt;
-
-&lt;p&gt;jmx_exporter的部署有两种选择，一是独立的容器进行部署，好处是可观察性强，且不会对kafka容器造成影响，缺点是部署更繁杂，配置内容更多；二是修改kafka容器，添加几项配置项，就可以直接在kafka容器内启动一个java进程，进行metrics输出。这里实践使用的是第二种方法，配置修改如下：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kafka_1&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx_prometheus_javaagent-0.9.jar:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx-kafka-2_0_0.yaml:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;19092:9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;17071:7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;expose&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9093&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# internal traffic&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9991&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*KAFKA_LOGGING_DEFAULTS&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;JMX_PORT&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;9991&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_OPTS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-javaagent:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar=7071:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&amp;quot;&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*KAFKA_ENV_DEFAULTS&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;&lt;code&gt;JMX_PORT&lt;/code&gt;告知kafka在启动的时候需要一并启动jmx，&lt;code&gt;KAFKA_OPTS&lt;/code&gt;告知kafka在启动时一并需要启动jmx_exporter，而这个exporter的jar包以及配置文件则是通过bind mount放入容器内的。&lt;/p&gt;
-
-&lt;p&gt;配置文件主要来自于：&lt;a href=&quot;https://github.com/Mousavi310/kafka-grafana/blob/master/jmx-exporter/kafka-2_0_0.yml&quot; target=&quot;_blank&quot;&gt;kafka-grafana/jmx-exporter/kafka-2_0_0.yml&lt;/a&gt;。此外，因为使用通用jmx dashboard：&lt;a href=&quot;https://grafana.com/dashboards/8563&quot; target=&quot;_blank&quot;&gt;JVM dashboard&lt;/a&gt;来进行数据展示，该配置文件中也放入了部分这个dashboard要求的数据转换规则：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;lowercaseOutputLabelNames&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;rules&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# JMX common&lt;/span&gt;
-&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;java.lang&amp;lt;type=OperatingSystem&amp;gt;&amp;lt;&amp;gt;(committed_virtual_memory|free_physical_memory|free_swap_space|total_physical_memory|total_swap_space)_size:&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os_$1_bytes&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;GAUGE&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;attrNameSnakeCase&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pattern&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;java.lang&amp;lt;type=OperatingSystem&amp;gt;&amp;lt;&amp;gt;((?!process_cpu_time)\w+):&amp;#39;&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os_$1&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;GAUGE&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;attrNameSnakeCase&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;nn&quot;&gt;...&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;此外还有prometheus集群采集添加以及grafana dashboard导入，都是常规操作，就不多说了。&lt;/p&gt;
-
-&lt;h2 id=&quot;52-高可用&quot;&gt;5.2 高可用&lt;/h2&gt;
-&lt;p&gt;在之前的&lt;a href=&quot;#ID_CLUSTER&quot;&gt;4.2 集群&lt;/a&gt;中，已经介绍过了Kafka的集群模式，可以看到Kafka天然就是分布式的，而且在设计之初就考虑到了集群的高可用。本文之前章节内关于集群的内容偏简单了，只介绍了大致的设计。如有需要更深入了解分布式和高可用的细节，则可以阅读唯品会的：&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;，这篇讲解非常透彻，基本上可以当经典来看了。&lt;/p&gt;
-
-&lt;p&gt;Kafka的高可用配置，有几个配置项控制了集群的安全程度。这里需要记住一点，整个集群越安全集群的吞吐量就越低，这是等价交换的，不可能不付出任何代价就获得数据的安全性。唯品会的文章讲解的细节非常多，但我们真正执行操作的时候可以只知其然，懂得哪几个配置项需要操作即可：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;topic：
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code&gt;replication.factor&lt;/code&gt;：每个partition会拥有多少个replica&lt;/li&gt;
-      &lt;li&gt;&lt;code&gt;min.insync.replicas&lt;/code&gt;：partition的leader节点要求当前在线的replica节点的数量，如果实际在线数量少于这个数值，客户端的请求会被拒绝：&lt;code&gt;org.apache.kafka.common.errors.NotEnoughReplicasExceptoin: Messages are rejected since there are fewer in-sync replicas than required&lt;/code&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;broker：
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code&gt;unclean.leader.election.enable&lt;/code&gt;：是否允许out-of-sync replica成为leader&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;producer：
-    &lt;ul&gt;
-      &lt;li&gt;producer.type：消息生产者提交消息到kafka服务器的时候的模式，可选：sync或async
-        &lt;ul&gt;
-          &lt;li&gt;&lt;code&gt;sync&lt;/code&gt;拥有很好的安全性&lt;/li&gt;
-          &lt;li&gt;&lt;code&gt;async&lt;/code&gt;拥有更高的吞吐量，可以批量进行消息发送&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;request.required.acks：kafka服务器在收到消息之后何时对生产者进行完成反馈
-        &lt;ul&gt;
-          &lt;li&gt;&lt;code&gt;1（默认）&lt;/code&gt;：partition的leader节点收取完成即反馈，如果在follower同步数据之前leader宕机则数据丢失&lt;/li&gt;
-          &lt;li&gt;&lt;code&gt;0&lt;/code&gt;：producer不等待kafka服务器反馈即直接进行后续发送，拥有最高的吞吐量以及最低的安全性&lt;/li&gt;
-          &lt;li&gt;&lt;code&gt;-1&lt;/code&gt;：partition的所有节点包括了leader以及所有的follower全部都确认数据同步完成再反馈，最高的安全性以及最低的吞吐量&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;要保证数据写入到Kafka是安全的，高可靠的，需要如下配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;topic：
-    &lt;ul&gt;
-      &lt;li&gt;replication.factor&amp;gt;=3：即副本数至少是3个&lt;/li&gt;
-      &lt;li&gt;2&amp;lt;=min.insync.replicas&amp;lt;=replication.factor：要求每个partition leader的在线replica数量最少保持2个&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;broker：
-    &lt;ul&gt;
-      &lt;li&gt;unclean.leader.election.enable=false：不允许out-of-sync replica成为leader&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;producer：
-    &lt;ul&gt;
-      &lt;li&gt;request.required.acks=-1(all)：producer发送的消息请求必须让partition所有的replica都同步完毕才会返回成功&lt;/li&gt;
-      &lt;li&gt;producer.type=sync：producer发送的消息以同步方式发送，即在写入成功之前，producer必须等待&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;6-kafka-benchmark&quot;&gt;6. Kafka Benchmark&lt;/h1&gt;
-&lt;p&gt;这里的内容全部是转载自唯品会的：&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;。网上的资料很容易失效，因此在这里做下转载。&lt;/p&gt;
-
-&lt;p&gt;Benchmark的Kafka版本是：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;0.10.1.0
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;h2 id=&quot;61-测试环境&quot;&gt;6.1 测试环境&lt;/h2&gt;
-&lt;p&gt;Kafka broker 用到了 4 台机器，分别为 broker[0/1/2/3] 配置如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;CPU: 24core/2.6GHZ&lt;/li&gt;
-  &lt;li&gt;Memory: 62G&lt;/li&gt;
-  &lt;li&gt;Network: 4000Mb&lt;/li&gt;
-  &lt;li&gt;OS/kernel: CentOs release 6.6 (Final)&lt;/li&gt;
-  &lt;li&gt;Disk: 1089G&lt;/li&gt;
-  &lt;li&gt;Kafka 版本：0.10.1.0&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;broker 端 JVM 参数设置：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;-Xmx8G -Xms8G -server -XX:+UseParNewGC -XX:+UseConcMarkSweepGC -XX:+CMSClassUnloadingEnabled -XX:+CMSScavengeBeforeRemark -XX:+DisableExplicitGC -Djava.awt.headless=true -Xloggc:/apps/service/kafka/bin/../logs/kafkaServer-gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.port=9999
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;客户端机器配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;CPU: 24core/2.6GHZ&lt;/li&gt;
-  &lt;li&gt;Memory: 3G&lt;/li&gt;
-  &lt;li&gt;Network: 1000Mb&lt;/li&gt;
-  &lt;li&gt;OS/kernel: CentOs release 6.3 (Final)&lt;/li&gt;
-  &lt;li&gt;Disk: 240G&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;62-不同场景测试&quot;&gt;6.2 不同场景测试&lt;/h2&gt;
-&lt;h3 id=&quot;621-场景1&quot;&gt;6.2.1 场景1&lt;/h3&gt;
-&lt;p&gt;测试不同的副本数、min.insync.replicas 策略以及 request.required.acks 策略（以下简称 acks 策略）对于发送速度（TPS）的影响。&lt;/p&gt;
-
-&lt;p&gt;具体配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一个 producer&lt;/li&gt;
-  &lt;li&gt;发送方式为 sync&lt;/li&gt;
-  &lt;li&gt;消息体大小为 1kB&lt;/li&gt;
-  &lt;li&gt;partition 数为 12&lt;/li&gt;
-  &lt;li&gt;副本数为：1/2/4&lt;/li&gt;
-  &lt;li&gt;min.insync.replicas 分别为 1/2/4&lt;/li&gt;
-  &lt;li&gt;acks 分别为 -1（all）/1/0&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;具体测试数据如下表（min.insync.replicas 只在 acks=-1 时有效）：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-06.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;测试结果分析：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;客户端的 acks 策略对发送的 TPS 有较大的影响，TPS：acks_0 &amp;gt; acks_1 &amp;gt; ack_-1;&lt;/li&gt;
-  &lt;li&gt;副本数越高，TPS 越低；副本数一致时，min.insync.replicas 不影响 TPS；&lt;/li&gt;
-  &lt;li&gt;acks=0/1 时，TPS 与 min.insync.replicas 参数以及副本数无关，仅受 acks 策略的影响。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;下面将 partition 的个数设置为 1，来进一步确认下不同的 acks 策略、不同的 min.insync.replicas 策略以及不同的副本数对于发送速度的影响，详细请看情景 2 和情景 3。&lt;/p&gt;
-
-&lt;h3 id=&quot;622-场景2&quot;&gt;6.2.2 场景2&lt;/h3&gt;
-&lt;p&gt;在 partition 个数固定为 1，测试不同的副本数和 min.insync.replicas 策略对发送速度的影响。&lt;/p&gt;
-
-&lt;p&gt;具体配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一个 producer&lt;/li&gt;
-  &lt;li&gt;发送方式为 sync&lt;/li&gt;
-  &lt;li&gt;消息体大小为 1kB&lt;/li&gt;
-  &lt;li&gt;producer 端 acks=-1(all)&lt;/li&gt;
-  &lt;li&gt;变换副本数：2/3/4&lt;/li&gt;
-  &lt;li&gt;min.insync.replicas 设置为：1/2/4&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;测试结果如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-07.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;测试结果分析：&lt;/p&gt;
-
-&lt;p&gt;副本数越高，TPS 越低（这点与场景 1 的测试结论吻合），但是当 partition 数为 1 时差距甚微。min.insync.replicas 不影响 TPS。&lt;/p&gt;
-
-&lt;h3 id=&quot;623-场景3&quot;&gt;6.2.3 场景3&lt;/h3&gt;
-&lt;p&gt;在 partition 个数固定为 1，测试不同的 acks 策略和副本数对发送速度的影响。&lt;/p&gt;
-
-&lt;p&gt;具体配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一个 producer&lt;/li&gt;
-  &lt;li&gt;发送方式为 sync&lt;/li&gt;
-  &lt;li&gt;消息体大小为 1kB&lt;/li&gt;
-  &lt;li&gt;min.insync.replicas=1&lt;/li&gt;
-  &lt;li&gt;topic 副本数为：1/2/4&lt;/li&gt;
-  &lt;li&gt;acks： 0/1/-1&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;测试结果如下：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-08.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;测试结果分析（与情景 1 一致）：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;副本数越多，TPS 越低；&lt;/li&gt;
-  &lt;li&gt;客户端的 acks 策略对发送的 TPS 有较大的影响，TPS：acks_0 &amp;gt; acks_1 &amp;gt; ack_-1。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;ID_BENCHMARK_SCEN4&quot;&gt;6.2.4 场景4&lt;/h3&gt;
-&lt;p&gt;测试不同 partition 数对发送速率的影响&lt;/p&gt;
-
-&lt;p&gt;具体配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一个 producer&lt;/li&gt;
-  &lt;li&gt;消息体大小为 1KB&lt;/li&gt;
-  &lt;li&gt;发送方式为 sync&lt;/li&gt;
-  &lt;li&gt;topic 副本数为 2&lt;/li&gt;
-  &lt;li&gt;min.insync.replicas=2&lt;/li&gt;
-  &lt;li&gt;acks=-1&lt;/li&gt;
-  &lt;li&gt;partition 数量设置为 1/2/4/8/12&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;测试结果：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-09.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;测试结果分析：&lt;/p&gt;
-
-&lt;p&gt;partition 的不同会影响 TPS，随着 partition 的个数的增长 TPS 会有所增长，但并不是一直成正比关系，到达一定临界值时，partition 数量的增加反而会使 TPS 略微降低。&lt;/p&gt;
-
-&lt;h3 id=&quot;625-场景5&quot;&gt;6.2.5 场景5&lt;/h3&gt;
-&lt;p&gt;通过将集群中部分 broker 设置成不可服务状态，测试对客户端以及消息落盘的影响。&lt;/p&gt;
-
-&lt;p&gt;具体配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一个 producer&lt;/li&gt;
-  &lt;li&gt;消息体大小 1KB&lt;/li&gt;
-  &lt;li&gt;发送方式为 sync&lt;/li&gt;
-  &lt;li&gt;topic 副本数为 4&lt;/li&gt;
-  &lt;li&gt;min.insync.replicas 设置为 2&lt;/li&gt;
-  &lt;li&gt;acks=-1&lt;/li&gt;
-  &lt;li&gt;retries=0/100000000&lt;/li&gt;
-  &lt;li&gt;partition 数为 12&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;具体测试数据如下表：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-10.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;出错信息：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;错误 1：客户端返回异常，部分数据可落盘，部分失败：org.apache.kafka.common.errors.NetworkException: The server disconnected before a response was received.&lt;/li&gt;
-  &lt;li&gt;错误 2：[WARN]internals.Sender - Got error produce response with correlation id 19369 on topic-partition default_channel_replicas_4_1-3, retrying (999999999 attempts left). Error: NETWORK_EXCEPTION&lt;/li&gt;
-  &lt;li&gt;错误 3： [WARN]internals.Sender - Got error produce response with correlation id 77890 on topic-partition default_channel_replicas_4_1-8, retrying (999999859 attempts left). Error: NOT_ENOUGH_REPLICAS&lt;/li&gt;
-  &lt;li&gt;错误 4： [WARN]internals.Sender - Got error produce response with correlation id 77705 on topic-partition default_channel_replicas_4_1-3, retrying (999999999 attempts left). Error: NOT_ENOUGH_REPLICAS_AFTER_APPEND&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;测试结果分析：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;kill 两台 broker 后，客户端可以继续发送。broker 减少后，partition 的 leader 分布在剩余的两台 broker 上，造成了 TPS 的减小；&lt;/li&gt;
-  &lt;li&gt;kill 三台 broker 后，客户端无法继续发送。Kafka 的自动重试功能开始起作用，当大于等于 min.insync.replicas 数量的 broker 恢复后，可以继续发送；&lt;/li&gt;
-  &lt;li&gt;当 retries 不为 0 时，消息有重复落盘；客户端成功返回的消息都成功落盘，异常时部分消息可以落盘。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;626-场景6&quot;&gt;6.2.6 场景6&lt;/h3&gt;
-&lt;p&gt;测试单个 producer 的发送延迟，以及端到端的延迟。&lt;/p&gt;
-
-&lt;p&gt;具体配置：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;一个 producer&lt;/li&gt;
-  &lt;li&gt;消息体大小 1KB&lt;/li&gt;
-  &lt;li&gt;发送方式为 sync&lt;/li&gt;
-  &lt;li&gt;topic 副本数为 4&lt;/li&gt;
-  &lt;li&gt;min.insync.replicas 设置为 2&lt;/li&gt;
-  &lt;li&gt;acks=-1&lt;/li&gt;
-  &lt;li&gt;partition 数为 12&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;测试数据及结果（单位为 ms）：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/04/kafka-note/message-queue-11.jpg&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;63-各场景测试总结&quot;&gt;6.3 各场景测试总结&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;当 acks=-1 时，Kafka 发送端的 TPS 受限于 topic 的副本数量（ISR 中），副本越多 TPS 越低；&lt;/li&gt;
-  &lt;li&gt;acks=0 时，TPS 最高，其次为 1，最差为 -1，即 TPS：acks_0 &amp;gt; acks_1 &amp;gt; ack_-1；&lt;/li&gt;
-  &lt;li&gt;min.insync.replicas 参数不影响 TPS；&lt;/li&gt;
-  &lt;li&gt;partition 的不同会影响 TPS，随着 partition 的个数的增长 TPS 会有所增长，但并不是一直成正比关系，到达一定临界值时，partition 数量的增加反而会使 TPS 略微降低；&lt;/li&gt;
-  &lt;li&gt;Kafka 在 acks=-1,min.insync.replicas&amp;gt;=1 时，具有高可靠性，所有成功返回的消息都可以落盘。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;7-kafka使用范例&quot;&gt;7. Kafka使用范例&lt;/h1&gt;
-&lt;p&gt;实验使用的还是下载下来的Kafka，版本如头部申明的是&lt;code&gt;2.2.0&lt;/code&gt;。范例代码可以在Github查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/tree/master/experiment/kafka&quot; target=&quot;_blank&quot;&gt;dist-system-practice/experiment/kafka/&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;8-在docker内部署集群&quot;&gt;8. 在Docker内部署集群&lt;/h1&gt;
-&lt;p&gt;一般来说部署一个以上的docker容器组成集群，可以使用bash脚本的方法，自己编写命令一个个启动，但更好的方法是使用&lt;code&gt;docker-compose&lt;/code&gt;命令，读取配置文件，将整个集群按设定的模式启动起来。可运行范例可以查看：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/conf/dev/kafka-cluster.yaml&quot; target=&quot;_blank&quot;&gt;dist-system-practice/conf/dev/kafka-cluster.yaml&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;启动脚本：&lt;a href=&quot;https://github.com/agreatfool/dist-system-practice/blob/master/golang/src/dist-system-practice/bash/dev/docker_kafka.sh&quot; target=&quot;_blank&quot;&gt;dist-system-practice/bash/dev/docker_kafka.sh&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;主要有几个点需要注意下。&lt;/p&gt;
-
-&lt;h2 id=&quot;81-重要配置项&quot;&gt;8.1 重要配置项&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kafka_1&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;wurstmeister/kafka:2.12-2.2.0&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 一定需要&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;hostname&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kafka_1&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;container_name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;kafka_1&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 使用这个名字来让同network的其他服务进行访问&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;zookeeper&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 保证启动先后顺序&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;volumes&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx_prometheus_javaagent-0.9.jar:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/private/tmp/jmx-kafka-2_0_0.yaml:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kafka_vol_1:/tmp/kafka/data&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;networks&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;net&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;ports&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;19092:9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port # 保证非同一network的其他服务也能访问，但这么做要求每个kafka service都监听不同的端口，相互不能冲突&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;17071:7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;expose&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# client port&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9093&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# internal traffic # kafka集群内部流量走的端口号&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;9991&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx # jmx进程本身监听的地址，提供给jmx_exporter连接用&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;7071&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx prometheus metrics # jmx_exporter监听的地址，提供给prometheus抓取metrics&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;always&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;logging&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;driver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;json-file&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 日志输出以json格式，容易让聚合工具使用&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;max-size&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;512m&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 保证日志最大尺寸不会过大占用过多系统磁盘&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka的实际监听地址，一般不是0.0.0.0就是容器名&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ADVERTISED_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://kafka_1:9093,OUTSIDE://127.0.0.1:19092&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka发布到zookeeper，让客户端获取并凭之连接kafka的地址，一定需要是客户端能访问到的地址，INSIDE部分供集群内部流量使用，OUTSIDE供客户端使用&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENER_SECURITY_PROTOCOL_MAP&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 明确内部外部的通讯协议&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_INTER_BROKER_LISTENER_NAME&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;INSIDE&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 告诉kafka集群上面的INSIDE和OUTSIDE配置哪个才是供集群内部流量使用的，按语义一般是INSIDE&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_BROKER_ID&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 必须每个kafka broker单独一个，不可重复&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;JMX_PORT&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;9991&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# jmx监听的地址&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_OPTS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;-javaagent:/usr/local/bin/jmx_prometheus_javaagent-0.9.jar=7071:/etc/jmx-exporter/jmx-kafka-2_0_0.yaml&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka在启动时一并会给予启动&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ZOOKEEPER_CONNECT&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;zookeeper:2181&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 告知kafka zookeeper的地址&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LOG_DIRS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;/tmp/kafka-logs&amp;quot;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka实际的数据存放位置，推荐使用volume进行该地址的local映射&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka内部用来保存topic的offset的数据，其replication数量&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# kafka内部用来保存transaction state log的数据，其replication数量&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_MIN_INSYNC_REPLICAS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# partition的leader节点要求当前在线的replica节点的数量&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;关于&lt;code&gt;LISTENER&lt;/code&gt;相关的几个配置（用于集群访问）更多的可以看下：&lt;a href=&quot;#DOCKER_OUT_NET&quot;&gt;8.2 对容器外应用提供服务&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;参见：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.confluent.io/current/kafka/deployment.html&quot; target=&quot;_blank&quot;&gt;Running Kafka in Production&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;DOCKER_OUT_NET&quot;&gt;8.2 对容器外应用提供服务&lt;/h2&gt;
-&lt;p&gt;在docker中部署集群有一个比较大的问题就是容器内部和外部的网络访问地址是隔离的，而kafka集群部分节点的相互发现是根据配置：&lt;code&gt;KAFKA_ADVERTISED_LISTENERS&lt;/code&gt;来进行通知的。&lt;/p&gt;
-
-&lt;p&gt;如果该配置内的地址填写的是&lt;code&gt;127.0.0.1&lt;/code&gt;这样的回环地址或容器外的IP，那么容器内各kafka节点之间的通讯就会有问题（因为容器内各节点拿到的配置地址都是容器外的IP）。而如果将该配置内的地址都配置成docker容器的名字，那么在容器内部的流量是没问题了，但外部访问kafka服务的应用程序拿到的地址则是容器的名字，就没法访问了。&lt;/p&gt;
-
-&lt;p&gt;所以对于需要向容器外部环境的应用提供服务的情况来说，需要做好几项配置的调整（这里说的配置都是kafka的配置，不涉及到zookeeper的配置，事实上集群部署的配置中zookeeper相关的内容非常简单）：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_ADVERTISED_LISTENERS&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE://kafka_1:9093,OUTSIDE://127.0.0.1:19092&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_LISTENER_SECURITY_PROTOCOL_MAP&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;KAFKA_INTER_BROKER_LISTENER_NAME&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;INSIDE&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;kafka的配置中，现在可以将内部流量和外部流量的监听地址分离开来，在配置&lt;code&gt;LISTENERS&lt;/code&gt;相关的配置时，使用&lt;code&gt;,&lt;/code&gt;将&lt;code&gt;INSIDE&lt;/code&gt;和&lt;code&gt;OUTSIDE&lt;/code&gt;隔离开来即可。一般来说，&lt;code&gt;INSIDE&lt;/code&gt;的地址会配置成当前节点的容器名，或者就直接设置成&lt;code&gt;0.0.0.0&lt;/code&gt;。而&lt;code&gt;OUTSIDE&lt;/code&gt;则根据自身需求设置即可，这里的范例是给本机开发测试用，因此设置的是&lt;code&gt;127.0.0.1&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;KAFKA_INTER_BROKER_LISTENER_NAME&lt;/code&gt;配置项则是告诉kafka，集群各broker节点之间是使用INSIDE还是OUTSIDE配置作为集群内部流量的通讯地址。此外需要注意的是，该配置的&lt;code&gt;INSIDE&lt;/code&gt;和&lt;code&gt;OUTSIDE&lt;/code&gt;监听的端口是&lt;code&gt;不可以重复&lt;/code&gt;的，因为实际上kafka就是开了两个端口都在监听。&lt;/p&gt;
-
-&lt;p&gt;一般第一次在本地设置集群进行开发和调试的时候，这里是个大坑，非常麻烦。配置不正确就会发现kafka完全无法通讯。&lt;/p&gt;
-
-&lt;h2 id=&quot;83-docker-compose-scale&quot;&gt;8.3 docker-compose scale&lt;/h2&gt;
-&lt;p&gt;一般来说，kafka service的配置不适合在配置文件中只设置一份，然后使用docker-compose scale的方法进行横向扩展。&lt;/p&gt;
-
-&lt;p&gt;适用scale的场景只有完全无状态，且各个节点之间的配置完全相同的情况，而kafka各节点一般最好设置自身的&lt;code&gt;container_name&lt;/code&gt;，然后在监听地址中使用正确的容器名作为地址，来进行相互通讯。&lt;/p&gt;
-
-&lt;h2 id=&quot;84-yaml配置重用&quot;&gt;8.4 yaml配置重用&lt;/h2&gt;
-&lt;p&gt;因为无法使用scale的缘故，必须手写大量的kafka service节点yaml配置，这倒也不算是大问题。关键的问题在于有大量重复的配置项，如果后面要修改，就很麻烦，怕漏改或者改错。&lt;/p&gt;
-
-&lt;p&gt;因此最好的方法是使用yaml的配置重用，来设置共通的配置，然后像变量一样重用。这可以参见我之前提到的范例配置文件：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;x-kafka-environment-defaults&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;&amp;amp;KAFKA_ENV_DEFAULTS&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;# 在这里放默认的配置&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;services&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kafka_1&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;...&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;*KAFKA_ENV_DEFAULTS&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# 这样就把作为变量的配置全部导入到这个点上了&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;84-相关参考&quot;&gt;8.4 相关参考&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://better-coding.com/building-apache-kafka-cluster-using-docker-compose-and-virtualbox/&quot; target=&quot;_blank&quot;&gt;Building Apache Kafka cluster using docker-compose and VirtualBox&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.kaaproject.org/kafka-docker&quot; target=&quot;_blank&quot;&gt;Deploying a Kafka broker in a Docker container&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;9-写性能与安全性&quot;&gt;9. 写性能与安全性&lt;/h1&gt;
-&lt;p&gt;在进行测试的过程中，发现写入的速度比较慢，基本上每次写入在kafka集群这边会耗时1秒多，完全不能接受了。之前的博文中也提到了，集群安全性和写入性能是反比的，主要有几项因素：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;producer的写入模式：同步、异步
-    &lt;ul&gt;
-      &lt;li&gt;异步拥有最佳的性能，但安全性极差&lt;/li&gt;
-      &lt;li&gt;同步性能很差，但安全性有保证&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;acks写入的集群同步模式：-1完全同步、0完全不等待同步、1Leader节点同步
-    &lt;ul&gt;
-      &lt;li&gt;0拥有最佳性能，最低的安全性&lt;/li&gt;
-      &lt;li&gt;-1拥有最佳性能，但性能最低&lt;/li&gt;
-      &lt;li&gt;1则比较均衡&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;partition数量：acks如果为-1，则需要同步所有节点，partition数量越多则性能越低&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;后续进行了一些研究和测试。&lt;/p&gt;
-
-&lt;p&gt;集群共3个broker，topic分片如下：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;Topic:work-topic	PartitionCount:3	ReplicationFactor:3	Configs:
-	Topic: work-topic	Partition: 0	Leader: 2	Replicas: 2,0,1	Isr: 2,0,1
-	Topic: work-topic	Partition: 1	Leader: 1	Replicas: 1,2,0	Isr: 1,2,0
-	Topic: work-topic	Partition: 2	Leader: 0	Replicas: 0,1,2	Isr: 0,1,2
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;查了下官方配置，&lt;code&gt;producer.acks&lt;/code&gt;这个现在放在&lt;code&gt;3.3 Producer Configs&lt;/code&gt;里，命名为&lt;code&gt;acks&lt;/code&gt;（&lt;a href=&quot;https://kafka.apache.org/22/documentation.html#producerconfigs&quot; target=&quot;_blank&quot;&gt;链接&lt;/a&gt;）。需要注意的是，这一项配置并不是服务端的配置项，而是连接上来的客户端producer所进行的设置，是否acks根据客户端producer的要求而变动。这很反直觉，我一开始一直都以为这是服务端的配置项，没想到居然是客户端的。&lt;/p&gt;
-
-&lt;p&gt;acks在kafka-go的使用，可以查看注释：&lt;a href=&quot;https://github.com/segmentio/kafka-go/blob/v0.2.4/writer.go#L101&quot; target=&quot;_blank&quot;&gt;kafka-go/writer.go&lt;/a&gt;，默认是-1，也就是最安全但最慢的那种。&lt;/p&gt;
-
-&lt;p&gt;此外，写入模式是同步还是异步也是客户端设置，见：&lt;a href=&quot;https://github.com/segmentio/kafka-go/blob/v0.2.4/writer.go#L105&quot; target=&quot;_blank&quot;&gt;kafka-go/writer.go&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;在上面提到的几项要素中，集群规模和partition数量之类都是业务要求，一般不会轻易变动，所以测试主要是实验在不同写入模式和acks情况下的性能变动。&lt;/p&gt;
-
-&lt;p&gt;测试：&lt;/p&gt;
-
-&lt;pre&gt;&lt;code&gt;同步 -1 1秒+
-同步 1  1秒+
-同步 0  1秒+
-异步 -1 0.2ms 几乎瞬间完成
-异步 1  0.2ms 几乎瞬间完成
-异步 0  0.2ms 几乎瞬间完成
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;结论：性能只在于是否将客户端设置成异步写入，acks对性能的影响微乎其微。&lt;/p&gt;
-
-&lt;p&gt;但上述的测试是在MAC本地环境进行的，有几项因素不够稳定：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;kafka集群的内存很小&lt;/li&gt;
-  &lt;li&gt;磁盘IO和实际情况差别较大&lt;/li&gt;
-  &lt;li&gt;集群规模过小&lt;/li&gt;
-  &lt;li&gt;partition数量很少（集群和partition数量很小能够部分解释为什么acks的改动基本上不影响性能）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;因此上述测试的结论主要是参考价值，不能作为最终结论。如果后续需要严谨结论的话，需要在真实机器上测试，并需要开启go的profiling，观察下kafka类库中的写入到底是怎么完成的，以及kafka集群的响应情况。此外，即便是模拟集群1秒左右的同步写入速度也实在是太慢了，后续还需要深入profiling，到底这1秒做了什么（无论是kafka还是go客户端）。&lt;/p&gt;
-
-&lt;h1 id=&quot;10-todo&quot;&gt;10. TODO&lt;/h1&gt;
-&lt;ul&gt;
-  &lt;li&gt;深入研究Kafka的监控Metrics&lt;/li&gt;
-  &lt;li&gt;Kafka集群同步写入性能较低的原因解析&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;资料&quot;&gt;资料&lt;/h1&gt;
-&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.kubiji.cn/book/apache_kafka/APACHEKAFKAJiaoCheng/APACHEKAFKAGaiShu.html&quot; target=&quot;_blank&quot;&gt;Apache kafka中文手册&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/distributed-queue-programme-model-actual-combat-optimization&quot; target=&quot;_blank&quot;&gt;分布式队列编程：从模型、实战到优化&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=MjM5NjQ5MTI5OA==&amp;amp;mid=2651745361&amp;amp;idx=1&amp;amp;sn=5f0f67484a0de4b0dd2796848ef9cc94&quot; target=&quot;_blank&quot;&gt;分布式队列编程优化篇&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.jianshu.com/p/7a6deaba34d2&quot; target=&quot;_blank&quot;&gt;如何保证消息队列的高可用和幂等性以及数据丢失，顺序一致性&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/kafka-vs-rabbitmq&quot; target=&quot;_blank&quot;&gt;消息中间件选型分析：从 Kafka 与 RabbitMQ 的对比看全局&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/dXJ3EYIp*WaHfmVwlMeu&quot; target=&quot;_blank&quot;&gt;滴滴出行基于 RocketMQ 构建企业级消息队列服务的实践&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/39586635/why-is-kafka-pull-based-instead-of-push-based&quot; target=&quot;_blank&quot;&gt;Why is Kafka pull-based instead of push-based?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://medium.com/@philipfeng/modern-open-source-messaging-apache-kafka-rabbitmq-nats-pulsar-and-nsq-ca3bf7422db5&quot; target=&quot;_blank&quot;&gt;Modern Open Source Messaging: NATS, RabbitMQ, Apache Kafka, hmbdc, Synapse, NSQ and Pulsar&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/huxi2b/p/6223228.html&quot; target=&quot;_blank&quot;&gt;Kafka消费组(consumer group)&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://stackoverflow.com/questions/45175424/how-multiple-consumer-group-consumers-work-across-partition-on-the-same-topic-in&quot; target=&quot;_blank&quot;&gt;How multiple consumer group consumers work across partition on the same topic in Kafka?&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/pursuer211/article/details/79799478&quot; target=&quot;_blank&quot;&gt;kafka中partition和消费者对应关系&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://medium.com/@danieljameskay/understanding-the-enable-auto-commit-kafka-consumer-property-12fa0ade7b65&quot; target=&quot;_blank&quot;&gt;Understanding the ‘enable.auto.commit’ Kafka Consumer property&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/monitoring-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P1&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.datadoghq.com/blog/collecting-kafka-performance-metrics/&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka performance metrics - P2&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.confluent.io/current/kafka/monitoring.html&quot; target=&quot;_blank&quot;&gt;Monitoring Kafka&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/depth-interpretation-of-kafka-data-reliability&quot; target=&quot;_blank&quot;&gt;Kafka 数据可靠性深度解读&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://better-coding.com/building-apache-kafka-cluster-using-docker-compose-and-virtualbox/&quot; target=&quot;_blank&quot;&gt;Building Apache Kafka cluster using docker-compose and VirtualBox&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.kaaproject.org/kafka-docker&quot; target=&quot;_blank&quot;&gt;Deploying a Kafka broker in a Docker container&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.confluent.io/current/kafka/deployment.html&quot; target=&quot;_blank&quot;&gt;Running Kafka in Production&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/47388267&quot; target=&quot;_blank&quot;&gt;比拼Kafka，大数据分析新秀Pulsar到底好在哪&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.slideshare.net/merlimat/high-performance-messaging-with-apache-pulsar&quot; target=&quot;_blank&quot;&gt;High performance messaging with Apache Pulsar&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/Us*a8umKXT9LpV9hA6tF&quot; target=&quot;_blank&quot;&gt;选择 Pulsar 而不是 Kafka 的 7 大理由&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/prometheus/jmx_exporter&quot; target=&quot;_blank&quot;&gt;prometheus/jmx_exporter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/sscaling/jmx-prometheus-exporter&quot; target=&quot;_blank&quot;&gt;sscaling/jmx-prometheus-exporter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/danielqsj/kafka_exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka_exporter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://hub.docker.com/r/danielqsj/kafka-exporter&quot; target=&quot;_blank&quot;&gt;danielqsj/kafka-exporter&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/oded-dd/prometheus-jmx-kafka&quot; target=&quot;_blank&quot;&gt;oded-dd/prometheus-jmx-kafka&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/Mousavi310/kafka-grafana&quot; target=&quot;_blank&quot;&gt;Mousavi310/kafka-grafana&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Mon, 29 Apr 2019 10:01:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/04/kafka-note/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/04/kafka-note/</guid>
 			</item>
 		
 	</channel>
