@@ -232,9 +232,27 @@
 <h2 id="21-日志启用">2.1 日志启用</h2>
 <p>GC日志需要在命令行启动node的时候添加option来启用，相关的option我找到一个不错的gist，里面有描述，这里fork了下：</p>
 
-<p>true<script src="https://gist.github.com/42456c819018a4bc1a789566c2748b0e.js"> </script></p>
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/42456c819018a4bc1a789566c2748b0e.js"> </script>
 
 <p>而本文撰写时参照的Node版本，支持的GC相关option如下：</p>
+
+<noscript><pre>400: Invalid request
+</pre></noscript>
+<script src="https://gist.github.com/34dc4c99fe42afdd1dc6a8c43d638edf.js"> </script>
+
+<h2 id="22-如何runtime触发gc">2.2 如何Runtime触发GC</h2>
+<p>如果想要在runtime使用代码主动触发GC，则需要在node启动的时候添加option<code>--expose-gc</code>。</p>
+
+<p>然后在代码里：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="k">if</span> <span class="p">(</span><span class="nx">global</span><span class="p">.</span><span class="nx">gc</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">global</span><span class="p">.</span><span class="nx">gc</span><span class="p">();</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="23-常用gc-options输出效果范例">2.3 常用GC options输出效果范例</h2>
+<p>范例效果：</p>
 
 <noscript><pre>&lt;!DOCTYPE html&gt;
 &lt;html&gt;
@@ -316,22 +334,6 @@
   &lt;/body&gt;
 &lt;/html&gt;
 </pre></noscript>
-<script src="https://gist.github.com/34dc4c99fe42afdd1dc6a8c43d638edf.js"> </script>
-
-<h2 id="22-如何runtime触发gc">2.2 如何Runtime触发GC</h2>
-<p>如果想要在runtime使用代码主动触发GC，则需要在node启动的时候添加option<code>--expose-gc</code>。</p>
-
-<p>然后在代码里：</p>
-
-<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="k">if</span> <span class="p">(</span><span class="nx">global</span><span class="p">.</span><span class="nx">gc</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">global</span><span class="p">.</span><span class="nx">gc</span><span class="p">();</span>
-<span class="p">}</span></code></pre></figure>
-
-<h2 id="23-常用gc-options输出效果范例">2.3 常用GC options输出效果范例</h2>
-<p>范例效果：</p>
-
-<noscript><pre>400: Invalid request
-</pre></noscript>
 <script src="https://gist.github.com/d50ac9f4f33e386cfc82f4a8e4a60bb6.js"> </script>
 
 <h2 id="24-gc日志图解">2.4 GC日志图解</h2>
@@ -390,9 +392,7 @@
 <h2 id="34-阿里工具的辅助脚本">3.4 阿里工具的辅助脚本</h2>
 <p><a href="https://github.com/aliyun-node/v8-gc-log-parser" target="_blank">aliyun-node/v8-gc-log-parser</a>只支持事后解析静态日志文件并输出结果，但有的时候我们需要查看下实时的情况。这里有一个脚本可以使用：</p>
 
-<noscript><pre>400: Invalid request
-</pre></noscript>
-<script src="https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js"> </script>
+<p>true<script src="https://gist.github.com/0980b5bd950d120b8751114817e0f30c.js"> </script></p>
 
 <p>该脚本暂时不能分析<code>--trace-gc --trace-gc-verbose</code>的输出结果，因为该输出是多行的，需要聚合后才可以发给解析工具。有兴趣的可以自己改造下。</p>
 
@@ -715,6 +715,8 @@
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2019/12/wxpay/">微信支付接入</a></li>
+    
     <li><a href="/2019/12/alipay/">支付宝接入</a></li>
     
     <li><a href="/2019/12/docker-registry/">Docker Registry 的简单使用</a></li>
@@ -722,8 +724,6 @@
     <li><a href="/2019/12/gitea-note/">Gitea简单介绍及使用</a></li>
     
     <li><a href="/2019/12/consul-note/">Consul Notes</a></li>
-    
-    <li><a href="/2019/12/drone-ci/">使用Drone进行CI支持</a></li>
     
   </ul>
 </div>
