@@ -1,0 +1,800 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>支付宝接入 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2019/12/alipay/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2019/12/alipay/">支付宝接入</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>27 Dec 2019</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Payment">Payment</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Alipay">Alipay</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-支付流程" id="markdown-toc-2-支付流程">2. 支付流程</a>    <ul>
+      <li><a href="#21-网页端" id="markdown-toc-21-网页端">2.1 网页端</a></li>
+      <li><a href="#22-移动原生" id="markdown-toc-22-移动原生">2.2 移动原生</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-准备工作" id="markdown-toc-3-准备工作">3. 准备工作</a>    <ul>
+      <li><a href="#31-账号申请" id="markdown-toc-31-账号申请">3.1 账号申请</a></li>
+      <li><a href="#32-应用申请" id="markdown-toc-32-应用申请">3.2 应用申请</a></li>
+      <li><a href="#33-秘钥申请" id="markdown-toc-33-秘钥申请">3.3 秘钥申请</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-api--sdk" id="markdown-toc-4-api--sdk">4. API &amp; SDK</a>    <ul>
+      <li><a href="#41-sdk选择" id="markdown-toc-41-sdk选择">4.1 SDK选择</a></li>
+      <li><a href="#42-api使用基础" id="markdown-toc-42-api使用基础">4.2 API使用基础</a></li>
+      <li><a href="#43-常用接口" id="markdown-toc-43-常用接口">4.3 常用接口</a>        <ul>
+          <li><a href="#431-pc网页支付下单" id="markdown-toc-431-pc网页支付下单">4.3.1 PC网页支付下单</a></li>
+          <li><a href="#432-app支付下单" id="markdown-toc-432-app支付下单">4.3.2 APP支付下单</a></li>
+          <li><a href="#433-支付宝订单查询" id="markdown-toc-433-支付宝订单查询">4.3.3 支付宝订单查询</a></li>
+        </ul>
+      </li>
+      <li><a href="#44-回调处理" id="markdown-toc-44-回调处理">4.4 回调处理</a>        <ul>
+          <li><a href="#441-return_url" id="markdown-toc-441-return_url">4.4.1 return_url</a></li>
+          <li><a href="#442-notify_url" id="markdown-toc-442-notify_url">4.4.2 notify_url</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#5-沙箱使用" id="markdown-toc-5-沙箱使用">5. 沙箱使用</a>    <ul>
+      <li><a href="#51-沙箱申请" id="markdown-toc-51-沙箱申请">5.1 沙箱申请</a></li>
+      <li><a href="#52-沙箱管理" id="markdown-toc-52-沙箱管理">5.2 沙箱管理</a></li>
+      <li><a href="#53-沙箱支付" id="markdown-toc-53-沙箱支付">5.3 沙箱支付</a></li>
+    </ul>
+  </li>
+  <li><a href="#6-错误处理" id="markdown-toc-6-错误处理">6. 错误处理</a>    <ul>
+      <li><a href="#61-回调处理" id="markdown-toc-61-回调处理">6.1 回调处理</a></li>
+      <li><a href="#62-修复订单" id="markdown-toc-62-修复订单">6.2 修复订单</a></li>
+    </ul>
+  </li>
+  <li><a href="#7-上线生效" id="markdown-toc-7-上线生效">7. 上线生效</a></li>
+  <li><a href="#appendix" id="markdown-toc-appendix">Appendix</a>    <ul>
+      <li><a href="#链接" id="markdown-toc-链接">链接</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="1-前言">1. 前言</h1>
+<p>支付宝的接入，权当笔记。</p>
+
+<h1 id="2-支付流程">2. 支付流程</h1>
+<h3 id="21-网页端">2.1 网页端</h3>
+<p>PC网页端的支付，官方文档在：<a href="https://docs.open.alipay.com/270/105899/" target="_blank">开发文档 / 电脑网站支付 / 快速接入</a>。这篇应该说是完整的tutorial，里面也包含了支付的整个流程。</p>
+
+<p>官方配图：</p>
+
+<p><img src="/resources/2019/12/alipay/alipay_pc_process.png" alt="" target="_blank" /></p>
+
+<p>总觉得支付宝的这个流程图有点问题，并没有很好解释流程顺序。这里整理一个文字版。</p>
+
+<p>流程涉及到几个角色：</p>
+
+<ul>
+  <li>PC网站网页</li>
+  <li>PC网站后台</li>
+  <li>支付宝系统</li>
+</ul>
+
+<p>支付流程如下：</p>
+
+<ul>
+  <li><code>用户</code>打开PC网站网页的商品页</li>
+  <li><code>用户</code>对商品进行下单</li>
+  <li><code>PC网站网页</code>发送下单请求到PC网站后台</li>
+  <li><code>PC网站后台</code>在自身系统内生成订单（生成内部订单号），并返回给网页</li>
+  <li><code>PC网站网页</code>获得内部订单信息，并将用户导向到支付页面</li>
+  <li><code>用户</code>确认订单内容，并开始付款流程</li>
+  <li><code>PC网站网页</code>发起支付请求到PC网站后台</li>
+  <li><code>PC网站后台</code>向支付宝系统发起下单请求
+    <ul>
+      <li>其中附加了notify_url，会在支付完成后收到回调</li>
+      <li>且附加了return_url，会在支付完成后将页面导向到该页面</li>
+    </ul>
+  </li>
+  <li><code>PC网站后台</code>将支付宝返回的信息交付给PC网站网页</li>
+  <li><code>PC网站网页</code>收到支付宝返回信息，使用其中的信息将页面导向到支付宝的付款页面</li>
+  <li><code>用户</code>在支付宝的付款页面完成付款</li>
+  <li><code>支付宝系统</code>确认支付完成，将用户网页重定向到return_url的页面</li>
+  <li><code>支付宝系统</code>确认支付完成，向notify_url发送回调信息</li>
+  <li><code>PC网站后台</code>验证支付宝回调完成，标记订单状态为已支付</li>
+</ul>
+
+<h3 id="22-移动原生">2.2 移动原生</h3>
+<p>移动端原生支付和PC网页支付差异不是很大，官方文档在：<a href="https://docs.open.alipay.com/204/105297/" target="_blank">开发文档 / App支付 / 快速接入</a>。</p>
+
+<p>官方配图：</p>
+
+<p><img src="/resources/2019/12/alipay/alipay_native_process.png" alt="" target="_blank" /></p>
+
+<p>这个图还算可以，老样子整理一个文字版。</p>
+
+<p>流程涉及到几个角色：</p>
+
+<ul>
+  <li>手机APP</li>
+  <li>APP后台</li>
+  <li>支付宝系统</li>
+</ul>
+
+<p>支付流程如下：</p>
+
+<ul>
+  <li><code>用户</code>打开手机APP的商品页</li>
+  <li><code>用户</code>对商品进行下单</li>
+  <li><code>手机APP</code>发送下单请求到APP后台</li>
+  <li><code>APP后台</code>在自身系统内生成订单（生成内部订单号），并返回给APP</li>
+  <li><code>手机APP</code>获得内部订单信息，并将用户导向到支付页面</li>
+  <li><code>用户</code>确认订单内容，并开始付款流程</li>
+  <li><code>手机APP</code>发起支付请求到APP后台</li>
+  <li><code>APP后台</code>向支付宝系统发起下单请求，获得支付宝APP唤醒参数，并交付给手机APP
+    <ul>
+      <li>其中附加了notify_url，会在支付完成后收到回调</li>
+    </ul>
+  </li>
+  <li><code>手机APP</code>收到支付宝返回信息，使用其中的参数唤醒支付宝APP</li>
+  <li><code>用户</code>在支付宝APP完成付款</li>
+  <li><code>支付宝系统</code>确认支付完成，返回手机APP</li>
+  <li><code>支付宝系统</code>确认支付完成，向notify_url发送回调信息</li>
+  <li><code>APP后台</code>验证支付宝回调完成，标记订单状态为已支付</li>
+</ul>
+
+<h1 id="3-准备工作">3. 准备工作</h1>
+<p>在正式接入支付宝之前，还需要做一些准备工作，主要是一系列账号、应用、秘钥的申请。</p>
+
+<h2 id="31-账号申请">3.1 账号申请</h2>
+<p>公司账号申请都是老板做的事情，虽然繁琐但和技术人员没什么关系。创建完成后可以通过<a href="https://docs.open.alipay.com/200/ug05sr/" target="_blank">账户成员管理</a>将员工账号加入到管理群组里，方便员工直接进行开发。</p>
+
+<p>员工可以通过<a href="https://openhome.alipay.com/platform/manageHome.htm" target="_blank">这个链接</a>，登入到支付宝进行账号和应用的管理。</p>
+
+<h2 id="32-应用申请">3.2 应用申请</h2>
+<p>见官方文档：<a href="https://docs.open.alipay.com/200/105310" target="_blank">开发文档 / 开发指南 / 创建应用</a>。</p>
+
+<p>刚创建出来的应用是没有任何功能的，支付宝的各种功能（包括最基础的支付功能）都是支付应用下的<code>应用功能</code>，一般来说每个都需要单独开通，某些开通还需要一定的条件，比如说网页支付开通的话你必须首先要有一个已经上线的网页而且要有明确的支付功能（申请失败如下）。等等。见：<a href="https://docs.open.alipay.com/200/105314/" target="_blank">签约功能</a>。</p>
+
+<p><img src="/resources/2019/12/alipay/alipay_pc_app_failure.png" alt="" target="_blank" /></p>
+
+<p>在这一步最重要的是要把支付应用的APP_ID记录下来。</p>
+
+<h2 id="33-秘钥申请">3.3 秘钥申请</h2>
+<p>见官方文档：<a href="https://docs.open.alipay.com/291/105971/" target="_blank">开发文档 / 签名专区 / 第一步：生成 RSA 密钥</a>。</p>
+
+<p>官方有提供一个工具<code>支付宝开放平台开发助手</code>，可以用这个工具进行秘钥制作，比较方便：</p>
+
+<ul>
+  <li><a href="https://ideservice.alipay.com/ide/getPluginUrl.htm?clientType=assistant&amp;platform=win&amp;channelType=WEB" target="_blank">WIN版本</a></li>
+  <li><a href="https://ideservice.alipay.com/ide/getPluginUrl.htm?clientType=assistant&amp;platform=mac&amp;channelType=WEB" target="_blank">MAC版本</a></li>
+</ul>
+
+<p>后续研发上遇到签名问题可以参考：<a href="https://docs.open.alipay.com/291/106096/" target="_blank">自助排查</a>以及<a href="https://docs.open.alipay.com/291/106098/" target="_blank">常见问题</a>。</p>
+
+<p>这一步操作完成后应该会获得三个文件，需要妥善保存：</p>
+
+<ul>
+  <li>alipay的公钥
+    <ul>
+      <li>文件以<code>-----BEGIN PUBLIC KEY-----</code>开头</li>
+      <li>文件以<code>-----END PUBLIC KEY-----</code>结尾</li>
+    </ul>
+  </li>
+  <li>应用的公钥
+    <ul>
+      <li>文件以<code>-----BEGIN PUBLIC KEY-----</code>开头</li>
+      <li>文件以<code>-----END PUBLIC KEY-----</code>结尾</li>
+    </ul>
+  </li>
+  <li>应用的私钥
+    <ul>
+      <li>文件以<code>-----BEGIN RSA PRIVATE KEY-----</code>开头</li>
+      <li>文件以<code>-----END RSA PRIVATE KEY-----</code>结尾</li>
+    </ul>
+  </li>
+</ul>
+
+<p>下载下来的公钥和私钥都是不断行的连续字符串，还需要借助像是<a href="https://www.samltool.com/format_privatekey.php" target="_blank">Online tool to format private key. - SAMLTool.com</a>这样的工具进行格式转换，断行。如果没有文件头和文件尾的话，还需要手动添加。</p>
+
+<h1 id="4-api--sdk">4. API &amp; SDK</h1>
+<h2 id="41-sdk选择">4.1 SDK选择</h2>
+<p>Node.js进行开发的话，有两个npm库可选：</p>
+
+<ul>
+  <li><a href="https://www.npmjs.com/package/alipay-node-sdk" target="_blank">alipay-node-sdk</a>：这个库非官方，但维护的很好，而且使用的人也不少，可以一用</li>
+  <li><a href="https://www.npmjs.com/package/alipay-sdk" target="_blank">Alipay SDK</a>：这个库是官方的，但封装得还没有上一个好，而且文档也很糟糕，但毕竟是官方的，所以还是首选</li>
+</ul>
+
+<p>官方SDK的使用需要了解：</p>
+
+<ul>
+  <li><a href="https://www.yuque.com/chenqiu/alipay-node-sdk/config-sdk" target="_blank">SDK 配置</a></li>
+  <li><a href="https://www.yuque.com/chenqiu/alipay-node-sdk/with_biz_content" target="_blank">包含业务参数</a></li>
+  <li><a href="https://www.yuque.com/chenqiu/alipay-node-sdk/without_biz_content" target="_blank">不包含业务参数</a></li>
+  <li><a href="https://www.yuque.com/chenqiu/alipay-node-sdk/page_api" target="_blank">页面类接口调用</a>：其实后续PC和APP下单用的都是这种模式，调用支付宝接口后获得对应的信息，然后返回给应用客户端，让它们触发后续流程</li>
+  <li><a href="https://www.yuque.com/chenqiu/alipay-node-sdk/notify_verify" target="_blank">通知验签</a></li>
+</ul>
+
+<p>此外，官方SDK有一个比较严重的BUG：<a href="https://github.com/alipay/alipay-sdk-nodejs-all/issues/45" target="_blank">设置了 passbackParams 会导致 alipaySdk.checkNotifySign 失败 #45</a>，会直接影响使用，需要注意。</p>
+
+<p>解决方案：</p>
+
+<figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span></span><span class="nx">payload</span><span class="p">.</span><span class="nx">passback_params</span> <span class="o">=</span> <span class="nb">encodeURIComponent</span><span class="p">(</span><span class="nx">payload</span><span class="p">.</span><span class="nx">passback_params</span><span class="p">)</span>
+<span class="kr">const</span> <span class="nx">verified</span> <span class="o">=</span> <span class="nx">alipaySdk</span><span class="p">.</span><span class="nx">checkNotifySign</span><span class="p">(</span><span class="nx">payload</span><span class="p">)</span></code></pre></figure>
+
+<h2 id="42-api使用基础">4.2 API使用基础</h2>
+<p>官方的API文档在：<a href="https://docs.open.alipay.com/api_1" target="_blank">支付API</a>。</p>
+
+<p>支付宝的API的接口，参数都分为<code>公共请求参数</code>以及<code>请求参数</code>。简单点来说：</p>
+
+<ul>
+  <li>公共请求参数：支付宝级别比较顶层的参数，比如说：app_id、sign等</li>
+  <li>请求参数：非公共请求参数之外的其他一切参数</li>
+</ul>
+
+<p>请求参数会放在公共请求参数的<code>biz_content</code>里，至于怎么放进去的可以不用关心，SDK都会直接封装掉。</p>
+
+<p>API的测试可以通过：<a href="https://openhome.alipay.com/platform/demoManage.htm#/alipay.trade.page.pay" target="_blank">在线调试(Beta)</a>来模拟使用。</p>
+
+<h2 id="43-常用接口">4.3 常用接口</h2>
+<p>官方SDK的初始化，沙箱和正式用的是两套秘钥，这块需要动态处理下：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">import</span> <span class="nx">AlipaySdk</span> <span class="nx">from</span> <span class="s2">&quot;alipay-sdk/lib/alipay&quot;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">AlipayFormData</span> <span class="nx">from</span> <span class="s2">&quot;alipay-sdk/lib/form&quot;</span><span class="p">;</span>
+
+<span class="c1">// ...</span>
+
+<span class="kr">const</span> <span class="nx">vendorConfig</span> <span class="o">=</span> <span class="nx">Config</span><span class="p">.</span><span class="nx">get</span><span class="p">().</span><span class="nx">getVendor</span><span class="p">(</span><span class="nx">Constant</span><span class="p">.</span><span class="nx">VENDOR_ALIPAY_ID</span><span class="p">)</span> <span class="kr">as</span> <span class="nx">IVendorConfigAlipay</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">isSandbox</span> <span class="o">=</span> <span class="nx">Config</span><span class="p">.</span><span class="nx">get</span><span class="p">().</span><span class="nx">getRaw</span><span class="p">().</span><span class="nx">sandbox</span><span class="p">;</span>
+
+<span class="k">this</span><span class="p">.</span><span class="nx">notifyUrl</span> <span class="o">=</span> <span class="nx">vendorConfig</span><span class="p">.</span><span class="nx">callbackUrl</span><span class="p">;</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">returnUrl</span> <span class="o">=</span> <span class="nx">vendorConfig</span><span class="p">.</span><span class="nx">returnUrl</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">pubKeyPath</span> <span class="o">=</span> <span class="nx">LibPath</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span>
+    <span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;../../../pem/alipay&quot;</span><span class="p">,</span> <span class="nx">isSandbox</span> <span class="o">?</span> <span class="s2">&quot;sandbox/alipay.pub.txt&quot;</span> <span class="o">:</span> <span class="s2">&quot;alipay.pub.txt&quot;</span><span class="p">,</span>
+<span class="p">);</span>
+<span class="kr">const</span> <span class="nx">priKeyPath</span> <span class="o">=</span> <span class="nx">LibPath</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span>
+    <span class="nx">__dirname</span><span class="p">,</span> <span class="s2">&quot;../../../pem/alipay&quot;</span><span class="p">,</span> <span class="nx">isSandbox</span> <span class="o">?</span> <span class="s2">&quot;sandbox/app.pri.txt&quot;</span> <span class="o">:</span> <span class="s2">&quot;app.pri.txt&quot;</span><span class="p">,</span>
+<span class="p">);</span>
+<span class="k">this</span><span class="p">.</span><span class="nx">gateway</span> <span class="o">=</span> <span class="nx">isSandbox</span>
+    <span class="o">?</span> <span class="s2">&quot;https://openapi.alipaydev.com/gateway.do&quot;</span>
+    <span class="o">:</span> <span class="s2">&quot;https://openapi.alipay.com/gateway.do&quot;</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;alipay::sdk::pubKeyPath&quot;</span><span class="p">,</span> <span class="nx">pubKeyPath</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;alipay::sdk::priKeyPath&quot;</span><span class="p">,</span> <span class="nx">priKeyPath</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;alipay::sdk::gateway&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">gateway</span><span class="p">);</span>
+
+<span class="k">this</span><span class="p">.</span><span class="nx">aliPay</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AlipaySdk</span><span class="p">({</span>
+    <span class="nx">appId</span>: <span class="kt">vendorConfig.appId</span><span class="p">,</span>
+    <span class="nx">alipayPublicKey</span>: <span class="kt">LibFs.readFileSync</span><span class="p">(</span><span class="nx">pubKeyPath</span><span class="p">).</span><span class="nx">toString</span><span class="p">(),</span>
+    <span class="nx">privateKey</span>: <span class="kt">LibFs.readFileSync</span><span class="p">(</span><span class="nx">priKeyPath</span><span class="p">).</span><span class="nx">toString</span><span class="p">(),</span>
+    <span class="nx">gateway</span>: <span class="kt">this.gateway</span><span class="p">,</span>
+    <span class="nx">signType</span><span class="o">:</span> <span class="s2">&quot;RSA2&quot;</span><span class="p">,</span>
+<span class="p">});</span></code></pre></figure>
+
+<h3 id="431-pc网页支付下单">4.3.1 PC网页支付下单</h3>
+<p>文档在：<a href="https://docs.open.alipay.com/api_1/alipay.trade.page.pay" target="_blank">alipay.trade.page.pay</a>。</p>
+
+<p>范例代码：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">const</span> <span class="nx">formData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AlipayFormData</span><span class="p">();</span>
+<span class="nx">formData</span><span class="p">.</span><span class="nx">addField</span><span class="p">(</span><span class="s2">&quot;returnUrl&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">returnUrl</span><span class="p">);</span>
+<span class="nx">formData</span><span class="p">.</span><span class="nx">addField</span><span class="p">(</span><span class="s2">&quot;notifyUrl&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">notifyUrl</span><span class="p">);</span>
+<span class="nx">formData</span><span class="p">.</span><span class="nx">addField</span><span class="p">(</span><span class="s2">&quot;bizContent&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">outTradeNo</span>: <span class="kt">orderId.toString</span><span class="p">(),</span>
+    <span class="nx">productCode</span><span class="o">:</span> <span class="s2">&quot;FAST_INSTANT_TRADE_PAY&quot;</span><span class="p">,</span>
+    <span class="nx">totalAmount</span>: <span class="kt">price</span><span class="p">,</span>
+    <span class="nx">subject</span>: <span class="kt">name</span><span class="p">,</span>
+    <span class="nx">body</span>: <span class="kt">desc</span><span class="p">,</span>
+    <span class="nx">passbackParams</span>: <span class="kt">encodeURIComponent</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({}})),</span>
+    <span class="nx">timeoutExpress</span><span class="o">:</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">seconds</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)}</span><span class="nx">m</span><span class="err">`</span><span class="p">,</span>
+    <span class="nx">qrPayMode</span>: <span class="kt">0</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="k">return</span> <span class="nx">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">aliPay</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span>
+    <span class="s2">&quot;alipay.trade.page.pay&quot;</span><span class="p">,</span>
+    <span class="p">{},</span>
+    <span class="p">{</span><span class="nx">formData</span><span class="p">,</span> <span class="nx">log</span><span class="o">:</span> <span class="p">{</span><span class="nx">info</span>: <span class="kt">console.log</span><span class="p">,</span> <span class="nx">error</span>: <span class="kt">console.log</span><span class="p">}},</span>
+<span class="p">);</span></code></pre></figure>
+
+<p>范例返回：</p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span></span><span class="p">&lt;</span><span class="nt">form</span> <span class="na">action</span><span class="o">=</span><span class="s">&quot;https://openapi.alipaydev.com/gateway.do?method=alipay.trade.page.pay&amp;app_id=...&amp;charset=utf-8&amp;version=1.0&amp;sign_type=RSA2&amp;timestamp=2019-XX-XX%2015%3A20%3A24&amp;return_url=...&amp;notify_url=...&amp;sign=...&quot;</span> <span class="na">method</span><span class="o">=</span><span class="s">&quot;post&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;alipaySDKSubmit1577431224474&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;alipaySDKSubmit1577431224474&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;hidden&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;alipay_sdk&quot;</span> <span class="na">value</span><span class="o">=</span><span class="s">&quot;alipay-sdk-nodejs-3.0.8&quot;</span> <span class="p">/&gt;&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;hidden&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;biz_content&quot;</span> <span class="na">value</span><span class="o">=</span><span class="s">&quot;{&amp;quot;out_trade_no&amp;quot;:143123,&amp;quot;product_code&amp;quot;:&amp;quot;FAST_INSTANT_TRADE_PAY...}&quot;</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nb">document</span><span class="p">.</span><span class="nx">forms</span><span class="p">[</span><span class="s2">&quot;alipaySDKSubmit1577431224474&quot;</span><span class="p">].</span><span class="nx">submit</span><span class="p">();&lt;/</span><span class="nt">script</span><span class="p">&gt;</span></code></pre></figure>
+
+<p>返回的是一个字符串，这串字符串交付给网页，让JS直接append到当前页面上，就会进行跳转（form.submit），到支付宝的页面让用户付款。</p>
+
+<h3 id="432-app支付下单">4.3.2 APP支付下单</h3>
+<p>文档在：<a href="https://docs.open.alipay.com/api_1/alipay.trade.app.pay" target="_blank">alipay.trade.app.pay</a>。</p>
+
+<p>范例代码：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">const</span> <span class="nx">formData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">AlipayFormData</span><span class="p">();</span>
+<span class="nx">formData</span><span class="p">.</span><span class="nx">setMethod</span><span class="p">(</span><span class="s2">&quot;get&quot;</span><span class="p">);</span>
+<span class="nx">formData</span><span class="p">.</span><span class="nx">addField</span><span class="p">(</span><span class="s2">&quot;notifyUrl&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">notifyUrl</span><span class="p">);</span>
+<span class="nx">formData</span><span class="p">.</span><span class="nx">addField</span><span class="p">(</span><span class="s2">&quot;bizContent&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">outTradeNo</span>: <span class="kt">orderId.toString</span><span class="p">(),</span>
+    <span class="nx">productCode</span><span class="o">:</span> <span class="s2">&quot;QUICK_MSECURITY_PAY&quot;</span><span class="p">,</span>
+    <span class="nx">totalAmount</span>: <span class="kt">price.toString</span><span class="p">(),</span>
+    <span class="nx">subject</span>: <span class="kt">name</span><span class="p">,</span>
+    <span class="nx">body</span>: <span class="kt">desc</span><span class="p">,</span>
+    <span class="nx">passbackParams</span>: <span class="kt">encodeURIComponent</span><span class="p">(</span><span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">({}})),</span>
+    <span class="nx">timeoutExpress</span><span class="o">:</span> <span class="err">`</span><span class="nx">$</span><span class="p">{</span><span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">seconds</span> <span class="o">/</span> <span class="mi">60</span><span class="p">)}</span><span class="nx">m</span><span class="err">`</span><span class="p">,</span>
+<span class="p">});</span>
+
+<span class="k">return</span> <span class="nx">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">aliPay</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span>
+    <span class="s2">&quot;alipay.trade.app.pay&quot;</span><span class="p">,</span>
+    <span class="p">{},</span>
+    <span class="p">{</span><span class="nx">formData</span><span class="p">,</span> <span class="nx">log</span><span class="o">:</span> <span class="p">{</span><span class="nx">info</span>: <span class="kt">console.log</span><span class="p">,</span> <span class="nx">error</span>: <span class="kt">console.log</span><span class="p">}},</span>
+<span class="p">)</span> <span class="kr">as</span> <span class="kt">string</span><span class="p">;</span></code></pre></figure>
+
+<p>范例返回：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>https://openapi.alipaydev.com/gateway.do?method<span class="o">=</span>alipay.trade.app.pay<span class="p">&amp;</span><span class="nv">app_id</span><span class="o">=</span>...<span class="p">&amp;</span><span class="nv">charset</span><span class="o">=</span>utf-8<span class="p">&amp;</span><span class="nv">version</span><span class="o">=</span><span class="m">1</span>.0<span class="p">&amp;</span><span class="nv">sign_type</span><span class="o">=</span>RSA2<span class="p">&amp;</span><span class="nv">timestamp</span><span class="o">=</span><span class="m">2019</span>-XX-XX%2015%3A23%3A25<span class="p">&amp;</span><span class="nv">notify_url</span><span class="o">=</span>...</code></pre></figure>
+
+<p>这一串字符串需要去掉头部的gateway：<code>https://openapi.alipaydev.com/gateway.do?</code>，只需要把剩下的参数部分交付给移动APP即可，移动APP会使用这些参数唤醒支付宝APP。</p>
+
+<h3 id="433-支付宝订单查询">4.3.3 支付宝订单查询</h3>
+<p>文档在：<a href="https://docs.open.alipay.com/api_1/alipay.trade.query" target="_blank">alipay.trade.query</a>。</p>
+
+<p>范例代码：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="k">return</span> <span class="nx">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">aliPay</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="s2">&quot;alipay.trade.query&quot;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">bizContent</span><span class="o">:</span> <span class="p">{</span><span class="nx">out_trade_no</span>: <span class="kt">orderId.toString</span><span class="p">()},</span>
+<span class="p">},</span> <span class="p">{</span><span class="nx">log</span><span class="o">:</span> <span class="p">{</span><span class="nx">info</span>: <span class="kt">console.log</span><span class="p">,</span> <span class="nx">error</span>: <span class="kt">console.log</span><span class="p">}})</span> <span class="kr">as</span> <span class="nx">any</span><span class="p">;</span></code></pre></figure>
+
+<p>返回的结果详见文档。</p>
+
+<h2 id="44-回调处理">4.4 回调处理</h2>
+<h3 id="441-return_url">4.4.1 return_url</h3>
+<p>在return_url上收到的参数如下：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+    <span class="nt">&quot;charset&quot;</span><span class="p">:</span> <span class="s2">&quot;utf-8&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;out_trade_no&quot;</span><span class="p">:</span> <span class="s2">&quot;143123&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;method&quot;</span><span class="p">:</span> <span class="s2">&quot;alipay.trade.page.pay.return&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;total_amount&quot;</span><span class="p">:</span> <span class="s2">&quot;0.01&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;sign&quot;</span><span class="p">:</span> <span class="s2">&quot;B5wBu/icxG9u12XyBKUu...&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;auth_app_id&quot;</span><span class="p">:</span> <span class="s2">&quot;201...422&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;version&quot;</span><span class="p">:</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;app_id&quot;</span><span class="p">:</span> <span class="s2">&quot;201...422&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;sign_type&quot;</span><span class="p">:</span> <span class="s2">&quot;RSA2&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;seller_id&quot;</span><span class="p">:</span> <span class="s2">&quot;208...342&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;timestamp&quot;</span><span class="p">:</span> <span class="s2">&quot;2019-XX-XX 15:48:17&quot;</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="442-notify_url">4.4.2 notify_url</h3>
+<p>在notify_url上收到的参数如下：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span> <span class="err">gmt_create:</span> <span class="err">&#39;2019-XX-XX</span> <span class="err">15:48:01&#39;,</span>
+  <span class="err">charset:</span> <span class="err">&#39;utf-8&#39;,</span>
+  <span class="err">subject:</span> <span class="err">&#39;测试商品名&#39;,</span>
+  <span class="err">sign:</span>
+   <span class="err">&#39;OMcW3K9Sy...&#39;,</span>
+  <span class="err">buyer_id:</span> <span class="err">&#39;208...342&#39;,</span>
+  <span class="err">body:</span> <span class="err">&#39;测试商品描述&#39;,</span>
+  <span class="err">invoice_amount:</span> <span class="err">&#39;0.01&#39;,</span>
+  <span class="err">notify_id:</span> <span class="err">&#39;2019...589&#39;,</span>
+  <span class="err">fund_bill_list:</span> <span class="err">&#39;[{</span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="s2">&quot;0.01&quot;</span><span class="p">,</span><span class="nt">&quot;fundChannel&quot;</span><span class="p">:</span><span class="s2">&quot;ALIPAYACCOUNT&quot;</span><span class="p">}</span><span class="err">]&#39;,</span>
+  <span class="err">notify_type:</span> <span class="err">&#39;trade_status_sync&#39;,</span>
+  <span class="err">trade_status:</span> <span class="err">&#39;TRADE_SUCCESS&#39;,</span>
+  <span class="err">receipt_amount:</span> <span class="err">&#39;</span><span class="mf">0.01</span><span class="err">&#39;,</span>
+  <span class="err">app_id:</span> <span class="err">&#39;</span><span class="mi">201</span><span class="err">...</span><span class="mi">422</span><span class="err">&#39;,</span>
+  <span class="err">buyer_pay_amount:</span> <span class="err">&#39;</span><span class="mf">0.01</span><span class="err">&#39;,</span>
+  <span class="err">sign_type:</span> <span class="err">&#39;RSA</span><span class="mi">2</span><span class="err">&#39;,</span>
+  <span class="err">seller_id:</span> <span class="err">&#39;</span><span class="mi">208</span><span class="err">...</span><span class="mi">342</span><span class="err">&#39;,</span>
+  <span class="err">gmt_payment:</span> <span class="err">&#39;</span><span class="mi">2019</span><span class="err">-XX-XX</span> <span class="mi">15</span><span class="err">:</span><span class="mi">48</span><span class="err">:</span><span class="mi">15</span><span class="err">&#39;,</span>
+  <span class="err">notify_time:</span> <span class="err">&#39;</span><span class="mi">2019</span><span class="err">-XX-XX</span> <span class="mi">15</span><span class="err">:</span><span class="mi">48</span><span class="err">:</span><span class="mi">16</span><span class="err">&#39;,</span>
+  <span class="err">passback_params:</span>
+   <span class="err">&#39;%</span><span class="mi">7</span><span class="err">B%</span><span class="mi">22</span><span class="err">orderId%</span><span class="mi">22</span><span class="err">%</span><span class="mi">3</span><span class="err">A</span><span class="mi">143123</span><span class="err">%</span><span class="mi">2</span><span class="err">C%</span><span class="mi">22</span><span class="err">salt%</span><span class="mi">22</span><span class="err">%</span><span class="mi">3</span><span class="err">A%</span><span class="mi">221</span><span class="err">fvwtia</span><span class="mi">2</span><span class="err">k</span><span class="mi">4</span><span class="err">nuszx</span><span class="mi">2</span><span class="err">%</span><span class="mi">22</span><span class="err">%</span><span class="mi">7</span><span class="err">D&#39;,</span>
+  <span class="err">version:</span> <span class="err">&#39;</span><span class="mf">1.0</span><span class="err">&#39;,</span>
+  <span class="err">out_trade_no:</span> <span class="err">&#39;</span><span class="mi">143123</span><span class="err">&#39;,</span>
+  <span class="err">total_amount:</span> <span class="err">&#39;</span><span class="mf">0.01</span><span class="err">&#39;,</span>
+  <span class="err">trade_no:</span> <span class="err">&#39;</span><span class="mi">2019</span><span class="err">...</span><span class="mi">383</span><span class="err">&#39;,</span>
+  <span class="err">auth_app_id:</span> <span class="err">&#39;</span><span class="mi">201</span><span class="err">...</span><span class="mi">422</span><span class="err">&#39;,</span>
+  <span class="err">point_amount:</span> <span class="err">&#39;</span><span class="mf">0.00</span><span class="err">&#39;</span> 
+<span class="err">}</span></code></pre></figure>
+
+<h1 id="5-沙箱使用">5. 沙箱使用</h1>
+<p>官方文档在：<a href="https://docs.open.alipay.com/200/105311/" target="_blank">开发文档 / 开发指南 / 使用沙箱环境</a>。移动APP的沙箱使用还需要一些额外的调整：<a href="https://docs.open.alipay.com/204/106450/" target="_blank">开发文档 / App支付 / 沙箱联调指南</a>。</p>
+
+<h2 id="51-沙箱申请">5.1 沙箱申请</h2>
+<p>沙箱不需要额外申请，在支付应用创建完成之后，其沙箱自动创建完成。</p>
+
+<h2 id="52-沙箱管理">5.2 沙箱管理</h2>
+<p>沙箱有单独的管理页面，上面主要要处理两个事情：</p>
+
+<ul>
+  <li>获取沙箱的APP ID；沙箱应用是单独的应用，和正式应用是隔离的，在沙箱环境使用正式应用的APP ID会告知没有该应用，反之亦然</li>
+  <li>制作沙箱单独的秘钥；该秘钥和正式环境是隔离的，需要单独制作</li>
+  <li>获取沙箱支付宝APP的账号和密码以及支付密码；在测试的时候会使用到</li>
+</ul>
+
+<h2 id="53-沙箱支付">5.3 沙箱支付</h2>
+<p>沙箱环境有单独的一个调试用支付宝APP，只有android版本：<a href="https://sandbox.alipaydev.com/user/downloadApp.htm" target="_blank">下载链接</a>。</p>
+
+<p>在沙箱管理页面上能获取到对应的账号信息等。使用这些信息登入支付宝沙箱APP，然后就可以进行测试支付了。</p>
+
+<h1 id="6-错误处理">6. 错误处理</h1>
+<h2 id="61-回调处理">6.1 回调处理</h2>
+<p>无论对错，业务服务器后端都需要以<code>text/plain</code>的格式响应，如果回调处理没有问题，就返回<code>success</code>，如果报错，则返回<code>fail</code>。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="k">try</span> <span class="p">{</span>
+    <span class="c1">// 在这里处理业务</span>
+
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="s2">&quot;success&quot;</span><span class="p">;</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">err</span><span class="p">);</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="s2">&quot;text/plain&quot;</span><span class="p">;</span>
+    <span class="nx">ctx</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="s2">&quot;fail&quot;</span><span class="p">;</span>
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="62-修复订单">6.2 修复订单</h2>
+<p>在某些情况下，回调可能没有收到，或者一直报错导致回调没有正常处理。表现在用户视角，就是支付完成后订单状态无法正常改为支付完成（也就不会发货）。这是很糟糕的，因此需要制作修复订单功能。</p>
+
+<p>客户端在检查到订单状态为等待支付之后，可以提供一个入口给用户，用户点击之后，应用后端应该向支付宝查询订单信息，如果在支付宝这里已经是<code>已支付</code>而在应用这边还是<code>等待支付</code>的话，就立即将业务订单改为已支付，并向用户发货。</p>
+
+<h1 id="7-上线生效">7. 上线生效</h1>
+<p>开发完成（甚至在这之前）就可以<a href="https://docs.open.alipay.com/200/golive/" target="_blank">上线应用</a>，之前在申请应用的时候提到过的功能开通，签约等，很大一部分都需要应用上线之后才可以做，所以这个操作可以尽早。最基础的支付功能基本上签约没什么难度，早点签约早点开通。</p>
+
+<h1 id="appendix">Appendix</h1>
+<h2 id="链接">链接</h2>
+<ul>
+  <li><a href="https://blog.csdn.net/weibo1230123/article/details/80214424" target="_blank">支付宝和微信的支付流程图</a></li>
+  <li><a href="https://www.cnblogs.com/xch-yang/p/10336922.html" target="_blank">手把手教你接入支付宝支付</a></li>
+  <li><a href="https://www.cnblogs.com/luckyyang/p/9517402.html" target="_blank">支付宝支付之扫码支付（电脑网站支付）、H5支付（手机网站支付）相关业务流程分析总结</a></li>
+  <li><a href="https://my.oschina.net/u/2428791/blog/617651" target="_blank">支付宝支付接口中notify_url 与 return_url 的区别</a></li>
+</ul>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2019/12/alipay/">支付宝接入</a></li>
+    
+    <li><a href="/2019/12/docker-registry/">Docker Registry 的简单使用</a></li>
+    
+    <li><a href="/2019/12/gitea-note/">Gitea简单介绍及使用</a></li>
+    
+    <li><a href="/2019/12/consul-note/">Consul Notes</a></li>
+    
+    <li><a href="/2019/12/drone-ci/">使用Drone进行CI支持</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+      <li><a href="/category/Tor">Tor</a></li>
+    
+      <li><a href="/category/Node.js">Node.js</a></li>
+    
+      <li><a href="/category/CI">CI</a></li>
+    
+      <li><a href="/category/ServiceDiscovery">ServiceDiscovery</a></li>
+    
+      <li><a href="/category/Git">Git</a></li>
+    
+      <li><a href="/category/Payment">Payment</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2019/12/alipay/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
