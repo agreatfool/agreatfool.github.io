@@ -343,7 +343,7 @@
     &lt;span class=&quot;nx&quot;&gt;bizContent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;out_trade_no&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;orderId.toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()},&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}})&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;p&gt;返回的结果详见文档。&lt;/p&gt;
+&lt;p&gt;返回的结果详见官方API文档。&lt;/p&gt;
 
 &lt;h2 id=&quot;44-回调处理&quot;&gt;4.4 回调处理&lt;/h2&gt;
 &lt;h3 id=&quot;441-return_url&quot;&gt;4.4.1 return_url&lt;/h3&gt;
@@ -366,34 +366,33 @@
 &lt;h3 id=&quot;442-notify_url&quot;&gt;4.4.2 notify_url&lt;/h3&gt;
 &lt;p&gt;在notify_url上收到的参数如下：&lt;/p&gt;
 
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;gmt_create:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;2019-XX-XX&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;15:48:01&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;charset:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;utf-8&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;subject:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;测试商品名&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;sign:&lt;/span&gt;
-   &lt;span class=&quot;err&quot;&gt;&amp;#39;OMcW3K9Sy...&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;buyer_id:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;208...342&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;body:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;测试商品描述&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;invoice_amount:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;0.01&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;notify_id:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;2019...589&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;fund_bill_list:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;[{&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;quot;amount&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;quot;fundChannel&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;ALIPAYACCOUNT&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;]&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;notify_type:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;trade_status_sync&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;trade_status:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;TRADE_SUCCESS&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;receipt_amount:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;app_id:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;201&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;422&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;buyer_pay_amount:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;sign_type:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;RSA&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;seller_id:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;208&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;342&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;gmt_payment:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2019&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-XX-XX&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;48&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;notify_time:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2019&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;-XX-XX&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;48&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;16&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;passback_params:&lt;/span&gt;
-   &lt;span class=&quot;err&quot;&gt;&amp;#39;%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;B%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;orderId%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;143123&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;C%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;salt%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;A%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;221&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;fvwtia&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;k&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;nuszx&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;22&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;%&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;D&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;out_trade_no:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;143123&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;total_amount:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;trade_no:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2019&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;383&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;auth_app_id:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;201&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;422&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;,&lt;/span&gt;
-  &lt;span class=&quot;err&quot;&gt;point_amount:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.00&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;&amp;#39;&lt;/span&gt; 
-&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
+  &lt;span class=&quot;err&quot;&gt;gmt_create:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;2019-XX-XX 15:48:01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;charset:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;subject:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;测试商品名&amp;quot;&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  sign: &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;OMcW&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;K&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Sy...&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  buyer_id: &amp;quot;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;208&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;342&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  body: &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;测试商品描述&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  invoice_amount: &amp;quot;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  notify_id: &amp;quot;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2019&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;589&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;  fund_bill_list: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;quot;amount\&amp;quot;:\&amp;quot;0.01\&amp;quot;,\&amp;quot;fundChannel\&amp;quot;:\&amp;quot;ALIPAYACCOUNT\&amp;quot;}]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;notify_type:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;trade_status_sync&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;trade_status:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;TRADE_SUCCESS&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;receipt_amount:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;app_id:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;201...422&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;buyer_pay_amount:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;sign_type:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;RSA2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;seller_id:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;208...342&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;gmt_payment:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;2019-XX-XX 15:48:15&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;notify_time:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;2019-XX-XX 15:48:16&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;passback_params:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;%7B%22orderId%22%3A143123%2C%22salt%22%3A%221fvwtia2k4nuszx2%22%7D&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;version:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;out_trade_no:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;143123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;total_amount:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;trade_no:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;2019...383&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;auth_app_id:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;201...422&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;err&quot;&gt;point_amount:&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;&amp;quot;0.00&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;h1 id=&quot;5-沙箱使用&quot;&gt;5. 沙箱使用&lt;/h1&gt;
 &lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.open.alipay.com/200/105311/&quot; target=&quot;_blank&quot;&gt;开发文档 / 开发指南 / 使用沙箱环境&lt;/a&gt;。移动APP的沙箱使用还需要一些额外的调整：&lt;a href=&quot;https://docs.open.alipay.com/204/106450/&quot; target=&quot;_blank&quot;&gt;开发文档 / App支付 / 沙箱联调指南&lt;/a&gt;。&lt;/p&gt;
@@ -402,7 +401,7 @@
 &lt;p&gt;沙箱不需要额外申请，在支付应用创建完成之后，其沙箱自动创建完成。&lt;/p&gt;
 
 &lt;h2 id=&quot;52-沙箱管理&quot;&gt;5.2 沙箱管理&lt;/h2&gt;
-&lt;p&gt;沙箱有单独的管理页面，上面主要要处理两个事情：&lt;/p&gt;
+&lt;p&gt;沙箱有单独的管理页面，上面主要要处理几个事情：&lt;/p&gt;
 
 &lt;ul&gt;
   &lt;li&gt;获取沙箱的APP ID；沙箱应用是单独的应用，和正式应用是隔离的，在沙箱环境使用正式应用的APP ID会告知没有该应用，反之亦然&lt;/li&gt;
@@ -411,7 +410,7 @@
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;53-沙箱支付&quot;&gt;5.3 沙箱支付&lt;/h2&gt;
-&lt;p&gt;沙箱环境有单独的一个调试用支付宝APP，只有android版本：&lt;a href=&quot;https://sandbox.alipaydev.com/user/downloadApp.htm&quot; target=&quot;_blank&quot;&gt;下载链接&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;沙箱环境有单独的一个调试用支付宝APP（用正常的支付宝APP扫码会失败，也无法被沙箱应用唤醒），只有android版本：&lt;a href=&quot;https://sandbox.alipaydev.com/user/downloadApp.htm&quot; target=&quot;_blank&quot;&gt;下载链接&lt;/a&gt;。&lt;/p&gt;
 
 &lt;p&gt;在沙箱管理页面上能获取到对应的账号信息等。使用这些信息登入支付宝沙箱APP，然后就可以进行测试支付了。&lt;/p&gt;
 

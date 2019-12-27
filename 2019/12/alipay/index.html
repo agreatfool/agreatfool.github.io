@@ -498,7 +498,7 @@
     <span class="nx">bizContent</span><span class="o">:</span> <span class="p">{</span><span class="nx">out_trade_no</span>: <span class="kt">orderId.toString</span><span class="p">()},</span>
 <span class="p">},</span> <span class="p">{</span><span class="nx">log</span><span class="o">:</span> <span class="p">{</span><span class="nx">info</span>: <span class="kt">console.log</span><span class="p">,</span> <span class="nx">error</span>: <span class="kt">console.log</span><span class="p">}})</span> <span class="kr">as</span> <span class="nx">any</span><span class="p">;</span></code></pre></figure>
 
-<p>返回的结果详见文档。</p>
+<p>返回的结果详见官方API文档。</p>
 
 <h2 id="44-回调处理">4.4 回调处理</h2>
 <h3 id="441-return_url">4.4.1 return_url</h3>
@@ -521,34 +521,33 @@
 <h3 id="442-notify_url">4.4.2 notify_url</h3>
 <p>在notify_url上收到的参数如下：</p>
 
-<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span> <span class="err">gmt_create:</span> <span class="err">&#39;2019-XX-XX</span> <span class="err">15:48:01&#39;,</span>
-  <span class="err">charset:</span> <span class="err">&#39;utf-8&#39;,</span>
-  <span class="err">subject:</span> <span class="err">&#39;测试商品名&#39;,</span>
-  <span class="err">sign:</span>
-   <span class="err">&#39;OMcW3K9Sy...&#39;,</span>
-  <span class="err">buyer_id:</span> <span class="err">&#39;208...342&#39;,</span>
-  <span class="err">body:</span> <span class="err">&#39;测试商品描述&#39;,</span>
-  <span class="err">invoice_amount:</span> <span class="err">&#39;0.01&#39;,</span>
-  <span class="err">notify_id:</span> <span class="err">&#39;2019...589&#39;,</span>
-  <span class="err">fund_bill_list:</span> <span class="err">&#39;[{</span><span class="nt">&quot;amount&quot;</span><span class="p">:</span><span class="s2">&quot;0.01&quot;</span><span class="p">,</span><span class="nt">&quot;fundChannel&quot;</span><span class="p">:</span><span class="s2">&quot;ALIPAYACCOUNT&quot;</span><span class="p">}</span><span class="err">]&#39;,</span>
-  <span class="err">notify_type:</span> <span class="err">&#39;trade_status_sync&#39;,</span>
-  <span class="err">trade_status:</span> <span class="err">&#39;TRADE_SUCCESS&#39;,</span>
-  <span class="err">receipt_amount:</span> <span class="err">&#39;</span><span class="mf">0.01</span><span class="err">&#39;,</span>
-  <span class="err">app_id:</span> <span class="err">&#39;</span><span class="mi">201</span><span class="err">...</span><span class="mi">422</span><span class="err">&#39;,</span>
-  <span class="err">buyer_pay_amount:</span> <span class="err">&#39;</span><span class="mf">0.01</span><span class="err">&#39;,</span>
-  <span class="err">sign_type:</span> <span class="err">&#39;RSA</span><span class="mi">2</span><span class="err">&#39;,</span>
-  <span class="err">seller_id:</span> <span class="err">&#39;</span><span class="mi">208</span><span class="err">...</span><span class="mi">342</span><span class="err">&#39;,</span>
-  <span class="err">gmt_payment:</span> <span class="err">&#39;</span><span class="mi">2019</span><span class="err">-XX-XX</span> <span class="mi">15</span><span class="err">:</span><span class="mi">48</span><span class="err">:</span><span class="mi">15</span><span class="err">&#39;,</span>
-  <span class="err">notify_time:</span> <span class="err">&#39;</span><span class="mi">2019</span><span class="err">-XX-XX</span> <span class="mi">15</span><span class="err">:</span><span class="mi">48</span><span class="err">:</span><span class="mi">16</span><span class="err">&#39;,</span>
-  <span class="err">passback_params:</span>
-   <span class="err">&#39;%</span><span class="mi">7</span><span class="err">B%</span><span class="mi">22</span><span class="err">orderId%</span><span class="mi">22</span><span class="err">%</span><span class="mi">3</span><span class="err">A</span><span class="mi">143123</span><span class="err">%</span><span class="mi">2</span><span class="err">C%</span><span class="mi">22</span><span class="err">salt%</span><span class="mi">22</span><span class="err">%</span><span class="mi">3</span><span class="err">A%</span><span class="mi">221</span><span class="err">fvwtia</span><span class="mi">2</span><span class="err">k</span><span class="mi">4</span><span class="err">nuszx</span><span class="mi">2</span><span class="err">%</span><span class="mi">22</span><span class="err">%</span><span class="mi">7</span><span class="err">D&#39;,</span>
-  <span class="err">version:</span> <span class="err">&#39;</span><span class="mf">1.0</span><span class="err">&#39;,</span>
-  <span class="err">out_trade_no:</span> <span class="err">&#39;</span><span class="mi">143123</span><span class="err">&#39;,</span>
-  <span class="err">total_amount:</span> <span class="err">&#39;</span><span class="mf">0.01</span><span class="err">&#39;,</span>
-  <span class="err">trade_no:</span> <span class="err">&#39;</span><span class="mi">2019</span><span class="err">...</span><span class="mi">383</span><span class="err">&#39;,</span>
-  <span class="err">auth_app_id:</span> <span class="err">&#39;</span><span class="mi">201</span><span class="err">...</span><span class="mi">422</span><span class="err">&#39;,</span>
-  <span class="err">point_amount:</span> <span class="err">&#39;</span><span class="mf">0.00</span><span class="err">&#39;</span> 
-<span class="err">}</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span> 
+  <span class="err">gmt_create:</span> <span class="nt">&quot;2019-XX-XX 15:48:01&quot;</span><span class="p">,</span>
+  <span class="err">charset:</span> <span class="nt">&quot;utf-8&quot;</span><span class="p">,</span>
+  <span class="err">subject:</span> <span class="nt">&quot;测试商品名&quot;</span><span class="s2">&quot;,</span>
+<span class="s2">  sign: &quot;</span><span class="err">OMcW</span><span class="mi">3</span><span class="err">K</span><span class="mi">9</span><span class="err">Sy...</span><span class="s2">&quot;,</span>
+<span class="s2">  buyer_id: &quot;</span><span class="mi">208</span><span class="err">...</span><span class="mi">342</span><span class="s2">&quot;,</span>
+<span class="s2">  body: &quot;</span><span class="err">测试商品描述</span><span class="s2">&quot;,</span>
+<span class="s2">  invoice_amount: &quot;</span><span class="mf">0.01</span><span class="s2">&quot;,</span>
+<span class="s2">  notify_id: &quot;</span><span class="mi">2019</span><span class="err">...</span><span class="mi">589</span><span class="s2">&quot;,</span>
+<span class="s2">  fund_bill_list: &quot;</span><span class="p">[{</span><span class="err">\</span><span class="nt">&quot;amount\&quot;:\&quot;0.01\&quot;,\&quot;fundChannel\&quot;:\&quot;ALIPAYACCOUNT\&quot;}]&quot;</span><span class="p">,</span>
+  <span class="err">notify_type:</span> <span class="nt">&quot;trade_status_sync&quot;</span><span class="p">,</span>
+  <span class="err">trade_status:</span> <span class="nt">&quot;TRADE_SUCCESS&quot;</span><span class="p">,</span>
+  <span class="err">receipt_amount:</span> <span class="nt">&quot;0.01&quot;</span><span class="p">,</span>
+  <span class="err">app_id:</span> <span class="nt">&quot;201...422&quot;</span><span class="p">,</span>
+  <span class="err">buyer_pay_amount:</span> <span class="nt">&quot;0.01&quot;</span><span class="p">,</span>
+  <span class="err">sign_type:</span> <span class="nt">&quot;RSA2&quot;</span><span class="p">,</span>
+  <span class="err">seller_id:</span> <span class="nt">&quot;208...342&quot;</span><span class="p">,</span>
+  <span class="err">gmt_payment:</span> <span class="nt">&quot;2019-XX-XX 15:48:15&quot;</span><span class="p">,</span>
+  <span class="err">notify_time:</span> <span class="nt">&quot;2019-XX-XX 15:48:16&quot;</span><span class="p">,</span>
+  <span class="err">passback_params:</span> <span class="nt">&quot;%7B%22orderId%22%3A143123%2C%22salt%22%3A%221fvwtia2k4nuszx2%22%7D&quot;</span><span class="p">,</span>
+  <span class="err">version:</span> <span class="nt">&quot;1.0&quot;</span><span class="p">,</span>
+  <span class="err">out_trade_no:</span> <span class="nt">&quot;143123&quot;</span><span class="p">,</span>
+  <span class="err">total_amount:</span> <span class="nt">&quot;0.01&quot;</span><span class="p">,</span>
+  <span class="err">trade_no:</span> <span class="nt">&quot;2019...383&quot;</span><span class="p">,</span>
+  <span class="err">auth_app_id:</span> <span class="nt">&quot;201...422&quot;</span><span class="p">,</span>
+  <span class="err">point_amount:</span> <span class="nt">&quot;0.00&quot;</span>
+<span class="p">}</span></code></pre></figure>
 
 <h1 id="5-沙箱使用">5. 沙箱使用</h1>
 <p>官方文档在：<a href="https://docs.open.alipay.com/200/105311/" target="_blank">开发文档 / 开发指南 / 使用沙箱环境</a>。移动APP的沙箱使用还需要一些额外的调整：<a href="https://docs.open.alipay.com/204/106450/" target="_blank">开发文档 / App支付 / 沙箱联调指南</a>。</p>
@@ -557,7 +556,7 @@
 <p>沙箱不需要额外申请，在支付应用创建完成之后，其沙箱自动创建完成。</p>
 
 <h2 id="52-沙箱管理">5.2 沙箱管理</h2>
-<p>沙箱有单独的管理页面，上面主要要处理两个事情：</p>
+<p>沙箱有单独的管理页面，上面主要要处理几个事情：</p>
 
 <ul>
   <li>获取沙箱的APP ID；沙箱应用是单独的应用，和正式应用是隔离的，在沙箱环境使用正式应用的APP ID会告知没有该应用，反之亦然</li>
@@ -566,7 +565,7 @@
 </ul>
 
 <h2 id="53-沙箱支付">5.3 沙箱支付</h2>
-<p>沙箱环境有单独的一个调试用支付宝APP，只有android版本：<a href="https://sandbox.alipaydev.com/user/downloadApp.htm" target="_blank">下载链接</a>。</p>
+<p>沙箱环境有单独的一个调试用支付宝APP（用正常的支付宝APP扫码会失败，也无法被沙箱应用唤醒），只有android版本：<a href="https://sandbox.alipaydev.com/user/downloadApp.htm" target="_blank">下载链接</a>。</p>
 
 <p>在沙箱管理页面上能获取到对应的账号信息等。使用这些信息登入支付宝沙箱APP，然后就可以进行测试支付了。</p>
 
