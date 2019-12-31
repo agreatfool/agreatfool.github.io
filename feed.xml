@@ -2140,6 +2140,8 @@ server {
 &lt;h2 id=&quot;资料&quot;&gt;资料&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;&lt;a href=&quot;https://my.oschina.net/qiangmzsx/blog/1634206&quot; target=&quot;_blank&quot;&gt;consul服务注册与服务发现的巨坑&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://juejin.im/post/5d2d0c736fb9a07eb67dc156&quot; target=&quot;_blank&quot;&gt;Node.js + Consul 实现服务注册、健康检查、配置中心&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.hi-linux.com/posts/36431.html&quot; target=&quot;_blank&quot;&gt;通过 Consul-Template 实现动态配置服务&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;ID_APP_AGENT_HELP&quot;&gt;consul agent –help&lt;/h2&gt;
