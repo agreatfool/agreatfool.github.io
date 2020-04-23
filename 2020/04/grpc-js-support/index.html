@@ -2,13 +2,13 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>About | Xenojoshua</title>
+  <title>grpc_tools_node_protoc_ts 对 @grpc/grpc-js 的支持 | Xenojoshua</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://xenojoshua.com/js/jquery.min.js"></script>
   <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
   <script src="https://xenojoshua.com/js/header.js"></script>
   <script src="https://xenojoshua.com/js/toc.js"></script>
-  <link href="https://xenojoshua.com//about/" rel="canonical" />
+  <link href="https://xenojoshua.com//2020/04/grpc-js-support/" rel="canonical" />
   <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
   <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
@@ -146,62 +146,49 @@
     <div class="container container-center">
       <div class="row">
         <div class="col-md-8">
-          <div class="well">
-            <h3 id="dark-version-of-jekyll-clean-theme">Dark version of jekyll-clean theme</h3>
-
-<p>This theme was created on top of Jekyll Clean theme by Scotte, you can view the originnal version in action <a href="https://scotte.github.io">on his blog</a>.</p>
-
-<ul>
-  <li>Get it from <a href="https://github.com/streetturtle/jekyll-clean-dark">github</a>.</li>
-  <li>See the <a href="http://pavelmakhov.com/jekyll-clean-dark">live demo</a>.</li>
-  <li>See it <a href="http://pavelmakhov.com">in action on my own blog</a>.</li>
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2020/04/grpc-js-support/">grpc_tools_node_protoc_ts 对 @grpc/grpc-js 的支持</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>23 Apr 2020</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/JavaScript">JavaScript</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Node.js">Node.js</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/gRPC">gRPC</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-grpcgrpc-js" id="markdown-toc-1-grpcgrpc-js">1. @grpc/grpc-js</a></li>
 </ul>
 
-<p>This theme uses some parts of Twitter Bootstrap, which allows it to look nice on a mobile devices using a collapsable nav bar and hiding the
-sidebar.</p>
+<h2 id="1-grpcgrpc-js">1. @grpc/grpc-js</h2>
+<p>最近<a href="https://www.npmjs.com/package/grpc_tools_node_protoc_ts" target="_blank">grpc_tools_node_protoc_ts</a>收到一个issue，问我可不可以支持<a href="https://www.npmjs.com/package/@grpc/grpc-js" target="_blank">@grpc/grpc-js</a>。</p>
 
-<p>Optionally you can use:</p>
+<p>这个库倒是不陌生，前几年就已经有了，只不过一直都没有过1.0的正式版本，一直在开发阶段。最近看了下，已经到<code>1.0.1</code>版本了，基本上功能完备。和提issue的人讨论了下，主要诉求是使用这个纯js实现的库做到更小的docker镜像，以及在electron这种容器中使用的时候更容易构建。应该说理由还是相当充分的，于是就花了1天多点的时间做了下migration。</p>
 
-<ul>
-  <li><a href="http://disqus.com">Disqus</a> as a comments system;</li>
-  <li><a href="http://www.google.com/analytics/">Google Analyticse</a>;</li>
-  <li><a href="http://metrica.yandex.com">Yandex Metrika</a>;</li>
-  <li>Blog tags.</li>
-</ul>
-
-<p>All these features could be set up in <code>_config.yml</code>. Also you can have social icons which could lead to your social acounts. Out-of-the box it has: LinkedIn, GitHub, StackOverflow, LastFm, Instagram. You can easily add more by putting svg images in a /css/social folder.</p>
-
-<h1 id="installation">Installation</h1>
-
-<p>If you dont’t have your own blog you can clone this repository and put your articles in a <code>_posts</code> folder.
-If you already have your own blog then I think you can clone this repository and copy-paste content keeping your <code>_posts</code> folder.</p>
-
-<p>After you will have to set up your <code>_config.yml</code></p>
-
-<h1 id="license">License</h1>
-
-<p>The content of this theme is distributed and licensed under a
-<a href="https://creativecommons.org/licenses/by/4.0/legalcode">Creative Commons Attribution 4.0 License</a></p>
+<p>因为版本做完之后用英文已经写过一遍文档了，这里就不啰嗦了，直接看英语文档即可：<a href="https://github.com/agreatfool/grpc_tools_node_protoc_ts/blob/master/doc/grpcjs_support.md" target="_blank">@grpc/grpc-js support</a>。</p>
 
 <blockquote>
-  <p>This license lets others distribute, remix, tweak, and build upon your work,
-even commercially, as long as they credit you for the original creation. This
-is the most accommodating of licenses offered. Recommended for maximum
-dissemination and use of licensed materials.</p>
+  <p>EOF</p>
 </blockquote>
 
-<p>In other words: you can do anything you want with this theme on any site, just please
-provide a link to the original theme on github.</p>
-
-<p>This theme includes the following files which are the properties of their
-respective owners:</p>
-
-<ul>
-  <li>js/bootstrap.min.js - <a href="http://getbootstrap.com">bootstrap</a></li>
-  <li>css/bootstrap.min.css - <a href="http://getbootstrap.com">bootstrap</a></li>
-  <li>js/jquery.min.js - <a href="https://jquery.com">jquery</a></li>
-</ul>
-
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
           </div>
         </div>
         <div class="col-md-4 hidden-xs">
@@ -330,6 +317,25 @@ respective owners:</p>
         </div>
       </div>
     </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2020/04/grpc-js-support/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
   </div>
       <footer class="footer-distributed">
       <div class="container">

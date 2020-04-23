@@ -7,6 +7,29 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>grpc_tools_node_protoc_ts 对 @grpc/grpc-js 的支持</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-grpcgrpc-js&quot; id=&quot;markdown-toc-1-grpcgrpc-js&quot;&gt;1. @grpc/grpc-js&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1-grpcgrpc-js&quot;&gt;1. @grpc/grpc-js&lt;/h2&gt;
+&lt;p&gt;最近&lt;a href=&quot;https://www.npmjs.com/package/grpc_tools_node_protoc_ts&quot; target=&quot;_blank&quot;&gt;grpc_tools_node_protoc_ts&lt;/a&gt;收到一个issue，问我可不可以支持&lt;a href=&quot;https://www.npmjs.com/package/@grpc/grpc-js&quot; target=&quot;_blank&quot;&gt;@grpc/grpc-js&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;这个库倒是不陌生，前几年就已经有了，只不过一直都没有过1.0的正式版本，一直在开发阶段。最近看了下，已经到&lt;code&gt;1.0.1&lt;/code&gt;版本了，基本上功能完备。和提issue的人讨论了下，主要诉求是使用这个纯js实现的库做到更小的docker镜像，以及在electron这种容器中使用的时候更容易构建。应该说理由还是相当充分的，于是就花了1天多点的时间做了下migration。&lt;/p&gt;
+
+&lt;p&gt;因为版本做完之后用英文已经写过一遍文档了，这里就不啰嗦了，直接看英语文档即可：&lt;a href=&quot;https://github.com/agreatfool/grpc_tools_node_protoc_ts/blob/master/doc/grpcjs_support.md&quot; target=&quot;_blank&quot;&gt;@grpc/grpc-js support&lt;/a&gt;。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Thu, 23 Apr 2020 20:02:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2020/04/grpc-js-support/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2020/04/grpc-js-support/</guid>
+			</item>
+		
+			<item>
 				<title>grpc-tools@1.8.1 安装问题</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -11566,93 +11589,6 @@ server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
 				<pubDate>Wed, 11 Dec 2019 10:36:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/12/node-in-docker/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/12/node-in-docker/</guid>
-			</item>
-		
-			<item>
-				<title>在VirtualBox中安装Tor</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-virtualbox&quot; id=&quot;markdown-toc-2-virtualbox&quot;&gt;2. VirtualBox&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-linux&quot; id=&quot;markdown-toc-3-linux&quot;&gt;3. Linux&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-tor&quot; id=&quot;markdown-toc-4-tor&quot;&gt;4. Tor&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;就是一篇简单的笔记。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-virtualbox&quot;&gt;2. VirtualBox&lt;/h1&gt;
-&lt;p&gt;这块不需要很详细的讲解，基本上只要从官网下载binary直接使用即可。镜像需要提前下载好，VirtualBox安装比较奇怪的一点是，虚拟机的创建和操作系统的安装是分开的，会先创建出虚拟机实例，然后才是加载镜像进行虚拟机操作系统的安装。这点有点和其他的虚拟机不太相同。&lt;/p&gt;
-
-&lt;p&gt;VirtualBox虚拟机的显示自适应需要额外设置，比较麻烦。显示设置的屏幕里，需要把显卡控制器改成：&lt;code&gt;VBoxSVGA&lt;/code&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;3-linux&quot;&gt;3. Linux&lt;/h1&gt;
-&lt;p&gt;这里使用的是Ubuntu Desktop版本，因为后续安装和使用Tor最简单的做法就是直接使用官方的Tor Browser，也正因此需要桌面版本的操作系统。如果对安全有更高的要求，可以使用FreeBSD操作系统。&lt;/p&gt;
-
-&lt;p&gt;软件安装：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install build-essential
-$ sudo apt-get install wget vim&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;安装virtualbox的辅助程序&lt;code&gt;Devices &amp;gt; Insert Guest Additions CD Image&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;按个人喜好，可选安装：&lt;a href=&quot;https://linuxize.com/post/how-to-install-sublime-text-3-on-ubuntu-18-04/&quot; target=&quot;_blank&quot;&gt;sublime text3&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;安装privoxy，用来给需要HTTP代理的应用程序做前置入口，将这些HTTP流量转为socks5流量，进入到tor：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ sudo apt-get install privoxy&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;修改配置文件&lt;code&gt;/etc/privoxy/config&lt;/code&gt;：添加&lt;code&gt;forward-socks5 / localhost:9150 .&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;后续可以在命令行下设置：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;http_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://127.0.0.1:8118
-&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;https_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://127.0.0.1:8118&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;命令行流量就全走tor了。命令行下，可以使用&lt;code&gt;curl ipinfo.io&lt;/code&gt;来查看当前IP的位置。&lt;/p&gt;
-
-&lt;p&gt;在tor安装成功之前，虚拟机肯定也是需要代理的，否则tor软件根本下不下来。可以通过Linux操作系统&lt;code&gt;网络配置&lt;/code&gt;设置代理：&lt;/p&gt;
-
-&lt;p&gt;将所有的HTTP(s)代理设置成：192.168.xx.xx:xxxx，socks设置成192.168.xx.xx:xxxx。&lt;/p&gt;
-
-&lt;p&gt;命令行下则：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;http_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://192.168.xx.xx:xxxx
-&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;https_proxy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://192.168.xx.xx:xxxx&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;4-tor&quot;&gt;4. Tor&lt;/h1&gt;
-&lt;p&gt;安装就直接从官网上下载Tor Browser，解压即可使用。配置文件位置：&lt;code&gt;Browser/TorBrowser/Data/Tor/torrc&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;国内使用的时候必须使用网桥，按软件提示直接选一个可用的网桥，或从数据库申请一个网桥即可。注意，从数据库申请下来的网桥不一定就是可用的，还是需要连接测试。如果有条件的话，可以在Tor Browser之前再自己做一个跳板，这样效果会好很多，无论是从隐匿性上来说，还是从可用性上来说。&lt;/p&gt;
-
-&lt;p&gt;Tor Browser在连接完成之后，会在本地打开一个端口&lt;code&gt;9150&lt;/code&gt;，提供本地的socks5连接。但软件并不提供HTTP和HTTPS代理，需要之前提到过的privoxy软件进行转换即可。&lt;/p&gt;
-
-&lt;p&gt;对Tor的节点进行限制，直接在之前提到的配置文件里添加内容即可，注意不要修改网桥相关的配置内容，那些是软件自动生成添加的：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;## 以下为排除的节点(StrictNodes 1为坚决执行)&lt;/span&gt;
-ExcludeNodes &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;cn&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;hk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;mo&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kp&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ir&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;cu&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;vn&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ru&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;by&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sd&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kz&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;uz&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;pk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kg&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;tj&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;tm&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;tr&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sy&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sg&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;th&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ph&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;my&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;lk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-ExcludeExitNodes &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;cn&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;hk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;mo&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kp&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ir&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;cu&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;vn&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ru&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;by&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sd&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kz&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;uz&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;pk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kg&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;tj&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;tm&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;tr&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sy&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sg&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;th&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ph&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;my&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;lk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#ExcludeNodes 是指排除节点，即把括号中的国家的节点从tor链路上除去&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#ExcludeExitNodes 是指“排除“出口”节点”，即tor的出口节点要排除括号中的国家的节点&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;## 指定出口节点：&lt;/span&gt;
-StrictNodes &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-ExitNodes &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;us&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;#这里us是指限定美国的ip为出口ip，你可以改为任何国家，国家代码请参考：https://zh.wikipedia.org/zh-cn/ISO_3166-1&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;轻量级过滤：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;ExcludeNodes &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;cn&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;hk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;mo&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-ExcludeExitNodes &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;cn&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;hk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;mo&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;kp&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;ir&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;cu&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;vn&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sd&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;pk&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;sy&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-StrictNodes &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Fri, 20 Sep 2019 10:36:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/09/virtualbox-tor/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/09/virtualbox-tor/</guid>
 			</item>
 		
 	</channel>
