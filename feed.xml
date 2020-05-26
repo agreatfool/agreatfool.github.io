@@ -7,6 +7,145 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>youtube-dl 及 ffmpeg 相关</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-youtube-dl-403&quot; id=&quot;markdown-toc-1-youtube-dl-403&quot;&gt;1. youtube-dl 403&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-手动下载及视频剪辑相关&quot; id=&quot;markdown-toc-2-手动下载及视频剪辑相关&quot;&gt;2. 手动下载及视频剪辑相关&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1-youtube-dl-403&quot;&gt;1. youtube-dl 403&lt;/h2&gt;
+
+&lt;p&gt;在使用&lt;a href=&quot;https://github.com/ytdl-org/youtube-dl&quot; target=&quot;_blank&quot;&gt;youtube-dl&lt;/a&gt;进行下载的时候，时不时会遇到403报错，导致无法正常进行下载。搜了下，github上关于403报错的issue还真不少，有效的解决方案全部是要求使用extension从浏览器中导出cookie信息到文件，然后使用&lt;code&gt;--cookies&lt;/code&gt;导入，就能正常使用了。但实际上操作下来，仍旧会报错。&lt;/p&gt;
+
+&lt;p&gt;其实只需要一个简单命令就能解决了：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ youtube-dl --rm-cache-dir&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;2-手动下载及视频剪辑相关&quot;&gt;2. 手动下载及视频剪辑相关&lt;/h2&gt;
+
+&lt;p&gt;有的时候因为某些原因，使用软件下载不是很好处理，就需要手动操作，一般来说可用的下载网站随便google下就能找到，这里列几个：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;https://bitdownloader.com/en2&lt;/li&gt;
+  &lt;li&gt;https://www.savethevideo.com/download&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;下载下来的某些源是没有音频的，就需要手动处理下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# 抽取withsound.mp4中的音频到audio.aac文件&lt;/span&gt;
+$ ffmpeg -i withsound.mp4 -vn -acodec copy audio.aac
+&lt;span class=&quot;c1&quot;&gt;# 不改变任何内容，直接结合视频/音频封装为MKV/MP4&lt;/span&gt;
+$ ffmpeg -i videoplayback.webm -i audio.aac -c:v copy -c:a copy -strict experimental output.mkv
+$ ffmpeg -i videoplayback.mp4 -i audio.aac -c:v copy -c:a copy -strict experimental output.mp4&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Mon, 18 May 2020 14:02:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2020/05/youtube-dl/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2020/05/youtube-dl/</guid>
+			</item>
+		
+			<item>
+				<title>Golang Concurrency</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#2-资料&quot; id=&quot;markdown-toc-2-资料&quot;&gt;2. 资料&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#3-额外的几点&quot; id=&quot;markdown-toc-3-额外的几点&quot;&gt;3. 额外的几点&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h2&gt;
+
+&lt;p&gt;Go语言的并发支持在语言上是第一级原生直接支持的，就像异步事件在Node.js上是语言原生支持的一样。Go语言的并发与其他语言的多线程使用还有点不太一样，在使用的时候需要从思路上理解这个”原生支持”的概念，才能用好。因此这篇博文就对其中的一些内容做个整理，此外在&lt;a href=&quot;https://github.com/agreatfool/golang-practice&quot; target=&quot;_blank&quot;&gt;golang-practice&lt;/a&gt;这个代码库中进行实践操作，并进行监控观察效果。&lt;/p&gt;
+
+&lt;h2 id=&quot;2-资料&quot;&gt;2. 资料&lt;/h2&gt;
+
+&lt;p&gt;因着Go语言在国内的火热，大量分析和资料其实都有了，这里我尽量多做整理，不做重复发明轮子的无用功：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;channel &amp;amp; goroutine&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483671&amp;amp;idx=1&amp;amp;sn=1706ffa6deee44a367c34ef84448f55f&quot; target=&quot;_blank&quot;&gt;Golang并发模型：轻松入门流水线模型&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;channel的基本运用&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483680&amp;amp;idx=1&amp;amp;sn=de463ebbd088c0acf6c2f0b5f179f38d&quot; target=&quot;_blank&quot;&gt;Golang并发模型：轻松入门流水线FAN模式&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;channel的多routine协同工作&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483702&amp;amp;idx=1&amp;amp;sn=50825426986120a0b306e0f6da176951&quot; target=&quot;_blank&quot;&gt;Golang并发模型：轻松入门select&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;select的使用，routine的情况判断&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483714&amp;amp;idx=1&amp;amp;sn=383e060fbf824d956dab6dc0a5555352&quot; target=&quot;_blank&quot;&gt;Golang并发模型：select进阶&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;select的高级运用，需要排除的select的分支处理，select的阻塞运用等&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483689&amp;amp;idx=1&amp;amp;sn=7dfed7ffb000752a456125513ed99c26&quot; target=&quot;_blank&quot;&gt;Golang并发模型：并发协程的优雅退出&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;routine的退出方法&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483724&amp;amp;idx=1&amp;amp;sn=6890ab956c2f0020e9107ef60a388d5b&quot; target=&quot;_blank&quot;&gt;Golang并发模型：轻松入门协程池&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;和FAN模式有异曲同工之妙&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483788&amp;amp;idx=1&amp;amp;sn=3b9d237029bfaa02847b4dacdc118173&quot; target=&quot;_blank&quot;&gt;Golang并发：再也不愁选channel还是选锁&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;channel和锁的选择问题，根据情况有不同的选择&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s/m8HjfS0tJCibD8hSRIxrBA&quot; target=&quot;_blank&quot;&gt;Golang并发模型：一招教你无阻塞读写通道&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;巧用select，在阻塞的情况下进入到不同的分支做到零等待&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483803&amp;amp;idx=1&amp;amp;sn=7be293f3d03e892058bebbdebed68cb5&quot; target=&quot;_blank&quot;&gt;总结了才知道，原来channel有这么多用法！&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;总结了所有的channel用法和细节&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;sync &amp;amp; lock&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://mp.weixin.qq.com/s?__biz=Mzg3MTA0NDQ1OQ==&amp;amp;mid=2247483768&amp;amp;idx=1&amp;amp;sn=dd94f808b9ee48d0fe2661d9a5efdd96&quot; target=&quot;_blank&quot;&gt;Golang并发的次优选择：sync包&lt;/a&gt;
+    &lt;ul&gt;
+      &lt;li&gt;sync包及锁的基本运用&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;3-额外的几点&quot;&gt;3. 额外的几点&lt;/h2&gt;
+
+&lt;p&gt;上面的资料可能因为时间问题，没有提到Context，实际上在真实场景中，对多routine的退出协作使用的更多的是context：&lt;a href=&quot;https://blog.golang.org/context&quot; target=&quot;_blank&quot;&gt;Go Concurrency Patterns: Context&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;channel和锁之间的选择简单来说就是：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;如果有共享内存需要在多个routine之间共用，选择锁&lt;/li&gt;
+  &lt;li&gt;如果所有的内存都无需在routine之间共享，选择channel&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Sun, 03 May 2020 13:02:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2020/05/golang-concurrency/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2020/05/golang-concurrency/</guid>
+			</item>
+		
+			<item>
 				<title>grpc_tools_node_protoc_ts 对 @grpc/grpc-js 的支持</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -10703,892 +10842,6 @@ Available commands are:
 				<pubDate>Wed, 25 Dec 2019 10:36:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/12/consul-note/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/12/consul-note/</guid>
-			</item>
-		
-			<item>
-				<title>使用Drone进行CI支持</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-概念&quot; id=&quot;markdown-toc-2-概念&quot;&gt;2. 概念&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-pipeline&quot; id=&quot;markdown-toc-21-pipeline&quot;&gt;2.1 &lt;a href=&quot;https://docs.drone.io/configure/pipeline/&quot; target=&quot;_blank&quot;&gt;pipeline&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-step&quot; id=&quot;markdown-toc-22-step&quot;&gt;2.2 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/steps/&quot; target=&quot;_blank&quot;&gt;step&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#23-workspace&quot; id=&quot;markdown-toc-23-workspace&quot;&gt;2.3 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/workspace/&quot; target=&quot;_blank&quot;&gt;workspace&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#24-trigger&quot; id=&quot;markdown-toc-24-trigger&quot;&gt;2.4 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/trigger/&quot; target=&quot;_blank&quot;&gt;trigger&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#25-condition&quot; id=&quot;markdown-toc-25-condition&quot;&gt;2.5 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/conditions/&quot; target=&quot;_blank&quot;&gt;condition&lt;/a&gt;&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-架构--multiple-pipeline--parallelism&quot; id=&quot;markdown-toc-3-架构--multiple-pipeline--parallelism&quot;&gt;3. 架构 &amp;amp; Multiple Pipeline &amp;amp; Parallelism&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-架构&quot; id=&quot;markdown-toc-31-架构&quot;&gt;3.1 架构&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-multiple-pipeline&quot; id=&quot;markdown-toc-32-multiple-pipeline&quot;&gt;3.2 Multiple Pipeline&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#33-parallelism&quot; id=&quot;markdown-toc-33-parallelism&quot;&gt;3.3 Parallelism&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-使用&quot; id=&quot;markdown-toc-4-使用&quot;&gt;4. 使用&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-server安装--运行&quot; id=&quot;markdown-toc-41-server安装--运行&quot;&gt;4.1 Server：安装 &amp;amp; 运行&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#411-oauth2准备&quot; id=&quot;markdown-toc-411-oauth2准备&quot;&gt;4.1.1 OAuth2准备&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#412-启动drone&quot; id=&quot;markdown-toc-412-启动drone&quot;&gt;4.1.2 启动drone&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#413-oauth2授权&quot; id=&quot;markdown-toc-413-oauth2授权&quot;&gt;4.1.3 OAuth2授权&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#414-ui同步--激活代码库&quot; id=&quot;markdown-toc-414-ui同步--激活代码库&quot;&gt;4.1.4 UI同步 &amp;amp; 激活代码库&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#415-api秘钥&quot; id=&quot;markdown-toc-415-api秘钥&quot;&gt;4.1.5 API秘钥&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#42-runner安装--运行&quot; id=&quot;markdown-toc-42-runner安装--运行&quot;&gt;4.2 Runner：安装 &amp;amp; 运行&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#421-安装&quot; id=&quot;markdown-toc-421-安装&quot;&gt;4.2.1 安装&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#422-运行&quot; id=&quot;markdown-toc-422-运行&quot;&gt;4.2.2 运行&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#43-ui秘钥设置&quot; id=&quot;markdown-toc-43-ui秘钥设置&quot;&gt;4.3 UI秘钥设置&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#44-私有registry&quot; id=&quot;markdown-toc-44-私有registry&quot;&gt;4.4 私有Registry&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#45-部署--多点事件触发&quot; id=&quot;markdown-toc-45-部署--多点事件触发&quot;&gt;4.5 部署 &amp;amp; 多点事件触发&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#451-drone-api--drone-cli&quot; id=&quot;markdown-toc-451-drone-api--drone-cli&quot;&gt;4.5.1 drone api | drone cli&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#452-plugin&quot; id=&quot;markdown-toc-452-plugin&quot;&gt;4.5.2 plugin&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#453-webhook-plugin&quot; id=&quot;markdown-toc-453-webhook-plugin&quot;&gt;4.5.3 webhook plugin&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#454-webhook-fake&quot; id=&quot;markdown-toc-454-webhook-fake&quot;&gt;4.5.4 webhook fake&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#455-waiting-hack&quot; id=&quot;markdown-toc-455-waiting-hack&quot;&gt;4.5.5 waiting hack&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;Drone是一个Golang技术栈的CI解决方案，功能和Jenkins之类的CI工具类似。&lt;/p&gt;
-
-&lt;p&gt;优点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Golang编写，分发及搭建非常容易（镜像体积很小）&lt;/li&gt;
-  &lt;li&gt;Golang编写，运行时占用资源极小（特指和Java栈的一系列工具比较）&lt;/li&gt;
-  &lt;li&gt;构建运行时以镜像优先，保证在不同平台的构建结果一致&lt;/li&gt;
-  &lt;li&gt;优秀的设计，支持插件化提供强大的功能支持&lt;/li&gt;
-  &lt;li&gt;现代化的UI，开箱即用，甩开Jenkins之类有历史包袱的工具几条街&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;缺点：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;较年轻，文档工作需要强化&lt;/li&gt;
-  &lt;li&gt;插件的数量和质量，以及插件的文档支持需要强化&lt;/li&gt;
-  &lt;li&gt;功能尚不能说强大，和Jenkins之类的老牌CI相比差距较大&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;简单选择：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Drone：
-    &lt;ul&gt;
-      &lt;li&gt;小型团队，对新技术适应能力较强的团队&lt;/li&gt;
-      &lt;li&gt;对功能的丰富性要求并不是很高，但要求性能强大功能稳定&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Jenkins：
-    &lt;ul&gt;
-      &lt;li&gt;对功能的丰富性要求较高，要求任何情况任何需求都能快速应对&lt;/li&gt;
-      &lt;li&gt;运维人员对Jenkins非常熟悉可以很快上手使用&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;相关资源：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;官方站点：&lt;a href=&quot;https://drone.io/&quot; target=&quot;_blank&quot;&gt;drone.io&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;文档站点：&lt;a href=&quot;https://docs.drone.io/&quot; target=&quot;_blank&quot;&gt;docs.drone.io&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;官方论坛：&lt;a href=&quot;https://discourse.drone.io/&quot; target=&quot;_blank&quot;&gt;discourse.drone.io&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;2-概念&quot;&gt;2. 概念&lt;/h1&gt;
-&lt;h2 id=&quot;21-pipeline&quot;&gt;2.1 &lt;a href=&quot;https://docs.drone.io/configure/pipeline/&quot; target=&quot;_blank&quot;&gt;pipeline&lt;/a&gt;&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;pipeline是drone的核心概念&lt;/li&gt;
-  &lt;li&gt;pipeline一般负责完成一个&lt;code&gt;任务&lt;/code&gt;：构建、发布、部署，其内部会有多个行为共同组成一个pipeline&lt;/li&gt;
-  &lt;li&gt;pipeline在drone里是进行分类的，按类型有多种种类，常用的有：
-    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/&quot; target=&quot;_blank&quot;&gt;docker&lt;/a&gt;：所有的构建行为都在临时docker容器内进行，跨平台保证行为一致
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;https://exec-runner.docs.drone.io/configuration/variables/&quot; target=&quot;_blank&quot;&gt;Environment Variables&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://exec-runner.docs.drone.io/configuration/&quot; target=&quot;_blank&quot;&gt;exec&lt;/a&gt;：所有的构建行为都在runner所在主机上进行，一般用在某些不方便放在容器内运行的工作，e.g xcode项目的构建
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/environment/variables/&quot; target=&quot;_blank&quot;&gt;Environment Variables&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;https://ssh-runner.docs.drone.io/configuration/&quot; target=&quot;_blank&quot;&gt;ssh&lt;/a&gt;：构建行为通过ssh执行远程命令进行
-        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;https://ssh-runner.docs.drone.io/configuration/variables/&quot; target=&quot;_blank&quot;&gt;Environment Variables&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;22-step&quot;&gt;2.2 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/steps/&quot; target=&quot;_blank&quot;&gt;step&lt;/a&gt;&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;pipeline里的每一个操作被称为&lt;code&gt;step&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;组织多个&lt;code&gt;step&lt;/code&gt;可以完成一个特定的pipeline，e.g
-    &lt;ul&gt;
-      &lt;li&gt;构建pipeline：clone、安装依赖、单元测试、打包、制作镜像、推送镜像&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;23-workspace&quot;&gt;2.3 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/workspace/&quot; target=&quot;_blank&quot;&gt;workspace&lt;/a&gt;&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;构建运行的工作空间，在不同的环境下其位置会有所不同&lt;/li&gt;
-  &lt;li&gt;Posix系统（含docker容器），工作空间在：&lt;code&gt;/tmp/drone-${RANDOM}/drone/src&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;OSX系统，工作空间在：&lt;code&gt;/private/var/folders/...&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;Win系统，工作空间在：&lt;code&gt;C:\windows\drone-%RANDOM%\drone\src&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;有一点要强调下，如果在bash脚本中访问当前pipeline的&lt;code&gt;~&lt;/code&gt;或&lt;code&gt;$HOME&lt;/code&gt;，获得的地址就是workspace的根目录，而&lt;code&gt;不是&lt;/code&gt;当前runner的用户home&lt;/li&gt;
-  &lt;li&gt;此外，workspace是临时的，会在pipeline创建的时候产生，并在完成的时候被销毁&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;24-trigger&quot;&gt;2.4 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/trigger/&quot; target=&quot;_blank&quot;&gt;trigger&lt;/a&gt;&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;trigger决定当前的&lt;code&gt;pipeline&lt;/code&gt;是否要&lt;code&gt;触发&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;trigger有很多类型：
-    &lt;ul&gt;
-      &lt;li&gt;根据分支：e.g 是否dev分支&lt;/li&gt;
-      &lt;li&gt;根据事件：e.g 是否tag事件（注意，tag和分支trigger不能同时存在，因为tag是不区分分支的）&lt;/li&gt;
-      &lt;li&gt;根据reference：e.g refs/tags/**&lt;/li&gt;
-      &lt;li&gt;根据代码库：e.g octocat/hello-world&lt;/li&gt;
-      &lt;li&gt;根据runner实例：e.g drone.instance1.com&lt;/li&gt;
-      &lt;li&gt;根据状态触发：e.g failure&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;25-condition&quot;&gt;2.5 &lt;a href=&quot;https://docker-runner.docs.drone.io/configuration/conditions/&quot; target=&quot;_blank&quot;&gt;condition&lt;/a&gt;&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;condition决定当前的&lt;code&gt;step&lt;/code&gt;是否要&lt;code&gt;触发&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;condition有很多类型：
-    &lt;ul&gt;
-      &lt;li&gt;根据分支：e.g 是否dev分支&lt;/li&gt;
-      &lt;li&gt;根据事件：e.g 是否tag事件（注意，tag和分支condition不能同时存在，因为tag是不区分分支的）&lt;/li&gt;
-      &lt;li&gt;根据reference：e.g refs/tags/**&lt;/li&gt;
-      &lt;li&gt;根据代码库：e.g octocat/hello-world&lt;/li&gt;
-      &lt;li&gt;根据runner实例：e.g drone.instance1.com&lt;/li&gt;
-      &lt;li&gt;根据状态触发：e.g failure&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;3-架构--multiple-pipeline--parallelism&quot;&gt;3. 架构 &amp;amp; Multiple Pipeline &amp;amp; Parallelism&lt;/h1&gt;
-&lt;h2 id=&quot;31-架构&quot;&gt;3.1 架构&lt;/h2&gt;
-&lt;p&gt;Drone这个CI其实很简单，也说不上什么架构。一般Drone会有一个单点Server，在git工具上注册好webhook接收事件，然后启动多个Runner来处理Server上产生的任务。这些Runner可以在同一台主机上，也可以分散在多台不同的主机上，官方文档的指引中要求不要将runner和server放在同一台主机上。&lt;/p&gt;
-
-&lt;h2 id=&quot;32-multiple-pipeline&quot;&gt;3.2 Multiple Pipeline&lt;/h2&gt;
-&lt;p&gt;官方说明：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Drone supports configuring and orchestrating multiple pipelines. This is useful when you need to fan-out and distribute your build tasks across multiple machines to reduce build times, or to execute your build tasks across multiple platforms (e.g. amd64 and arm64).&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;&lt;strong&gt;用途1：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;在处理大型项目任务的时候，将任务拆散，分散到不同的物理机上进行并行处理，加速整个构建进程。如果是不同主机的话，需要用到&lt;code&gt;2.4&lt;/code&gt;提到的pipeline trigger，将不同的pipeline设定好自己的运行目标主机。保证同一个repo在不同主机上触发的时候，只有当前主机（runner）应该执行的pipeline得到执行。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;用途2：&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;确定pipeline之间的先后顺序，通过在pipeline一级定义&lt;code&gt;depends_on&lt;/code&gt;来申明相互之间的依赖关系。这里特别需要注意的是：pipeline之间是不共享workspace的。所以每一步都需要单独做类似于依赖安装之类的工作，这需要特别小心。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
-
-&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;p3&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;notify&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;p1&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;p2&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;33-parallelism&quot;&gt;3.3 Parallelism&lt;/h2&gt;
-&lt;p&gt;这部分内容与 Multiple Pipeline 的关系，和之前讲过的 trigger 与 condition 的关系一样。Multiple Pipeline 是pipeline级别的，而Parallelism则是step级别的，本质上仍旧是并行运行。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
-
-&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;s3&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ...&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;s1&lt;/span&gt;
-    &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;s2&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;4-使用&quot;&gt;4. 使用&lt;/h1&gt;
-&lt;h2 id=&quot;41-server安装--运行&quot;&gt;4.1 Server：安装 &amp;amp; 运行&lt;/h2&gt;
-&lt;h3 id=&quot;411-oauth2准备&quot;&gt;4.1.1 OAuth2准备&lt;/h3&gt;
-&lt;p&gt;需要在git repo软件上申请一个OAuth应用。这里我使用的是Gitea，就拿它来做演示：&lt;/p&gt;
-
-&lt;p&gt;点击：&lt;code&gt;右上角头像 &amp;gt; 设置（下拉菜单） &amp;gt; 应用（页面中间）&lt;/code&gt;，打开的页面是管理用户级别的&lt;code&gt;Access Tokens&lt;/code&gt;和&lt;code&gt;OAuth2应用&lt;/code&gt;的。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/oauth1.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;找到：&lt;code&gt;创建新的 OAuth2 应用程序&lt;/code&gt;这一栏，输入：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;应用名称：这名字后面用不到，填可理解的内容即可&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;重定向 URI&lt;/code&gt;：http://&lt;code&gt;${drone_host}:${drone_ip}&lt;/code&gt;/login&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/oauth2.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;点击&lt;code&gt;创建应用&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;在打开的页面上显示了OAuth2应用的相关信息，这里需要记下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;客户端ID&lt;/li&gt;
-  &lt;li&gt;客户端秘钥&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/oauth3.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;412-启动drone&quot;&gt;4.1.2 启动drone&lt;/h3&gt;
-&lt;p&gt;Golang应用程序，使用上最容易的方式仍旧是镜像：&lt;a href=&quot;https://hub.docker.com/r/drone/drone&quot; target=&quot;_blank&quot;&gt;drone/drone&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;drone服务器启动时的环境变量文档在：&lt;a href=&quot;https://docs.drone.io/installation/reference/&quot; target=&quot;_blank&quot;&gt;Drone Documentation &amp;gt; Installation &amp;gt; Reference&lt;/a&gt;。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run -it -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name drone-server &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -p &lt;span class=&quot;m&quot;&gt;18980&lt;/span&gt;:80 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --log-driver&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;json-file &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --log-opt max-size&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;512m &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -v /tmp/drone/data:/data &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# sqlite db file&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_LOGS_DEBUG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_LOGS_COLOR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_LOGS_PRETTY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_LOGS_TRACE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_AGENTS_ENABLED&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                                             &lt;span class=&quot;c1&quot;&gt;# drone server running with no agents, start runners manually&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_GITEA_SKIP_VERIFY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                                          &lt;span class=&quot;c1&quot;&gt;# gitea: use http protocol&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_GITEA_SERVER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://host.docker.internal:13000 &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                  &lt;span class=&quot;c1&quot;&gt;# gitea: server address with protocol&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_GITEA_CLIENT_ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;fd023edb-7976-4d50-a92f-b16612683240 &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;            &lt;span class=&quot;c1&quot;&gt;# gitea: oauth client id&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_GITEA_CLIENT_SECRET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;S4Q6PktE3dKNHPUzZrTdyNJsTThwal4doUWf6jf4eRA&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# gitea: oauth client secret &lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_RPC_SECRET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;d9856af41ffe31f5e8025be020e981be &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                     &lt;span class=&quot;c1&quot;&gt;# drone: runner shall connect server with this secret&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_SERVER_HOST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;host.docker.internal:18980 &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                          &lt;span class=&quot;c1&quot;&gt;# drone: server address without protocol&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;DRONE_SERVER_PROTO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                                               &lt;span class=&quot;c1&quot;&gt;# drone: server with http protocol&lt;/span&gt;
-    drone/drone:1.6.3&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;413-oauth2授权&quot;&gt;4.1.3 OAuth2授权&lt;/h3&gt;
-&lt;p&gt;访问drone的地址：&lt;code&gt;http://host.docker.internal:18980&lt;/code&gt;，会跳转到gitea进行授权，授权完成后会跳转回drone。这时应该就已经以刚才制作OAuth2应用的用户身份登录drone了。&lt;/p&gt;
-
-&lt;p&gt;这里说明下，因为gitea和drone都运行在容器内，他们之间相互访问是通过容器名来进行的，而host主机访问这两者都是通过loopback地址，两者之间存在差异，会导致OAuth的过程失败。因此这里统一使用docker MAC desktop版本的&lt;code&gt;host.docker.internal&lt;/code&gt;域名来贯通内部和外部。但需要额外修改host主机的&lt;code&gt;/etc/hosts&lt;/code&gt;配置，把这个host解析为loopback地址。&lt;/p&gt;
-
-&lt;h3 id=&quot;414-ui同步--激活代码库&quot;&gt;4.1.4 UI同步 &amp;amp; 激活代码库&lt;/h3&gt;
-&lt;p&gt;刚完成授权的账户是没有任何代码库的，打开drone首页发现是空列表（即便当前通过OAuth2授权的账号在gitea内有代码库）：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/drone1.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;点击右上角的&lt;code&gt;SYNC&lt;/code&gt;就会开始和gitea同步账户的代码库数据，完成后即可获得所有当前账号在gitea内所拥有的代码库列表：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/drone2.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这时候账号下的drone项目都是&lt;code&gt;未激活&lt;/code&gt;状态，需要点击面板上项目右边的&lt;code&gt;ACTIVATE&lt;/code&gt;进行激活：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/drone3.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/12/drone-ci/drone4.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;点击&lt;code&gt;SAVE&lt;/code&gt;保存即可。经过这几个操作，drone即激活了对这几个代码库的webhook事件监听。&lt;/p&gt;
-
-&lt;p&gt;至此为止drone本体的安装基本上完成了，后续还需要配置下runner。&lt;/p&gt;
-
-&lt;h3 id=&quot;415-api秘钥&quot;&gt;4.1.5 API秘钥&lt;/h3&gt;
-&lt;p&gt;点击右上角的用户头像，然后点击&lt;code&gt;User settings&lt;/code&gt;会打开用户的设置页面。在这个页面上能找到用户的token。如果有需要使用drone API的话（或者是cli命令行工具），这个token是必须的。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/drone7.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;42-runner安装--运行&quot;&gt;4.2 Runner：安装 &amp;amp; 运行&lt;/h2&gt;
-&lt;h3 id=&quot;421-安装&quot;&gt;4.2.1 安装&lt;/h3&gt;
-&lt;p&gt;服务器设置完成后，如果没有单独安装和运行runner，服务器上所有触发的事件都会是&lt;code&gt;Pending&lt;/code&gt;状态，而且没有任何日志。&lt;/p&gt;
-
-&lt;p&gt;关于Pending的debug，可以看下官方的一篇帖子：&lt;a href=&quot;https://discourse.drone.io/t/builds-are-stuck-in-pending-status/4437&quot; target=&quot;_blank&quot;&gt;Builds are Stuck in Pending Status&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;Runner的安装见官方文档：&lt;a href=&quot;https://docs.drone.io/installation/runners/&quot; target=&quot;_blank&quot;&gt;Drone Documentation &amp;gt; Installation &amp;gt; Runners&lt;/a&gt;。Runner也分不同的类型，一般常用的是：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.drone.io/installation/runners/exec/&quot; target=&quot;_blank&quot;&gt;Exec Runner&lt;/a&gt;：直接运行在主机上的runner&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://docs.drone.io/installation/runners/docker/&quot; target=&quot;_blank&quot;&gt;Docker Runner&lt;/a&gt;：运行在docker容器内的runner&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Runner的类型和pipeline的类型并不要求一致，runner只是pipeline的运行者，不管是什么类型的pipeline，都可以在任何类型的runner上运作。举例来说，一个docker类型的pipeline，在exec runner上就会在主机上启动docker容器并运行，而docker runner则是直接在docker容器内运行。&lt;/p&gt;
-
-&lt;h3 id=&quot;422-运行&quot;&gt;4.2.2 运行&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;Exec Runner&lt;/strong&gt;  &lt;br /&gt;
-Exec Runner需要手动在&lt;code&gt;~/.drone-runner-exec/config&lt;/code&gt;创建一个配置文件：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DRONE_DEBUG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;DRONE_LOG_FILE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/tmp/drone-runner-exec.txt
-&lt;span class=&quot;nv&quot;&gt;DRONE_LOG_FILE_MAX_SIZE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;50&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;DRONE_RPC_DUMP_HTTP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;DRONE_RPC_DUMP_HTTP_BODY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;DRONE_RPC_PROTO&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http
-&lt;span class=&quot;nv&quot;&gt;DRONE_RPC_HOST&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;host.docker.internal:18980
-&lt;span class=&quot;nv&quot;&gt;DRONE_RPC_SECRET&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;d9856af41ffe31f5e8025be020e981be
-&lt;span class=&quot;nv&quot;&gt;DRONE_RUNNER_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/.yarn/bin:&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/.config/yarn/global/node_modules/.bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;更多的配置项可以查阅官方文档：&lt;a href=&quot;https://exec-runner.docs.drone.io/installation/reference/&quot; target=&quot;_blank&quot;&gt;Exec Runner &amp;gt; Installation &amp;gt; Configuration Reference&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;配置文件里最重要的是&lt;code&gt;DRONE_RPC_HOST&lt;/code&gt;&lt;code&gt;DRONE_RPC_SECRET&lt;/code&gt;这两项。修改完成后记得重启runner：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ drone-runner-exec service stop &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; drone-runner-exec service start&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Runner在执行pipeline操作时候的用户即是runner启动时的用户，这需要非常小心，否则会搞错用户导致权限错误。此外，在2.3 workspace的时候也提到过了，在runner执行pipeline的时候，&lt;code&gt;~&lt;/code&gt;指向的是workspace的根目录，而不是用户的home，这点要非常小心。&lt;/p&gt;
-
-&lt;p&gt;举例来说，存放在&lt;code&gt;$HOME/.docker&lt;/code&gt;下的凭证在exec runner运行的时候是不可访问的（&lt;code&gt;~&lt;/code&gt;会定位到workspace而不是&lt;code&gt;$HOME&lt;/code&gt;），这会导致私有registry的访问失败。同样的，pipeline运行时的PATH也不同于用户自身的PATH，需要在配置文件中设置好&lt;code&gt;DRONE_RUNNER_PATH&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Docker Runner&lt;/strong&gt;  &lt;br /&gt;
-这部分就非常简单了，无非就是一个docker容器，直接使用对应的官方镜像即可：&lt;a href=&quot;https://hub.docker.com/r/drone/drone-runner-docker&quot; target=&quot;_blank&quot;&gt;drone/drone-runner-docker&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;相关配置项可以查阅官方文档：&lt;a href=&quot;https://docker-runner.docs.drone.io/installation/reference/&quot; target=&quot;_blank&quot;&gt;Docker Runner &amp;gt; Installation &amp;gt; Configuration Reference&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;43-ui秘钥设置&quot;&gt;4.3 UI秘钥设置&lt;/h2&gt;
-&lt;p&gt;在执行pipeline的时候不可避免需要访问一些密码秘钥之类的信息，而构建过程中，理论上runner只能访问代码库里的内容。这就造成了问题，因为代码库并不是安全的存放秘钥的地方。针对这样的问题，drone有对应的解决方案。&lt;/p&gt;
-
-&lt;p&gt;在drone ui仓库的设置中，有一处：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/drone5.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;设置完成后，就会保存在drone系统中：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/drone6.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;后续在pipeline可以如下的形式进行访问：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;default&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-&lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;build&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;alpine&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;USERNAME&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;from_secret&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;docker_username&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;PASSWORD&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;from_secret&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;docker_password&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;更多关于secret的设置及访问，可以参见官方文档：&lt;a href=&quot;https://docs.drone.io/configure/secrets/&quot; target=&quot;_blank&quot;&gt;Drone Documentation &amp;gt; Configuration &amp;gt; Secrets&lt;/a&gt;。在这方面，drone支持得非常全面，甚至外部的加密设施也可以支持访问。&lt;/p&gt;
-
-&lt;h2 id=&quot;44-私有registry&quot;&gt;4.4 私有Registry&lt;/h2&gt;
-&lt;p&gt;在pipeline应用的过程中，比较常见的问题是对于私有registry的访问。毕竟现在的CI基本上都围绕着镜像打转，抓取镜像进行部署或者构建镜像向上推送都是常见需求。&lt;/p&gt;
-
-&lt;p&gt;官方对此也有解决方案：&lt;a href=&quot;https://discourse.drone.io/t/how-to-pull-private-images-with-1-0/3155&quot; target=&quot;_blank&quot;&gt;How to pull private images with 1.0&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;45-部署--多点事件触发&quot;&gt;4.5 部署 &amp;amp; 多点事件触发&lt;/h2&gt;
-&lt;p&gt;上述的内容基本上把CI的最基础的应用都讲到了，如果只是简单的&lt;code&gt;提交代码 &amp;gt; 触发webhook &amp;gt; drone pipeline&lt;/code&gt;这个流程的话，是没有问题的。&lt;/p&gt;
-
-&lt;p&gt;那么接下来就可以考虑下稍微复杂点的需求：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;项目的构建和部署需要分开&lt;/li&gt;
-  &lt;li&gt;构建定义为一个pipeline&lt;/li&gt;
-  &lt;li&gt;部署定义为一个pipeline&lt;/li&gt;
-  &lt;li&gt;部署pipeline应该由构建pipeline异步触发&lt;/li&gt;
-  &lt;li&gt;部署pipeline应该和构建pipeline解耦，两者可能发生在完全隔离的两个物理机的runner上&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;然后我简单说下结论：在当前的版本（drone/drone:1.6.3），这个需求&lt;code&gt;做不到&lt;/code&gt;，如果是按官方的API和功能的话。而使用一些非官方的hacking思路，则可以做到&lt;code&gt;基本上一致的效果&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;根据一开始说的，如果单独只是一个构建pipeline，很简单就能做到。而如果要实现刚才列出的需求，就需要在构建pipeline完成并退出之前触发一个额外的事件，只要能触发额外的事件，再配合上：trigger &amp;amp; condition，保证代码库的pipeline启动的时候，只有部署pipeline进入工作，且只有正确的runner实例进入工作，那一切就通了。&lt;/p&gt;
-
-&lt;p&gt;那么，能不能手动触发一个部署呢？研究了下官方的资料，发现正常途径基本上做不到，只有一些非正常的思路才可以做到。下面说下思路。&lt;/p&gt;
-
-&lt;h3 id=&quot;451-drone-api--drone-cli&quot;&gt;4.5.1 drone api | drone cli&lt;/h3&gt;
-&lt;p&gt;首先想到的是看看官方的API中有没有可用的命令（cli实际上就是官方API的封装）：&lt;a href=&quot;https://docs.drone.io/api/overview/&quot; target=&quot;_blank&quot;&gt;API文档&lt;/a&gt;、&lt;a href=&quot;https://docs.drone.io/cli/install/&quot; target=&quot;_blank&quot;&gt;CLI文档&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;发现官方有一个命令：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ drone build promote --help
-  NAME:
-     drone build promote - promote a build
-  
-  USAGE:
-     drone build promote &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt; options&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &amp;lt;repo/name&amp;gt; &amp;lt;build&amp;gt; &amp;lt;environment&amp;gt;
-  
-  OPTIONS:
-     --param value, -p value  custom parameters to be injected into the job environment. Format: &lt;span class=&quot;nv&quot;&gt;KEY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;value
-     --format value           format output &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: &lt;span class=&quot;s2&quot;&gt;&amp;quot;...&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;结合&lt;code&gt;.drone.yml&lt;/code&gt;使用：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;exec&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;test&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;darwin&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;arch&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;amd64&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;test&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;echo &amp;quot;tested&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;tag&lt;/span&gt;
-
-&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;exec&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;build&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;darwin&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;arch&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;amd64&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;build&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;echo &amp;quot;built&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;tag&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;test&lt;/span&gt;
-
-&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;exec&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;notify&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;darwin&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;arch&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;amd64&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;notify&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;drone build promote fullstack/gateway 100 production&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;environment&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;DRONE_SERVER&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http://host.docker.internal:18980&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;DRONE_TOKEN&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;K5i8g6PMlLM3tWaPDRagigPkBrl1YKGu&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;tag&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;depends_on&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;build&lt;/span&gt;
-
-&lt;span class=&quot;nn&quot;&gt;---&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;kind&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;pipeline&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;exec&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;deploy&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;os&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;darwin&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;arch&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;amd64&lt;/span&gt;
-
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;steps&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;deploy&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;commands&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;echo &amp;quot;deployed&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;when&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;event&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;promote&lt;/span&gt;
-      &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;p p-Indicator&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;production&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;测试后发现，如果&lt;code&gt;build&lt;/code&gt;参数给的是已经存在的构建的话，则会重复之前的构建流程；而如果给的是一个很大的不存在该build的值（比如上面举例的100），则构建在notify这一步失败，并报错：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;+ drone build promote fullstack/gateway &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt; production
-client error &lt;span class=&quot;m&quot;&gt;404&lt;/span&gt;: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;sql: no rows in result set&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;查找了下相关资料，并没有找到官方文档，仅在论坛中找到几篇讨论：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://discourse.drone.io/t/manually-trigger-a-build/874/8&quot; target=&quot;_blank&quot;&gt;Manually trigger a build&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://discourse.drone.io/t/promoting-a-build-by-branch/4755&quot; target=&quot;_blank&quot;&gt;Promoting a build by branch&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/drone/drone/issues/2679#issue-435262568&quot; target=&quot;_blank&quot;&gt;Trigger build for Branch, Commit&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;根据官方人员的解释：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;When you deploy, you are essentially “promoting” a build, which means you need to provide the build number you are promoting, and the environment you are promoting to. For example:&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;drone deploy octocat/hello-world 42 production&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;In the above example, you are promoting build 42 to production. This will execute a deployment event in the system with environment name production.&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;也就是说你只能对&lt;code&gt;已经存在&lt;/code&gt;的build进行触发让这个&lt;code&gt;已经测试构建完成的&lt;/code&gt;build进行部署，而不能从头创建一个新的build。也就是说，上述的工具能大致满足上面提出的那串需求，但本质上还是不同的：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;测试构建等必须是一个单独的行为，需要先行做完，并形成一个完成的build&lt;/li&gt;
-  &lt;li&gt;需要手动触发（因为你需要确认build号，所以这个行为必然是手动的，不可能自动化）这个完成的build，让yaml中配置为promote的event触发，进行部署&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;452-plugin&quot;&gt;4.5.2 plugin&lt;/h3&gt;
-&lt;p&gt;官方有一个插件叫：&lt;a href=&quot;http://plugins.drone.io/drone-plugins/drone-downstream/&quot; target=&quot;_blank&quot;&gt;Downstream Build&lt;/a&gt;。乍看之下貌似是满足需求的，但我实际扒了下源码，发现这个插件的本质其实就是封装了下官方的API。所以实际上和4.5.1一样，不行。&lt;/p&gt;
-
-&lt;h3 id=&quot;453-webhook-plugin&quot;&gt;4.5.3 webhook plugin&lt;/h3&gt;
-&lt;p&gt;后续的思路是尝试使用webhook插件，在构建pipeline完成之后用webhook触发一个构建：&lt;a href=&quot;http://plugins.drone.io/drone-plugins/drone-webhook/&quot; target=&quot;_blank&quot;&gt;Webhook&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;文档工作总是半吊子，参数有几个根本不知道具体应该填什么，只能随便尝试下：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run --rm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;PLUGIN_URLS&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;http://host.docker.internal:18980/hook &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;PLUGIN_USERNAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;root &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;PLUGIN_PASSWORD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Abcd1234_ &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;PLUGIN_DEBUG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;PLUGIN_SKIP_VERIFY&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;DRONE_REPO_OWNER&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;fullstack &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;DRONE_REPO_NAME&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;gateway &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;DRONE_COMMIT_SHA&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2087d78f48 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;DRONE_COMMIT_BRANCH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;master &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          -e &lt;span class=&quot;nv&quot;&gt;DRONE_BUILD_EVENT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;deployment &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-          plugins/webhook:latest
-Webhook &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
-  URL: http://host.docker.internal:18980/hook
-  METHOD: POST
-  HEADERS: map&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Authorization:&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Basic &lt;span class=&quot;nv&quot;&gt;cm9vdDpBYmNkMTIzNF8&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=]&lt;/span&gt; Content-Type:&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;application/json&lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;
-  REQUEST BODY: &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;repo&amp;quot;&lt;/span&gt;:&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;owner&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;gateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;build&amp;quot;&lt;/span&gt;:&lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;tag&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;event&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;deployment&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;number&amp;quot;&lt;/span&gt;:0,&lt;span class=&quot;s2&quot;&gt;&amp;quot;commit&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;2087d78f48&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;ref&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;refs/heads/master&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;branch&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;master&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;author&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;message&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;success&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;link&amp;quot;&lt;/span&gt;:&lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;,&lt;span class=&quot;s2&quot;&gt;&amp;quot;started&amp;quot;&lt;/span&gt;:0,&lt;span class=&quot;s2&quot;&gt;&amp;quot;created&amp;quot;&lt;/span&gt;:0&lt;span class=&quot;o&quot;&gt;}}&lt;/span&gt;
-
-  RESPONSE STATUS: &lt;span class=&quot;m&quot;&gt;200&lt;/span&gt; OK
-  RESPONSE BODY:&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;返回结果是200，正常，但结果本身为&lt;code&gt;空&lt;/code&gt;。查看drone的UI发现实际上没有任何build被触发。这就很无奈了，这里的问题可能出在：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;操作者：给的参数不正确&lt;/li&gt;
-  &lt;li&gt;webhook插件：没有发送正确的webhook请求&lt;/li&gt;
-  &lt;li&gt;drone服务器：忽略了不正确的webhook请求&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;无论如何，后续如果要继续的话就需要看源码了，插件的以及服务器的源码。&lt;/p&gt;
-
-&lt;h3 id=&quot;454-webhook-fake&quot;&gt;4.5.4 webhook fake&lt;/h3&gt;
-&lt;p&gt;到这里就是非正常思路了。&lt;/p&gt;
-
-&lt;p&gt;因为gitea可以正常触发drone的webhook，思路就是使用curl仿造gitea的请求，发送到drone。其实drone官方也有对webhook的描述：&lt;a href=&quot;https://discourse.drone.io/t/how-to-use-global-webhooks/3755&quot; target=&quot;_blank&quot;&gt;How to use Global Webhooks&lt;/a&gt;，但实在是没什么正式的支持，API之类的易用性的工具都没有，只有这篇文章。&lt;/p&gt;
-
-&lt;p&gt;gitea官方有webhook相关的文档：&lt;a href=&quot;https://docs.gitea.io/en-us/webhooks/&quot; target=&quot;_blank&quot;&gt;Webhooks&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;gitea的钩子可以在这里找到，点击下面的链接可以查看请求细节：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/drone-ci/gitea1.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/12/drone-ci/gitea2.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;
-&lt;img src=&quot;/resources/2019/12/drone-ci/gitea3.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;当然这也非常麻烦，而且gitea发送出去的webhook请求里有非常多repo详细信息，如果要做到自动化的话，这块的获取也是很麻烦的一件事情。&lt;/p&gt;
-
-&lt;h3 id=&quot;455-waiting-hack&quot;&gt;4.5.5 waiting hack&lt;/h3&gt;
-&lt;p&gt;另一个非正常思路就是定义一个pipeline，仅在指定的runner上运行，然后命令中执行脚本，查询私有registry，看目标仓库（镜像）的目标tag是否存在，存在的话就进行部署。而在其他的runner上进行构建和镜像推送操作。&lt;/p&gt;
-
-&lt;p&gt;这样就能做到一开始提的需求，虽然恶心了点。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Mon, 23 Dec 2019 10:36:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/12/drone-ci/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/12/drone-ci/</guid>
-			</item>
-		
-			<item>
-				<title>在Docker中使用Node</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-镜像制作&quot; id=&quot;markdown-toc-2-镜像制作&quot;&gt;2. 镜像制作&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-npm&quot; id=&quot;markdown-toc-21-npm&quot;&gt;2.1 npm&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-镜像制作&quot; id=&quot;markdown-toc-22-镜像制作&quot;&gt;2.2 镜像制作&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#23-镜像stage&quot; id=&quot;markdown-toc-23-镜像stage&quot;&gt;2.3 镜像stage&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-集群处理及反向代理&quot; id=&quot;markdown-toc-3-集群处理及反向代理&quot;&gt;3. 集群处理及反向代理&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-pm2--nginx&quot; id=&quot;markdown-toc-31-pm2--nginx&quot;&gt;3.1 pm2 + nginx&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-docker-compose--nginx&quot; id=&quot;markdown-toc-32-docker-compose--nginx&quot;&gt;3.2 docker-compose + nginx&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-健康检查&quot; id=&quot;markdown-toc-4-健康检查&quot;&gt;4. 健康检查&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;在Docker中使用Node，中间遇到了相当多的问题，这里就简单记录下，以防忘记。下述的所有范例都是使用typescript进行逻辑编写的，并在Docker中进行编译制作镜像的，周知。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-镜像制作&quot;&gt;2. 镜像制作&lt;/h1&gt;
-&lt;h2 id=&quot;21-npm&quot;&gt;2.1 npm&lt;/h2&gt;
-&lt;p&gt;在Dockerfile里的npm安装记得要加上&lt;code&gt;--unsafe-perm&lt;/code&gt;，具体可以看：&lt;a href=&quot;https://github.com/grpc/grpc-node/issues/604&quot; target=&quot;_blank&quot;&gt;grpc/grpc-node#604&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;22-镜像制作&quot;&gt;2.2 镜像制作&lt;/h2&gt;
-&lt;p&gt;Docker的&lt;code&gt;COPY&lt;/code&gt;命令是将命令对应的文件夹&lt;code&gt;下&lt;/code&gt;的所有内容拷贝到目标位置，而不包含命令中的文件夹本身，这是必须先了解的基础。&lt;/p&gt;
-
-&lt;p&gt;一般来说node项目的资源都会比较多比较散，不会像go应用程序一样build完成之后就是一个binary文件，node会有很多零碎的文件和代码都必须拷贝到镜像里。这里就需要先制作一个context。&lt;/p&gt;
-
-&lt;p&gt;假设项目的文件夹结构如下：&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;/- 
- | bash /-              # bash脚本
- |       | compose.sh   # 制作compose配置文件的脚本
- |       | docker.sh    # 制作镜像的脚本
- | build                # 编译完成的js文件
- | node_modules         # npm包
- | schema               # sql文件
- | src                  # typescript源码
- | .gitignore
- | Dockerfile
- | package.json
- | config.yml
- | README.md
- | tsconfig.json
- | tslint.json
- | yarn.lock
-&lt;/code&gt;&lt;/pre&gt;
-
-&lt;p&gt;则可以使用如下脚本制作一个context子集，并进行镜像制作：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;FULLPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;dirname &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt; -P &lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FULLPATH&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/..
-
-&lt;span class=&quot;nv&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;cat ./package.json &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq -r &lt;span class=&quot;s1&quot;&gt;&amp;#39;.version&amp;#39;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# prepare docker context&lt;/span&gt;
-rm -rf ./docker                 &lt;span class=&quot;c1&quot;&gt;# 删除之前的context，如果有的话&lt;/span&gt;
-mkdir -p ./docker/context       &lt;span class=&quot;c1&quot;&gt;# 制作context文件夹&lt;/span&gt;
-mkdir -p ./docker/context/pm2   &lt;span class=&quot;c1&quot;&gt;# 制作PM2日志文件夹，后面会说到&lt;/span&gt;
-cp -r &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                        &lt;span class=&quot;c1&quot;&gt;# 拷贝制作镜像需要的资源到context内&lt;/span&gt;
-    src &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    config.yml &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    package.json &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    tsconfig.json &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    tslint.json &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    yarn.lock &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    ./docker/context
-
-&lt;span class=&quot;c1&quot;&gt;# build image&lt;/span&gt;
-docker build &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --no-cache &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --tag your_app_name:&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --file ./Dockerfile &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    ./docker
-
-&lt;span class=&quot;c1&quot;&gt;# remove images without tags&lt;/span&gt;
-docker rmi &lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;docker images &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; awk &lt;span class=&quot;s1&quot;&gt;&amp;#39;/^&amp;lt;none&amp;gt;/ {print $3}&amp;#39;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# 当制作tag重复的镜像时，这个命令就很有用&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# remove tmp file&lt;/span&gt;
-rm -rf ./docker
-
-&lt;span class=&quot;c1&quot;&gt;# push image&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;ORIGIN_TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;you_app_name:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;TARGET_TAG&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;your_dockerhub_account/you_app_name:&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-docker tag &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;ORIGIN_TAG&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TARGET_TAG&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
-docker push &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TARGET_TAG&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;23-镜像stage&quot;&gt;2.3 镜像stage&lt;/h2&gt;
-&lt;p&gt;node的镜像在制作过程中，需要一些命令进行辅助，而这些命令在基准的node镜像上是不存在的，因此就需要在Dockerfile中先npm安装它们。比如说typescript、yarn等。而这些安装行为都会显著增大镜像的体积，因此这里就需要使用到按stage进行构建的技术。&lt;/p&gt;
-
-&lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.docker.com/develop/develop-images/multistage-build/&quot; target=&quot;_blank&quot;&gt;Use multi-stage builds&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;先放一个例子：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-docker&quot; data-lang=&quot;docker&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; node:10.16.3-alpine as builder&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /opt&lt;/span&gt;
-
-COPY ./context ./
-
-&lt;span class=&quot;k&quot;&gt;RUN&lt;/span&gt; npm i typescript -g --unsafe-perm &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    npm i --only&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;prod --unsafe-perm --loglevel verbose &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    tsc
-
-&lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; node:10.16.3-alpine&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;WORKDIR&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; /app&lt;/span&gt;
-
-COPY --from&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;builder /opt .
-
-&lt;span class=&quot;k&quot;&gt;ENTRYPOINT&lt;/span&gt;&lt;span class=&quot;s&quot;&gt; [&amp;quot;node&amp;quot;, &amp;quot;./build/index.js&amp;quot;]&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;该Dockerfile的上半部分将&lt;code&gt;./context&lt;/code&gt;下的所有内容拷贝到&lt;code&gt;/opt&lt;/code&gt;这个工作路径下。然后安装了typescript，并根据&lt;code&gt;package.json&lt;/code&gt;的内容进行npm包的安装。接下来使用刚才安装好的typescript命令&lt;code&gt;tsc&lt;/code&gt;根据&lt;code&gt;tsconfig.json&lt;/code&gt;的配置将src文件夹下的源码编译为&lt;code&gt;build&lt;/code&gt;文件夹下的js源码。&lt;/p&gt;
-
-&lt;p&gt;从下半部分的&lt;code&gt;FROM node:10.16.3-alpine&lt;/code&gt;开始，起了一个干净的node镜像，并将&lt;code&gt;builder&lt;/code&gt;这个阶段做好的内容从builder阶段的&lt;code&gt;/opt&lt;/code&gt;文件夹下拷贝到&lt;code&gt;/app&lt;/code&gt;下。这里仍旧需要注意&lt;code&gt;COPY&lt;/code&gt;命令是不会拷贝目标文件夹自身的，只会拷贝文件夹下的内容。这样制作完成的镜像中就不会包含之前安装的typescript了。&lt;/p&gt;
-
-&lt;p&gt;这个例子简单了点，只有一个typescript，如果在构建过程中还要用到一些其他东西的话，效果（体积变化）就会非常明显。&lt;/p&gt;
-
-&lt;h1 id=&quot;3-集群处理及反向代理&quot;&gt;3. 集群处理及反向代理&lt;/h1&gt;
-&lt;p&gt;node作为一个单进程单线程的应用程序，在利用CPU上实在是不行，所以就需要一些外部程序的辅助来充分利用物理CPU。一般有两个解决方案。下述解决方案中的Nginx跑在容器里或跑在主机上都是可以的，没有任何区别。&lt;/p&gt;
-
-&lt;h2 id=&quot;31-pm2--nginx&quot;&gt;3.1 pm2 + nginx&lt;/h2&gt;
-&lt;p&gt;这个解决方案只需要启动一个应用程序容器，在容器内使用PM2对应用程序进行cluster化，由PM2监听单个端口并转发所有的进入请求。在应用程序容器之外，由Nginx处理所有到达主机的请求。&lt;/p&gt;
-
-&lt;p&gt;这里就涉及到在容器内使用PM2。首先需要安装PM2，需要在之前范例中的Dockerfile中的&lt;code&gt;COPY --from=builder /opt .&lt;/code&gt;之后添加一行：&lt;code&gt;RUN npm i pm2 -g --unsafe-perm --loglevel verbose&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;然后在容器运行的&lt;code&gt;ENTRYPOINT&lt;/code&gt;上，需要修改成：&lt;code&gt;ENTRYPOINT [&quot;pm2-runtime&quot;, &quot;start&quot;, &quot;./build/index.js&quot;]&lt;/code&gt;。这里注意，启动命令中使用的不是&lt;code&gt;pm2&lt;/code&gt;而是&lt;code&gt;pm2-runtime&lt;/code&gt;。这个命令是为了在容器内使用而专门特化出来的，普通的pm2命令在启动后就会转后台，导致容器退出。&lt;/p&gt;
-
-&lt;p&gt;此外，在使用时可以附加一些参数：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;docker run -d -it --name your_app_name &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -p &lt;span class=&quot;m&quot;&gt;3000&lt;/span&gt;:3000 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -v dir_of_host:/app/pm2 &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                      &lt;span class=&quot;c1&quot;&gt;# 映射到主机上的日志文件路径&lt;/span&gt;
-    your_app_name:version &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;your_app_name_in_pm2 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --instances&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;max &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;                              &lt;span class=&quot;c1&quot;&gt;# 以cluster模式启动pm2，并按CPU数量启动node应用的进程&lt;/span&gt;
-    --output&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/app/pm2/your_app_name.stdout.log &lt;span class=&quot;se&quot;&gt;\ &lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# 输出日志到pm2文件夹下，也就是之前在做context时特地做出来的文件夹&lt;/span&gt;
-    --error&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/app/pm2/your_app_name.stderr.log &lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;32-docker-compose--nginx&quot;&gt;3.2 docker-compose + nginx&lt;/h2&gt;
-&lt;p&gt;这个方案比较粗暴，之前提到的Dockerfile不需要改动，容器仍旧只有一个进程一个线程，容器本身并不做任何改动。而是使用docker-compose命令启动多个容器，然后在Nginx中配置upstream来进行反向代理负载均衡。&lt;/p&gt;
-
-&lt;p&gt;使用如下bash脚本来生成compose配置文件：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;ch&quot;&gt;#!/usr/bin/env bash&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;FULLPATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;dirname &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;pwd&lt;/span&gt; -P &lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FULLPATH&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/..
-
-&lt;span class=&quot;nv&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;cat ./package.json &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq -r &lt;span class=&quot;s1&quot;&gt;&amp;#39;.version&amp;#39;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;CONF&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;FULLPATH&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;/../compose.yml
-
-&lt;span class=&quot;nv&quot;&gt;PROCESS_COUNT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;8&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;PORT_BASE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3000&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;COMPOSE_TEMPLATE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;cat &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt;-EOC&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;version: &amp;quot;2.1&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;networks:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;  net:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    driver: bridge&lt;/span&gt;
-
-&lt;span class=&quot;s&quot;&gt;services:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;EOC&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; generate_compose&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nv&quot;&gt;OUTPUT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;COMPOSE_TEMPLATE&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;((&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; i&amp;lt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PROCESS_COUNT&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; i++ &lt;span class=&quot;o&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-        &lt;span class=&quot;nv&quot;&gt;ID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;nv&quot;&gt;PORT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$((&lt;/span&gt;PORT_BASE &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; ID&lt;span class=&quot;k&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-
-        &lt;span class=&quot;nv&quot;&gt;SERVICE_TEMPLATE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;cat &lt;span class=&quot;s&quot;&gt;&amp;lt;&amp;lt;-EOS&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;  you_app_name_${ID}:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    image: your_dockerhub_account/you_app_name:${VERSION}&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    container_name: you_app_name_${ID}&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    hostname: you_app_name_${ID}&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    networks:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      - net&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    ports:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      - ${PORT}:3000&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    logging:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      driver: json-file&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      options:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;        max-size: 512m&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    restart: always&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    volumes:&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      - dir_of_host:/app/pm2&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    command: [&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      &amp;quot;--name=your_app_name_in_pm2_${ID}&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      &amp;quot;--instances=max&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      &amp;quot;--output=/app/pm2/your_app_name_${ID}.stdout.log&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;      &amp;quot;--error=/app/pm2/your_app_name_${ID}.stderr.log&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;    ]&lt;/span&gt;
-&lt;span class=&quot;s&quot;&gt;EOS&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-
-        &lt;span class=&quot;nv&quot;&gt;NL&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;$&amp;#39;\n&amp;#39;&lt;/span&gt;
-        &lt;span class=&quot;nv&quot;&gt;OUTPUT&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OUTPUT&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;NL&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;SERVICE_TEMPLATE&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
-
-    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;OUTPUT&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; &amp;gt; &lt;span class=&quot;si&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;CONF&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-generate_compose&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;当然也可以编写一个脚本来制作nginx的配置文件，这里就简略点，直接改了：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;upstream upstream_node &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3001 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3002 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3003 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3004 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3005 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3006 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3007 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    server &lt;span class=&quot;m&quot;&gt;127&lt;/span&gt;.0.0.1:3008 &lt;span class=&quot;nv&quot;&gt;max_fails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;fail_timeout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;60&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;weight&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-    listen &lt;span class=&quot;m&quot;&gt;80&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    listen &lt;span class=&quot;m&quot;&gt;443&lt;/span&gt; ssl&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    ssl_prefer_server_ciphers on&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    ssl_certificate         cert/yourapp.youhost.com.key.pem&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    ssl_certificate_key     cert/yourapp.youhost.com.key&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    ssl_dhparam             cert/dhparam.pem&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    access_log /var/log/nginx/yourapp.youhost.com.access.log&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    error_log /var/log/nginx/yourapp.youhost.com.error.log&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    root /usr/share/nginx/html&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    index index.html index.htm&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    server_name yourapp.youhost.com&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    location / &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-        proxy_set_header x-Forwarded-For &lt;span class=&quot;nv&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        proxy_set_header HOST &lt;span class=&quot;nv&quot;&gt;$http_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        proxy_set_header X-Forwarded-Proto https&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        proxy_redirect http:// https://&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        proxy_connect_timeout &lt;span class=&quot;m&quot;&gt;240&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        proxy_send_timeout &lt;span class=&quot;m&quot;&gt;240&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        proxy_read_timeout &lt;span class=&quot;m&quot;&gt;240&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        proxy_pass http://upstream_node&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;4-健康检查&quot;&gt;4. 健康检查&lt;/h1&gt;
-&lt;p&gt;在容器内运行的node程序，可以设置一个专门用来进行健康检查的端点，然后在运行时进行配置，这样docker就可以了解程序是否存活。在配合consul等服务发现程序使用时，也可以使用该端点。&lt;/p&gt;
-
-&lt;p&gt;应用程序代码改动：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;===&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;/health&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;status&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;OK&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;Docker compose yml改动：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;restart&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;always&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;healthcheck&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;wget http://127.0.0.1:3000/health -q -O - &amp;gt; /dev/null 2&amp;gt;&amp;amp;1&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;10s&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;timeout&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;20s&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;retries&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;10&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Wed, 11 Dec 2019 10:36:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/12/node-in-docker/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/12/node-in-docker/</guid>
 			</item>
 		
 	</channel>

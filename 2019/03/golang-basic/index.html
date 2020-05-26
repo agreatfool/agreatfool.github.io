@@ -251,6 +251,10 @@
       <li><a href="#41-函数内联" id="markdown-toc-41-函数内联">4.1 函数内联</a></li>
     </ul>
   </li>
+  <li><a href="#5-杂项" id="markdown-toc-5-杂项">5. 杂项</a>    <ul>
+      <li><a href="#map值的取址" id="markdown-toc-map值的取址">Map值的取址</a></li>
+    </ul>
+  </li>
 </ul>
 
 <h1 id="1-前言">1. 前言</h1>
@@ -776,6 +780,17 @@ google手册：<a href="https://github.com/google/pprof/tree/master/doc" target=
 <h2 id="41-函数内联">4.1 函数内联</h2>
 <p>比较细节的解释可以参考：<a href="https://zhuanlan.zhihu.com/p/28347225" target="_blank">剖析使Go语言高效的5个特性(2/5): 函数调用不是免费的</a>。此外，可以看下官方的wiki：<a href="https://github.com/golang/go/wiki/CompilerOptimizations#function-inlining" target="_blank">Function Inlining</a>来了解官方对于内联的要求。</p>
 
+<h1 id="5-杂项">5. 杂项</h1>
+<h2 id="map值的取址">Map值的取址</h2>
+<p>Map的值是不可以取址的，见：<a href="https://github.com/golang/go/issues/11865#issuecomment-124801193" target="_blank">spec: can take the address of map[x] #11865</a>。如果有这样的需求，必须将其赋值给某个变量，然后对某个变量进行取址。</p>
+
+<figure class="highlight"><pre><code class="language-go" data-lang="go"><span></span><span class="c1">// compiling error</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Address: %p&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">m</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">])</span>
+
+<span class="c1">// do this, but it&#39;s a little bit meaning less</span>
+<span class="kd">var</span> <span class="nx">v</span> <span class="p">=</span> <span class="nx">m</span><span class="p">[</span><span class="s">&quot;key&quot;</span><span class="p">]</span>
+<span class="nx">fmt</span><span class="p">.</span><span class="nx">Printf</span><span class="p">(</span><span class="s">&quot;Address: %p&quot;</span><span class="p">,</span> <span class="o">&amp;</span><span class="nx">v</span><span class="p">)</span></code></pre></figure>
+
 <blockquote>
   <p>EOF</p>
 </blockquote>
@@ -795,15 +810,15 @@ google手册：<a href="https://github.com/google/pprof/tree/master/doc" target=
   <h2>Recent Posts</h2>
   <ul>
     
+    <li><a href="/2020/05/youtube-dl/">youtube-dl 及 ffmpeg 相关</a></li>
+    
+    <li><a href="/2020/05/golang-concurrency/">Golang Concurrency</a></li>
+    
     <li><a href="/2020/04/grpc-js-support/">grpc_tools_node_protoc_ts 对 @grpc/grpc-js 的支持</a></li>
     
     <li><a href="/2020/04/grpc-tools/">grpc-tools@1.8.1 安装问题</a></li>
     
     <li><a href="/2020/03/japanese/">日语自学笔记</a></li>
-    
-    <li><a href="/2019/12/wxpay/">微信支付接入</a></li>
-    
-    <li><a href="/2019/12/alipay/">支付宝接入</a></li>
     
   </ul>
 </div>
