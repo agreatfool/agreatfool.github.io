@@ -1,0 +1,738 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>MaterialUI Notes | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2020/06/material-ui/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2020/06/material-ui/">MaterialUI Notes</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>10 Jun 2020</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/CSS">CSS</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/UIKit">UIKit</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MaterialUI">MaterialUI</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Flexbox">Flexbox</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言">前言</a></li>
+  <li><a href="#notes" id="markdown-toc-notes">Notes</a>    <ul>
+      <li><a href="#样式" id="markdown-toc-样式">样式</a></li>
+      <li><a href="#栅格系统" id="markdown-toc-栅格系统">栅格系统</a></li>
+      <li><a href="#常用容器" id="markdown-toc-常用容器">常用容器</a></li>
+      <li><a href="#间距设置" id="markdown-toc-间距设置">间距设置</a></li>
+      <li><a href="#宽高尺寸设置" id="markdown-toc-宽高尺寸设置">宽高尺寸设置</a></li>
+      <li><a href="#颜色系统" id="markdown-toc-颜色系统">颜色系统</a></li>
+      <li><a href="#阴影" id="markdown-toc-阴影">阴影</a></li>
+      <li><a href="#层级" id="markdown-toc-层级">层级</a></li>
+      <li><a href="#文字铸排" id="markdown-toc-文字铸排">文字铸排</a></li>
+      <li><a href="#统一风格系统" id="markdown-toc-统一风格系统">统一风格系统</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="前言">前言</h2>
+<p><a href="https://material-ui.com/zh/" target="_blank">MaterialUI</a>算是现在比较常见的UIKit了，用的人多，社区比较大，而且各种环境和框架的移植也很丰富，用起来比较简单和方便。当然使用的时候因为一些特有的概念和语法糖，还是需要一点上手时间。</p>
+
+<p>官方的教程：<a href="https://material-ui.com/zh/getting-started/usage/#quick-start" target="_blank">Tutorial</a>（基本上没用）。</p>
+
+<p>一些资源：</p>
+
+<ul>
+  <li><a href="https://material-ui.com/zh/components/material-icons/" target="_blank">Material Icons 图标</a>
+    <ul>
+      <li><a href="https://material-ui.com/zh/getting-started/installation/#font-icons" target="_blank">字体的安装</a></li>
+    </ul>
+  </li>
+  <li><a href="https://material-ui.com/store/">Material 主题商店</a>){:target=”_blank”}</li>
+</ul>
+
+<h2 id="notes">Notes</h2>
+<h3 id="样式">样式</h3>
+<p>直接的样式处理及样式的编程，见文档：<a href="https://material-ui.com/zh/styles/basics/" target="_blank">@material-ui/styles</a>。简单范例：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">makeStyles</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@material-ui/core/styles&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">Button</span> <span class="nx">from</span> <span class="s1">&#39;@material-ui/core/Button&#39;</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">useStyles</span> <span class="o">=</span> <span class="nx">makeStyles</span><span class="p">({</span>
+  <span class="nx">root</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">background</span><span class="o">:</span> <span class="s1">&#39;linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)&#39;</span><span class="p">,</span>
+    <span class="nx">border</span>: <span class="kt">0</span><span class="p">,</span>
+    <span class="nx">borderRadius</span>: <span class="kt">3</span><span class="p">,</span>
+    <span class="nx">boxShadow</span><span class="o">:</span> <span class="s1">&#39;0 3px 5px 2px rgba(255, 105, 135, .3)&#39;</span><span class="p">,</span>
+    <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;white&#39;</span><span class="p">,</span>
+    <span class="nx">height</span>: <span class="kt">48</span><span class="p">,</span>
+    <span class="nx">padding</span><span class="o">:</span> <span class="s1">&#39;0 30px&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">});</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">Hook() {</span>
+  <span class="kr">const</span> <span class="nx">classes</span> <span class="o">=</span> <span class="nx">useStyles</span><span class="p">();</span>
+  <span class="k">return</span> <span class="o">&lt;</span><span class="nx">Button</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">root</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">Hook</span><span class="o">&lt;</span><span class="err">/Button&gt;;</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="栅格系统">栅格系统</h3>
+<p>栅格系统是布局的基础，官方文档在：<a href="https://material-ui.com/zh/components/grid/" target="_blank">Grid 栅格</a>。当然，MaterialUI也提供了直接使用<a href="https://material-ui.com/zh/system/flexbox/" target="_blank">Flexbox</a>来进行布局自定义的能力。另外，在做响应式布局的时候，<a href="https://material-ui.com/zh/components/hidden/" target="_blank">Hidden</a>组件也是非常重要的，能在某些分辨率下隐藏一些组件的显示。</p>
+
+<p>栅格系统使用 Grid “盒子”组件实现：</p>
+
+<ul>
+  <li>为了达到高度的灵活性，盒子组件运用了用 CSS 的 Flexible Box 模块 。</li>
+  <li>它有两种类型的布局：containers，items。</li>
+  <li>而项目宽度以百分比设置，因此相对于其父元素，它们总是流动的和变换大小的。</li>
+  <li>子元素则自带 padding 来和其他元素间隔。</li>
+  <li>你可以找到五个网格断点：xs，sm，md，lg 和 xl。</li>
+</ul>
+
+<p>首先需要了解响应式布局的网格断点，见文档：<a href="https://material-ui.com/zh/customization/breakpoints/" target="_blank">Breakpoints</a>。要注意，虽然断点的尺寸是有预定义值的，但也是可以自定义改动的。</p>
+
+<p>每个断点（一个键）匹配一个固定的屏幕宽度（一个值）：</p>
+
+<ul>
+  <li>xs，超小：0px</li>
+  <li>sm，小：600px</li>
+  <li>md，中等：960px</li>
+  <li>lg，大：1280px</li>
+  <li>xl，超大：1920px</li>
+</ul>
+
+<pre><code>value         |0px     600px    960px    1280px   1920px
+key           |xs      sm       md       lg       xl
+screen width  |--------|--------|--------|--------|--------&gt;
+range         |   xs   |   sm   |   md   |   lg   |   xl
+</code></pre>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="c1">// 样式的屏幕尺寸感知，并自适应</span>
+<span class="kr">const</span> <span class="nx">styles</span> <span class="o">=</span> <span class="nx">theme</span> <span class="o">=&gt;</span> <span class="p">({</span>
+  <span class="nx">root</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">padding</span>: <span class="kt">theme.spacing</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+    <span class="p">[</span><span class="nx">theme</span><span class="p">.</span><span class="nx">breakpoints</span><span class="p">.</span><span class="nx">down</span><span class="p">(</span><span class="s1">&#39;sm&#39;</span><span class="p">)]</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">backgroundColor</span>: <span class="kt">theme.palette.secondary.main</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">[</span><span class="nx">theme</span><span class="p">.</span><span class="nx">breakpoints</span><span class="p">.</span><span class="nx">up</span><span class="p">(</span><span class="s1">&#39;md&#39;</span><span class="p">)]</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">backgroundColor</span>: <span class="kt">theme.palette.primary.main</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="p">[</span><span class="nx">theme</span><span class="p">.</span><span class="nx">breakpoints</span><span class="p">.</span><span class="nx">up</span><span class="p">(</span><span class="s1">&#39;lg&#39;</span><span class="p">)]</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">backgroundColor</span>: <span class="kt">green</span><span class="p">[</span><span class="mi">500</span><span class="p">],</span>
+    <span class="p">},</span>
+  <span class="p">},</span>
+<span class="p">});</span></code></pre></figure>
+
+<p>实际组件的空间占用布局是按<a href="https://material-ui.com/zh/components/grid/#fluid-grids" target="_blank">Fluid grids 流式网格</a>来排放的。举个例子：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">makeStyles</span><span class="p">,</span> <span class="nx">createStyles</span><span class="p">,</span> <span class="nx">Theme</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;@material-ui/core/styles&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">Paper</span> <span class="nx">from</span> <span class="s1">&#39;@material-ui/core/Paper&#39;</span><span class="p">;</span>
+<span class="kr">import</span> <span class="nx">Grid</span> <span class="nx">from</span> <span class="s1">&#39;@material-ui/core/Grid&#39;</span><span class="p">;</span>
+
+<span class="kr">const</span> <span class="nx">useStyles</span> <span class="o">=</span> <span class="nx">makeStyles</span><span class="p">((</span><span class="nx">theme</span>: <span class="kt">Theme</span><span class="p">)</span> <span class="o">=&gt;</span>
+  <span class="nx">createStyles</span><span class="p">({</span>
+    <span class="nx">root</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">flexGrow</span>: <span class="kt">1</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="nx">paper</span><span class="o">:</span> <span class="p">{</span>
+      <span class="nx">padding</span>: <span class="kt">theme.spacing</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>
+      <span class="nx">textAlign</span><span class="o">:</span> <span class="s1">&#39;center&#39;</span><span class="p">,</span>
+      <span class="nx">color</span>: <span class="kt">theme.palette.text.secondary</span><span class="p">,</span>
+    <span class="p">},</span>
+  <span class="p">}),</span>
+<span class="p">);</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">CenteredGrid() {</span>
+  <span class="kr">const</span> <span class="nx">classes</span> <span class="o">=</span> <span class="nx">useStyles</span><span class="p">();</span>
+
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">div</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">root</span><span class="p">}</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">container</span> <span class="nx">spacing</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">12</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">xs</span><span class="o">=</span><span class="mi">12</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+        <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">6</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">xs</span><span class="o">=</span><span class="mi">6</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+        <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">6</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">xs</span><span class="o">=</span><span class="mi">6</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+        <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">xs</span><span class="o">=</span><span class="mi">3</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+        <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">xs</span><span class="o">=</span><span class="mi">3</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+        <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">xs</span><span class="o">=</span><span class="mi">3</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+        <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+          <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">xs</span><span class="o">=</span><span class="mi">3</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+        <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+      <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+    <span class="o">&lt;</span><span class="err">/div&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>效果：</p>
+
+<p><img src="/resources/2020/06/material-ui/grid-effect-01.png" alt="" target="_blank" /></p>
+
+<p>例子中的<code>xs</code>是指刚才提到的断点。只有屏幕尺寸在xs及其上的断点的情况下，才会按此布局。里面的数值是相对的，第一行最大值为12，后面第二行的6就是其一半。这个例子的playground：<a href="https://codesandbox.io/s/hpyjz?file=/demo.tsx">链接</a>。</p>
+
+<p>定义尺寸的时候可以对一个组件设置多个网格断点情况下的大小，这样做的话，可以让组件排布顺应不同的屏幕尺寸发生变化，看下面的例子：</p>
+
+<p><img src="/resources/2020/06/material-ui/grid-effect-02.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/grid-effect-03.png" alt="" target="_blank" /></p>
+
+<p>例子中，在屏幕尺寸大于sm的情况下（从大到小匹配），sm的尺寸定义发挥作用：第二行的组件占比都为6，第二行2个组件各占一半，同样的第三行占比设为3，一行正好4个组件都放进去。</p>
+
+<p>然后在屏幕尺寸缩小之后，尺寸小于sm，且大于xs，则xs的尺寸定义发挥作用：原来第二行各分一半的2个组件分别占了一行，原来第三行的4个组件分为了两行，每行两个。这个例子的playground：<a href="https://codesandbox.io/s/2ysg9?file=/demo.tsx">链接</a>。</p>
+
+<h3 id="常用容器">常用容器</h3>
+<p><strong><a href="https://material-ui.com/zh/components/container/" target="_blank">Container</a></strong></p>
+
+<p>页面的主要容器，一般来说所有的内容都会放在Container内。Container的最大宽度，使用<code>maxWidth</code>来设置，里面的值需要设置刚才的断点值：xs、sm、md、lg、xl。另，Container的<a href="https://material-ui.com/zh/api/container/" target="_blank">API文档</a>，属性相关内容都在这里。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Container</span> <span class="nx">maxWidth</span><span class="o">=</span><span class="s2">&quot;sm&quot;</span> <span class="o">/&gt;</span></code></pre></figure>
+
+<p><strong><a href="https://material-ui.com/zh/components/box/" target="_blank">Box</a></strong></p>
+
+<p>包装容器，一般用来将某几个组件包装在一起做位置偏移或样式添加等操作。Box默认为一个div，也可以使用<code>component</code>来设置实际的HTML标签：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">component</span><span class="o">=</span><span class="s2">&quot;span&quot;</span> <span class="nx">m</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">Button</span> <span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="err">/Box&gt;</span></code></pre></figure>
+
+<p><strong><a href="https://material-ui.com/zh/components/grid/" target="_blank">Grid</a></strong></p>
+
+<p>最基本的容器组件，通过将该组件相互嵌套使用，就可以组成非常复杂的页面布局。另，Grid的<a href="https://material-ui.com/zh/api/grid/" target="_blank">API文档</a>，组件属性需要到这里查阅。</p>
+
+<p>嵌套的情况下，<code>container</code>属性表示是包在外层的Grid，<code>item</code>则表示是从属于外层包装的Grid。如果有多层嵌套，则中间层的Grid既是container又是item。看个例子，playground在<a href="https://codesandbox.io/s/jf0r8?file=/demo.tsx" target="_blank">链接</a>：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="c1">// defining FormRow</span>
+<span class="kd">function</span> <span class="nx">FormRow() {</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">React</span><span class="p">.</span><span class="nx">Fragment</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">item</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+      <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">item</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+      <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">4</span><span class="p">}</span><span class="o">&gt;</span>
+        <span class="o">&lt;</span><span class="nx">Paper</span> <span class="nx">className</span><span class="o">=</span><span class="p">{</span><span class="nx">classes</span><span class="p">.</span><span class="nx">paper</span><span class="p">}</span><span class="o">&gt;</span><span class="nx">item</span><span class="o">&lt;</span><span class="err">/Paper&gt;</span>
+      <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+    <span class="o">&lt;</span><span class="err">/React.Fragment&gt;</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// using FormRow</span>
+<span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">container</span> <span class="nx">spacing</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">container</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">12</span><span class="p">}</span> <span class="nx">spacing</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">FormRow</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+  <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">container</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">12</span><span class="p">}</span> <span class="nx">spacing</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">FormRow</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+  <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">container</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">12</span><span class="p">}</span> <span class="nx">spacing</span><span class="o">=</span><span class="p">{</span><span class="mi">3</span><span class="p">}</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">FormRow</span> <span class="o">/&gt;</span>
+  <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+<span class="o">&lt;</span><span class="err">/Grid&gt;</span></code></pre></figure>
+
+<p>效果：</p>
+
+<p><img src="/resources/2020/06/material-ui/grid-effect-04.png" alt="" target="_blank" /></p>
+
+<h3 id="间距设置">间距设置</h3>
+<p>在MaterialUI中设置间距有已经做好的语法糖，直接使用即可，文档：<a href="https://material-ui.com/zh/system/spacing/" target="_blank">Spacing</a>，还有<a href="https://material-ui.com/zh/customization/spacing/" target="_blank">Theme Spacing</a>。</p>
+
+<p>其中属性是其中之一：</p>
+
+<ul>
+  <li>m - 对于设置margin</li>
+  <li>p - 对于设置padding</li>
+</ul>
+
+<p>哪边边是其中之一：</p>
+
+<ul>
+  <li>t - 对于设置* margin-top或padding-top*的类</li>
+  <li>b - 对于设置margin-bottom的类或padding-bottom的类</li>
+  <li>l - 对于设置margin-left或padding-left的类</li>
+  <li>r - 对于设置margin-right或padding-right的类</li>
+  <li>x - 对于设置* -left和* -right的类</li>
+  <li>y - 对于设置* -top和* -bottom的类</li>
+  <li>空白 - 用于在元素的所有4个边上设置边距或填充的类</li>
+</ul>
+
+<p>上面提到的属性的值，是数字，意思是<code>几份</code>。比如说<code>my={1}</code>就是上下添加一份的margin。下面的例子中，一份就是8px（MaterialUI的默认值一份就是8px）。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">const</span> <span class="nx">theme</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">spacing</span>: <span class="kt">8</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">m</span><span class="o">=</span><span class="p">{</span><span class="o">-</span><span class="mi">2</span><span class="p">}</span> <span class="o">/&gt;</span>  <span class="c1">// margin: -16px;</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">m</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">}</span> <span class="o">/&gt;</span>   <span class="c1">// margin: 0px;</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">m</span><span class="o">=</span><span class="p">{</span><span class="mf">0.5</span><span class="p">}</span> <span class="o">/&gt;</span> <span class="c1">// margin: 4px;</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">m</span><span class="o">=</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span> <span class="o">/&gt;</span>   <span class="c1">// margin: 16px;</span></code></pre></figure>
+
+<h3 id="宽高尺寸设置">宽高尺寸设置</h3>
+<p>见文档：<a href="https://material-ui.com/zh/system/sizing/" target="_blank">Sizing</a>。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">width</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="o">/</span><span class="mi">4</span><span class="p">}</span> <span class="o">/&gt;</span> <span class="c1">// Numbers in [0,1] are multiplied by 100 and converted to % values.</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">width</span><span class="o">=</span><span class="p">{</span><span class="mi">300</span><span class="p">}</span> <span class="o">/&gt;</span> <span class="c1">// Numbers are converted to pixel values.</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">width</span><span class="o">=</span><span class="s2">&quot;75%&quot;</span> <span class="o">/&gt;</span> <span class="c1">// String values are used as raw CSS.</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">width</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span> <span class="o">/&gt;</span>   <span class="c1">// 100%</span></code></pre></figure>
+
+<h3 id="颜色系统">颜色系统</h3>
+<p>MaterialUI提供了配色相关的解决方案，见：<a href="https://material-ui.com/zh/customization/color/" target="_blank">Color 颜色</a>（如果需要选择颜色代码的话，就直接在这个文档页面上查找），以及<a href="https://material-ui.com/zh/customization/palette/" target="_blank">Theme Palette</a>，以及<a href="https://material-ui.com/zh/system/palette/" target="_blank">Palette 调色</a>。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">color</span><span class="o">=</span><span class="s2">&quot;warning.main&quot;</span> <span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">bgcolor</span><span class="o">=</span><span class="s2">&quot;info.main&quot;</span> <span class="o">/&gt;</span></code></pre></figure>
+
+<h3 id="阴影">阴影</h3>
+<p>MaterialUI的阴影直接使用属性<code>boxShadow</code>就能实现了，文档：<a href="https://material-ui.com/zh/system/shadows/" target="_blank">Shadow</a>。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">boxShadow</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span> <span class="o">/&gt;</span></code></pre></figure>
+
+<h3 id="层级">层级</h3>
+<p>有时候一些元素会在同位置上进行重叠，这时候就需要确定它们的层级来进行相互覆盖的定义。在CSS中我们会使用<code>z-index</code>来操作，在MaterialUI中，一般使用属性<code>zIndex</code>来操作，且MaterialUI已经定义了一些，一般直接使用即可，<a href="https://material-ui.com/zh/system/positions/" target="_blank">范例</a>：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">zIndex</span><span class="o">=</span><span class="s2">&quot;tooltip&quot;</span> <span class="o">/&gt;</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">zIndex</span><span class="o">=</span><span class="s2">&quot;modal&quot;</span> <span class="o">/&gt;</span></code></pre></figure>
+
+<p><a href="https://material-ui.com/zh/customization/z-index/" target="_blank">预定义数值</a>：</p>
+
+<ul>
+  <li>mobile stepper（移动设备起步）: 1000</li>
+  <li>speed dial: 1050</li>
+  <li>app bar（应用栏）：1100</li>
+  <li>drawer（抽屉）：1200</li>
+  <li>modal（浮层）：1300</li>
+  <li>snackbar：1400</li>
+  <li>tooltip（提示）：1500</li>
+</ul>
+
+<h3 id="文字铸排">文字铸排</h3>
+<p>组件内文字内容的Typography，MaterialUI有属性可以直接控制，不需要手动编写CSS。见文档：<a href="https://material-ui.com/zh/system/typography/" target="_blank">Typography</a>，以及<a href="https://material-ui.com/zh/customization/typography/" target="_blank">Theme Typography</a>。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">textAlign</span><span class="o">=</span><span class="s2">&quot;left&quot;</span> <span class="o">/&gt;</span>                <span class="c1">// right, left, center</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">fontWeight</span><span class="o">=</span><span class="s2">&quot;fontWeightRegular&quot;</span> <span class="o">/&gt;</span>  <span class="c1">// light, regular, medium, 500, bold</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">fontSize</span><span class="o">=</span><span class="s2">&quot;fontSize&quot;</span> <span class="o">/&gt;</span>             <span class="c1">// default, h6.fontSize, 16</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">fontStyle</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span> <span class="o">/&gt;</span>              <span class="c1">// normal, italic, oblique</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">letterSpacing</span><span class="o">=</span><span class="p">{</span><span class="mi">6</span><span class="p">}</span> <span class="o">/&gt;</span>               <span class="c1">// 字符间距，这里的数值就是6px</span>
+<span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">lineHeight</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span> <span class="o">/&gt;</span>             <span class="c1">// normal, 10</span></code></pre></figure>
+
+<p>如果需要在页面上直接展示文字，建议使用组件Typography，见文档：<a href="https://material-ui.com/zh/components/typography/" target="_blank">Typography</a>。此外，还有<a href="https://material-ui.com/zh/api/typography/" target="_blank">API文档</a>，组件的属性需要到这里查阅。</p>
+
+<p>看一个例子，该例子的playground在：<a href="https://codesandbox.io/s/lpul9?file=/demo.tsx" target="_blank">链接</a>。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">12</span><span class="p">}</span> <span class="nx">sm</span> <span class="nx">container</span><span class="o">&gt;</span>
+  <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span> <span class="nx">container</span> <span class="nx">direction</span><span class="o">=</span><span class="s2">&quot;column&quot;</span> <span class="nx">spacing</span><span class="o">=</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">gutterBottom</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;subtitle1&quot;</span><span class="o">&gt;</span>
+        <span class="nx">Standard</span> <span class="nx">license</span>
+      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;body2&quot;</span> <span class="nx">gutterBottom</span><span class="o">&gt;</span>
+        <span class="nx">Full</span> <span class="nx">resolution</span> <span class="mi">1920</span><span class="nx">x1080</span> <span class="err">•</span> <span class="nx">JPEG</span>
+      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;body2&quot;</span> <span class="nx">color</span><span class="o">=</span><span class="s2">&quot;textSecondary&quot;</span><span class="o">&gt;</span>
+        <span class="nx">ID</span>: <span class="kt">1030114</span>
+      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
+    <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+    <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span><span class="o">&gt;</span>
+      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;body2&quot;</span> <span class="nx">style</span><span class="o">=&gt;</span>
+        <span class="nx">Remove</span>
+      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
+    <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+  <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+  <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span><span class="o">&gt;</span>
+    <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;subtitle1&quot;</span><span class="o">&gt;</span><span class="nx">$19</span><span class="p">.</span><span class="mi">00</span><span class="o">&lt;</span><span class="err">/Typography&gt;</span>
+  <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
+<span class="o">&lt;</span><span class="err">/Grid&gt;</span></code></pre></figure>
+
+<p>效果：</p>
+
+<p><img src="/resources/2020/06/material-ui/typography-effect-01.png" alt="" target="_blank" /></p>
+
+<p>该组件的<code>noWrap</code>属性默认值为false，也就是说遇到文字过长的情况下会进行回行。如果将这个属性设置为true，则文字过长的部分会被截断，并显示为省略号。</p>
+
+<h3 id="统一风格系统">统一风格系统</h3>
+<p>MaterialUI有一套统一的设计方案，方便开发者在App级别对所有的组件进行统一的样式及风格定义。官方文档：<a href="https://material-ui.com/zh/system/basics/" target="_blank">@material-ui/system</a>。一般来说项目大的话，肯定有需要进行这部分的调整。如果使用的是官方Store中的一些Template，一般它们已经做好了对应的功能。</p>
+
+<p>这部分比较庞大，细节很多。这里放一个简单例子，直观感受下：</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span>
+<span class="kr">import</span> <span class="p">{</span> <span class="nx">ThemeProvider</span> <span class="p">}</span> <span class="nx">from</span> <span class="s1">&#39;styled-components&#39;</span>
+
+<span class="kr">const</span> <span class="nx">theme</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="nx">spacing</span>: <span class="kt">4</span><span class="p">,</span>
+  <span class="nx">palette</span><span class="o">:</span> <span class="p">{</span>
+    <span class="nx">primary</span><span class="o">:</span> <span class="s1">&#39;#007bff&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+<span class="p">};</span>
+
+<span class="kr">export</span> <span class="k">default</span> <span class="kd">function</span> <span class="nx">App() {</span>
+  <span class="k">return</span> <span class="p">(</span>
+    <span class="o">&lt;</span><span class="nx">ThemeProvider</span> <span class="nx">theme</span><span class="o">=</span><span class="p">{</span><span class="nx">theme</span><span class="p">}</span><span class="o">&gt;</span>
+      <span class="p">{</span><span class="cm">/* children */</span><span class="p">}</span>
+    <span class="o">&lt;</span><span class="err">/ThemeProvider&gt;</span>
+  <span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>更多的细节可以查看MaterialUI的<a href="https://material-ui.com/zh/customization/theming/" target="_blank">Customization</a>个性化文档。</p>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2020/06/material-ui/">MaterialUI Notes</a></li>
+    
+    <li><a href="/2020/06/nextjs-note/">Next.js Notes</a></li>
+    
+    <li><a href="/2020/05/youtube-dl/">youtube-dl 及 ffmpeg 相关</a></li>
+    
+    <li><a href="/2020/05/golang-concurrency/">Golang Concurrency</a></li>
+    
+    <li><a href="/2020/04/grpc-js-support/">grpc_tools_node_protoc_ts 对 @grpc/grpc-js 的支持</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+      <li><a href="/category/Tor">Tor</a></li>
+    
+      <li><a href="/category/Node.js">Node.js</a></li>
+    
+      <li><a href="/category/CI">CI</a></li>
+    
+      <li><a href="/category/ServiceDiscovery">ServiceDiscovery</a></li>
+    
+      <li><a href="/category/Git">Git</a></li>
+    
+      <li><a href="/category/Payment">Payment</a></li>
+    
+      <li><a href="/category/Japanese">Japanese</a></li>
+    
+      <li><a href="/category/ReactJs">ReactJs</a></li>
+    
+      <li><a href="/category/CSS">CSS</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2020/06/material-ui/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
