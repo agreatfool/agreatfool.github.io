@@ -172,7 +172,12 @@
   <li><a href="#前言" id="markdown-toc-前言">前言</a></li>
   <li><a href="#notes" id="markdown-toc-notes">Notes</a>    <ul>
       <li><a href="#样式" id="markdown-toc-样式">样式</a></li>
-      <li><a href="#栅格系统" id="markdown-toc-栅格系统">栅格系统</a></li>
+      <li><a href="#栅格系统" id="markdown-toc-栅格系统">栅格系统</a>        <ul>
+          <li><a href="#网格断点" id="markdown-toc-网格断点">网格断点</a></li>
+          <li><a href="#断点隐藏" id="markdown-toc-断点隐藏">断点隐藏</a></li>
+          <li><a href="#流式网格" id="markdown-toc-流式网格">流式网格</a></li>
+        </ul>
+      </li>
       <li><a href="#常用容器" id="markdown-toc-常用容器">常用容器</a></li>
       <li><a href="#间距设置" id="markdown-toc-间距设置">间距设置</a></li>
       <li><a href="#宽高尺寸设置" id="markdown-toc-宽高尺寸设置">宽高尺寸设置</a></li>
@@ -198,7 +203,7 @@
       <li><a href="https://material-ui.com/zh/getting-started/installation/#font-icons" target="_blank">字体的安装</a></li>
     </ul>
   </li>
-  <li><a href="https://material-ui.com/store/">Material 主题商店</a>){:target=”_blank”}</li>
+  <li><a href="https://material-ui.com/store/" target="_blank">Material 主题商店</a></li>
 </ul>
 
 <h2 id="notes">Notes</h2>
@@ -239,6 +244,7 @@
   <li>你可以找到五个网格断点：xs，sm，md，lg 和 xl。</li>
 </ul>
 
+<h4 id="网格断点">网格断点</h4>
 <p>首先需要了解响应式布局的网格断点，见文档：<a href="https://material-ui.com/zh/customization/breakpoints/" target="_blank">Breakpoints</a>。要注意，虽然断点的尺寸是有预定义值的，但也是可以自定义改动的。</p>
 
 <p>每个断点（一个键）匹配一个固定的屏幕宽度（一个值）：</p>
@@ -273,6 +279,103 @@ range         |   xs   |   sm   |   md   |   lg   |   xl
   <span class="p">},</span>
 <span class="p">});</span></code></pre></figure>
 
+<h4 id="断点隐藏">断点隐藏</h4>
+<p>一般在做响应式设计的时候，会用到<a href="https://material-ui.com/zh/components/hidden/" target="_blank">Hidden组件</a>，该组件有3组属性可以控制当前组件在某些断点情况下的显示和隐藏：</p>
+
+<ul>
+  <li>*Up：使用任何断点<code>up</code>属性的元素，给定的 子节点 将在<code>断点以及断点以上</code>时被隐藏。</li>
+  <li>*Down：使用任何断点<code>down</code>属性的元素，给定 子节点 将在<code>断点以及断点以下</code>时被隐藏。</li>
+  <li>*Only：利用断点<code>only</code>属性，给定 子节点 将被隐藏在<code>指定的断点</code>。</li>
+</ul>
+
+<pre><code>innerWidth  |xs      sm       md       lg       xl
+            |--------|--------|--------|--------|--------&gt;
+width       |   xs   |   sm   |   md   |   lg   |   xl
+
+smUp        |   show | hide
+mdDown      |                     hide | show
+</code></pre>
+
+<p>看几个例子：</p>
+
+<p><strong>Up</strong>  <br />
+*Up：使用任何断点<code>up</code>属性的元素，给定的 子节点 将在<code>断点以及断点以上</code>时被隐藏。playground：<a href="https://codesandbox.io/s/zlpm4?file=/demo.tsx" target="_blank">链接</a></p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.container}</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">xsUp</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>xsUp<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">smUp</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>smUp<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">mdUp</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>mdUp<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">lgUp</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>lgUp<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">xlUp</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>xlUp<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre></figure>
+
+<p>效果：</p>
+
+<p><img src="/resources/2020/06/material-ui/hidden-up-lg.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-up-md.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-up-sm.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-up-xs.png" alt="" target="_blank" /></p>
+
+<p><strong>Down</strong>  <br />
+*Down：使用任何断点<code>down</code>属性的元素，给定 子节点 将在<code>断点以及断点以下</code>时被隐藏。playground：<a href="https://codesandbox.io/s/5d4xk?file=/demo.tsx" target="_blank">链接</a></p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.container}</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">xsDown</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>xsDown<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">smDown</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>smDown<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">mdDown</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>mdDown<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">lgDown</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>lgDown<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">xlDown</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>xlDown<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre></figure>
+
+<p>效果：</p>
+
+<p><img src="/resources/2020/06/material-ui/hidden-down-lg.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-down-md.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-down-sm.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-down-xs.png" alt="" target="_blank" /></p>
+
+<p><strong>Only</strong>  <br />
+*Only：利用断点<code>only</code>属性，给定 子节点 将被隐藏在<code>指定的断点</code>。playground：<a href="https://codesandbox.io/s/6nury?file=/demo.tsx" target="_blank">链接</a></p>
+
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span></span><span class="p">&lt;</span><span class="nt">div</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.container}</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">only</span><span class="o">=</span><span class="s">&quot;lg&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>Hidden on lg<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">only</span><span class="o">=</span><span class="s">&quot;sm&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>Hidden on sm<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Hidden</span> <span class="na">only</span><span class="o">=</span><span class="s">{[&#39;sm&#39;,</span> <span class="err">&#39;</span><span class="na">lg</span><span class="err">&#39;]}</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Paper</span> <span class="na">className</span><span class="o">=</span><span class="s">{classes.paper}</span><span class="p">&gt;</span>Hidden on sm and lg<span class="p">&lt;/</span><span class="nt">Paper</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Hidden</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span></code></pre></figure>
+
+<p>效果：</p>
+
+<p><img src="/resources/2020/06/material-ui/hidden-only-lg.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-only-md.png" alt="" target="_blank" />
+<img src="/resources/2020/06/material-ui/hidden-only-sm.png" alt="" target="_blank" /></p>
+
+<h4 id="流式网格">流式网格</h4>
 <p>实际组件的空间占用布局是按<a href="https://material-ui.com/zh/components/grid/#fluid-grids" target="_blank">Fluid grids 流式网格</a>来排放的。举个例子：</p>
 
 <figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="kr">import</span> <span class="nx">React</span> <span class="nx">from</span> <span class="s1">&#39;react&#39;</span><span class="p">;</span>
@@ -329,7 +432,7 @@ range         |   xs   |   sm   |   md   |   lg   |   xl
 
 <p><img src="/resources/2020/06/material-ui/grid-effect-01.png" alt="" target="_blank" /></p>
 
-<p>例子中的<code>xs</code>是指刚才提到的断点。只有屏幕尺寸在xs及其上的断点的情况下，才会按此布局。里面的数值是相对的，第一行最大值为12，后面第二行的6就是其一半。这个例子的playground：<a href="https://codesandbox.io/s/hpyjz?file=/demo.tsx">链接</a>。</p>
+<p>例子中的<code>xs</code>是指前面提到的断点。只有屏幕尺寸在xs及其上的断点的情况下，才会按此布局。里面的数值是相对的，第一行最大值为12，后面第二行的6就是其一半。这个例子的playground：<a href="https://codesandbox.io/s/hpyjz?file=/demo.tsx">链接</a>。</p>
 
 <p>定义尺寸的时候可以对一个组件设置多个网格断点情况下的大小，这样做的话，可以让组件排布顺应不同的屏幕尺寸发生变化，看下面的例子：</p>
 
@@ -351,9 +454,9 @@ range         |   xs   |   sm   |   md   |   lg   |   xl
 
 <p>包装容器，一般用来将某几个组件包装在一起做位置偏移或样式添加等操作。Box默认为一个div，也可以使用<code>component</code>来设置实际的HTML标签：</p>
 
-<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Box</span> <span class="nx">component</span><span class="o">=</span><span class="s2">&quot;span&quot;</span> <span class="nx">m</span><span class="o">=</span><span class="p">{</span><span class="mi">1</span><span class="p">}</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="nx">Button</span> <span class="o">/&gt;</span>
-<span class="o">&lt;</span><span class="err">/Box&gt;</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span></span><span class="p">&lt;</span><span class="nt">Box</span> <span class="na">component</span><span class="o">=</span><span class="s">&quot;span&quot;</span> <span class="na">m</span><span class="o">=</span><span class="s">{1}</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Button</span> <span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">Box</span><span class="p">&gt;</span></code></pre></figure>
 
 <p><strong><a href="https://material-ui.com/zh/components/grid/" target="_blank">Grid</a></strong></p>
 
@@ -479,29 +582,29 @@ range         |   xs   |   sm   |   md   |   lg   |   xl
 
 <p>看一个例子，该例子的playground在：<a href="https://codesandbox.io/s/lpul9?file=/demo.tsx" target="_blank">链接</a>。</p>
 
-<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">=</span><span class="p">{</span><span class="mi">12</span><span class="p">}</span> <span class="nx">sm</span> <span class="nx">container</span><span class="o">&gt;</span>
-  <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span> <span class="nx">container</span> <span class="nx">direction</span><span class="o">=</span><span class="s2">&quot;column&quot;</span> <span class="nx">spacing</span><span class="o">=</span><span class="p">{</span><span class="mi">2</span><span class="p">}</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span> <span class="nx">xs</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">gutterBottom</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;subtitle1&quot;</span><span class="o">&gt;</span>
-        <span class="nx">Standard</span> <span class="nx">license</span>
-      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
-      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;body2&quot;</span> <span class="nx">gutterBottom</span><span class="o">&gt;</span>
-        <span class="nx">Full</span> <span class="nx">resolution</span> <span class="mi">1920</span><span class="nx">x1080</span> <span class="err">•</span> <span class="nx">JPEG</span>
-      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
-      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;body2&quot;</span> <span class="nx">color</span><span class="o">=</span><span class="s2">&quot;textSecondary&quot;</span><span class="o">&gt;</span>
-        <span class="nx">ID</span>: <span class="kt">1030114</span>
-      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
-    <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
-    <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span><span class="o">&gt;</span>
-      <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;body2&quot;</span> <span class="nx">style</span><span class="o">=&gt;</span>
-        <span class="nx">Remove</span>
-      <span class="o">&lt;</span><span class="err">/Typography&gt;</span>
-    <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
-  <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
-  <span class="o">&lt;</span><span class="nx">Grid</span> <span class="nx">item</span><span class="o">&gt;</span>
-    <span class="o">&lt;</span><span class="nx">Typography</span> <span class="nx">variant</span><span class="o">=</span><span class="s2">&quot;subtitle1&quot;</span><span class="o">&gt;</span><span class="nx">$19</span><span class="p">.</span><span class="mi">00</span><span class="o">&lt;</span><span class="err">/Typography&gt;</span>
-  <span class="o">&lt;</span><span class="err">/Grid&gt;</span>
-<span class="o">&lt;</span><span class="err">/Grid&gt;</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-html" data-lang="html"><span></span><span class="p">&lt;</span><span class="nt">Grid</span> <span class="na">item</span> <span class="na">xs</span><span class="o">=</span><span class="s">{12}</span> <span class="na">sm</span> <span class="na">container</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Grid</span> <span class="na">item</span> <span class="na">xs</span> <span class="na">container</span> <span class="na">direction</span><span class="o">=</span><span class="s">&quot;column&quot;</span> <span class="na">spacing</span><span class="o">=</span><span class="s">{2}</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Grid</span> <span class="na">item</span> <span class="na">xs</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">Typography</span> <span class="na">gutterBottom</span> <span class="na">variant</span><span class="o">=</span><span class="s">&quot;subtitle1&quot;</span><span class="p">&gt;</span>
+        Standard license
+      <span class="p">&lt;/</span><span class="nt">Typography</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">Typography</span> <span class="na">variant</span><span class="o">=</span><span class="s">&quot;body2&quot;</span> <span class="na">gutterBottom</span><span class="p">&gt;</span>
+        Full resolution 1920x1080 • JPEG
+      <span class="p">&lt;/</span><span class="nt">Typography</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">Typography</span> <span class="na">variant</span><span class="o">=</span><span class="s">&quot;body2&quot;</span> <span class="na">color</span><span class="o">=</span><span class="s">&quot;textSecondary&quot;</span><span class="p">&gt;</span>
+        ID: 1030114
+      <span class="p">&lt;/</span><span class="nt">Typography</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">Grid</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Grid</span> <span class="na">item</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">Typography</span> <span class="na">variant</span><span class="o">=</span><span class="s">&quot;body2&quot;</span> <span class="na">style</span><span class="o">=</span><span class="err">&gt;</span>
+        Remove
+      <span class="p">&lt;/</span><span class="nt">Typography</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">Grid</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Grid</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">Grid</span> <span class="na">item</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">Typography</span> <span class="na">variant</span><span class="o">=</span><span class="s">&quot;subtitle1&quot;</span><span class="p">&gt;</span>$19.00<span class="p">&lt;/</span><span class="nt">Typography</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">Grid</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">Grid</span><span class="p">&gt;</span></code></pre></figure>
 
 <p>效果：</p>
 
