@@ -27,6 +27,7 @@
       &lt;li&gt;&lt;a href=&quot;#层级&quot; id=&quot;markdown-toc-层级&quot;&gt;层级&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#文字铸排&quot; id=&quot;markdown-toc-文字铸排&quot;&gt;文字铸排&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#统一风格系统&quot; id=&quot;markdown-toc-统一风格系统&quot;&gt;统一风格系统&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#typescript&quot; id=&quot;markdown-toc-typescript&quot;&gt;Typescript&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
@@ -477,6 +478,9 @@ mdDown      |                     hide | show
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 &lt;p&gt;更多的细节可以查看MaterialUI的&lt;a href=&quot;https://material-ui.com/zh/customization/theming/&quot; target=&quot;_blank&quot;&gt;Customization&lt;/a&gt;个性化文档。&lt;/p&gt;
+
+&lt;h3 id=&quot;typescript&quot;&gt;Typescript&lt;/h3&gt;
+&lt;p&gt;MaterialUI对Typescript支持很好，官方文档：&lt;a href=&quot;https://material-ui.com/zh/guides/typescript/&quot;&gt;TypeScript&lt;/a&gt;。里面细节还是有点多的，需要慢慢习惯用法。&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
