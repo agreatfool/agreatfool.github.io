@@ -521,6 +521,9 @@ mdDown      |                     hide | show
 
 &lt;p&gt;入门Next.js可以阅读官方的教程：&lt;a href=&quot;https://nextjs.org/learn/basics/create-nextjs-app&quot; target=&quot;_blank&quot;&gt;Create a Next.js App&lt;/a&gt;。关于Next.js的优势，为什么要使用Next.js以及很多关于Next.js的细节等，可以查看这篇博文：&lt;a href=&quot;https://www.freecodecamp.org/news/the-next-js-handbook/&quot; target=&quot;_blank&quot;&gt;The Next.js Handbook&lt;/a&gt;。&lt;/p&gt;
 
+&lt;p&gt;version&lt;code&gt;9.4.4&lt;/code&gt;已知问题（会列一些对使用有影响的）：
+&lt;a href=&quot;https://github.com/vercel/next.js/issues/5214&quot; target=&quot;_blank&quot;&gt;trailing slash in link … 404 … #5214&lt;/a&gt;&lt;/p&gt;
+
 &lt;h2 id=&quot;1-文件结构&quot;&gt;1. 文件结构&lt;/h2&gt;
 &lt;p&gt;默认被占用的路径只有两个：&lt;/p&gt;
 
