@@ -511,9 +511,9 @@ mdDown      |                     hide | show
   &lt;li&gt;&lt;a href=&quot;#6-react相关概念&quot; id=&quot;markdown-toc-6-react相关概念&quot;&gt;6. React相关概念&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#61-state&quot; id=&quot;markdown-toc-61-state&quot;&gt;6.1 state&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#62-effect&quot; id=&quot;markdown-toc-62-effect&quot;&gt;6.2 effect&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#7-自定义服务器&quot; id=&quot;markdown-toc-7-自定义服务器&quot;&gt;7. 自定义服务器&lt;/a&gt;&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#7-自定义服务器&quot; id=&quot;markdown-toc-7-自定义服务器&quot;&gt;7. 自定义服务器&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#资料&quot; id=&quot;markdown-toc-资料&quot;&gt;资料&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
@@ -668,7 +668,7 @@ mdDown      |                     hide | show
   &lt;span class=&quot;c1&quot;&gt;// your effect here&lt;/span&gt;
 &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;foo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
-&lt;h3 id=&quot;7-自定义服务器&quot;&gt;7. 自定义服务器&lt;/h3&gt;
+&lt;h2 id=&quot;7-自定义服务器&quot;&gt;7. 自定义服务器&lt;/h2&gt;
 &lt;p&gt;在大部分情况下，使用&lt;code&gt;next [start]&lt;/code&gt;命令启动的服务器就已经足够满足需求了，但某些时候，我们仍旧有需求需要自定义一些服务端的功能，这时候就需要改造Next.js自带的服务端功能了。&lt;/p&gt;
 
 &lt;p&gt;官方文档在：&lt;a href=&quot;https://nextjs.org/docs/advanced-features/custom-server&quot; target=&quot;_blank&quot;&gt;Custom Server&lt;/a&gt;。koa的例子可以在官方范例代码库中进行查看：&lt;a href=&quot;https://github.com/vercel/next.js/tree/master/examples/custom-server-koa&quot; target=&quot;_blank&quot;&gt;Custom Koa Server example&lt;/a&gt;。此外，还有一篇博客讲得不错：&lt;a href=&quot;https://cloudreports.net/nextjs-koajs-create-custom-nextjs-server-with-koajs/&quot; target=&quot;_blank&quot;&gt;NextJs + KoaJs Create custom NextJs server with KoaJs&lt;/a&gt;。&lt;/p&gt;
