@@ -185,6 +185,7 @@
   <li><a href="#6-react相关概念" id="markdown-toc-6-react相关概念">6. React相关概念</a>    <ul>
       <li><a href="#61-state" id="markdown-toc-61-state">6.1 state</a></li>
       <li><a href="#62-effect" id="markdown-toc-62-effect">6.2 effect</a></li>
+      <li><a href="#7-自定义服务器" id="markdown-toc-7-自定义服务器">7. 自定义服务器</a></li>
     </ul>
   </li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a></li>
@@ -341,6 +342,15 @@
   <span class="c1">// your effect here</span>
 <span class="p">},</span> <span class="p">[</span><span class="nx">foo</span><span class="p">]);</span></code></pre></figure>
 
+<h3 id="7-自定义服务器">7. 自定义服务器</h3>
+<p>在大部分情况下，使用<code>next [start]</code>命令启动的服务器就已经足够满足需求了，但某些时候，我们仍旧有需求需要自定义一些服务端的功能，这时候就需要改造Next.js自带的服务端功能了。</p>
+
+<p>官方文档在：<a href="https://nextjs.org/docs/advanced-features/custom-server" target="_blank">Custom Server</a>。koa的例子可以在官方范例代码库中进行查看：<a href="https://github.com/vercel/next.js/tree/master/examples/custom-server-koa" target="_blank">Custom Koa Server example</a>。此外，还有一篇博客讲得不错：<a href="https://cloudreports.net/nextjs-koajs-create-custom-nextjs-server-with-koajs/" target="_blank">NextJs + KoaJs Create custom NextJs server with KoaJs</a>。</p>
+
+<p>不过官方的文档给出的信息其实也相当有限，没有任何对于<code>next</code>命令的细致解释，如果想要知道官方启动命令实际上做了什么，就只能去阅读源码了。简单看了下，除了启动服务器之外，next命令还是做了不少事情的，如果想要在保证这些功能的情况下兼容koa的话，是相当困难的。</p>
+
+<p>这里更建议的做法是启一个纯粹的koa后端作为API的服务器，而将基本的前端页面和pages交给Next.js来进行服务。这样就可以绕开必须改动或者无法使用next命令的情况。</p>
+
 <h2 id="资料">资料</h2>
 <ul>
   <li><a href="https://nextjs.org/" target="_blank">Next.js</a></li>
@@ -364,6 +374,7 @@
   <li><a href="https://juejin.im/post/5d8ad2c7518825091471fd26" target="_blank">Next.js实践总结 - 登录授权验证最佳方案</a></li>
   <li><a href="https://juejin.im/post/5c07a0bbf265da613438308c" target="_blank">Next.js脚手架进阶 — 封装fetch &amp;&amp; 增加中间件</a></li>
   <li><a href="https://juejin.im/post/5b868b45e51d4538ae4db7ca" target="_blank">Next.js踩坑入门系列（三）— 目录重构&amp;&amp;再谈路由</a></li>
+  <li><a href="https://cloudreports.net/nextjs-koajs-create-custom-nextjs-server-with-koajs/" target="_blank">NextJs + KoaJs Create custom NextJs server with KoaJs</a></li>
 </ul>
 
 <blockquote>
