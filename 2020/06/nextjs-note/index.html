@@ -187,6 +187,10 @@
     </ul>
   </li>
   <li><a href="#7-自定义服务器" id="markdown-toc-7-自定义服务器">7. 自定义服务器</a></li>
+  <li><a href="#8-问题及解决" id="markdown-toc-8-问题及解决">8. 问题及解决</a>    <ul>
+      <li><a href="#81-typeorm" id="markdown-toc-81-typeorm">8.1 TypeORM</a></li>
+    </ul>
+  </li>
   <li><a href="#资料" id="markdown-toc-资料">资料</a></li>
 </ul>
 
@@ -344,6 +348,65 @@
 <p>不过官方的文档给出的信息其实也相当有限，没有任何对于<code>next</code>命令的细致解释，如果想要知道官方启动命令实际上做了什么，就只能去阅读源码了。简单看了下，除了启动服务器之外，next命令还是做了不少事情的，如果想要在保证这些功能的情况下兼容koa的话，是相当困难的。</p>
 
 <p>这里更建议的做法是启一个纯粹的koa后端作为API的服务器，而将基本的前端页面和pages交给Next.js来进行服务。这样就可以绕开必须改动或者无法使用next命令的情况。</p>
+
+<h2 id="8-问题及解决">8. 问题及解决</h2>
+<h3 id="81-typeorm">8.1 TypeORM</h3>
+<p>初始Versions</p>
+
+<pre><code>next: 9.4.4
+typeorm: 0.0.25
+</code></pre>
+
+<p>在添加一系列typeorm相关代码之后，next.js的编译会遇到报错（无法正常build）：</p>
+
+<pre><code>Syntax error: Support for the experimental syntax 'decorators-legacy' isn't currently enabled
+</code></pre>
+
+<p>解决方法见：<a href="https://stackoverflow.com/a/52765213" target="_blank">Syntax error - Support for the experimental syntax ‘decorators-legacy’ isn’t currently enabled</a>，需要在项目根目录添加文件<code>.babelrc</code>，并添加内容（关于babel的客制化，官方文档见：<a href="https://nextjs.org/docs/advanced-features/customizing-babel-config" target="_blank">Customizing Babel Config</a>）：</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+  <span class="nt">&quot;plugins&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="s2">&quot;@babel/plugin-proposal-decorators&quot;</span><span class="p">,</span>
+      <span class="p">{</span>
+        <span class="nt">&quot;legacy&quot;</span><span class="p">:</span> <span class="kc">true</span>
+      <span class="p">}</span>
+    <span class="p">]</span>
+  <span class="p">],</span>
+  <span class="nt">&quot;presets&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="s2">&quot;next/babel&quot;</span>
+  <span class="p">]</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>当然还需要安装扩展：<code>yarn add @babel/plugin-proposal-decorators -D</code>。</p>
+
+<p>接下来会遇到第二个报错：</p>
+
+<pre><code>error - ./node_modules/typeorm/browser/driver/DriverFactory.js
+Attempted import error: 'AuroraDataApiPostgresDriver' is not exported from './postgres/PostgresDriver'.
+</code></pre>
+
+<p>解决方法见：<a href="https://github.com/typeorm/typeorm/issues/6110" target="_blank">Typeorm/browser cannot be compiled since version 0.2.25 #6110</a>，解决方案简单粗暴，将typeorm的版本降到<code>0.2.24</code>即可。</p>
+
+<p>然后会遇到第三个报错：</p>
+
+<pre><code>warn  - ./node_modules/typeorm/browser/driver/react-native/ReactNativeDriver.js
+Module not found: Can't resolve 'react-native-sqlite-storage' in './node_modules/typeorm/browser/driver/react-native'
+</code></pre>
+
+<p>解决方法见：<a href="https://github.com/typeorm/typeorm/issues/2158#issuecomment-626984473" target="_blank">browser: Can’t resolve ‘react-native-sqlite-storage’ #2158</a>。创建一个假的stub package即可。</p>
+
+<p>然后就可以在<code>_app.tsx:MyApp.getInitialProps</code>进行数据库连接的初始化。</p>
+
+<figure class="highlight"><pre><code class="language-typescript" data-lang="typescript"><span></span><span class="k">try</span> <span class="p">{</span>
+  <span class="nx">getConnection</span><span class="p">();</span>
+<span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="nx">err</span> <span class="k">instanceof</span> <span class="nx">ConnectionNotFoundError</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">await</span> <span class="nx">createConnection</span><span class="p">(</span><span class="nx">Database</span><span class="p">.</span><span class="nx">getConnectionOptions</span><span class="p">());</span>
+  <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="k">throw</span> <span class="nx">err</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">}</span></code></pre></figure>
 
 <h2 id="资料">资料</h2>
 <ul>
