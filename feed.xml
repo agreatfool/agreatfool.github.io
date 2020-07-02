@@ -11,6 +11,136 @@
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
   &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#中间件执行顺序&quot; id=&quot;markdown-toc-中间件执行顺序&quot;&gt;中间件执行顺序&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#洋葱式的调用顺序&quot; id=&quot;markdown-toc-洋葱式的调用顺序&quot;&gt;洋葱式的调用顺序&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#中断的链式调用&quot; id=&quot;markdown-toc-中断的链式调用&quot;&gt;中断的链式调用&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#不使用await&quot; id=&quot;markdown-toc-不使用await&quot;&gt;不使用await&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#结论&quot; id=&quot;markdown-toc-结论&quot;&gt;结论&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+&lt;p&gt;发现之前对koa的中间件的理解还不够完全，这里做点笔记。&lt;/p&gt;
+
+&lt;h2 id=&quot;中间件执行顺序&quot;&gt;中间件执行顺序&lt;/h2&gt;
+&lt;p&gt;这里主要需要理解&lt;code&gt;next&lt;/code&gt;函数。这个函数有几个点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;调用next函数，就会触发下一个中间件的业务逻辑执行（异步），但不会离开当前中间件，如果在next之后有逻辑代码的话，会正常执行&lt;/li&gt;
+  &lt;li&gt;该函数调用是异步的，因此可以await等待后续的中间件执行结束返回回来&lt;/li&gt;
+  &lt;li&gt;以next函数为分隔线，上面是顺序执行，下面是倒叙执行，上面的由上向下，下面的由下向上&lt;/li&gt;
+  &lt;li&gt;next函数的显示执行构成了一个中间件的调用链，如果任何一个中间件没有调用next，则链条会在当前中间件中断，后续即便注册了再多的中间件也不会被执行&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;看几个例子：&lt;/p&gt;
+
+&lt;h3 id=&quot;洋葱式的调用顺序&quot;&gt;洋葱式的调用顺序&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;1a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;1b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;2a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;2b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;3a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;3b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;最后的输出是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1a
+2a
+3a
+3b
+2b
+1b
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;中断的链式调用&quot;&gt;中断的链式调用&lt;/h3&gt;
+
+&lt;p&gt;如果某个中间件没有调用next，则后续的调用链会中断。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;1a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;1b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;2a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;3a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;3b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;最后的输出是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1a
+2a
+1b
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;不使用await&quot;&gt;不使用await&lt;/h3&gt;
+
+&lt;p&gt;如果在调用next的时候不使用await的话，当前的中间件触发下一个中间件的执行（异步）后不会等待后续中间件返回，后续的业务逻辑会&lt;code&gt;立即&lt;/code&gt;继续执行。会打乱洋葱回调的顺序。&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;1a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;1b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;2a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;2b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;use&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;Koa.Next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;3a&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;next&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+  &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;3b&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;最后的输出是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;1a
+2a
+3a
+2b
+3b
+1b
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h2 id=&quot;结论&quot;&gt;结论&lt;/h2&gt;
+&lt;p&gt;主要有下面几点：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;制作通用的中间件的时候，必须在代码中执行&lt;code&gt;return next();&lt;/code&gt;将调用链继续下去，否则后面的中间件将会失效&lt;/li&gt;
+  &lt;li&gt;一般编写中间件，如果某些业务需要等其他中间件执行结束后处理则使用&lt;code&gt;await next();&lt;/code&gt;，否则一律&lt;code&gt;return next();&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;next调用返回的是一个Promise，因此也可以使用&lt;code&gt;next().catch&lt;/code&gt;之类的方式来进行错误处理&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Wed, 10 Jun 2020 10:02:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2020/06/koa-middleware/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2020/06/koa-middleware/</guid>
+			</item>
+		
+			<item>
+				<title>MaterialUI Notes</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#notes&quot; id=&quot;markdown-toc-notes&quot;&gt;Notes&lt;/a&gt;    &lt;ul&gt;
       &lt;li&gt;&lt;a href=&quot;#样式&quot; id=&quot;markdown-toc-样式&quot;&gt;样式&lt;/a&gt;&lt;/li&gt;
       &lt;li&gt;&lt;a href=&quot;#栅格系统&quot; id=&quot;markdown-toc-栅格系统&quot;&gt;栅格系统&lt;/a&gt;        &lt;ul&gt;
@@ -10081,276 +10211,6 @@ npm ERR!     /Users/Jonathan/.npm/_logs/2020-04-22T01_31_02_124Z-debug.log
 				<pubDate>Fri, 27 Dec 2019 10:36:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/12/alipay/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/12/alipay/</guid>
-			</item>
-		
-			<item>
-				<title>Docker Registry 的简单使用</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-安装--启动&quot; id=&quot;markdown-toc-2-安装--启动&quot;&gt;2. 安装 &amp;amp; 启动&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-访问限制&quot; id=&quot;markdown-toc-3-访问限制&quot;&gt;3. 访问限制&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-api&quot; id=&quot;markdown-toc-3-api&quot;&gt;3. API&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-删除镜像&quot; id=&quot;markdown-toc-4-删除镜像&quot;&gt;4. 删除镜像&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;Docker和镜像在工作中是越来越常见了，而镜像仓库的需求也变得越来越常见。Docker官方给的解决方案是私有Registry仓库，官方也给了镜像进行对应的使用。但不得不说Docker的Registry是真的不好用：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;没有UI界面&lt;/li&gt;
-  &lt;li&gt;只有很弱的访问权限限制&lt;/li&gt;
-  &lt;li&gt;所有接口都必须通过HTTP请求方式进行，没有提供命令行工具等简化操作&lt;/li&gt;
-  &lt;li&gt;没有删除镜像的手段&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;此外还有很多，这里就不一并列举了。&lt;/p&gt;
-
-&lt;p&gt;因此，市面上也有不少alternative替代方案，做的最好的应该是&lt;a href=&quot;https://goharbor.io/&quot; target=&quot;_blank&quot;&gt;harbor&lt;/a&gt;。如果是大型企业或者是有比较严谨的权限控制需求的话，推荐使用harbor。&lt;/p&gt;
-
-&lt;p&gt;但针对小公司来说，更简单快速的部署和更简单的运维是相对来说更重要的事情，因此Docker Registry的使用也是有市场的。这里就简单做下使用上的介绍。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-安装--启动&quot;&gt;2. 安装 &amp;amp; 启动&lt;/h1&gt;
-&lt;p&gt;使用的还是官方的镜像：&lt;a href=&quot;https://hub.docker.com/_/registry&quot; target=&quot;_blank&quot;&gt;registry&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.docker.com/registry/deploying/&quot; target=&quot;_blank&quot;&gt;Deploy a registry server&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;启动命令：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker network create registry
-
-$ docker run -d &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --name docker_registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --network registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --restart&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;always &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -p &lt;span class=&quot;m&quot;&gt;15000&lt;/span&gt;:5000 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -v /tmp/registry/auth:/data/registry/auth &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -v /tmp/registry/data:/var/lib/registry &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -v /tmp/registry/config.yml:/etc/docker/registry/config.yml &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;REGISTRY_AUTH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;htpasswd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;REGISTRY_AUTH_HTPASSWD_REALM&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Registry Realm&amp;quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -e &lt;span class=&quot;nv&quot;&gt;REGISTRY_AUTH_HTPASSWD_PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/data/registry/auth/htpasswd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    registry:2.7.1&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;容器内配置文件的位置：&lt;code&gt;/etc/docker/registry/config.yml&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;当前例子中使用的是没有前置proxy，并且仅设置了最简单的用户名密码访问限制的情况。关于这块的访问限制相关，更详细的内容可以查看官方文档：&lt;a href=&quot;https://docs.docker.com/registry/deploying/#restricting-access&quot; target=&quot;_blank&quot;&gt;Restricting access&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;生成秘钥可以使用命令：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker run --rm &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --entrypoint htpasswd &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    registry:2.7.1 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    -Bbn username password &amp;gt; /tmp/registry/auth/htpasswd&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;如果需要结合nginx使用的话（一般推荐这样做），需要参见：&lt;a href=&quot;https://docs.docker.com/registry/recipes/nginx/&quot; target=&quot;_blank&quot;&gt;Authenticate proxy with nginx&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;参考配置文件：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-nginx&quot; data-lang=&quot;nginx&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;events&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;worker_connections&lt;/span&gt;  &lt;span class=&quot;mi&quot;&gt;1024&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-
-  &lt;span class=&quot;kn&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;docker-registry&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;registry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;c1&quot;&gt;## Set a variable to help us decide if we need to add the&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;## &amp;#39;Docker-Distribution-Api-Version&amp;#39; header.&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;## The registry always sets this header.&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;## In the case of nginx performing auth, the header is unset&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;## since nginx is auth-ing before proxying.&lt;/span&gt;
-  &lt;span class=&quot;kn&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$upstream_http_docker_distribution_api_version&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$docker_distribution_api_version&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;&amp;#39;&amp;#39;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;registry/2.0&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-  &lt;span class=&quot;kn&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;443&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;ssl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;myregistrydomain.com&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;# SSL&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;ssl_certificate&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/etc/nginx/conf.d/domain.crt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;ssl_certificate_key&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/etc/nginx/conf.d/domain.key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;# Recommendations from https://raymii.org/s/tutorials/Strong_SSL_Security_On_nginx.html&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;ssl_protocols&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;TLSv1.1&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;TLSv1.2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;ssl_ciphers&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;ssl_prefer_server_ciphers&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;ssl_session_cache&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;shared:SSL:10m&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;# disable any limits to avoid HTTP 413 for large image uploads&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;client_max_body_size&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;c1&quot;&gt;# required to avoid HTTP 411: see Issue #1486 (https://github.com/moby/moby/issues/1486)&lt;/span&gt;
-    &lt;span class=&quot;kn&quot;&gt;chunked_transfer_encoding&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;on&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-    &lt;span class=&quot;kn&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/v2/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;c1&quot;&gt;# Do not allow connections from docker 1.5 and earlier&lt;/span&gt;
-      &lt;span class=&quot;c1&quot;&gt;# docker pre-1.6.0 did not properly set the user agent on ping, catch &amp;quot;Go *&amp;quot; user agents&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$http_user_agent&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;~&lt;/span&gt; &lt;span class=&quot;sr&quot;&gt;&amp;quot;^(docker\/1\.(3|4|5(?!\.[0-9]-dev))|Go&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;).*&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$&amp;quot;&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;kn&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;404&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-      &lt;span class=&quot;c1&quot;&gt;# To add basic authentication to v2 use auth_basic setting.&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;auth_basic&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;Registry&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;realm&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;auth_basic_user_file&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;/etc/nginx/conf.d/nginx.htpasswd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-      &lt;span class=&quot;c1&quot;&gt;## If $docker_distribution_api_version is empty, the header is not added.&lt;/span&gt;
-      &lt;span class=&quot;c1&quot;&gt;## See the map directive above where this variable is defined.&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;add_header&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;#39;Docker-Distribution-Api-Version&amp;#39;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$docker_distribution_api_version&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;always&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-      &lt;span class=&quot;kn&quot;&gt;proxy_pass&lt;/span&gt;                          &lt;span class=&quot;s&quot;&gt;http://docker-registry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;Host&lt;/span&gt;              &lt;span class=&quot;nv&quot;&gt;$http_host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;   &lt;span class=&quot;c1&quot;&gt;# required for docker client&amp;#39;s sake&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;X-Real-IP&lt;/span&gt;         &lt;span class=&quot;nv&quot;&gt;$remote_addr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# pass on real client&amp;#39;s IP&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;X-Forwarded-For&lt;/span&gt;   &lt;span class=&quot;nv&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;proxy_set_header&lt;/span&gt;  &lt;span class=&quot;s&quot;&gt;X-Forwarded-Proto&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$scheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;kn&quot;&gt;proxy_read_timeout&lt;/span&gt;                  &lt;span class=&quot;mi&quot;&gt;900&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;3-访问限制&quot;&gt;3. 访问限制&lt;/h1&gt;
-&lt;p&gt;在刚才的启动命令部分已经提到了&lt;code&gt;如何制作用户名和密码的访问限制秘钥&lt;/code&gt;。而作为用户访问Registry则是另一回事。&lt;/p&gt;
-
-&lt;p&gt;私有Registry如果架设的是HTTP，而不是HTTPS的话，访问的客户端需要修改配置，将该Registry的地址列入允许的不安全访问列表内，才可以正常访问。一般来说这个配置文件是在：&lt;code&gt;~/.docker/daemon.json&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;范例：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;insecure-registries&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;127.0.0.1:15000&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;修改完成之后必须重启本地的docker进程，该配置才会生效。&lt;/p&gt;
-
-&lt;p&gt;然后使用&lt;code&gt;docker login 127.0.0.1:15000&lt;/code&gt;进行登录，这会在&lt;code&gt;~/.docker/config.json&lt;/code&gt;文件中生成一个登录项。但访问凭证一般不会直接存储在这里，OSX操作系统是使用keychain来进行存储。参见：&lt;a href=&quot;https://docs.docker.com/engine/reference/commandline/login/#credentials-store&quot; target=&quot;_blank&quot;&gt;Credentials store&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;在某些场合，需求预先生成访问凭证，而不是到实际运行的主机上进行docker login。这时候使用命令来生成凭证，并手动生成对应的登录项配置文件，放到指定的位置来生效。&lt;/p&gt;
-
-&lt;p&gt;根据用户名和密码来生成凭证：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; -n &lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; base64
-&lt;span class=&quot;c1&quot;&gt;# dGVzdDphYmMxMjNf&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;生成登录项配置文件&lt;code&gt;~/.docker/config.json&lt;/code&gt;：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;auths&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nt&quot;&gt;&amp;quot;127.0.0.1:15000&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;nt&quot;&gt;&amp;quot;auth&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;dGVzdDphYmMxMjNf&amp;quot;&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;这样后续的使用就没有问题了，当然这样做是非常不安全的，不推荐使用。&lt;/p&gt;
-
-&lt;h1 id=&quot;3-api&quot;&gt;3. API&lt;/h1&gt;
-&lt;p&gt;因为registry没有提供UI界面，所有的操作都必须通过RESTful API来进行。&lt;/p&gt;
-
-&lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.docker.com/registry/spec/api/&quot; target=&quot;_blank&quot;&gt;HTTP API V2&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;常用API范例：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;查看所有的仓库清单&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -u &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; http://127.0.0.1:15000/v2/_catalog &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;结果：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;repositories&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/builder&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/common&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/gateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/runner&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/server&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;&lt;strong&gt;查看某个仓库的所有tag&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -u &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; http://127.0.0.1:15000/v2/fullstack/common/tags/list &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq .&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;结果：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;fullstack/common&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;tags&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.42&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.43&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.35&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.32&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.33&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.0.34&amp;quot;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;&lt;strong&gt;查看某个仓库某个tag的digest&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl -u &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; http://127.0.0.1:15000/v2/fullstack/common/manifests/0.0.43 &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
-    --header &lt;span class=&quot;s2&quot;&gt;&amp;quot;Accept: application/vnd.docker.distribution.manifest.v2+json&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; jq &lt;span class=&quot;s1&quot;&gt;&amp;#39;.config|.digest&amp;#39;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;结果：&lt;/p&gt;
-
-&lt;p&gt;&lt;code&gt;&quot;sha256:23ffb64a5f8c7bf748eb80830d7f3be7f5de613ba9d37817fe7771180b59fdc5&quot;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;根据digest删除某个仓库的某个tag&lt;/strong&gt;&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ curl &lt;span class=&quot;nv&quot;&gt;$username&lt;/span&gt;:&lt;span class=&quot;nv&quot;&gt;$password&lt;/span&gt; -I -X DELETE &lt;span class=&quot;s2&quot;&gt;&amp;quot;http://127.0.0.1:15000/v2/fullstack/common/manifests/sha256:23ffb64a5f8c7bf748eb80830d7f3be7f5de613ba9d37817fe7771180b59fdc5&amp;quot;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;结果：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;HTTP/1.1 &lt;span class=&quot;m&quot;&gt;202&lt;/span&gt; Accepted
-Docker-Distribution-Api-Version: registry/2.0
-X-Content-Type-Options: nosniff
-Date: Thu, &lt;span class=&quot;m&quot;&gt;26&lt;/span&gt; Dec &lt;span class=&quot;m&quot;&gt;2019&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;09&lt;/span&gt;:17:51 GMT
-Content-Length: &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;只要返回的CODE是&lt;code&gt;202&lt;/code&gt;，说明就是没问题的，正常删除。&lt;/p&gt;
-
-&lt;h1 id=&quot;4-删除镜像&quot;&gt;4. 删除镜像&lt;/h1&gt;
-&lt;p&gt;刚才在API中已经提到了根据digest删除某个tag，但是这时候镜像的真实数据还并没有被删除。还需要做几步操作。&lt;/p&gt;
-
-&lt;p&gt;首先需要修改Registry的配置文件，允许删除操作。注意下面范例的：&lt;code&gt;storage.delete.enabled: true&lt;/code&gt;。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;0.1&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;fields&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;service&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;registry&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;storage&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;cache&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;blobdescriptor&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;inmemory&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;filesystem&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;rootdirectory&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;/var/lib/registry&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;delete&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;addr&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;:5000&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;X-Content-Type-Options&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p p-Indicator&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;nosniff&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;health&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;storagedriver&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;enabled&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;true&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;interval&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;10s&lt;/span&gt;
-    &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;threshold&lt;/span&gt;&lt;span class=&quot;p p-Indicator&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;l l-Scalar l-Scalar-Plain&quot;&gt;3&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;然后需要进入容器内部进行删除操作：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ docker &lt;span class=&quot;nb&quot;&gt;exec&lt;/span&gt; -it /bin/sh
-/# /bin/registry garbage-collect /etc/docker/registry/config.yml&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;即便这样，被删除的tag仍旧会出现在tag列表API的结果里。Docker官方对删除就完全没做好支持。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Thu, 26 Dec 2019 11:36:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/12/docker-registry/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/12/docker-registry/</guid>
 			</item>
 		
 	</channel>
