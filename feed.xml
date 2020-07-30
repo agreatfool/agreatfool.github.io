@@ -825,6 +825,8 @@ mdDown      |                     hide | show
 
 &lt;p&gt;&lt;code&gt;useState&lt;/code&gt;函数接受一个状态的默认值，然后返回一个数组，数组的0位是state变量，1位是改变这个state变量的方法，名字可以自己命名。&lt;/p&gt;
 
+&lt;p&gt;State的值调整需要注意内存的问题，有的时候不是仅仅只是修改对象的值就可以了。特别是遇到复杂的state，一个object或者数组里有嵌套的object和数组的时候，需要非常注意内存拷贝的问题。具体的可以看这个帖子：&lt;a href=&quot;https://stackoverflow.com/a/49502115&quot; target=&quot;_blank&quot;&gt;React: how to update state.item[1] in state using setState?&lt;/a&gt;。&lt;/p&gt;
+
 &lt;h3 id=&quot;62-effect&quot;&gt;6.2 effect&lt;/h3&gt;
 &lt;p&gt;React的官方文档在：&lt;a href=&quot;https://reactjs.org/docs/hooks-effect.html&quot; target=&quot;_blank&quot;&gt;Using the Effect Hook - React&lt;/a&gt;。只要是涉及到状态变化的，都属于effect的范畴。一个React组件里可以使用&lt;code&gt;useEffect&lt;/code&gt;函数注册多个effect事件。第二个参数的指定可以决定该effect事件应该在什么时候触发。&lt;/p&gt;
 
