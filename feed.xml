@@ -7,6 +7,172 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>使用frp内网穿透进行ssh登录</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#架构与场景理解&quot; id=&quot;markdown-toc-架构与场景理解&quot;&gt;架构与场景理解&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#安装&quot; id=&quot;markdown-toc-安装&quot;&gt;安装&lt;/a&gt;    &lt;ul&gt;
+      &lt;li&gt;&lt;a href=&quot;#服务端&quot; id=&quot;markdown-toc-服务端&quot;&gt;服务端&lt;/a&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;a href=&quot;#客户端&quot; id=&quot;markdown-toc-客户端&quot;&gt;客户端&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#最终使用&quot; id=&quot;markdown-toc-最终使用&quot;&gt;最终使用&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+&lt;p&gt;内网穿透工具frp，有需要的人肯定已经了解它是什么了，不知道的可以去官网看下：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/fatedier/frp&quot; target=&quot;_blank&quot;&gt;fatedier/frp&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;架构与场景理解&quot;&gt;架构与场景理解&lt;/h2&gt;
+&lt;p&gt;这块网上其实已经有相当多的文章进行过阐述了，这里就简单说一些我的理解。&lt;/p&gt;
+
+&lt;p&gt;首先需要明确角色：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;用户：需要从外部（公网上）访问&lt;code&gt;内部服务&lt;/code&gt;的人&lt;/li&gt;
+  &lt;li&gt;frp服务端：处于公网上，拥有固定IP或者固定域名的主机；必须是主机，需要可以在这台主机上安装frp的服务端程序&lt;/li&gt;
+  &lt;li&gt;frp客户端：处于内网上，缺失固定IP或者从公网上无法访问得到的一些局域网内主机；同样必须是主机，必须可以安装frp的客户端程序&lt;/li&gt;
+  &lt;li&gt;内部服务：可以是和frp客户端安装在同一台主机上的应用程序，也可能是和frp客户端处于同一内网的某一台主机上的一些应用程序&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;如果内部服务这台主机在公网上可以直接访问得到，那么用户就可以直接过去访问，就没有frp什么事情了。但很多情况就是如此不尽如人意，某些服务和主机就是隐藏在一些内部私有的网络里面的，在公网上是没办法直接访问的。&lt;/p&gt;
+
+&lt;p&gt;这时候就需要在公网的主机上安装frp服务端程序，作为一个大家的目标（后续用户和frp客户端都会主动连接到这台主机上，这个主机是双向标的）。用户连接上来是为了访问内部服务，而frp客户端连接上来，则是为了告知frp服务端，内部服务到底在哪里。因为处于内网的服务，frp服务端也不能主动得知，必须frp客户端主动连接上去告知服务端，我在这里。&lt;/p&gt;
+
+&lt;p&gt;上面是一些比较感性的理解，具体的可以看图（注意图上的&lt;code&gt;s&lt;/code&gt;和&lt;code&gt;c&lt;/code&gt;，frps就是刚才说的frp服务端，而frpc则是frp客户端）：&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/resources/2020/10/frp_arch.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
+&lt;p&gt;安装分为服务端和客户端两部分。frp在大部分的linux发行版本上都是没有的，所以一般需要直接从github上下载release包，具体可以到&lt;a href=&quot;https://github.com/fatedier/frp/releases&quot; target=&quot;_blank&quot;&gt;这里&lt;/a&gt;查看。&lt;/p&gt;
+
+&lt;p&gt;下面的例子都以ubuntu为例，应用场景都是：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;用户 =&amp;gt; frp服务端（公网） =&amp;gt; frp客户端（私有网络） =&amp;gt; 目标内部主机ssh（私有网络）
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;服务端&quot;&gt;服务端&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ uname -m
+x86_64
+$ wget https://github.com/fatedier/frp/releases/download/v0.34.1/frp_0.34.1_linux_amd64.tar.gz
+$ tar zxvf frp_0.34.1_linux_amd64.tar.gz
+$ rm ./frp_0.34.1_linux_amd64.tar.gz
+$ mv -f ./frp_0.34.1_linux_amd64 ./frp
+$ &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; frp
+$ vim frps.ini&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ini&quot; data-lang=&quot;ini&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;bind_port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;7000&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;some_secret_string&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;dashboard_port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;7500&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;dashboard_user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;user_name&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;dashboard_pwd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;user_password&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;说明：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;bind_port：frp客户端连接frp服务端的端口号&lt;/li&gt;
+  &lt;li&gt;token：frp客户端连接服务端需要一致的秘钥（客户端和服务端两者的ini配置文件里这个字串必须一致）&lt;/li&gt;
+  &lt;li&gt;dashboard_port：frp服务端暴露出来，让管理员监控的面板的端口号&lt;/li&gt;
+  &lt;li&gt;dashboard_user：监控面板的用户名&lt;/li&gt;
+  &lt;li&gt;dashboard_pwd：监控面板的用户密码&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;接下来创建ubuntu的开机启动和daemon控制：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ sudo vim /etc/systemd/system/frps.service&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;填写内容：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ini&quot; data-lang=&quot;ini&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;[Unit]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;frps daemon&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;[Service]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;simple&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/path_to_frp/frps -c /path_to_frp/frps.ini&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;[Install]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;multi-user.target&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;启动、设置开机启动、重启，三个命令：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ sudo systemctl start frps
+$ sudo systemctl &lt;span class=&quot;nb&quot;&gt;enable&lt;/span&gt; frps
+$ sudo systemctl restart frps&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h3 id=&quot;客户端&quot;&gt;客户端&lt;/h3&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ uname -m
+x86_64
+$ wget https://github.com/fatedier/frp/releases/download/v0.34.1/frp_0.34.1_linux_amd64.tar.gz
+$ tar zxvf frp_0.34.1_linux_amd64.tar.gz
+$ rm ./frp_0.34.1_linux_amd64.tar.gz
+$ mv -f ./frp_0.34.1_linux_amd64 ./frp
+$ &lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; frp
+$ vim frpc.ini&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ini&quot; data-lang=&quot;ini&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;[common]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;server_addr&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;some_ip&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;server_port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;7000&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;token&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;some_secret_string&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;[ssh]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tcp&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;local_ip&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;127.0.0.1 &lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;local_port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;22&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;remote_port&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;6000&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;说明：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;server_addr：frp服务端所在的机器的IP，也就是公网上的那台&lt;/li&gt;
+  &lt;li&gt;server_port：这个端口号记得和之前服务端的配置一致&lt;/li&gt;
+  &lt;li&gt;token：这个也必须和之前服务端的配置一致&lt;/li&gt;
+  &lt;li&gt;local_port：内部服务所在那台机器，也就目标登录机的ssh端口号&lt;/li&gt;
+  &lt;li&gt;remote_port：这个端口号，是指&lt;code&gt;frpc的local_port&lt;/code&gt;应该映射到&lt;code&gt;frps主机上的哪个端口号&lt;/code&gt;，也就是最终用户ssh登录时使用的端口号&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;仍旧需要创建ubuntu的开机启动和daemon控制：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ sudo vim /etc/systemd/system/frpc.service&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;填写内容：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ini&quot; data-lang=&quot;ini&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;[Unit]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;Description&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;frpc daemon&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;[Service]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;Type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;simple&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;ExecStart&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;/path_to_frp/frpc -c /path_to_frp/frpc.ini&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;[Install]&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;WantedBy&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;multi-user.target&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;启动、设置开机启动、重启，三个命令：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ sudo systemctl start frpc
+$ sudo systemctl &lt;span class=&quot;nb&quot;&gt;enable&lt;/span&gt; frpc
+$ sudo systemctl restart frpc&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;最终使用&quot;&gt;最终使用&lt;/h2&gt;
+&lt;p&gt;最终用户ssh登录的时候，使用的命令如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ ssh -v -p &lt;span class=&quot;m&quot;&gt;6000&lt;/span&gt; user@frps_ip&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Mon, 19 Oct 2020 10:02:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2020/10/frp/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2020/10/frp/</guid>
+			</item>
+		
+			<item>
 				<title>Koa2 中间件范例</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -9825,455 +9991,6 @@ npm ERR!     /Users/Jonathan/.npm/_logs/2020-04-22T01_31_02_124Z-debug.log
 				<pubDate>Fri, 27 Dec 2019 11:36:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2019/12/wxpay/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2019/12/wxpay/</guid>
-			</item>
-		
-			<item>
-				<title>支付宝接入</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-支付流程&quot; id=&quot;markdown-toc-2-支付流程&quot;&gt;2. 支付流程&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-网页端&quot; id=&quot;markdown-toc-21-网页端&quot;&gt;2.1 网页端&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-移动原生&quot; id=&quot;markdown-toc-22-移动原生&quot;&gt;2.2 移动原生&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-准备工作&quot; id=&quot;markdown-toc-3-准备工作&quot;&gt;3. 准备工作&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#31-账号申请&quot; id=&quot;markdown-toc-31-账号申请&quot;&gt;3.1 账号申请&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#32-应用申请&quot; id=&quot;markdown-toc-32-应用申请&quot;&gt;3.2 应用申请&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#33-秘钥申请&quot; id=&quot;markdown-toc-33-秘钥申请&quot;&gt;3.3 秘钥申请&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-api--sdk&quot; id=&quot;markdown-toc-4-api--sdk&quot;&gt;4. API &amp;amp; SDK&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-sdk选择&quot; id=&quot;markdown-toc-41-sdk选择&quot;&gt;4.1 SDK选择&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#42-api使用基础&quot; id=&quot;markdown-toc-42-api使用基础&quot;&gt;4.2 API使用基础&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#43-常用接口&quot; id=&quot;markdown-toc-43-常用接口&quot;&gt;4.3 常用接口&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#431-pc网页支付下单&quot; id=&quot;markdown-toc-431-pc网页支付下单&quot;&gt;4.3.1 PC网页支付下单&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#432-app支付下单&quot; id=&quot;markdown-toc-432-app支付下单&quot;&gt;4.3.2 APP支付下单&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#433-支付宝订单查询&quot; id=&quot;markdown-toc-433-支付宝订单查询&quot;&gt;4.3.3 支付宝订单查询&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#44-回调处理&quot; id=&quot;markdown-toc-44-回调处理&quot;&gt;4.4 回调处理&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#441-return_url&quot; id=&quot;markdown-toc-441-return_url&quot;&gt;4.4.1 return_url&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#442-notify_url&quot; id=&quot;markdown-toc-442-notify_url&quot;&gt;4.4.2 notify_url&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-沙箱使用&quot; id=&quot;markdown-toc-5-沙箱使用&quot;&gt;5. 沙箱使用&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#51-沙箱申请&quot; id=&quot;markdown-toc-51-沙箱申请&quot;&gt;5.1 沙箱申请&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#52-沙箱管理&quot; id=&quot;markdown-toc-52-沙箱管理&quot;&gt;5.2 沙箱管理&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#53-沙箱支付&quot; id=&quot;markdown-toc-53-沙箱支付&quot;&gt;5.3 沙箱支付&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-错误处理&quot; id=&quot;markdown-toc-6-错误处理&quot;&gt;6. 错误处理&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#61-回调处理&quot; id=&quot;markdown-toc-61-回调处理&quot;&gt;6.1 回调处理&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#62-修复订单&quot; id=&quot;markdown-toc-62-修复订单&quot;&gt;6.2 修复订单&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-上线生效&quot; id=&quot;markdown-toc-7-上线生效&quot;&gt;7. 上线生效&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#appendix&quot; id=&quot;markdown-toc-appendix&quot;&gt;Appendix&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;支付宝的接入，权当笔记。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-支付流程&quot;&gt;2. 支付流程&lt;/h1&gt;
-&lt;h3 id=&quot;21-网页端&quot;&gt;2.1 网页端&lt;/h3&gt;
-&lt;p&gt;PC网页端的支付，官方文档在：&lt;a href=&quot;https://docs.open.alipay.com/270/105899/&quot; target=&quot;_blank&quot;&gt;开发文档 / 电脑网站支付 / 快速接入&lt;/a&gt;。这篇应该说是完整的tutorial，里面也包含了支付的整个流程。&lt;/p&gt;
-
-&lt;p&gt;官方配图：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/alipay/alipay_pc_process.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;总觉得支付宝的这个流程图有点问题，并没有很好解释流程顺序。这里整理一个文字版。&lt;/p&gt;
-
-&lt;p&gt;流程涉及到几个角色：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;PC网站网页&lt;/li&gt;
-  &lt;li&gt;PC网站后台&lt;/li&gt;
-  &lt;li&gt;支付宝系统&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;支付流程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;打开PC网站网页的商品页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;对商品进行下单&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;发送下单请求到PC网站后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;在自身系统内生成订单（生成内部订单号），并返回给网页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;获得内部订单信息，并将用户导向到支付页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;确认订单内容，并开始付款流程&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;发起支付请求到PC网站后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;向支付宝系统发起下单请求
-    &lt;ul&gt;
-      &lt;li&gt;其中附加了notify_url，会在支付完成后收到回调&lt;/li&gt;
-      &lt;li&gt;且附加了return_url，会在支付完成后将页面导向到该页面&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;将支付宝返回的信息交付给PC网站网页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;收到支付宝返回信息，使用其中的信息将页面导向到支付宝的付款页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;在支付宝的付款页面完成付款&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;支付宝系统&lt;/code&gt;确认支付完成，将用户网页重定向到return_url的页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;支付宝系统&lt;/code&gt;确认支付完成，向notify_url发送回调信息&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;验证支付宝回调完成，标记订单状态为已支付&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;22-移动原生&quot;&gt;2.2 移动原生&lt;/h3&gt;
-&lt;p&gt;移动端原生支付和PC网页支付差异不是很大，官方文档在：&lt;a href=&quot;https://docs.open.alipay.com/204/105297/&quot; target=&quot;_blank&quot;&gt;开发文档 / App支付 / 快速接入&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;官方配图：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/alipay/alipay_native_process.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;这个图还算可以，老样子整理一个文字版。&lt;/p&gt;
-
-&lt;p&gt;流程涉及到几个角色：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;手机APP&lt;/li&gt;
-  &lt;li&gt;APP后台&lt;/li&gt;
-  &lt;li&gt;支付宝系统&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;支付流程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;打开手机APP的商品页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;对商品进行下单&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;手机APP&lt;/code&gt;发送下单请求到APP后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;APP后台&lt;/code&gt;在自身系统内生成订单（生成内部订单号），并返回给APP&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;手机APP&lt;/code&gt;获得内部订单信息，并将用户导向到支付页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;确认订单内容，并开始付款流程&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;手机APP&lt;/code&gt;发起支付请求到APP后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;APP后台&lt;/code&gt;向支付宝系统发起下单请求，获得支付宝APP唤醒参数，并交付给手机APP
-    &lt;ul&gt;
-      &lt;li&gt;其中附加了notify_url，会在支付完成后收到回调&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;手机APP&lt;/code&gt;收到支付宝返回信息，使用其中的参数唤醒支付宝APP&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;在支付宝APP完成付款&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;支付宝系统&lt;/code&gt;确认支付完成，返回手机APP&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;支付宝系统&lt;/code&gt;确认支付完成，向notify_url发送回调信息&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;APP后台&lt;/code&gt;验证支付宝回调完成，标记订单状态为已支付&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;3-准备工作&quot;&gt;3. 准备工作&lt;/h1&gt;
-&lt;p&gt;在正式接入支付宝之前，还需要做一些准备工作，主要是一系列账号、应用、秘钥的申请。&lt;/p&gt;
-
-&lt;h2 id=&quot;31-账号申请&quot;&gt;3.1 账号申请&lt;/h2&gt;
-&lt;p&gt;公司账号申请都是老板做的事情，虽然繁琐但和技术人员没什么关系。创建完成后可以通过&lt;a href=&quot;https://docs.open.alipay.com/200/ug05sr/&quot; target=&quot;_blank&quot;&gt;账户成员管理&lt;/a&gt;将员工账号加入到管理群组里，方便员工直接进行开发。&lt;/p&gt;
-
-&lt;p&gt;员工可以通过&lt;a href=&quot;https://openhome.alipay.com/platform/manageHome.htm&quot; target=&quot;_blank&quot;&gt;这个链接&lt;/a&gt;，登入到支付宝进行账号和应用的管理。&lt;/p&gt;
-
-&lt;h2 id=&quot;32-应用申请&quot;&gt;3.2 应用申请&lt;/h2&gt;
-&lt;p&gt;见官方文档：&lt;a href=&quot;https://docs.open.alipay.com/200/105310&quot; target=&quot;_blank&quot;&gt;开发文档 / 开发指南 / 创建应用&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;刚创建出来的应用是没有任何功能的，支付宝的各种功能（包括最基础的支付功能）都是支付应用下的&lt;code&gt;应用功能&lt;/code&gt;，一般来说每个都需要单独开通，某些开通还需要一定的条件，比如说网页支付开通的话你必须首先要有一个已经上线的网页而且要有明确的支付功能（申请失败如下）。等等。见：&lt;a href=&quot;https://docs.open.alipay.com/200/105314/&quot; target=&quot;_blank&quot;&gt;签约功能&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/alipay/alipay_pc_app_failure.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;在这一步最重要的是要把支付应用的APP_ID记录下来。&lt;/p&gt;
-
-&lt;h2 id=&quot;33-秘钥申请&quot;&gt;3.3 秘钥申请&lt;/h2&gt;
-&lt;p&gt;见官方文档：&lt;a href=&quot;https://docs.open.alipay.com/291/105971/&quot; target=&quot;_blank&quot;&gt;开发文档 / 签名专区 / 第一步：生成 RSA 密钥&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;官方有提供一个工具&lt;code&gt;支付宝开放平台开发助手&lt;/code&gt;，可以用这个工具进行秘钥制作，比较方便：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://ideservice.alipay.com/ide/getPluginUrl.htm?clientType=assistant&amp;amp;platform=win&amp;amp;channelType=WEB&quot; target=&quot;_blank&quot;&gt;WIN版本&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://ideservice.alipay.com/ide/getPluginUrl.htm?clientType=assistant&amp;amp;platform=mac&amp;amp;channelType=WEB&quot; target=&quot;_blank&quot;&gt;MAC版本&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;后续研发上遇到签名问题可以参考：&lt;a href=&quot;https://docs.open.alipay.com/291/106096/&quot; target=&quot;_blank&quot;&gt;自助排查&lt;/a&gt;以及&lt;a href=&quot;https://docs.open.alipay.com/291/106098/&quot; target=&quot;_blank&quot;&gt;常见问题&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;这一步操作完成后应该会获得三个文件，需要妥善保存：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;alipay的公钥
-    &lt;ul&gt;
-      &lt;li&gt;文件以&lt;code&gt;-----BEGIN PUBLIC KEY-----&lt;/code&gt;开头&lt;/li&gt;
-      &lt;li&gt;文件以&lt;code&gt;-----END PUBLIC KEY-----&lt;/code&gt;结尾&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;应用的公钥
-    &lt;ul&gt;
-      &lt;li&gt;文件以&lt;code&gt;-----BEGIN PUBLIC KEY-----&lt;/code&gt;开头&lt;/li&gt;
-      &lt;li&gt;文件以&lt;code&gt;-----END PUBLIC KEY-----&lt;/code&gt;结尾&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;应用的私钥
-    &lt;ul&gt;
-      &lt;li&gt;文件以&lt;code&gt;-----BEGIN RSA PRIVATE KEY-----&lt;/code&gt;开头&lt;/li&gt;
-      &lt;li&gt;文件以&lt;code&gt;-----END RSA PRIVATE KEY-----&lt;/code&gt;结尾&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;下载下来的公钥和私钥都是不断行的连续字符串，还需要借助像是&lt;a href=&quot;https://www.samltool.com/format_privatekey.php&quot; target=&quot;_blank&quot;&gt;Online tool to format private key. - SAMLTool.com&lt;/a&gt;这样的工具进行格式转换，断行。如果没有文件头和文件尾的话，还需要手动添加。&lt;/p&gt;
-
-&lt;h1 id=&quot;4-api--sdk&quot;&gt;4. API &amp;amp; SDK&lt;/h1&gt;
-&lt;h2 id=&quot;41-sdk选择&quot;&gt;4.1 SDK选择&lt;/h2&gt;
-&lt;p&gt;Node.js进行开发的话，有两个npm库可选：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/alipay-node-sdk&quot; target=&quot;_blank&quot;&gt;alipay-node-sdk&lt;/a&gt;：这个库非官方，但维护的很好，而且使用的人也不少，可以一用&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.npmjs.com/package/alipay-sdk&quot; target=&quot;_blank&quot;&gt;Alipay SDK&lt;/a&gt;：这个库是官方的，但封装得还没有上一个好，而且文档也很糟糕，但毕竟是官方的，所以还是首选&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;官方SDK的使用需要了解：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.yuque.com/chenqiu/alipay-node-sdk/config-sdk&quot; target=&quot;_blank&quot;&gt;SDK 配置&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.yuque.com/chenqiu/alipay-node-sdk/with_biz_content&quot; target=&quot;_blank&quot;&gt;包含业务参数&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.yuque.com/chenqiu/alipay-node-sdk/without_biz_content&quot; target=&quot;_blank&quot;&gt;不包含业务参数&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.yuque.com/chenqiu/alipay-node-sdk/page_api&quot; target=&quot;_blank&quot;&gt;页面类接口调用&lt;/a&gt;：其实后续PC和APP下单用的都是这种模式，调用支付宝接口后获得对应的信息，然后返回给应用客户端，让它们触发后续流程&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.yuque.com/chenqiu/alipay-node-sdk/notify_verify&quot; target=&quot;_blank&quot;&gt;通知验签&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;此外，官方SDK有一个比较严重的BUG：&lt;a href=&quot;https://github.com/alipay/alipay-sdk-nodejs-all/issues/45&quot; target=&quot;_blank&quot;&gt;设置了 passbackParams 会导致 alipaySdk.checkNotifySign 失败 #45&lt;/a&gt;，会直接影响使用，需要注意。&lt;/p&gt;
-
-&lt;p&gt;解决方案：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;passback_params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;encodeURIComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;passback_params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;verified&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;alipaySdk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;checkNotifySign&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;payload&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;42-api使用基础&quot;&gt;4.2 API使用基础&lt;/h2&gt;
-&lt;p&gt;官方的API文档在：&lt;a href=&quot;https://docs.open.alipay.com/api_1&quot; target=&quot;_blank&quot;&gt;支付API&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;支付宝的API的接口，参数都分为&lt;code&gt;公共请求参数&lt;/code&gt;以及&lt;code&gt;请求参数&lt;/code&gt;。简单点来说：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;公共请求参数：支付宝级别比较顶层的参数，比如说：app_id、sign等&lt;/li&gt;
-  &lt;li&gt;请求参数：非公共请求参数之外的其他一切参数&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;请求参数会放在公共请求参数的&lt;code&gt;biz_content&lt;/code&gt;里，至于怎么放进去的可以不用关心，SDK都会直接封装掉。&lt;/p&gt;
-
-&lt;p&gt;API的测试可以通过：&lt;a href=&quot;https://openhome.alipay.com/platform/demoManage.htm#/alipay.trade.page.pay&quot; target=&quot;_blank&quot;&gt;在线调试(Beta)&lt;/a&gt;来模拟使用。&lt;/p&gt;
-
-&lt;h2 id=&quot;43-常用接口&quot;&gt;4.3 常用接口&lt;/h2&gt;
-&lt;p&gt;官方SDK的初始化，沙箱和正式用的是两套秘钥，这块需要动态处理下：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AlipaySdk&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay-sdk/lib/alipay&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AlipayFormData&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay-sdk/lib/form&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vendorConfig&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getVendor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;Constant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;VENDOR_ALIPAY_ID&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;IVendorConfigAlipay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isSandbox&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getRaw&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sandbox&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notifyUrl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vendorConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;callbackUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;returnUrl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;vendorConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;returnUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pubKeyPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;LibPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;../../../pem/alipay&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isSandbox&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;sandbox/alipay.pub.txt&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay.pub.txt&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;priKeyPath&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;LibPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;../../../pem/alipay&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isSandbox&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;sandbox/app.pri.txt&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;app.pri.txt&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gateway&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isSandbox&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;https://openapi.alipaydev.com/gateway.do&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;https://openapi.alipay.com/gateway.do&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay::sdk::pubKeyPath&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;pubKeyPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay::sdk::priKeyPath&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;priKeyPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay::sdk::gateway&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;gateway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;aliPay&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AlipaySdk&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;appId&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;vendorConfig.appId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;alipayPublicKey&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;LibFs.readFileSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;pubKeyPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;privateKey&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;LibFs.readFileSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;priKeyPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;gateway&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;this.gateway&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;signType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;RSA2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;431-pc网页支付下单&quot;&gt;4.3.1 PC网页支付下单&lt;/h3&gt;
-&lt;p&gt;文档在：&lt;a href=&quot;https://docs.open.alipay.com/api_1/alipay.trade.page.pay&quot; target=&quot;_blank&quot;&gt;alipay.trade.page.pay&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;范例代码：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AlipayFormData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;returnUrl&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;returnUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;notifyUrl&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notifyUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;bizContent&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;outTradeNo&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;orderId.toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;productCode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;FAST_INSTANT_TRADE_PAY&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;totalAmount&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;subject&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;passbackParams&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;encodeURIComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({}})),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;timeoutExpress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;seconds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;qrPayMode&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;aliPay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay.trade.page.pay&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}},&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;范例返回：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;form&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;https://openapi.alipaydev.com/gateway.do?method=alipay.trade.page.pay&amp;amp;app_id=...&amp;amp;charset=utf-8&amp;amp;version=1.0&amp;amp;sign_type=RSA2&amp;amp;timestamp=2019-XX-XX%2015%3A20%3A24&amp;amp;return_url=...&amp;amp;notify_url=...&amp;amp;sign=...&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;method&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;post&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;alipaySDKSubmit1577431224474&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;alipaySDKSubmit1577431224474&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;hidden&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;alipay_sdk&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;alipay-sdk-nodejs-3.0.8&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;/&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;input&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;hidden&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;biz_content&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;{&amp;amp;quot;out_trade_no&amp;amp;quot;:143123,&amp;amp;quot;product_code&amp;amp;quot;:&amp;amp;quot;FAST_INSTANT_TRADE_PAY...}&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;/&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;form&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;forms&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;alipaySDKSubmit1577431224474&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;submit&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;script&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;返回的是一个字符串，这串字符串交付给网页，让JS直接append到当前页面上，就会进行跳转（form.submit），到支付宝的页面让用户付款。&lt;/p&gt;
-
-&lt;h3 id=&quot;432-app支付下单&quot;&gt;4.3.2 APP支付下单&lt;/h3&gt;
-&lt;p&gt;文档在：&lt;a href=&quot;https://docs.open.alipay.com/api_1/alipay.trade.app.pay&quot; target=&quot;_blank&quot;&gt;alipay.trade.app.pay&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;范例代码：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AlipayFormData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;get&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;notifyUrl&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;notifyUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;addField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;bizContent&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;outTradeNo&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;orderId.toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;productCode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;QUICK_MSECURITY_PAY&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;totalAmount&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;price.toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;subject&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;desc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;passbackParams&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;encodeURIComponent&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;stringify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({}})),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;timeoutExpress&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Math&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;floor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;seconds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)}&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;aliPay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay.trade.app.pay&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{},&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;formData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}},&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;范例返回：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;https://openapi.alipaydev.com/gateway.do?method&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;alipay.trade.app.pay&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;app_id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;...&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;charset&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;utf-8&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;version&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;.0&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sign_type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;RSA2&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;timestamp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2019&lt;/span&gt;-XX-XX%2015%3A23%3A25&lt;span class=&quot;p&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;notify_url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;...&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;这一串字符串需要去掉头部的gateway：&lt;code&gt;https://openapi.alipaydev.com/gateway.do?&lt;/code&gt;，只需要把剩下的参数部分交付给移动APP即可，移动APP会使用这些参数唤醒支付宝APP。&lt;/p&gt;
-
-&lt;h3 id=&quot;433-支付宝订单查询&quot;&gt;4.3.3 支付宝订单查询&lt;/h3&gt;
-&lt;p&gt;文档在：&lt;a href=&quot;https://docs.open.alipay.com/api_1/alipay.trade.query&quot; target=&quot;_blank&quot;&gt;alipay.trade.query&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;范例代码：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;aliPay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;exec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay.trade.query&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;bizContent&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;out_trade_no&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;orderId.toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()},&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;info&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;console.log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}})&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;返回的结果详见官方API文档。&lt;/p&gt;
-
-&lt;h2 id=&quot;44-回调处理&quot;&gt;4.4 回调处理&lt;/h2&gt;
-&lt;h3 id=&quot;441-return_url&quot;&gt;4.4.1 return_url&lt;/h3&gt;
-&lt;p&gt;在return_url上收到的参数如下：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;charset&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;out_trade_no&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;143123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;method&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;alipay.trade.page.pay.return&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;total_amount&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;sign&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;B5wBu/icxG9u12XyBKUu...&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;auth_app_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;201...422&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;app_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;201...422&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;sign_type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;RSA2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;seller_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;208...342&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nt&quot;&gt;&amp;quot;timestamp&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2019-XX-XX 15:48:17&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;442-notify_url&quot;&gt;4.4.2 notify_url&lt;/h3&gt;
-&lt;p&gt;在notify_url上收到的参数如下：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; 
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;gmt_create&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2019-XX-XX 15:48:01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;charset&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;utf-8&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;subject&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;测试商品名&amp;quot;&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;  &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;sign&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;: &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;OMcW&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;K&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;9&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;Sy...&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;  &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;buyer_id&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;: &amp;quot;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;208&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;342&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;  &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;: &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;测试商品描述&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;  &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;invoice_amount&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;: &amp;quot;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.01&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;  &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;notify_id&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;: &amp;quot;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2019&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;589&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;,&lt;/span&gt;
-&lt;span class=&quot;s2&quot;&gt;  &amp;quot;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;fund_bill_list&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;: &amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;&amp;quot;amount\&amp;quot;:\&amp;quot;0.01\&amp;quot;,\&amp;quot;fundChannel\&amp;quot;:\&amp;quot;ALIPAYACCOUNT\&amp;quot;}]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;notify_type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;trade_status_sync&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;trade_status&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;TRADE_SUCCESS&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;receipt_amount&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;app_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;201...422&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;buyer_pay_amount&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;sign_type&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;RSA2&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;seller_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;208...342&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;gmt_payment&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2019-XX-XX 15:48:15&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;notify_time&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2019-XX-XX 15:48:16&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;passback_params&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;%7B%22orderId%22%3A143123%2C%22salt%22%3A%221fvwtia2k4nuszx2%22%7D&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1.0&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;out_trade_no&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;143123&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;total_amount&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.01&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;trade_no&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;2019...383&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;auth_app_id&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;201...422&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nt&quot;&gt;&amp;quot;point_amount&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;0.00&amp;quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;5-沙箱使用&quot;&gt;5. 沙箱使用&lt;/h1&gt;
-&lt;p&gt;官方文档在：&lt;a href=&quot;https://docs.open.alipay.com/200/105311/&quot; target=&quot;_blank&quot;&gt;开发文档 / 开发指南 / 使用沙箱环境&lt;/a&gt;。移动APP的沙箱使用还需要一些额外的调整：&lt;a href=&quot;https://docs.open.alipay.com/204/106450/&quot; target=&quot;_blank&quot;&gt;开发文档 / App支付 / 沙箱联调指南&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;51-沙箱申请&quot;&gt;5.1 沙箱申请&lt;/h2&gt;
-&lt;p&gt;沙箱不需要额外申请，在支付应用创建完成之后，其沙箱自动创建完成。&lt;/p&gt;
-
-&lt;h2 id=&quot;52-沙箱管理&quot;&gt;5.2 沙箱管理&lt;/h2&gt;
-&lt;p&gt;沙箱有单独的管理页面，上面主要要处理几个事情：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;获取沙箱的APP ID；沙箱应用是单独的应用，和正式应用是隔离的，在沙箱环境使用正式应用的APP ID会告知没有该应用，反之亦然&lt;/li&gt;
-  &lt;li&gt;制作沙箱单独的秘钥；该秘钥和正式环境是隔离的，需要单独制作&lt;/li&gt;
-  &lt;li&gt;获取沙箱支付宝APP的账号和密码以及支付密码；在测试的时候会使用到&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;53-沙箱支付&quot;&gt;5.3 沙箱支付&lt;/h2&gt;
-&lt;p&gt;沙箱环境有单独的一个调试用支付宝APP（用正常的支付宝APP扫码会失败，也无法被沙箱应用唤醒），只有android版本：&lt;a href=&quot;https://sandbox.alipaydev.com/user/downloadApp.htm&quot; target=&quot;_blank&quot;&gt;下载链接&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;在沙箱管理页面上能获取到对应的账号信息等。使用这些信息登入支付宝沙箱APP，然后就可以进行测试支付了。&lt;/p&gt;
-
-&lt;h1 id=&quot;6-错误处理&quot;&gt;6. 错误处理&lt;/h1&gt;
-&lt;h2 id=&quot;61-回调处理&quot;&gt;6.1 回调处理&lt;/h2&gt;
-&lt;p&gt;无论对错，业务服务器后端都需要以&lt;code&gt;text/plain&lt;/code&gt;的格式响应，如果回调处理没有问题，就返回&lt;code&gt;success&lt;/code&gt;，如果报错，则返回&lt;code&gt;fail&lt;/code&gt;。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 在这里处理业务&lt;/span&gt;
-
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;text/plain&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;success&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;text/plain&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;fail&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;62-修复订单&quot;&gt;6.2 修复订单&lt;/h2&gt;
-&lt;p&gt;在某些情况下，回调可能没有收到，或者一直报错导致回调没有正常处理。表现在用户视角，就是支付完成后订单状态无法正常改为支付完成（也就不会发货）。这是很糟糕的，因此需要制作修复订单功能。&lt;/p&gt;
-
-&lt;p&gt;客户端在检查到订单状态为等待支付之后，可以提供一个入口给用户，用户点击之后，应用后端应该向支付宝查询订单信息，如果在支付宝这里已经是&lt;code&gt;已支付&lt;/code&gt;而在应用这边还是&lt;code&gt;等待支付&lt;/code&gt;的话，就立即将业务订单改为已支付，并向用户发货。&lt;/p&gt;
-
-&lt;h1 id=&quot;7-上线生效&quot;&gt;7. 上线生效&lt;/h1&gt;
-&lt;p&gt;开发完成（甚至在这之前）就可以&lt;a href=&quot;https://docs.open.alipay.com/200/golive/&quot; target=&quot;_blank&quot;&gt;上线应用&lt;/a&gt;，之前在申请应用的时候提到过的功能开通，签约等，很大一部分都需要应用上线之后才可以做，所以这个操作可以尽早。最基础的支付功能基本上签约没什么难度，早点签约早点开通。&lt;/p&gt;
-
-&lt;h1 id=&quot;appendix&quot;&gt;Appendix&lt;/h1&gt;
-&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/weibo1230123/article/details/80214424&quot; target=&quot;_blank&quot;&gt;支付宝和微信的支付流程图&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/xch-yang/p/10336922.html&quot; target=&quot;_blank&quot;&gt;手把手教你接入支付宝支付&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.cnblogs.com/luckyyang/p/9517402.html&quot; target=&quot;_blank&quot;&gt;支付宝支付之扫码支付（电脑网站支付）、H5支付（手机网站支付）相关业务流程分析总结&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://my.oschina.net/u/2428791/blog/617651&quot; target=&quot;_blank&quot;&gt;支付宝支付接口中notify_url 与 return_url 的区别&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Fri, 27 Dec 2019 10:36:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/12/alipay/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/12/alipay/</guid>
 			</item>
 		
 	</channel>
