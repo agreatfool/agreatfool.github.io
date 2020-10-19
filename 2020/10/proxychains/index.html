@@ -1,0 +1,534 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>使用proxychains进行命令行proxy设置 | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2020/10/proxychains/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2020/10/proxychains/">使用proxychains进行命令行proxy设置</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>19 Oct 2020</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Linux">Linux</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/ProxyChains">ProxyChains</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#前言" id="markdown-toc-前言">前言</a></li>
+  <li><a href="#安装" id="markdown-toc-安装">安装</a></li>
+  <li><a href="#mac下的sip问题" id="markdown-toc-mac下的sip问题">MAC下的SIP问题</a></li>
+</ul>
+
+<h2 id="前言">前言</h2>
+<p>proxychains是一款相当好用的命令行命令proxy设置工具。一般来说使用ssh登录、curl、wget等一系列命令，有的时候都很需要进行proxy设置，理由么大家都懂的。这时候有像proxychains这样的工具就会非常方便。</p>
+
+<p>官网：</p>
+
+<ul>
+  <li><a href="https://github.com/rofl0r/proxychains-ng" target="_blank">rofl0r/proxychains-ng</a></li>
+</ul>
+
+<h2 id="安装">安装</h2>
+<p>在MAC下安装仍旧非常简单：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ brew update --verbose
+$ brew install proxychains-ng --verbose</code></pre></figure>
+
+<p>然后创建配置文件：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ mkdir ~/.proxychains
+$ vim ~/.proxychains/proxychains.conf</code></pre></figure>
+
+<p>内容如下，其实也就没几条有用的：</p>
+
+<figure class="highlight"><pre><code class="language-ini" data-lang="ini"><span></span><span class="c1"># proxychains.conf  VER 4.x</span>
+<span class="c1">#</span>
+<span class="c1">#        HTTP, SOCKS4a, SOCKS5 tunneling proxifier with DNS.</span>
+
+
+<span class="c1"># The option below identifies how the ProxyList is treated.</span>
+<span class="c1"># only one option should be uncommented at time,</span>
+<span class="c1"># otherwise the last appearing option will be accepted</span>
+<span class="c1">#</span>
+<span class="na">dynamic_chain</span>
+<span class="c1">#</span>
+<span class="c1"># Dynamic - Each connection will be done via chained proxies</span>
+<span class="c1"># all proxies chained in the order as they appear in the list</span>
+<span class="c1"># at least one proxy must be online to play in chain</span>
+<span class="c1"># (dead proxies are skipped)</span>
+<span class="c1"># otherwise EINTR is returned to the app</span>
+<span class="c1">#</span>
+<span class="c1">#strict_chain</span>
+<span class="c1">#</span>
+<span class="c1"># Strict - Each connection will be done via chained proxies</span>
+<span class="c1"># all proxies chained in the order as they appear in the list</span>
+<span class="c1"># all proxies must be online to play in chain</span>
+<span class="c1"># otherwise EINTR is returned to the app</span>
+<span class="c1">#</span>
+<span class="c1">#round_robin_chain</span>
+<span class="c1">#</span>
+<span class="c1"># Round Robin - Each connection will be done via chained proxies</span>
+<span class="c1"># of chain_len length</span>
+<span class="c1"># all proxies chained in the order as they appear in the list</span>
+<span class="c1"># at least one proxy must be online to play in chain</span>
+<span class="c1"># (dead proxies are skipped).</span>
+<span class="c1"># the start of the current proxy chain is the proxy after the last</span>
+<span class="c1"># proxy in the previously invoked proxy chain.</span>
+<span class="c1"># if the end of the proxy chain is reached while looking for proxies</span>
+<span class="c1"># start at the beginning again.</span>
+<span class="c1"># otherwise EINTR is returned to the app</span>
+<span class="c1"># These semantics are not guaranteed in a multithreaded environment.</span>
+<span class="c1">#</span>
+<span class="c1">#random_chain</span>
+<span class="c1">#</span>
+<span class="c1"># Random - Each connection will be done via random proxy</span>
+<span class="c1"># (or proxy chain, see  chain_len) from the list.</span>
+<span class="c1"># this option is good to test your IDS :)</span>
+
+<span class="c1"># Make sense only if random_chain or round_robin_chain</span>
+<span class="c1">#chain_len = 2</span>
+
+<span class="c1"># Quiet mode (no output from library)</span>
+<span class="c1">#quiet_mode</span>
+
+<span class="c1"># Proxy DNS requests - no leak for DNS data</span>
+<span class="c1">#proxy_dns</span>
+
+<span class="c1"># set the class A subnet number to use for the internal remote DNS mapping</span>
+<span class="c1"># we use the reserved 224.x.x.x range by default,</span>
+<span class="c1"># if the proxified app does a DNS request, we will return an IP from that range.</span>
+<span class="c1"># on further accesses to this ip we will send the saved DNS name to the proxy.</span>
+<span class="c1"># in case some control-freak app checks the returned ip, and denies to</span>
+<span class="c1"># connect, you can use another subnet, e.g. 10.x.x.x or 127.x.x.x.</span>
+<span class="c1"># of course you should make sure that the proxified app does not need</span>
+<span class="c1"># *real* access to this subnet.</span>
+<span class="c1"># i.e. dont use the same subnet then in the localnet section</span>
+<span class="c1">#remote_dns_subnet 127</span>
+<span class="c1">#remote_dns_subnet 10</span>
+<span class="c1">#remote_dns_subnet 224</span>
+
+<span class="c1"># Some timeouts in milliseconds</span>
+<span class="na">tcp_read_time_out 15000</span>
+<span class="na">tcp_connect_time_out 8000</span>
+
+<span class="c1">### Examples for localnet exclusion</span>
+<span class="c1">## localnet ranges will *not* use a proxy to connect.</span>
+<span class="c1">## Exclude connections to 192.168.1.0/24 with port 80</span>
+<span class="c1"># localnet 192.168.1.0:80/255.255.255.0</span>
+
+<span class="c1">## Exclude connections to 192.168.100.0/24</span>
+<span class="c1"># localnet 192.168.100.0/255.255.255.0</span>
+
+<span class="c1">## Exclude connections to ANYwhere with port 80</span>
+<span class="c1"># localnet 0.0.0.0:80/0.0.0.0</span>
+
+<span class="c1">## RFC5735 Loopback address range</span>
+<span class="c1">## if you enable this, you have to make sure remote_dns_subnet is not 127</span>
+<span class="c1">## you&#39;ll need to enable it if you want to use an application that</span>
+<span class="c1">## connects to localhost.</span>
+<span class="c1"># localnet 127.0.0.0/255.0.0.0</span>
+
+<span class="c1">## RFC1918 Private Address Ranges</span>
+<span class="c1"># localnet 10.0.0.0/255.0.0.0</span>
+<span class="c1"># localnet 172.16.0.0/255.240.0.0</span>
+<span class="c1"># localnet 192.168.0.0/255.255.0.0</span>
+
+<span class="c1"># ProxyList format</span>
+<span class="c1">#       type  ip  port [user pass]</span>
+<span class="c1">#       (values separated by&#39;tab&#39;or&#39;blank&#39;)</span>
+<span class="c1">#</span>
+<span class="c1">#       only numeric ipv4 addresses are valid</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#        Examples:</span>
+<span class="c1">#</span>
+<span class="c1">#        socks5  192.168.67.78    1080    lamer    secret</span>
+<span class="c1">#        http    192.168.89.3     8080    justu    hidden</span>
+<span class="c1">#        socks4  192.168.1.49     1080</span>
+<span class="c1">#        http    192.168.39.93    8080</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1">#       proxy types: http, socks4, socks5</span>
+<span class="c1">#        ( auth types supported:&quot;basic&quot;-http&quot;user/pass&quot;-socks )</span>
+<span class="c1">#</span>
+<span class="k">[ProxyList]</span>
+<span class="c1"># add proxy here ...</span>
+<span class="c1"># meanwile</span>
+<span class="c1"># defaults set to&quot;tor&quot;</span>
+<span class="na">socks5 127.0.0.1 6153</span>
+<span class="na">http 127.0.0.1 6152</span></code></pre></figure>
+
+<p>这里需要注意，安装完之后的命令名为：<code>proxychains4</code>，而不是proxychains。</p>
+
+<h2 id="mac下的sip问题">MAC下的SIP问题</h2>
+<p>MAC下如果使用proxychains来进行操作的话，会发现一些命令其实并没有生效。这里就会遇到一个SIP的问题，具体可以看：</p>
+
+<ul>
+  <li><a href="https://medium.com/@xiaoqinglin2018/mac-osx-%E4%BD%BF%E7%94%A8proxychains-ng-91ba61472fdf" target="_blank">Mac OSX 使用proxychains-ng</a></li>
+</ul>
+
+<p>上面的处理方法是完全关闭SIP，这其实是不太可取的，这里还有另一个解决思路，见：</p>
+
+<ul>
+  <li><a href="https://www.tcdw.net/post/proxychains-with-sip/" target="_blank">故事：试图不关闭 SIP 在 macOS Sierra 上使用 proxychains-ng</a></li>
+</ul>
+
+<p>最后使用的命令会如下：</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>$ cp /usr/bin/ssh ~/Prog/Cmd
+$
+$ proxychains4 ~/Prog/Cmd/ssh -v -p <span class="m">22</span> user@ip</code></pre></figure>
+
+<blockquote>
+  <p>EOF</p>
+</blockquote>
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2020/10/proxychains/">使用proxychains进行命令行proxy设置</a></li>
+    
+    <li><a href="/2020/10/frp/">使用frp内网穿透进行ssh登录</a></li>
+    
+    <li><a href="/2020/07/koa-middleware/">Koa2 中间件范例</a></li>
+    
+    <li><a href="/2020/06/material-ui/">MaterialUI Notes</a></li>
+    
+    <li><a href="/2020/06/nextjs-note/">Next.js Notes</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+      <li><a href="/category/Tor">Tor</a></li>
+    
+      <li><a href="/category/Node.js">Node.js</a></li>
+    
+      <li><a href="/category/CI">CI</a></li>
+    
+      <li><a href="/category/ServiceDiscovery">ServiceDiscovery</a></li>
+    
+      <li><a href="/category/Git">Git</a></li>
+    
+      <li><a href="/category/Payment">Payment</a></li>
+    
+      <li><a href="/category/Japanese">Japanese</a></li>
+    
+      <li><a href="/category/ReactJs">ReactJs</a></li>
+    
+      <li><a href="/category/CSS">CSS</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2020/10/proxychains/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>

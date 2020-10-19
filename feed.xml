@@ -7,6 +7,184 @@
 		<atom:link href="https://xenojoshua.com/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>使用proxychains进行命令行proxy设置</title>
+				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#前言&quot; id=&quot;markdown-toc-前言&quot;&gt;前言&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#安装&quot; id=&quot;markdown-toc-安装&quot;&gt;安装&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#mac下的sip问题&quot; id=&quot;markdown-toc-mac下的sip问题&quot;&gt;MAC下的SIP问题&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
+&lt;p&gt;proxychains是一款相当好用的命令行命令proxy设置工具。一般来说使用ssh登录、curl、wget等一系列命令，有的时候都很需要进行proxy设置，理由么大家都懂的。这时候有像proxychains这样的工具就会非常方便。&lt;/p&gt;
+
+&lt;p&gt;官网：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/rofl0r/proxychains-ng&quot; target=&quot;_blank&quot;&gt;rofl0r/proxychains-ng&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;安装&quot;&gt;安装&lt;/h2&gt;
+&lt;p&gt;在MAC下安装仍旧非常简单：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ brew update --verbose
+$ brew install proxychains-ng --verbose&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;然后创建配置文件：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ mkdir ~/.proxychains
+$ vim ~/.proxychains/proxychains.conf&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;内容如下，其实也就没几条有用的：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-ini&quot; data-lang=&quot;ini&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# proxychains.conf  VER 4.x&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#        HTTP, SOCKS4a, SOCKS5 tunneling proxifier with DNS.&lt;/span&gt;
+
+
+&lt;span class=&quot;c1&quot;&gt;# The option below identifies how the ProxyList is treated.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# only one option should be uncommented at time,&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# otherwise the last appearing option will be accepted&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;dynamic_chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Dynamic - Each connection will be done via chained proxies&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# all proxies chained in the order as they appear in the list&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# at least one proxy must be online to play in chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# (dead proxies are skipped)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# otherwise EINTR is returned to the app&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#strict_chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Strict - Each connection will be done via chained proxies&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# all proxies chained in the order as they appear in the list&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# all proxies must be online to play in chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# otherwise EINTR is returned to the app&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#round_robin_chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Round Robin - Each connection will be done via chained proxies&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# of chain_len length&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# all proxies chained in the order as they appear in the list&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# at least one proxy must be online to play in chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# (dead proxies are skipped).&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# the start of the current proxy chain is the proxy after the last&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# proxy in the previously invoked proxy chain.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# if the end of the proxy chain is reached while looking for proxies&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# start at the beginning again.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# otherwise EINTR is returned to the app&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# These semantics are not guaranteed in a multithreaded environment.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#random_chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# Random - Each connection will be done via random proxy&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# (or proxy chain, see  chain_len) from the list.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# this option is good to test your IDS :)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Make sense only if random_chain or round_robin_chain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#chain_len = 2&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Quiet mode (no output from library)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#quiet_mode&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Proxy DNS requests - no leak for DNS data&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#proxy_dns&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# set the class A subnet number to use for the internal remote DNS mapping&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# we use the reserved 224.x.x.x range by default,&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# if the proxified app does a DNS request, we will return an IP from that range.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# on further accesses to this ip we will send the saved DNS name to the proxy.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# in case some control-freak app checks the returned ip, and denies to&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# connect, you can use another subnet, e.g. 10.x.x.x or 127.x.x.x.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# of course you should make sure that the proxified app does not need&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# *real* access to this subnet.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# i.e. dont use the same subnet then in the localnet section&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#remote_dns_subnet 127&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#remote_dns_subnet 10&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#remote_dns_subnet 224&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Some timeouts in milliseconds&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;tcp_read_time_out 15000&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;tcp_connect_time_out 8000&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;### Examples for localnet exclusion&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## localnet ranges will *not* use a proxy to connect.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## Exclude connections to 192.168.1.0/24 with port 80&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# localnet 192.168.1.0:80/255.255.255.0&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;## Exclude connections to 192.168.100.0/24&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# localnet 192.168.100.0/255.255.255.0&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;## Exclude connections to ANYwhere with port 80&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# localnet 0.0.0.0:80/0.0.0.0&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;## RFC5735 Loopback address range&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## if you enable this, you have to make sure remote_dns_subnet is not 127&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## you&amp;#39;ll need to enable it if you want to use an application that&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## connects to localhost.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# localnet 127.0.0.0/255.0.0.0&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;## RFC1918 Private Address Ranges&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# localnet 10.0.0.0/255.0.0.0&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# localnet 172.16.0.0/255.240.0.0&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# localnet 192.168.0.0/255.255.0.0&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# ProxyList format&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#       type  ip  port [user pass]&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#       (values separated by&amp;#39;tab&amp;#39;or&amp;#39;blank&amp;#39;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#       only numeric ipv4 addresses are valid&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#        Examples:&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#        socks5  192.168.67.78    1080    lamer    secret&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#        http    192.168.89.3     8080    justu    hidden&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#        socks4  192.168.1.49     1080&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#        http    192.168.39.93    8080&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#       proxy types: http, socks4, socks5&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#        ( auth types supported:&amp;quot;basic&amp;quot;-http&amp;quot;user/pass&amp;quot;-socks )&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;[ProxyList]&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# add proxy here ...&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# meanwile&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# defaults set to&amp;quot;tor&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;socks5 127.0.0.1 6153&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;http 127.0.0.1 6152&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;这里需要注意，安装完之后的命令名为：&lt;code&gt;proxychains4&lt;/code&gt;，而不是proxychains。&lt;/p&gt;
+
+&lt;h2 id=&quot;mac下的sip问题&quot;&gt;MAC下的SIP问题&lt;/h2&gt;
+&lt;p&gt;MAC下如果使用proxychains来进行操作的话，会发现一些命令其实并没有生效。这里就会遇到一个SIP的问题，具体可以看：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://medium.com/@xiaoqinglin2018/mac-osx-%E4%BD%BF%E7%94%A8proxychains-ng-91ba61472fdf&quot; target=&quot;_blank&quot;&gt;Mac OSX 使用proxychains-ng&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;上面的处理方法是完全关闭SIP，这其实是不太可取的，这里还有另一个解决思路，见：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.tcdw.net/post/proxychains-with-sip/&quot; target=&quot;_blank&quot;&gt;故事：试图不关闭 SIP 在 macOS Sierra 上使用 proxychains-ng&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;最后使用的命令会如下：&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ cp /usr/bin/ssh ~/Prog/Cmd
+$
+$ proxychains4 ~/Prog/Cmd/ssh -v -p &lt;span class=&quot;m&quot;&gt;22&lt;/span&gt; user@ip&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;EOF&lt;/p&gt;
+&lt;/blockquote&gt;
+</description>
+				<pubDate>Mon, 19 Oct 2020 10:02:22 +0800</pubDate>
+				<link>https://xenojoshua.com/2020/10/proxychains/</link>
+				<guid isPermaLink="true">https://xenojoshua.com/2020/10/proxychains/</guid>
+			</item>
+		
+			<item>
 				<title>使用frp内网穿透进行ssh登录</title>
 				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
 &lt;ul id=&quot;markdown-toc&quot;&gt;
@@ -18,6 +196,7 @@
     &lt;/ul&gt;
   &lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;#最终使用&quot; id=&quot;markdown-toc-最终使用&quot;&gt;最终使用&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#links&quot; id=&quot;markdown-toc-links&quot;&gt;Links&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;前言&quot;&gt;前言&lt;/h2&gt;
@@ -172,6 +351,16 @@ $ sudo systemctl restart frpc&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 &lt;p&gt;最终用户ssh登录的时候，使用的命令如下：&lt;/p&gt;
 
 &lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span&gt;&lt;/span&gt;$ ssh -v -p &lt;span class=&quot;m&quot;&gt;6000&lt;/span&gt; user@frps_ip&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;links&quot;&gt;Links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/fatedier/frp/issues/176&quot; target=&quot;_blank&quot;&gt;frp怎样开机启动和后台运行?#176&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/42071021&quot; target=&quot;_blank&quot;&gt;搭建frp用作内网SSH穿透&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.zjun.info/2020/frptest.html&quot; target=&quot;_blank&quot;&gt;frp内网穿透原理及实战应用&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://sspai.com/post/52523&quot; target=&quot;_blank&quot;&gt;使用frp进行内网穿透&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.hi-linux.com/posts/25686.html&quot; target=&quot;_blank&quot;&gt;推荐一款很好用的内网穿透工具 FRP&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;EOF&lt;/p&gt;
@@ -9582,425 +9771,6 @@ npm ERR!     /Users/Jonathan/.npm/_logs/2020-04-22T01_31_02_124Z-debug.log
 				<pubDate>Wed, 11 Mar 2020 22:22:22 +0800</pubDate>
 				<link>https://xenojoshua.com/2020/03/japanese/</link>
 				<guid isPermaLink="true">https://xenojoshua.com/2020/03/japanese/</guid>
-			</item>
-		
-			<item>
-				<title>微信支付接入</title>
-				<description>&lt;h4&gt;Table of Contents&lt;/h4&gt;
-&lt;ul id=&quot;markdown-toc&quot;&gt;
-  &lt;li&gt;&lt;a href=&quot;#1-前言&quot; id=&quot;markdown-toc-1-前言&quot;&gt;1. 前言&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#2-支付流程&quot; id=&quot;markdown-toc-2-支付流程&quot;&gt;2. 支付流程&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#21-网页端&quot; id=&quot;markdown-toc-21-网页端&quot;&gt;2.1 网页端&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#22-移动原生&quot; id=&quot;markdown-toc-22-移动原生&quot;&gt;2.2 移动原生&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#3-准备工作&quot; id=&quot;markdown-toc-3-准备工作&quot;&gt;3. 准备工作&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#4-api--sdk&quot; id=&quot;markdown-toc-4-api--sdk&quot;&gt;4. API &amp;amp; SDK&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#41-sdk选择&quot; id=&quot;markdown-toc-41-sdk选择&quot;&gt;4.1 SDK选择&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#42-api使用基础&quot; id=&quot;markdown-toc-42-api使用基础&quot;&gt;4.2 API使用基础&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#421-网页端&quot; id=&quot;markdown-toc-421-网页端&quot;&gt;4.2.1 网页端&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#422-移动原生&quot; id=&quot;markdown-toc-422-移动原生&quot;&gt;4.2.2 移动原生&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#43-常用接口&quot; id=&quot;markdown-toc-43-常用接口&quot;&gt;4.3 常用接口&lt;/a&gt;        &lt;ul&gt;
-          &lt;li&gt;&lt;a href=&quot;#431-统一下单接口&quot; id=&quot;markdown-toc-431-统一下单接口&quot;&gt;4.3.1 统一下单接口&lt;/a&gt;&lt;/li&gt;
-          &lt;li&gt;&lt;a href=&quot;#432-订单查询接口&quot; id=&quot;markdown-toc-432-订单查询接口&quot;&gt;4.3.2 订单查询接口&lt;/a&gt;&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#44-金额问题&quot; id=&quot;markdown-toc-44-金额问题&quot;&gt;4.4 金额问题&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#45-回调处理&quot; id=&quot;markdown-toc-45-回调处理&quot;&gt;4.5 回调处理&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#5-沙箱使用&quot; id=&quot;markdown-toc-5-沙箱使用&quot;&gt;5. 沙箱使用&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#51-沙箱申请&quot; id=&quot;markdown-toc-51-沙箱申请&quot;&gt;5.1 沙箱申请&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#52-沙箱使用&quot; id=&quot;markdown-toc-52-沙箱使用&quot;&gt;5.2 沙箱使用&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#53-沙箱问题&quot; id=&quot;markdown-toc-53-沙箱问题&quot;&gt;5.3 沙箱问题&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#6-错误处理&quot; id=&quot;markdown-toc-6-错误处理&quot;&gt;6. 错误处理&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#61-回调处理&quot; id=&quot;markdown-toc-61-回调处理&quot;&gt;6.1 回调处理&lt;/a&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;a href=&quot;#62-修复订单&quot; id=&quot;markdown-toc-62-修复订单&quot;&gt;6.2 修复订单&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#7-上线生效&quot; id=&quot;markdown-toc-7-上线生效&quot;&gt;7. 上线生效&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;#appendix&quot; id=&quot;markdown-toc-appendix&quot;&gt;Appendix&lt;/a&gt;    &lt;ul&gt;
-      &lt;li&gt;&lt;a href=&quot;#链接&quot; id=&quot;markdown-toc-链接&quot;&gt;链接&lt;/a&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;1-前言&quot;&gt;1. 前言&lt;/h1&gt;
-&lt;p&gt;微信支付的接入，权当笔记。&lt;/p&gt;
-
-&lt;h1 id=&quot;2-支付流程&quot;&gt;2. 支付流程&lt;/h1&gt;
-&lt;h3 id=&quot;21-网页端&quot;&gt;2.1 网页端&lt;/h3&gt;
-&lt;p&gt;官方文档：&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=6_5&quot; target=&quot;_blank&quot;&gt;扫码支付 &amp;gt; 模式二&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;官方配图：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/wxpay/wxpay_pc.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;流程涉及到几个角色：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;PC网站网页&lt;/li&gt;
-  &lt;li&gt;PC网站后台&lt;/li&gt;
-  &lt;li&gt;微信支付系统&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;支付流程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;打开PC网站网页的商品页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;对商品进行下单&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;发送下单请求到PC网站后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;在自身系统内生成订单（生成内部订单号），并返回给网页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;获得内部订单信息，并将用户导向到支付页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;确认订单内容，并开始付款流程&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;发起支付请求到PC网站后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;向微信支付系统发起下单请求，并将返回的信息交付给PC网站网页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;收到微信支付返回信息，将其中的QRCode渲染到页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;打开微信，使用扫码的方式完成支付&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;微信支付系统&lt;/code&gt;确认支付完成，向notify_url发送回调信息&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;验证微信支付回调完成，标记订单状态为已支付&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;22-移动原生&quot;&gt;2.2 移动原生&lt;/h3&gt;
-&lt;p&gt;官方文档：&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=8_3&quot; target=&quot;_blank&quot;&gt;APP支付 &amp;gt; 业务流程&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;官方配图：&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/resources/2019/12/wxpay/wxpay_app.png&quot; alt=&quot;&quot; target=&quot;_blank&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;流程涉及到几个角色：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;PC网站网页&lt;/li&gt;
-  &lt;li&gt;PC网站后台&lt;/li&gt;
-  &lt;li&gt;微信支付系统&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;支付流程如下：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;打开PC网站网页的商品页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;对商品进行下单&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;发送下单请求到PC网站后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;在自身系统内生成订单（生成内部订单号），并返回给网页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;获得内部订单信息，并将用户导向到支付页面&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;确认订单内容，并开始付款流程&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;发起支付请求到PC网站后台&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;向微信支付系统发起下单请求，并将返回的信息交付给PC网站网页&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站网页&lt;/code&gt;收到微信支付返回信息，使用其中的参数唤起微信APP&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;用户&lt;/code&gt;在微信APP中完成支付&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;微信支付系统&lt;/code&gt;确认支付完成，向notify_url发送回调信息&lt;/li&gt;
-  &lt;li&gt;&lt;code&gt;PC网站后台&lt;/code&gt;验证微信支付回调完成，标记订单状态为已支付&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h1 id=&quot;3-准备工作&quot;&gt;3. 准备工作&lt;/h1&gt;
-&lt;p&gt;微信的权限系统非常有问题，没有分级的子账号，只有一个申请人所拥有的主账号。这导致了后续的一系列操作全部都必须主账号持有人来完成（对，你没有看错，必须你的老板来操作，别人不能代劳）。&lt;/p&gt;
-
-&lt;p&gt;申请人必须操作：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;申请公司账号&lt;/li&gt;
-  &lt;li&gt;申请支付应用&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;申请完成之后，必须获得以下几个信息，程序才可以对接：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;APPID：支付应用的ID&lt;/li&gt;
-  &lt;li&gt;商户号：商户的ID&lt;/li&gt;
-  &lt;li&gt;商户的API秘钥：这里切记是&lt;code&gt;商户秘钥&lt;/code&gt;；微信整个生态中应用非常繁多，因此各种秘钥也多，特别是去生成秘钥的又是老板，一般没有技术经验，所以这步非常非常容易出错，会导致后面验证签名无论如何都不正确，所以一定要当心，必须是商户秘钥&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;微信支付也有证书，但这并不是必须项，大部分支付API是不需要证书的，只有部分才需要。证书也是在商户部分申请，申请完之后可以打包下载，里面含文件：&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;apiclient_cert.p12：证书pkcs12格式&lt;/li&gt;
-  &lt;li&gt;apiclient_cert.pem：证书&lt;/li&gt;
-  &lt;li&gt;apiclient_key.pem：私钥&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;申请及配置的相关操作可以看这篇：&lt;a href=&quot;https://www.leapcloud.cn/website/docs/doc_config/wxwangyezf/wxwangyezhifu.html&quot; target=&quot;_blank&quot;&gt;微信公众号支付配置&lt;/a&gt;，以及&lt;a href=&quot;https://www.leapcloud.cn/website/docs/doc_config/wxappzf/weixinapp.html&quot; target=&quot;_blank&quot;&gt;微信APP支付配置&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;移动端还会遇到制作应用签名的问题：&lt;a href=&quot;https://www.leapcloud.cn/website/docs/doc_config/keystorecreate/keystorecreate.html&quot; target=&quot;_blank&quot;&gt;Android App 签名生成教程&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h1 id=&quot;4-api--sdk&quot;&gt;4. API &amp;amp; SDK&lt;/h1&gt;
-&lt;h2 id=&quot;41-sdk选择&quot;&gt;4.1 SDK选择&lt;/h2&gt;
-&lt;p&gt;npm上可用的SDK包基本上只有：&lt;a href=&quot;https://www.npmjs.com/package/tenpay&quot; target=&quot;_blank&quot;&gt;tenpay&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;SDK的使用：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;tenpay&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;appid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;公众号ID&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;mchid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;微信商户号&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;partnerKey&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;微信支付安全密钥&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;pfx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;fs&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;readFileSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&amp;#39;证书文件路径&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;notify_url&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;支付回调网址&amp;#39;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;spbill_create_ip&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&amp;#39;IP地址&amp;#39;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// 方式一&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;api&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// 方式二&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;api&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
- 
-&lt;span class=&quot;c1&quot;&gt;// 调试模式(传入第二个参数为true, 可在控制台输出数据)&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;api&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
- 
-&lt;span class=&quot;c1&quot;&gt;// 沙盒模式(用于微信支付验收)&lt;/span&gt;
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sandboxAPI&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sandbox&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;config说明:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;appid - 公众号ID(必填)&lt;/li&gt;
-  &lt;li&gt;mchid - 微信商户号(必填)&lt;/li&gt;
-  &lt;li&gt;partnerKey - 微信支付安全密钥(必填, 在微信商户管理界面获取)&lt;/li&gt;
-  &lt;li&gt;pfx - 证书文件(选填, 在微信商户管理界面获取)
-    &lt;ul&gt;
-      &lt;li&gt;当不需要调用依赖证书的API时可不填此参数&lt;/li&gt;
-      &lt;li&gt;若业务流程中使用了依赖证书的API则需要在初始化时传入此参数&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;notify_url - 支付结果通知回调地址(选填)
-    &lt;ul&gt;
-      &lt;li&gt;可以在初始化的时候传入设为默认值, 不传则需在调用相关API时传入&lt;/li&gt;
-      &lt;li&gt;调用相关API时传入新值则使用新值&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;refund_url - 退款结果通知回调地址(选填)
-    &lt;ul&gt;
-      &lt;li&gt;可以在初始化的时候传入设为默认值, 不传则使用微信商户后台配置&lt;/li&gt;
-      &lt;li&gt;调用相关API时传入新值则使用新值&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;spbill_create_ip - IP地址(选填)
-    &lt;ul&gt;
-      &lt;li&gt;可以在初始化的时候传入设为默认值, 不传则默认值为127.0.0.1&lt;/li&gt;
-      &lt;li&gt;调用相关API时传入新值则使用新值&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;证书相关可以查阅：&lt;a href=&quot;https://kf.qq.com/faq/161222NneAJf161222U7fARv.html&quot; target=&quot;_blank&quot;&gt;什么是API证书？如何获取API证书？&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;如果在接入的时候遇到签名问题，可以使用：&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=20_1&quot; target=&quot;_blank&quot;&gt;微信支付接口签名校验工具&lt;/a&gt;或&lt;a href=&quot;https://pay.weixin.qq.com/wiki/tools/signverify/&quot; target=&quot;_blank&quot;&gt;微信公众平台支付接口调试工具&lt;/a&gt;进行调试。&lt;/p&gt;
-
-&lt;h2 id=&quot;42-api使用基础&quot;&gt;4.2 API使用基础&lt;/h2&gt;
-&lt;h3 id=&quot;421-网页端&quot;&gt;4.2.1 网页端&lt;/h3&gt;
-&lt;p&gt;API接入手册：&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=4_1&quot; target=&quot;_blank&quot;&gt;扫码支付 &amp;gt; 接口规则 &amp;gt; 协议规则&lt;/a&gt;。API列表：&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/native.php?chapter=9_1&quot; target=&quot;_blank&quot;&gt;扫码支付 &amp;gt; API列表 &amp;gt; 统一下单&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h3 id=&quot;422-移动原生&quot;&gt;4.2.2 移动原生&lt;/h3&gt;
-&lt;p&gt;API接入手册：&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=4_1&quot; target=&quot;_blank&quot;&gt;APP支付 &amp;gt; 接口规则 &amp;gt; 协议规则&lt;/a&gt;。API列表：&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/app/app.php?chapter=9_1&quot; target=&quot;_blank&quot;&gt;APP支付 &amp;gt; API列表 &amp;gt; 统一下单&lt;/a&gt;。&lt;/p&gt;
-
-&lt;h2 id=&quot;43-常用接口&quot;&gt;4.3 常用接口&lt;/h2&gt;
-&lt;h3 id=&quot;431-统一下单接口&quot;&gt;4.3.1 统一下单接口&lt;/h3&gt;
-&lt;p&gt;范例代码：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prepay_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;code_url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;wxpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;unifiedOrder&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;out_trade_no&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;orderId.toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 微信支付的金额是不带小数位的，所有的小数金额都必须*100转为正整数&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 数值先会被小数点后2位截断或补足，然后转为整数字符串&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 8.8     =&amp;gt; 8.80 =&amp;gt; 880&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 9.24678 =&amp;gt; 9.25 =&amp;gt; 925&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;total_fee&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toFixed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;trade_type&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// NATIVE：扫码支付 | APP：原生支付&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;product_id&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;productId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;prepayId&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;prepay_id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;codeUrl&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;code_url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;};&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;拿到返回值之后，后续根据支付类型不同，处理方式也不一样：&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;扫码支付&lt;/strong&gt;  &lt;br /&gt;
-需要将code_url的值，转换为QRCode，后续前端才可以将其渲染到HTML页面上（当然也可以直接将url传给前端，让前端渲染）。这里比较好用的是：&lt;a href=&quot;https://www.npmjs.com/package/qrcode&quot; target=&quot;_blank&quot;&gt;qrcode&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;后端代码：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;QRCode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;require&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;qrcode&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-
-&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;svg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;QRCode&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;codeUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;svg&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;HTML页面：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-html&quot; data-lang=&quot;html&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;head&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;qrcode&amp;quot;&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;width: 200px; height: 200px;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;div&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;html&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;&amp;gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;前端代码：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-javascript&quot; data-lang=&quot;javascript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;renderXml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;xmlString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;){&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// xmlString: svg content&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;doc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;DOMParser&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;parseFromString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;xmlString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;application/xml&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;el&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;document&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getElementById&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-  &lt;span class=&quot;nx&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;appendChild&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;el&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;ownerDocument&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;importNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;doc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;documentElement&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;));&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;nx&quot;&gt;renderXml&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;qrcode&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;extra&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;codeUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;&lt;strong&gt;原生支付&lt;/strong&gt;  &lt;br /&gt;
-在统一下单接口完成之后，还需要根据prepay_id来申请唤起微信的参数：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;wxpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getAppParamsByPrepay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;prepay_id&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;prepayId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h3 id=&quot;432-订单查询接口&quot;&gt;4.3.2 订单查询接口&lt;/h3&gt;
-&lt;p&gt;范例代码：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;order&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;await&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;wxpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;orderQuery&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;out_trade_no&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;orderId.toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()});&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;44-金额问题&quot;&gt;4.4 金额问题&lt;/h2&gt;
-&lt;p&gt;在刚才&lt;code&gt;4.3.1&lt;/code&gt;的例子中，代码里其实已经体现出来了。微信支付的金额和支付宝是不一样的，支付宝的金额就是自然的数额，带小数点后两位。而微信的做法不同，微信要求调用接口下单的时候的支付金额必须不带小数位，所有的金额都是小数点后两位的数字&lt;code&gt;*100转化为整数&lt;/code&gt;的数额。也就是说下单接口金额为&lt;code&gt;1&lt;/code&gt;的情况，实际支付的是&lt;code&gt;0.01&lt;/code&gt;。&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;// 微信支付的金额是不带小数位的，所有的小数金额都必须*100转为正整数&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// 数值先会被小数点后2位截断或补足，然后转为整数字符串&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// 8.8     =&amp;gt; 8.80 =&amp;gt; 880&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// 9.24678 =&amp;gt; 9.25 =&amp;gt; 925&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;total_fee&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toFixed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;replace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;.&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;45-回调处理&quot;&gt;4.5 回调处理&lt;/h2&gt;
-&lt;p&gt;微信的所有API都是使用XML作为输入和输出，因此获得的回调信息也是XML。因为之前的API调用中都有SDK处理完了，所以这里就有点恶心，需要自己处理。&lt;/p&gt;
-
-&lt;p&gt;回调结构：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;export&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;interface&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;IResOrderPayed&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;return_code&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// SUCCESS&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;return_msg&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// OK&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;appid&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// wx3...&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;mch_id&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 156..&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;nonce_str&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// cwGl...&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;sign&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// C51A...&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;result_code&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// SUCCESS&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;openid&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// oqvcFj-Uf...&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;is_subscribe&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// N&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;trade_type&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// NATIVE&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;bank_type&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// OTHERS&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;total_fee&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 1，需要 / 100&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;fee_type&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// CNY&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;transaction_id&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 42000004...&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;out_trade_no&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;attach&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// &amp;quot;&amp;quot;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;time_end&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 2019XXXX144155&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;trade_state&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// SUCCESS&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;cash_fee&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 1，需要 / 100&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;trade_state_desc&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 支付成功&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;cash_fee_type&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// CNY&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h1 id=&quot;5-沙箱使用&quot;&gt;5. 沙箱使用&lt;/h1&gt;
-&lt;p&gt;微信支付的沙箱和支付宝有点不同，支付宝是完全隔离，从环境、访问地址到账号，支付的支付宝APP全部都是单独分离的。微信则不同，账号、测试用APP都还是原来的微信商户号以及用户真实的微信APP，但访问地址是隔离的，在原来的API地址中间插入&lt;code&gt;/sandboxnew/&lt;/code&gt;。&lt;/p&gt;
-
-&lt;p&gt;虽然易用性上看起来是微信占优，但实际使用上微信的沙箱有相当多的问题，甚至我研发到最后完成，都完全没使用过沙箱，都是使用0.01的金额进行下单测试。&lt;/p&gt;
-
-&lt;h2 id=&quot;51-沙箱申请&quot;&gt;5.1 沙箱申请&lt;/h2&gt;
-&lt;p&gt;和支付宝一样，微信支付的沙箱使用不需要额外申请。&lt;/p&gt;
-
-&lt;h2 id=&quot;52-沙箱使用&quot;&gt;5.2 沙箱使用&lt;/h2&gt;
-&lt;p&gt;使用方面，可以看一篇第三方的教程：&lt;a href=&quot;https://juejin.im/post/5bea7c1d6fb9a04a053f36c3&quot; target=&quot;_blank&quot;&gt;浅析微信支付：如何使用沙箱环境测试&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;在使用刚才说的SDK的情况下，只需要在SDK初始化的地方做点调整即可：&lt;/p&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;appid&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;vendorConfig.appId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;mchid&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;vendorConfig.mchId&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;partnerKey&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;vendorConfig.appSecret&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;pfx&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;LibFs.readFileSync&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;LibPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;__dirname&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;../../../pem/wxpay/apiclient_key.pem&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;notify_url&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;vendorConfig.callbackUrl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;spbill_create_ip&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;vendorConfig.allowedIp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;as&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;Tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;IConfig&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// wxpay&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;isSandbox&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;getSignkey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;().&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;then&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;kr&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;key&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;sandbox_signkey&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;wxpay&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;Object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;assign&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;partnerKey&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;sandbox&lt;/span&gt;: &lt;span class=&quot;kt&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}),&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}).&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;throw&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;});&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;this&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;wxpay&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;tenpay&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;isTest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;p&gt;沙箱每次使用的秘钥（商户的API秘钥）和正式环境不一样，正式环境是配置死的，直接拿下来用即可。而沙箱则需要先使用正式环境的商户秘钥去调用&lt;code&gt;getSignkey&lt;/code&gt;获取沙箱使用的临时商户秘钥，才可以后续继续调用API。&lt;/p&gt;
-
-&lt;h2 id=&quot;53-沙箱问题&quot;&gt;5.3 沙箱问题&lt;/h2&gt;
-&lt;p&gt;理解了沙箱的隔离以及如何初始化沙箱SDK之后，如果直接实际调用的话，还是会遇到问题：&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;沙箱支付金额(1)无效，请检查需要验收的case&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;参见：&lt;a href=&quot;https://github.com/Wechat-Group/WxJava/issues/668&quot; target=&quot;_blank&quot;&gt;微信支付的沙箱环境能否使用？#668&lt;/a&gt;。&lt;/p&gt;
-
-&lt;p&gt;这里还需要额外做一个操作：在&lt;code&gt;微信支付商户接入验收助手&lt;/code&gt;这个公众号申请你的验收case，写入验收金额作为use case。后续在沙箱环境做测试的时候，金额必须完全符合之前申请的验收case，否则报错。&lt;/p&gt;
-
-&lt;h1 id=&quot;6-错误处理&quot;&gt;6. 错误处理&lt;/h1&gt;
-&lt;h2 id=&quot;61-回调处理&quot;&gt;6.1 回调处理&lt;/h2&gt;
-
-&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-typescript&quot; data-lang=&quot;typescript&quot;&gt;&lt;span&gt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// 业务处理&lt;/span&gt;
-    
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;application/xml&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;return_code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CDATA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;SUCCESS&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/return_code&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;return_msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CDATA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;OK&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/return_msg&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/xml&amp;gt;`;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;catch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;console&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;log&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;application/xml&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;nx&quot;&gt;ctx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;&amp;quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
-&lt;span class=&quot;err&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;xml&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;return_code&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CDATA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;FAIL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/return_code&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;return_msg&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;CDATA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;err&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}]]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/return_msg&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;err&quot;&gt;/xml&amp;gt;`;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
-
-&lt;h2 id=&quot;62-修复订单&quot;&gt;6.2 修复订单&lt;/h2&gt;
-&lt;p&gt;在某些情况下，回调可能没有收到，或者一直报错导致回调没有正常处理。表现在用户视角，就是支付完成后订单状态无法正常改为支付完成（也就不会发货）。这是很糟糕的，因此需要制作修复订单功能。&lt;/p&gt;
-
-&lt;p&gt;客户端在检查到订单状态为等待支付之后，可以提供一个入口给用户，用户点击之后，应用后端应该向支付宝查询订单信息，如果在支付宝这里已经是&lt;code&gt;已支付&lt;/code&gt;而在应用这边还是&lt;code&gt;等待支付&lt;/code&gt;的话，就立即将业务订单改为已支付，并向用户发货。&lt;/p&gt;
-
-&lt;h1 id=&quot;7-上线生效&quot;&gt;7. 上线生效&lt;/h1&gt;
-&lt;p&gt;微信支付应该是在应用申请审核通过的时候就直接上线了，不需要额外操作。&lt;/p&gt;
-
-&lt;h1 id=&quot;appendix&quot;&gt;Appendix&lt;/h1&gt;
-&lt;h2 id=&quot;链接&quot;&gt;链接&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developers.weixin.qq.com/doc/oplatform/Mobile_App/WeChat_Pay/Vendor_Service_Center.html&quot; target=&quot;_blank&quot;&gt;微信APP支付接入商户服务中心&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.jianshu.com/p/753393a0514a&quot; target=&quot;_blank&quot;&gt;微信APP支付接入&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://juejin.im/post/59c4bc7df265da06434b8c2b&quot; target=&quot;_blank&quot;&gt;微信App支付全解析&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.leapcloud.cn/website/docs/doc_config/wxwangyezf/wxwangyezhifu.html&quot; target=&quot;_blank&quot;&gt;微信公众号支付配置&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.leapcloud.cn/website/docs/doc_config/wxappzf/weixinapp.html&quot; target=&quot;_blank&quot;&gt;微信APP支付配置&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://www.leapcloud.cn/website/docs/doc_config/keystorecreate/keystorecreate.html&quot; target=&quot;_blank&quot;&gt;Android App 签名生成教程&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://kf.qq.com/faq/161222NneAJf161222U7fARv.html&quot; target=&quot;_blank&quot;&gt;什么是API证书？如何获取API证书？&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://developers.weixin.qq.com/doc/offiaccount/OA_Web_Apps/Wechat_webpage_authorization.html&quot; target=&quot;_blank&quot;&gt;微信网页开发 &amp;gt; 网页授权&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://juejin.im/post/5bea7c1d6fb9a04a053f36c3&quot; target=&quot;_blank&quot;&gt;浅析微信支付：如何使用沙箱环境测试&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/Wechat-Group/WxJava/issues/668&quot; target=&quot;_blank&quot;&gt;微信支付的沙箱环境能否使用？#668&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://pay.weixin.qq.com/wiki/doc/api/jsapi.php?chapter=20_1&quot; target=&quot;_blank&quot;&gt;微信支付接口签名校验工具&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://pay.weixin.qq.com/wiki/tools/signverify/&quot; target=&quot;_blank&quot;&gt;微信公众平台支付接口调试工具&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.51cto.com/xihan/2096880&quot; target=&quot;_blank&quot;&gt;微信支付接口返回“签名错误”的排查方法&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/yhm_brave/article/details/70240935&quot; target=&quot;_blank&quot;&gt;微信支付统一下单，签名错误&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/qq_35624642/article/details/53667679&quot; target=&quot;_blank&quot;&gt;微信支付统一下单，签名错误（生成的签名和测试工具生成的一样还报错）解决方法&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;EOF&lt;/p&gt;
-&lt;/blockquote&gt;
-</description>
-				<pubDate>Fri, 27 Dec 2019 11:36:22 +0800</pubDate>
-				<link>https://xenojoshua.com/2019/12/wxpay/</link>
-				<guid isPermaLink="true">https://xenojoshua.com/2019/12/wxpay/</guid>
 			</item>
 		
 	</channel>
