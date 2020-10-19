@@ -247,10 +247,15 @@ $ vim frps.ini</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-ini" data-lang="ini"><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">frps daemon</span>
+<span class="na">After</span><span class="o">=</span><span class="s">syslog.target  network.target</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">network.target</span>
 
 <span class="k">[Service]</span>
 <span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/path_to_frp/frps -c /path_to_frp/frps.ini</span>
+<span class="na">Restart</span><span class="o">=</span> <span class="s">always</span>
+<span class="na">RestartSec</span><span class="o">=</span><span class="s">1min</span>
+<span class="na">ExecStop</span><span class="o">=</span><span class="s">/usr/bin/killall frps</span>
 
 <span class="k">[Install]</span>
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span></code></pre></figure>
@@ -301,10 +306,15 @@ $ vim frpc.ini</code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-ini" data-lang="ini"><span></span><span class="k">[Unit]</span>
 <span class="na">Description</span><span class="o">=</span><span class="s">frpc daemon</span>
+<span class="na">After</span><span class="o">=</span><span class="s">syslog.target  network.target</span>
+<span class="na">Wants</span><span class="o">=</span><span class="s">network.target</span>
 
 <span class="k">[Service]</span>
 <span class="na">Type</span><span class="o">=</span><span class="s">simple</span>
 <span class="na">ExecStart</span><span class="o">=</span><span class="s">/path_to_frp/frpc -c /path_to_frp/frpc.ini</span>
+<span class="na">Restart</span><span class="o">=</span> <span class="s">always</span>
+<span class="na">RestartSec</span><span class="o">=</span><span class="s">1min</span>
+<span class="na">ExecStop</span><span class="o">=</span><span class="s">/usr/bin/killall frpc</span>
 
 <span class="k">[Install]</span>
 <span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span></code></pre></figure>
