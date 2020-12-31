@@ -189,15 +189,30 @@
       &lt;li&gt;消息在处理中，且耗时很长，可以由客户端进行 Touch，这样该消息就不会Time Out&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;消息发送后，可以由客户端主动进行requeue（REQ）&lt;/li&gt;
-  &lt;li&gt;消息发送后，可以由客户端主动进行requeue（REQ），且标记该消息为Deferred，表示该消息需要等待一段时间之后再进行分发&lt;/li&gt;
-  &lt;li&gt;消息发送后，该消息会附带Attempts（失败重试）数量，客户端在尝试失败后，会匹配失败次数，如果超过限制，则该消息会被DISCARD，即客户端会直接将该消息标记为Finished（FIN）&lt;/li&gt;
+  &lt;li&gt;消息发送后，可以由客户端主动进行requeue（REQ）
+    &lt;ul&gt;
+      &lt;li&gt;requeue行为可以附带设置延迟（Deferred）&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;消息发送后，如果客户端出错被认为是有问题的，客户端自身需要恢复，则客户端可以将该消息反馈为backoff，这个操作会导致：
+    &lt;ul&gt;
+      &lt;li&gt;nsqd会将该消息requeue，消息本身会再次（如果设置延迟的话，也会Deferred）分发&lt;/li&gt;
+      &lt;li&gt;此外这个操作会导致客户端将自身的RDY设置为0，意味着这个客户端短时间内将拒绝处理任何消息&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;消息发送后，如果该消息之前被requeue则该消息会附带Attempts（重试）数，客户端在尝试失败后，会匹配失败次数，如果超过限制，则该消息会被DISCARD，即客户端会直接将该消息标记为Finished（FIN）
+    &lt;ul&gt;
+      &lt;li&gt;如果客户端的max attempts设置为0，则可以无限次重试，不会被discard&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
   &lt;li&gt;消息发送后，可以由客户端标记为完成Finished（FIN）&lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;可以看到Nsq的客户端有很大的权利，特别是失败重试的决策是由客户端做的，如果超限消息就会被丢弃，标记为完成。&lt;/p&gt;
 
-&lt;p&gt;见comment：&lt;a href=&quot;https://github.com/nsqio/nsq/issues/1028#issuecomment-385126434&quot; target=&quot;_blank&quot;&gt;Timeout options #1028&lt;/a&gt;。&lt;/p&gt;
+&lt;p&gt;更多关于Timeout相关，请见comment：&lt;a href=&quot;https://github.com/nsqio/nsq/issues/1028#issuecomment-385126434&quot; target=&quot;_blank&quot;&gt;Timeout options #1028&lt;/a&gt;。&lt;/p&gt;
+
+&lt;p&gt;关于requeue和backoff的详细分析，可以看这篇：&lt;a href=&quot;https://github.com/judwhite/NsqSharp/wiki/NSQ-Requeue-and-Backoff&quot; target=&quot;_blank&quot;&gt;NSQ Requeue and Backoff&lt;/a&gt;。&lt;/p&gt;
 
 &lt;h3 id=&quot;admin-metrics&quot;&gt;&lt;a href=&quot;https://nsq.io/components/nsqadmin.html#metrics&quot; target=&quot;_blank&quot;&gt;Admin Metrics&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;Admin统计数据里的一些词汇可以简单解释下：&lt;/p&gt;
