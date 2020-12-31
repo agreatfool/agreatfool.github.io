@@ -1,0 +1,726 @@
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>NSQ Note | Xenojoshua</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://xenojoshua.com/js/jquery.min.js"></script>
+  <script src="https://xenojoshua.com/js/bootstrap.min.js"></script>
+  <script src="https://xenojoshua.com/js/header.js"></script>
+  <script src="https://xenojoshua.com/js/toc.js"></script>
+  <link href="https://xenojoshua.com//2020/12/nsq-note/" rel="canonical" />
+  <link href="https://xenojoshua.com/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/theme.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/syntax.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/css/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="https://xenojoshua.com/favicon.ico?" type="image/x-icon" rel="shortcut icon">
+  <style>
+    /* Enhance table style */
+    table {
+      border: 2px solid #4F7849;
+      background-color: #EEEEEE;
+      width: 100%;
+      text-align: center;
+      border-collapse: collapse;
+    }
+    table td, table.comicGreen th {
+      border: 1px solid #4F7849;
+      padding: 3px 5px;
+    }
+    table tbody td {
+      font-size: 14px;
+      color: #4F7849;
+    }
+    table tr:nth-child(even) {
+      background: #CEE0CC;
+    }
+    table thead {
+      background: #4F7849;
+      border-bottom: 1px solid #444444;
+    }
+    table thead th {
+      font-size: 16px;
+      font-weight: bold;
+      color: #FFFFFF;
+      text-align: center;
+      border-left: 2px solid #D0E4F5;
+      padding: 3px 5px;
+    }
+    table thead th:first-child {
+      border-left: none;
+    }
+    table tfoot td {
+      font-size: 21px;
+    }
+
+    /* Enhance pre style */
+    pre {
+      color: #FFFFFF;
+      background-color: #000000;
+      border-color: #000000;
+    }
+
+    /* Image bg color white while dark background */
+    img {
+      background-color: #FFFFFF;
+    }
+
+    /* Keep gist style clean */
+    .gist table tr:nth-child(even) {
+      background: #FFFFFF;
+    }
+    .gist td, th {
+      border: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-11349149-4']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+
+
+  
+
+ <script type="text/javascript">
+   var host = "xenojoshua.com";
+   if ((host == window.location.host) && (window.location.protocol != "https:"))
+     window.location.protocol = "https";
+ </script>
+ <script type="text/javascript">
+  WebFontConfig = {
+    google: {
+      families: ['Ubuntu::latin']
+    }
+  };
+  (function() {
+    var wf = document.createElement('script');
+    wf.src = ('https:' == document.location.protocol ? 'https' : 'http') +
+      '://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js';
+    wf.type = 'text/javascript';
+    wf.async = 'true';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(wf, s);
+  })();
+</script>
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="https://xenojoshua.com/">Xenojoshua</a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li><a href="https://xenojoshua.com/">/home</a></li>
+          <li><a href="https://xenojoshua.com/archive/">/archive</a></li>
+          <li><a href="https://xenojoshua.com/categories/">/categories</a></li>
+          <li><a href="https://xenojoshua.com/tags/">/tags</a></li>
+          <li><a href="https://xenojoshua.com/feed.xml" target="_blank">/rss</a></li>
+          <li><a href="https://xenojoshua.com/about/">/about</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+<div class="wrapper">
+  <div class="content">
+    <div class="container container-center">
+      <div class="row">
+        <div class="col-md-8">
+          <div class="article">
+            <div class="well">
+              <h1><a href="https://xenojoshua.com/2020/12/nsq-note/">NSQ Note</a></h1>
+              <div class="post-meta">
+                <div class="post-time">
+                  <i class="fa fa-calendar"></i>
+                  <time>31 Dec 2020</time>
+                </div>
+                <ul>
+                  
+                    <li><a href="https://xenojoshua.com/tag/Nsq">Nsq</a></li>
+                  
+                    <li><a href="https://xenojoshua.com/tag/MessageQueue">MessageQueue</a></li>
+                  
+                </ul>
+              </div>
+              <div class="post-content">
+                <h4>Table of Contents</h4>
+<ul id="markdown-toc">
+  <li><a href="#1-前言" id="markdown-toc-1-前言">1. 前言</a></li>
+  <li><a href="#2-简介" id="markdown-toc-2-简介">2. 简介</a></li>
+  <li><a href="#3-入门使用" id="markdown-toc-3-入门使用">3. 入门使用</a>    <ul>
+      <li><a href="#31-组件" id="markdown-toc-31-组件">3.1 组件</a></li>
+      <li><a href="#32-监控" id="markdown-toc-32-监控">3.2 监控</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-细节深入" id="markdown-toc-4-细节深入">4. 细节深入</a>    <ul>
+      <li><a href="#nsqd消息不持久" id="markdown-toc-nsqd消息不持久">nsqd消息不持久</a></li>
+      <li><a href="#at-least-once" id="markdown-toc-at-least-once">at least once</a></li>
+      <li><a href="#消息的投递是无序的" id="markdown-toc-消息的投递是无序的">消息的投递是无序的</a></li>
+      <li><a href="#nsqlookupd延迟" id="markdown-toc-nsqlookupd延迟">nsqlookupd延迟</a></li>
+      <li><a href="#性能" id="markdown-toc-性能">性能</a></li>
+      <li><a href="#topic和channel" id="markdown-toc-topic和channel">topic和channel</a></li>
+      <li><a href="#自动消失的topic和channel" id="markdown-toc-自动消失的topic和channel">自动消失的topic和channel</a></li>
+      <li><a href="#max-in-flight" id="markdown-toc-max-in-flight">max-in-flight</a></li>
+      <li><a href="#减轻gc压力" id="markdown-toc-减轻gc压力">减轻GC压力</a></li>
+      <li><a href="#消息生命周期" id="markdown-toc-消息生命周期">消息生命周期</a></li>
+      <li><a href="#admin-metrics" id="markdown-toc-admin-metrics"><a href="https://nsq.io/components/nsqadmin.html#metrics" target="_blank">Admin Metrics</a></a></li>
+    </ul>
+  </li>
+  <li><a href="#5-使用范例" id="markdown-toc-5-使用范例">5. 使用范例</a>    <ul>
+      <li><a href="#pubbeforesub" id="markdown-toc-pubbeforesub">pubBeforeSub</a></li>
+      <li><a href="#samemessagemultichannel" id="markdown-toc-samemessagemultichannel">sameMessageMultiChannel</a></li>
+      <li><a href="#subbeforepub" id="markdown-toc-subbeforepub">subBeforePub</a></li>
+      <li><a href="#errormessage" id="markdown-toc-errormessage">errorMessage</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="1-前言">1. 前言</h2>
+<p>说到消息队列一般就会直接想起Kafka、Rocket、Rabbit之类的全功能消息队列。但实际上在应用程序制作的过程中，我们也很需要一些小而精巧的消息队列用来进行某些业务上的解耦，或者降低主业务的消耗、耗时等。 类似于redis作者的这个：<a href="https://github.com/antirez/disque" target="_blank">antirez / disque</a>。其中Nsq就是一款非常小巧而实用的消息队列，特别是它还基于Go语言编写，特别符合性能要求以及当前云原生的大方向。</p>
+
+<h2 id="2-简介">2. 简介</h2>
+<p>Nsq的官方网站在：<a href="https://nsq.io/" target="_blank">nsq.io</a>。</p>
+
+<p>一些比较关键的文档位置：</p>
+
+<ul>
+  <li><a href="https://nsq.io/overview/quick_start.html" target="_blank">Quick Start</a>：快速上手使用</li>
+  <li><a href="https://nsq.io/overview/features_and_guarantees.html" target="_blank">FEATURES &amp; GUARANTEES</a>：一些核心功能点，和需要注意的特性</li>
+  <li><a href="https://nsq.io/overview/faq.html" target="_blank">FAQ</a></li>
+  <li><a href="https://nsq.io/overview/performance.html" target="_blank">Performance</a>：官方的性能测试指标</li>
+  <li><a href="https://nsq.io/overview/design.html" target="_blank">Design</a>：Nsq的核心设计，应该是所有官方文档中最重要的一篇了</li>
+  <li><a href="https://nsq.io/overview/internals.html" target="_blank">INTERNALS</a>：一些Nsq内部实现相关的细节</li>
+</ul>
+
+<p>此外，还有一份PPT，虽然年代比较久远了（2012年），但基本上把所有Nsq中比较重要的点都提及到了，如果需要快速过一遍的话，看这篇PPT也是个不错的选择：<a href="https://speakerdeck.com/snakes/nsq-nyc-golang-meetup" target="_blank">NSQ - NYC Golang Meetup</a>。</p>
+
+<h2 id="3-入门使用">3. 入门使用</h2>
+<p>快速入门可以查看官方文档：<a href="https://nsq.io/overview/quick_start.html" target="_blank">Quick Start</a>。Node的npm包在：<a href="https://www.npmjs.com/package/nsqjs" target="_blank">nsqjs</a>。</p>
+
+<h3 id="31-组件">3.1 组件</h3>
+<p>Nsq主要有3个组件：</p>
+
+<ul>
+  <li>nsqd：真正的消息队列服务进程，消息收发都是由客户端直接和nsqd沟通完成，没有任何第三方中间成员</li>
+  <li>nsqlookupd：消息队列的拓扑管理，主要负责：
+    <ul>
+      <li>nsqd的注册，存活管理</li>
+      <li>topic和channel的管理，所有的topic有哪些，分别分布在哪几个nsqd上lookupd都知道</li>
+      <li>客户端会先到lookupd上查询目标的topic，找到之后再与某个匹配的nsqd进行连接，最后收发消息</li>
+    </ul>
+  </li>
+  <li>nsqadmin：管理界面，功能非常丰富</li>
+</ul>
+
+<p>关于各组件的启动参数，以及HTTP的API，都可以在官方文档中找到。需要记住的只有一点，末尾为0的端口都是TCP端口，1的端口都是HTTP端口。</p>
+
+<ul>
+  <li><a href="https://nsq.io/components/nsqd.html" target="_blank">NSQD</a>
+    <ul>
+      <li><a href="https://nsq.io/components/nsqd.html#debugging-and-profiling" target="_blank">Debugging and Profiling</a></li>
+      <li><a href="https://nsq.io/components/nsqd.html#tls" target="_blank">TLS</a></li>
+      <li><a href="https://nsq.io/components/nsqd.html#auth" target="_blank">AUTH</a></li>
+      <li><a href="https://nsq.io/components/nsqd.html#end-to-end-processing-latency" target="_blank">End-to-End Processing Latency</a></li>
+      <li><a href="https://nsq.io/components/nsqd.html#statsd--graphite-integration" target="_blank">Statsd / Graphite Integration</a></li>
+    </ul>
+  </li>
+  <li><a href="https://nsq.io/components/nsqlookupd.html" target="_blank">NSQLOOKUPD</a>
+    <ul>
+      <li><a href="https://nsq.io/components/nsqlookupd.html#deletion-and-tombstones" target="_blank">Deletion and Tombstones</a></li>
+    </ul>
+  </li>
+  <li><a href="https://nsq.io/components/nsqadmin.html" target="_blank">NSQADMIN</a>
+    <ul>
+      <li><a href="https://nsq.io/components/nsqadmin.html#statsd--graphite-integration" target="_blank">statsd / Graphite Integration</a></li>
+      <li><a href="https://nsq.io/components/nsqadmin.html#admin-notifications" target="_blank">Admin Notifications</a></li>
+      <li><a href="https://nsq.io/components/nsqadmin.html#metrics" target="_blank">Metrics</a></li>
+    </ul>
+  </li>
+  <li><a href="https://nsq.io/components/utilities.html" target="_blank">UTILITIES</a>：一系列实用的Nsq工具组件
+    <ul>
+      <li><a href="https://nsq.io/components/utilities.html#nsq_stat" target="_blank">nsq_stat</a></li>
+      <li><a href="https://nsq.io/components/utilities.html#nsq_tail" target="_blank">nsq_tail</a></li>
+      <li><a href="https://nsq.io/components/utilities.html#nsq_to_file" target="_blank">nsq_to_file</a></li>
+      <li><a href="https://nsq.io/components/utilities.html#nsq_to_http" target="_blank">nsq_to_http</a></li>
+      <li><a href="https://nsq.io/components/utilities.html#nsq_to_nsq" target="_blank">nsq_to_nsq</a></li>
+      <li><a href="https://nsq.io/components/utilities.html#to_nsq" target="_blank">to_nsq</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="32-监控">3.2 监控</h3>
+<p>作为go语言编写的组件，理所当然的Nsq的各组件会暴露HTTP的<code>/debug/pprof</code>终端，作为性能查询的输出终端。</p>
+
+<h2 id="4-细节深入">4. 细节深入</h2>
+<p>接下来的章节，我会把所有我个人觉得比较重要的Nsq相关内容都列进去。</p>
+
+<h3 id="nsqd消息不持久">nsqd消息不持久</h3>
+<p>默认行为是所有收到的消息都存储在nsqd的内存中，且没有任何内建的replication机制。所以默认情况下，节点挂掉的话，消息会丢失，如果这种情况不可接受，就需要自己做一些机制来规避消息丢失。</p>
+
+<p><code>--mem-queue-size</code>参数可以限定存储在内存中的消息数量，如果超量，则会将后续的消息存储在磁盘上。将该值设置为0可以将消息全部存储在磁盘上。</p>
+
+<h3 id="at-least-once">at least once</h3>
+<p>消息消费失败或超时会requeue，并在后续重新进行分发，所以一条消息可能会被多次投递到client进行消费，以保证该消息确定被消费完毕。消费者需要做好幂等，否则一条消息可能会别重复消费多次。</p>
+
+<h3 id="消息的投递是无序的">消息的投递是无序的</h3>
+<p>nsqd只管将消息按顺序投递出去，但消息可能因为网络原因等导致最终消费的顺序和投递的顺序不一致。</p>
+
+<h3 id="nsqlookupd延迟">nsqlookupd延迟</h3>
+<p>服务发现被设计为最终一致。在扩散的过程中，可能会有时间差。客户端会最终从nsqlookupd获得所有的topic信息。</p>
+
+<p>测试应用中很可能出现的一情况就是：nsqlookupd上并没有任何topic消息，producer创建，nsqd上创建出topic，并在之后同步topic信息到nsqlookupd。而在这之前早得多consumer就已经连上nsqlookupd并没有收到任何topic的信息，这中间会有一个时间差。consumer会静止在那里，直到配置的lookup间隔时间到了，然后consumer会再次查询nsqlookupd，并最终或得到topic信息以及所属的nsqd。</p>
+
+<p>可以看下这几个comment：</p>
+
+<ul>
+  <li><a href="https://github.com/nsqio/nsqio.github.io/issues/42#issuecomment-432905203" target="_blank">docs: clarify when topics are created automatically #42 #comment-432905203</a></li>
+  <li><a href="https://github.com/nsqio/nsqio.github.io/issues/42#issuecomment-432905514" target="_blank">docs: clarify when topics are created automatically #42 #comment-432905514</a></li>
+</ul>
+
+<h3 id="性能">性能</h3>
+<p>看官方文档：<a href="https://nsq.io/overview/performance.html" target="_blank">Performance</a>。</p>
+
+<h3 id="topic和channel">topic和channel</h3>
+<p>估计这是使用Nsq的程序员最初最难搞懂的东西。一般来说其他的消息队列都是将消息发布到topic中，然后多个consumer消费一个topic。但Nsq在topic和consumer之间还插入了一个channel的概念。</p>
+
+<p>这里主要是看一个图：</p>
+
+<p><img src="/resources/2020/12/nsq-note/nsq_topic_channel.gif" alt="" target="_blank" /></p>
+
+<p>需要理解的最重要的概念是，同一个topic下的所有channel，都会得到进入topic的消息的拷贝。同样一份消息，进入topic后会分别拷贝并进入每一个channel，每个channel都需要各自的consumer把消息消费掉，否则就会造成消息积压。</p>
+
+<p>简单来说：如果你希望和一般的消息队列一样的 topic =&gt; consumers，那么就让所有该topic下的消费者使用同一个channel即可。</p>
+
+<p>channel的设计让Nsq可以做一些其他消息队列做不到的用途，最为常见的是：消息广播。多个consumer都需要在某个业务触发的时候得到通知，那么就在某个topic下，让所有的consumer都定义一个自己的channel连接进去（topic_channel_node_1/…），这样所有的consumer都各自占据了一个channel，而所有的channel都会得到topic内消息的拷贝，所以他们会都得到同样的消息通知。</p>
+
+<h3 id="自动消失的topic和channel">自动消失的topic和channel</h3>
+<p>topic和channel都是持久化的，默认情况下在创建成功后，他们都是不会自动消失的，时间长了之后清理就会比较麻烦。而上面的例子中那种类似消息通知的情况，其实topic和channel都是生命周期非常短暂的，一般我们希望他们在没用了之后就被销毁掉。</p>
+
+<p>在topic和channel的名字后面添加<code>#ephemeral</code>可以做到这点，当所有连接在topic或channel上的producer/consumer都断开连接之后，nsqd就会自动删除该topic或channel。</p>
+
+<p>需要注意的是，<code>#ephemeral</code>命名的topic/channel在超过<code>--mem-queue-size</code>的限制之后不会将消息写入磁盘，而是直接丢弃。这点行为上和普通的topic/channel非常不同，一定要小心注意。</p>
+
+<h3 id="max-in-flight">max-in-flight</h3>
+<p>客户端可以设置该值（比如说10），然后客户端在连接到nsqd的时候会发送<code>RDY 10</code>过去，nsqd就会知道该client的同时处理能力。在接下来的消息推送过程中，nsqd会不断向该client推送消息，直到目前已分发且尚未反馈结果的消息数量达到该数值（10）为止。这是为了更好的性能，client程序如果实现了多线程的话，可以充分利用线程和CPU来消费消息，而不是只有一个线程在工作，其他的都在闲置。</p>
+
+<p>对于node程序来说，这个数值就没有意义了，因为node进程只有一个工作线程。</p>
+
+<p>还可以看下这个comment：<a href="https://github.com/nsqio/go-nsq/issues/221#issuecomment-352865779" target="_blank">Question about concurrency and Max in Flight #221</a>。</p>
+
+<h3 id="减轻gc压力">减轻GC压力</h3>
+<p>见官方文档：<a href="https://nsq.io/overview/internals.html#reducing-gc-pressure" target="_blank">Reducing GC Pressure</a>。</p>
+
+<h3 id="消息生命周期">消息生命周期</h3>
+<p>一条消息的生命周期（消费端）主要是控制在client手中，这点和普通的消息队列的设计理念完全不同，这里需要花点时间稍微整理下。</p>
+
+<p>消息的创建是producer连接到nsqd，并进行publish的操作，这点没有任何问题。创建成功消息就收到了，失败的话，则消息在nsqd上不存在。</p>
+
+<p>消息的消费由nsqd向连接的consumer进行推送：</p>
+
+<ul>
+  <li>消息已分发且尚未反馈（未到超时时间），状态：In-Flight</li>
+  <li>消息已分发且超时没有反馈（该超时的时长是在客户端设置的！），状态：Time Out，该消息会被nsqd重新requeue（REQ）
+    <ul>
+      <li>消息在处理中，且耗时很长，可以由客户端进行 Touch，这样该消息就不会Time Out</li>
+    </ul>
+  </li>
+  <li>消息发送后，可以由客户端主动进行requeue（REQ）</li>
+  <li>消息发送后，可以由客户端主动进行requeue（REQ），且标记该消息为Deferred，表示该消息需要等待一段时间之后再进行分发</li>
+  <li>消息发送后，该消息会附带Attempts（失败重试）数量，客户端在尝试失败后，会匹配失败次数，如果超过限制，则该消息会被DISCARD，即客户端会直接将该消息标记为Finished（FIN）</li>
+  <li>消息发送后，可以由客户端标记为完成Finished（FIN）</li>
+</ul>
+
+<p>可以看到Nsq的客户端有很大的权利，特别是失败重试的决策是由客户端做的，如果超限消息就会被丢弃，标记为完成。</p>
+
+<p>见comment：<a href="https://github.com/nsqio/nsq/issues/1028#issuecomment-385126434" target="_blank">Timeout options #1028</a>。</p>
+
+<h3 id="admin-metrics"><a href="https://nsq.io/components/nsqadmin.html#metrics" target="_blank">Admin Metrics</a></h3>
+<p>Admin统计数据里的一些词汇可以简单解释下：</p>
+
+<p>Message Queues：</p>
+<ul>
+  <li>Depth：当前存储在内存和磁盘上的消息总量（尚未被分发）</li>
+  <li>In-Flight：目前已经被分发，但尚未被标记为 完成（FIN）、重新入队（REQ）或是超时的消息总量</li>
+  <li>Deferred：目前被重新入队且显式标记为推迟处理并且尚未到重新分发阶段的消息总量</li>
+</ul>
+
+<p>Statistics：</p>
+<ul>
+  <li>Requeued：消息因超时或被显式要求而重新入队的次数</li>
+  <li>Timed Out：消息因超过设定的超时时长未响应，而被标记为超时的次数</li>
+  <li>Messages：在节点启动之后收到的消息总数</li>
+  <li>Rate：过去两次statsd间隔间，每秒新收到的消息数量</li>
+  <li>Connections：连接总数</li>
+</ul>
+
+<p>Client Connections：</p>
+<ul>
+  <li>NSQd Host：Address of the nsqd node this client is connected to.</li>
+  <li>In-flight：当前发送给该client等待返回的消息数量</li>
+  <li>Ready Count：当前client节点最高in-flight可能的消息数量</li>
+  <li>Finished：所有当前client节点标记为FIN的消息数量</li>
+  <li>Requeued：同上，REQ</li>
+  <li>Messages：所有发送给该client节点的消息数量</li>
+</ul>
+
+<h2 id="5-使用范例">5. 使用范例</h2>
+<p>光说理论上的东西比较枯燥，实践操作也是比较重要的，下面可以通过几个例子来看下Nsq的一些行为。</p>
+
+<h3 id="pubbeforesub">pubBeforeSub</h3>
+
+<p>If there is no topic on <code>nsqd</code> (first execution), reader will suck for a long time. Since at the first time reader connect to lookupd, there hasn’t been updated with the published topics info yet. So it will suck until readers retrieve topics info next time.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>pubBeforeSub:
+    Two writers initialized
+    Two writers publish <span class="m">3</span> messages each into topic <span class="s2">&quot;TOPIC1&quot;</span> <span class="o">(</span>total <span class="m">6</span><span class="o">)</span>
+    One of the writer publish <span class="m">1</span> message into topic <span class="s2">&quot;TOPIC2_UNI&quot;</span>
+    Two readers created <span class="k">for</span> topic <span class="s2">&quot;TOPIC1&quot;</span> with the same channel <span class="s2">&quot;TOPIC1_READER_CHANNEL&quot;</span>
+    One reader created <span class="k">for</span> topic <span class="s2">&quot;TOPIC2_UNI&quot;</span> with channel <span class="s2">&quot;TOPIC2_UNI#ephemeral&quot;</span>
+    -
+    Two readers share the total <span class="m">6</span> messages in topic <span class="s2">&quot;TOPIC1&quot;</span>
+    One reader consume the message in topic <span class="s2">&quot;TOPIC2_UNI&quot;</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>➜  couchnsq git:<span class="o">(</span>master<span class="o">)</span> ✗ ./bash/nsq_run.sh
+  Nsq:Writer:bgF6l bgF6l: ready +0ms
+  Nsq:Writer:Plwtx Plwtx: ready +0ms
+  Nsq:Reader:oiFQg oiFQg: nsqd connected: <span class="s2">&quot;10.10.2.126:4250&quot;</span> +0ms
+  Nsq:Reader:oiFQg oiFQg: nsqd connected: <span class="s2">&quot;10.10.2.126:4150&quot;</span> +0ms
+  Nsq:Reader:MmLbX MmLbX: nsqd connected: <span class="s2">&quot;10.10.2.126:4250&quot;</span> +0ms
+  Nsq:Reader:MmLbX MmLbX: nsqd connected: <span class="s2">&quot;10.10.2.126:4150&quot;</span> +0ms
+  Nsq:Reader:8hpju 8hpju: nsqd connected: <span class="s2">&quot;10.10.2.126:4250&quot;</span> +0ms
+  Nsq:Reader:oiFQg oiFQg: message 0e38318eeb01e000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC1:jQ77FfY8lS<span class="s2">&quot;}&quot;</span> +16ms
+  Nsq:Message oiFQg: message 0e38318eeb01e000 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38318eeb01e000</span>
+<span class="s2">  Nsq:Message &quot;</span> +0ms
+  Nsq:Reader:MmLbX MmLbX: message 0e38318eeb01e001 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC1:ONvD8mH4Jq<span class="s2">&quot;}&quot;</span> +16ms
+  Nsq:Message MmLbX: message 0e38318eeb01e001 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38318eeb01e001</span>
+<span class="s2">  Nsq:Message &quot;</span> +1ms
+  Nsq:Reader:8hpju 8hpju: ready +17ms
+  Nsq:Reader:MmLbX MmLbX: message 0e38318eeb01e002 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC1:7xjankTlzU<span class="s2">&quot;}&quot;</span> +3ms
+  Nsq:Message MmLbX: message 0e38318eeb01e002 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38318eeb01e002</span>
+<span class="s2">  Nsq:Message &quot;</span> +3ms
+  Nsq:Reader:oiFQg oiFQg: message 0e38318eeb435000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC1:bQOiIt7BLE<span class="s2">&quot;}&quot;</span> +5ms
+  Nsq:Message oiFQg: message 0e38318eeb435000 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38318eeb435000</span>
+<span class="s2">  Nsq:Message &quot;</span> +1ms
+  Nsq:Reader:8hpju 8hpju: message 0e38318eec435000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC2_UNI:Ms10V0jtpc<span class="s2">&quot;}&quot;</span> +3ms
+  Nsq:Message 8hpju: message 0e38318eec435000 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38318eec435000</span>
+<span class="s2">  Nsq:Message &quot;</span> +1ms
+  Nsq:Reader:MmLbX MmLbX: message 0e38318eeb435001 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC1:APZJDBiVP9<span class="s2">&quot;}&quot;</span> +3ms
+  Nsq:Message MmLbX: message 0e38318eeb435001 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38318eeb435001</span>
+<span class="s2">  Nsq:Message &quot;</span> +1ms
+  Nsq:Reader:MmLbX MmLbX: message 0e38318eeb435002 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC1:CXF6AQVBDr<span class="s2">&quot;}&quot;</span> +53ms
+  Nsq:Message MmLbX: message 0e38318eeb435002 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38318eeb435002</span>
+<span class="s2">  Nsq:Message &quot;</span> +53ms
+^C  Nsq:Writer:bgF6l bgF6l: closed +1m
+  Nsq:Writer:Plwtx Plwtx: closed +1m
+  Nsq:Reader:oiFQg oiFQg: notReady +26s
+  Nsq:Reader:MmLbX MmLbX: notReady +25s
+  Nsq:Reader:8hpju 8hpju: notReady +26s
+NsqTest: all cleared</code></pre></figure>
+
+<h3 id="samemessagemultichannel">sameMessageMultiChannel</h3>
+
+<p>Multiple channels subscribe the same topic will receive duplicate messages.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>sameMessageMultiChannel:
+    Two writers initialized
+    One of the writer publish <span class="m">1</span> message into topic <span class="s2">&quot;TOPIC_SAME&quot;</span>
+    Two readers created <span class="k">for</span> topic <span class="s2">&quot;TOPIC_SAME&quot;</span> with two channels <span class="s2">&quot;TOPIC_SAME_CHANNEL_1/2&quot;</span> subscribe the same topic
+    -
+    Two readers receive the same message</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>➜  couchnsq git:<span class="o">(</span>master<span class="o">)</span> ✗ ./bash/nsq_run.sh
+  Nsq:Writer:oeAOC oeAOC: ready +0ms
+  Nsq:Writer:EdW9U EdW9U: ready +0ms
+  Nsq:Reader:SuqpY SuqpY: nsqd connected: <span class="s2">&quot;10.10.2.126:4250&quot;</span> +0ms
+  Nsq:Reader:vKCk9 vKCk9: nsqd connected: <span class="s2">&quot;10.10.2.126:4250&quot;</span> +0ms
+  Nsq:Reader:vKCk9 vKCk9: ready +5ms
+  Nsq:Reader:SuqpY SuqpY: ready +6ms
+  Nsq:Reader:vKCk9 vKCk9: message 0e38322140035000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC_SAME:Hn4tB5UA0N<span class="s2">&quot;}&quot;</span> +3ms
+  Nsq:Message vKCk9: message 0e38322140035000 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38322140035000</span>
+<span class="s2">  Nsq:Message &quot;</span> +0ms
+  Nsq:Reader:SuqpY SuqpY: message 0e38322140035000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC_SAME:Hn4tB5UA0N<span class="s2">&quot;}&quot;</span> +3ms
+  Nsq:Message SuqpY: message 0e38322140035000 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38322140035000</span>
+<span class="s2">  Nsq:Message &quot;</span> +0ms
+^C  Nsq:Writer:oeAOC oeAOC: closed +3s
+  Nsq:Writer:EdW9U EdW9U: closed +3s
+  Nsq:Reader:vKCk9 vKCk9: notReady +3s
+  Nsq:Reader:SuqpY SuqpY: notReady +3s
+NsqTest: all cleared</code></pre></figure>
+
+<h3 id="subbeforepub">subBeforePub</h3>
+
+<p>If the topic not deleted before execution (or first run). Reader will suck for a long time, the reason have been explained previously.</p>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>subBeforePub:
+    Two writers initialized
+    One reader create to subscribe an non-existing topic <span class="s2">&quot;TOPIC_UNKNOWN&quot;</span>
+    One of the writer <span class="nb">wait</span> 1000ms, <span class="k">then</span> publish <span class="m">1</span> message into topic <span class="s2">&quot;TOPIC_UNKNOWN&quot;</span>
+    -
+    One reader <span class="nb">wait</span> <span class="k">for</span> a long <span class="nb">time</span> <span class="k">then</span> receive the message</code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>➜  couchnsq git:<span class="o">(</span>master<span class="o">)</span> ✗ ./bash/nsq_run.sh
+  Nsq:Writer:2Fr6p 2Fr6p: ready +0ms
+  Nsq:Writer:vFIw5 vFIw5: ready +0ms
+  Nsq:Reader:uR6Lp uR6Lp: nsqd connected: <span class="s2">&quot;10.10.2.126:4150&quot;</span> +0ms
+  Nsq:Reader:uR6Lp uR6Lp: ready +5ms
+  Nsq:Reader:uR6Lp uR6Lp: message 0e38323df741e000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>TOPIC_UNKNOWN:kCwBySUMY0<span class="s2">&quot;}&quot;</span> +984ms
+  Nsq:Message uR6Lp: message 0e38323df741e000 respond: <span class="s2">&quot;0&quot;</span>, <span class="s2">&quot;FIN 0e38323df741e000</span>
+<span class="s2">  Nsq:Message &quot;</span> +0ms
+^C  Nsq:Writer:2Fr6p 2Fr6p: closed +3s
+  Nsq:Writer:vFIw5 vFIw5: closed +3s
+  Nsq:Reader:uR6Lp uR6Lp: notReady +2s
+NsqTest: all cleared</code></pre></figure>
+
+<h3 id="errormessage">errorMessage</h3>
+
+<p>Send error message, and message would be requeue with backoff in the reader, finally it would be discarded (finished).</p>
+
+<figure class="highlight"><pre><code class="language-json" data-lang="json"><span></span><span class="p">{</span>
+  <span class="nt">&quot;maxAttempts&quot;</span><span class="p">:</span> <span class="mi">3</span>
+<span class="p">}</span></code></pre></figure>
+
+<figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span></span>➜  couchnsq git:<span class="o">(</span>master<span class="o">)</span> ✗ ./bash/nsq_run.sh
+  Nsq:Writer:5P9rd 5P9rd: ready +0ms
+  Nsq:Writer:KKhyz KKhyz: ready +0ms
+  Nsq:Reader:hSWmK hSWmK: nsqd connected: <span class="s2">&quot;10.10.2.126:4150&quot;</span> +0ms
+  Nsq:Reader:hSWmK hSWmK: ready +5ms
+  Nsq:Reader:hSWmK hSWmK: message 0e3832a5bb01e000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>should throw error:WGZ9VlLLPa<span class="s2">&quot;}&quot;</span> +4ms
+  Nsq:Reader:hSWmK hSWmK: message 0e3832a5bb01e000 error <span class="p">&amp;</span> requeue, attempts: <span class="m">1</span> +1ms
+  Nsq:Message hSWmK: message 0e3832a5bb01e000 backoff +0ms
+  Nsq:Message hSWmK: message 0e3832a5bb01e000 respond: <span class="s2">&quot;1&quot;</span>, <span class="s2">&quot;REQ 0e3832a5bb01e000 2000</span>
+<span class="s2">  Nsq:Message &quot;</span> +1ms
+  Nsq:Reader:hSWmK hSWmK: message 0e3832a5bb01e000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>should throw error:WGZ9VlLLPa<span class="s2">&quot;}&quot;</span> +4s
+  Nsq:Reader:hSWmK hSWmK: message 0e3832a5bb01e000 error <span class="p">&amp;</span> requeue, attempts: <span class="m">2</span> +0ms
+  Nsq:Message hSWmK: message 0e3832a5bb01e000 backoff +4s
+  Nsq:Message hSWmK: message 0e3832a5bb01e000 respond: <span class="s2">&quot;1&quot;</span>, <span class="s2">&quot;REQ 0e3832a5bb01e000 2000</span>
+<span class="s2">  Nsq:Message &quot;</span> +0ms
+  Nsq:Reader:hSWmK hSWmK: message 0e3832a5bb01e000 got: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>should throw error:WGZ9VlLLPa<span class="s2">&quot;}&quot;</span> +7s
+  Nsq:Reader:hSWmK hSWmK: message 0e3832a5bb01e000 error <span class="p">&amp;</span> requeue, attempts: <span class="m">3</span> +0ms
+  Nsq:Message hSWmK: message 0e3832a5bb01e000 backoff +7s
+  Nsq:Message hSWmK: message 0e3832a5bb01e000 respond: <span class="s2">&quot;1&quot;</span>, <span class="s2">&quot;REQ 0e3832a5bb01e000 2000</span>
+<span class="s2">  Nsq:Message &quot;</span> +0ms
+  Nsq:Reader:hSWmK hSWmK: message discarded: <span class="s2">&quot;{&quot;</span>msg<span class="s2">&quot;:&quot;</span>should throw error:WGZ9VlLLPa<span class="s2">&quot;}&quot;</span> +11s
+^C  Nsq:Writer:5P9rd 5P9rd: closed +23s
+  Nsq:Writer:KKhyz KKhyz: closed +23s
+  Nsq:Reader:hSWmK hSWmK: notReady +2s
+NsqTest: all cleared</code></pre></figure>
+
+
+              </div>
+              
+              <div id="disqus_thread">
+                <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+                <a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4 hidden-xs">
+          <div class="sidebar ">
+  <h2>Recent Posts</h2>
+  <ul>
+    
+    <li><a href="/2020/12/nsq-note/">NSQ Note</a></li>
+    
+    <li><a href="/2020/10/proxychains/">使用proxychains进行命令行proxy设置</a></li>
+    
+    <li><a href="/2020/10/frp/">使用frp内网穿透进行ssh登录</a></li>
+    
+    <li><a href="/2020/07/koa-middleware/">Koa2 中间件范例</a></li>
+    
+    <li><a href="/2020/06/material-ui/">MaterialUI Notes</a></li>
+    
+  </ul>
+</div>
+
+<div class="sidebar">
+  <h2>Categories</h2>
+  <ul>
+    
+      <li><a href="/category/Linux">Linux</a></li>
+    
+      <li><a href="/category/Stress & Scaling">Stress & Scaling</a></li>
+    
+      <li><a href="/category/PHP">PHP</a></li>
+    
+      <li><a href="/category/IDE">IDE</a></li>
+    
+      <li><a href="/category/Wordpress">Wordpress</a></li>
+    
+      <li><a href="/category/SEO">SEO</a></li>
+    
+      <li><a href="/category/Version Control">Version Control</a></li>
+    
+      <li><a href="/category/HTML & CSS">HTML & CSS</a></li>
+    
+      <li><a href="/category/Trash">Trash</a></li>
+    
+      <li><a href="/category/Apache">Apache</a></li>
+    
+      <li><a href="/category/Memcache">Memcache</a></li>
+    
+      <li><a href="/category/Net Services">Net Services</a></li>
+    
+      <li><a href="/category/Java">Java</a></li>
+    
+      <li><a href="/category/MicroBlog">MicroBlog</a></li>
+    
+      <li><a href="/category/JavaScript">JavaScript</a></li>
+    
+      <li><a href="/category/DB">DB</a></li>
+    
+      <li><a href="/category/Something">Something</a></li>
+    
+      <li><a href="/category/Methodology & Thinking">Methodology & Thinking</a></li>
+    
+      <li><a href="/category/Redis">Redis</a></li>
+    
+      <li><a href="/category/Flash">Flash</a></li>
+    
+      <li><a href="/category/Thinking">Thinking</a></li>
+    
+      <li><a href="/category/Platform">Platform</a></li>
+    
+      <li><a href="/category/C _ C++">C / C++</a></li>
+    
+      <li><a href="/category/Dart">Dart</a></li>
+    
+      <li><a href="/category/Mobile">Mobile</a></li>
+    
+      <li><a href="/category/Video">Video</a></li>
+    
+      <li><a href="/category/Blog">Blog</a></li>
+    
+      <li><a href="/category/Politics">Politics</a></li>
+    
+      <li><a href="/category/V8Blog">V8Blog</a></li>
+    
+      <li><a href="/category/Docker">Docker</a></li>
+    
+      <li><a href="/category/Golang">Golang</a></li>
+    
+      <li><a href="/category/Career">Career</a></li>
+    
+      <li><a href="/category/Prometheus">Prometheus</a></li>
+    
+      <li><a href="/category/Grafana">Grafana</a></li>
+    
+      <li><a href="/category/Logging">Logging</a></li>
+    
+      <li><a href="/category/Jaeger">Jaeger</a></li>
+    
+      <li><a href="/category/Elasticsearch">Elasticsearch</a></li>
+    
+      <li><a href="/category/MessageQueue">MessageQueue</a></li>
+    
+      <li><a href="/category/Kafka">Kafka</a></li>
+    
+      <li><a href="/category/gRPC">gRPC</a></li>
+    
+      <li><a href="/category/Envoy">Envoy</a></li>
+    
+      <li><a href="/category/DistributedSystem">DistributedSystem</a></li>
+    
+      <li><a href="/category/Tor">Tor</a></li>
+    
+      <li><a href="/category/Node.js">Node.js</a></li>
+    
+      <li><a href="/category/CI">CI</a></li>
+    
+      <li><a href="/category/ServiceDiscovery">ServiceDiscovery</a></li>
+    
+      <li><a href="/category/Git">Git</a></li>
+    
+      <li><a href="/category/Payment">Payment</a></li>
+    
+      <li><a href="/category/Japanese">Japanese</a></li>
+    
+      <li><a href="/category/ReactJs">ReactJs</a></li>
+    
+      <li><a href="/category/CSS">CSS</a></li>
+    
+  </ul>
+</div>
+
+        </div>
+      </div>
+    </div>
+    
+<!-- Add Disqus comments. -->
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = "xenojoshua"; // required: replace example with your forum shortname
+  var disqus_identifier = "/2020/12/nsq-note/";
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+
+  </div>
+      <footer class="footer-distributed">
+      <div class="container">
+        <div class="footer">
+          <p>Jonathan Dai &copy; 2019</p>
+          <h6>Theme by <a href="https://github.com/streetturtle/jekyll-clean-dark" target="_blank">Pavel Makhov</a></h6>
+          <h6>Follow me</h6>
+
+<ul class="social-media">
+
+  
+    <li>
+      <a title="agreatfool on Github" href="https://github.com/agreatfool" target="_blank"><i class="fa fa-github fa-2x"></i></a>
+    </li>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    <li>
+      <a title="feed.xml RSS" href="https://xenojoshua.com/feed.xml" target="_blank"><i class="fa fa-rss fa-2x"></i></a>
+    </li>
+  
+
+</ul>
+
+        </div>
+      </div>
+    </footer>
+  </body>
+</html>
+
+</div>
