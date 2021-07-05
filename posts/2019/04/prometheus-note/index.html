@@ -58,7 +58,7 @@
 
         gtag('config', 'UA-11349149-4', {"send_page_view":false});
       }
-      </script><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><link rel="icon" href="/favicon-32x32.png?v=bc5f0053fc3ffc2dfb62b5abaa975347" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#F7A046"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><title data-react-helmet="true">Prometheus Notes - Blog by Jonathan Dai</title><meta data-react-helmet="true" name="description" content=""/><meta data-react-helmet="true" property="og:site_name" content="Prometheus Notes - Blog by Jonathan Dai"/><meta data-react-helmet="true" property="og:image" content="https://xenojoshua.com/static/7e722e026a41a08a8f9a1cc76782dd27/default-social-image.jpg"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:title" content="Prometheus Notes - Blog by Jonathan Dai"/><meta data-react-helmet="true" name="twitter:description" content=""/><meta data-react-helmet="true" name="twitter:image" content="https://xenojoshua.com/static/7e722e026a41a08a8f9a1cc76782dd27/default-social-image.jpg"/><link as="script" rel="preload" href="/webpack-runtime-85bd21567cb8ca1c8a08.js"/><link as="script" rel="preload" href="/framework-1e331b2e9d55ebef6dec.js"/><link as="script" rel="preload" href="/532a2f07-549094fa347c85980056.js"/><link as="script" rel="preload" href="/dc6a8720040df98778fe970bf6c000a41750d3ae-ae9f57b3df6a2a1f7657.js"/><link as="script" rel="preload" href="/app-d9bbf6acf43eadf2087a.js"/><link as="script" rel="preload" href="/styles-407fe62976dc5310c43e.js"/><link as="script" rel="preload" href="/cd95ea5cbd2c605f26db819f07999610c9ff4310-69626fa07c736046dbe7.js"/><link as="script" rel="preload" href="/component---src-templates-post-template-js-f2aa9cce62920d34090f.js"/><link as="fetch" rel="preload" href="/page-data/posts/2019/04/prometheus-note/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/251939775.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/401334301.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/825871152.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="Layout-module--layout--3Pyz6"><div><a class="Post-module--post__home-button--16Kl0" href="/">All Articles</a><div><div class="Content-module--content--3p512"><h1 class="Content-module--content__title--2BDW9">Prometheus Notes</h1><div class="Content-module--content__body--2TrQ-"><h1 id="1-前言" style="position:relative;"><a href="#1-%E5%89%8D%E8%A8%80" aria-label="1 前言 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 前言</h1>
+      </script><link rel="sitemap" type="application/xml" href="/sitemap.xml"/><link rel="icon" href="/favicon-32x32.png?v=bc5f0053fc3ffc2dfb62b5abaa975347" type="image/png"/><link rel="manifest" href="/manifest.webmanifest" crossorigin="anonymous"/><meta name="theme-color" content="#F7A046"/><link rel="apple-touch-icon" sizes="48x48" href="/icons/icon-48x48.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="72x72" href="/icons/icon-72x72.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="96x96" href="/icons/icon-96x96.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="256x256" href="/icons/icon-256x256.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="384x384" href="/icons/icon-384x384.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><link rel="apple-touch-icon" sizes="512x512" href="/icons/icon-512x512.png?v=bc5f0053fc3ffc2dfb62b5abaa975347"/><title data-react-helmet="true">Prometheus Notes - Blog by Jonathan Dai</title><meta data-react-helmet="true" name="description" content=""/><meta data-react-helmet="true" property="og:site_name" content="Prometheus Notes - Blog by Jonathan Dai"/><meta data-react-helmet="true" property="og:image" content="https://xenojoshua.com/static/7e722e026a41a08a8f9a1cc76782dd27/default-social-image.jpg"/><meta data-react-helmet="true" name="twitter:card" content="summary"/><meta data-react-helmet="true" name="twitter:title" content="Prometheus Notes - Blog by Jonathan Dai"/><meta data-react-helmet="true" name="twitter:description" content=""/><meta data-react-helmet="true" name="twitter:image" content="https://xenojoshua.com/static/7e722e026a41a08a8f9a1cc76782dd27/default-social-image.jpg"/><link as="script" rel="preload" href="/webpack-runtime-85bd21567cb8ca1c8a08.js"/><link as="script" rel="preload" href="/framework-1e331b2e9d55ebef6dec.js"/><link as="script" rel="preload" href="/532a2f07-549094fa347c85980056.js"/><link as="script" rel="preload" href="/dc6a8720040df98778fe970bf6c000a41750d3ae-ae9f57b3df6a2a1f7657.js"/><link as="script" rel="preload" href="/app-4a8b63fc4e02e19dc59f.js"/><link as="script" rel="preload" href="/styles-407fe62976dc5310c43e.js"/><link as="script" rel="preload" href="/cd95ea5cbd2c605f26db819f07999610c9ff4310-69626fa07c736046dbe7.js"/><link as="script" rel="preload" href="/component---src-templates-post-template-js-f2aa9cce62920d34090f.js"/><link as="fetch" rel="preload" href="/page-data/posts/2019/04/prometheus-note/page-data.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/251939775.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/401334301.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/sq/d/825871152.json" crossorigin="anonymous"/><link as="fetch" rel="preload" href="/page-data/app-data.json" crossorigin="anonymous"/></head><body><div id="___gatsby"><div style="outline:none" tabindex="-1" id="gatsby-focus-wrapper"><div class="Layout-module--layout--3Pyz6"><div><a class="Post-module--post__home-button--16Kl0" href="/">All Articles</a><div><div class="Content-module--content--3p512"><h1 class="Content-module--content__title--2BDW9">Prometheus Notes</h1><div class="Content-module--content__body--2TrQ-"><h1 id="1-前言" style="position:relative;"><a href="#1-%E5%89%8D%E8%A8%80" aria-label="1 前言 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 前言</h1>
 <p>对于分布式系统来说，监控是非常重要的，少了精密的监控应用程序的状况就无法得知了，也很难查找问题。而在云原生的年代，监控系统（或者说分布式系统的所有组件）最好是使用Go语言编写的，这样才能做到最小的镜像、最高的性能、最佳的CPU利用。所以监控系统的选择其实也不是那么的难，直接用CNCF的Prometheus就可以了。虽然说是这么说，实际使用之前对于工具的理解还是有必要的，因此有了此文。</p>
 <p>此外，这里简单讲下，官方的文档，怎么说呢，只能说是一个”手册”。假设，Prometheus的作者（这里假设是一个自然人）花了100个小时编完了Prometheus的代码，那么这个官方文档估计也就只花了30分钟，内容完全就是一堆细节的堆砌，完全没动脑子。所以，如果你是一名初学者，建议直接忽略官方的文档，去找第三方的书来看。这份文档只对需要跟着最新版本走的工程师，或者需要查找下一些Prometheus知识点或使用方法的工程师有点用。</p>
 <p>这里推荐一本中文的gitbook：<a href="https://yunlzheng.gitbook.io/prometheus-book/" target="_blank" rel="nofollow noopener noreferrer">prometheus-book</a>。从起始的安装和使用例子，到后面的集群管理以及exporter等等，都做了非常详实的解说，最可贵的是，作者写的内容是基于思考、组织之后的，明确地是为了读者服务的，而不像官方文档，仅仅只是一堆细节的罗列。</p>
@@ -107,7 +107,7 @@ prometheus, version 2.8.1 (branch: HEAD, revision: 4d60eb36dcbed725fcac5b2701857
 <p>这里先给出一个简单的exporter吐出来的数据范例：</p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text"># HELP node_cpu Seconds the cpus spent in each mode.
 # TYPE node_cpu counter
-node_cpu{cpu=&quot;cpu0&quot;,mode=&quot;idle&quot;} 362812.7890625
+node_cpu{cpu="cpu0",mode="idle"} 362812.7890625
 # HELP node_load1 1m load average.
 # TYPE node_load1 gauge
 node_load1 3.0703125</code></pre></div>
@@ -117,7 +117,7 @@ node_load1 3.0703125</code></pre></div>
 <li>其中第一行是<code class="language-text">注释</code>：<code class="language-text"># HELP ...</code>，主要用来说明该指标是什么</li>
 <li>第二行是<code class="language-text">定义</code>：<code class="language-text"># TYPE ...</code>，对当前的指标进行<code class="language-text">命名</code>：<code class="language-text">node_load1</code>，及<code class="language-text">类型</code>的定义：<code class="language-text">gauge</code></li>
 </ul>
-<p>除了名字之外，每一个指标都可以有一系列的<code class="language-text">Labels（标签）</code>来描述更细致的维度：<code class="language-text">{cpu=&quot;cpu0&quot;,mode=&quot;idle&quot;}</code>。</p>
+<p>除了名字之外，每一个指标都可以有一系列的<code class="language-text">Labels（标签）</code>来描述更细致的维度：<code class="language-text">{cpu="cpu0",mode="idle"}</code>。</p>
 <p>每一次数据采集获得到的即一个<code class="language-text">Sample（样本）</code>，其由三部分组成：</p>
 <ul>
 <li>Metrics（指标）：包含了Metrics name以及Labels</li>
@@ -125,19 +125,19 @@ node_load1 3.0703125</code></pre></div>
 <li>Value（采样值）：其类型为float64浮点数</li>
 </ul>
 <p>e.g</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">&lt;--------------- metric ---------------------&gt;&lt;-timestamp -&gt;&lt;-value-&gt;
-http_request_total{status=&quot;200&quot;, method=&quot;GET&quot;}@1434417560938 =&gt; 94355
-http_request_total{status=&quot;200&quot;, method=&quot;GET&quot;}@1434417561287 =&gt; 94334
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">&lt;--------------- metric --------------------->&lt;-timestamp ->&lt;-value->
+http_request_total{status="200", method="GET"}@1434417560938 => 94355
+http_request_total{status="200", method="GET"}@1434417561287 => 94334
 
-http_request_total{status=&quot;404&quot;, method=&quot;GET&quot;}@1434417560938 =&gt; 38473
-http_request_total{status=&quot;404&quot;, method=&quot;GET&quot;}@1434417561287 =&gt; 38544
+http_request_total{status="404", method="GET"}@1434417560938 => 38473
+http_request_total{status="404", method="GET"}@1434417561287 => 38544
 
-http_request_total{status=&quot;200&quot;, method=&quot;POST&quot;}@1434417560938 =&gt; 4748
-http_request_total{status=&quot;200&quot;, method=&quot;POST&quot;}@1434417561287 =&gt; 4785</code></pre></div>
+http_request_total{status="200", method="POST"}@1434417560938 => 4748
+http_request_total{status="200", method="POST"}@1434417561287 => 4785</code></pre></div>
 <p>在Prometheus内部有一个预定义的变量<code class="language-text">__name__</code>用来表达<code class="language-text">Metrics name</code>（这里注意，该值只是名字，不含Label），在后续编程及配置文件处理的时候会用得到：</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">api_http_requests_total{method=&quot;POST&quot;, handler=&quot;/messages&quot;}
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">api_http_requests_total{method="POST", handler="/messages"}
 =
-{__name__=&quot;api_http_requests_total&quot;，method=&quot;POST&quot;, handler=&quot;/messages&quot;}</code></pre></div>
+{__name__="api_http_requests_total"，method="POST", handler="/messages"}</code></pre></div>
 <p>Prometheus服务器启动的时候，可以设置从很多端点（endpoint）进行数据采集。比如说：我们有一个主机，主机上运行了3个Go程序，一个Java程序，以及一个数据库。那么我们采集的时候就需要运行6个工作：主机采集、Go采集*3、Java采集、数据库采集。这6个工作，每一个我们都称之为：<code class="language-text">Job</code>。Job可以自由设置采集的IP、端口以及endpoint，因此其自由度相当高，可以采集同服务器的不同服务，也可以采集不同的服务器上的数据，最终都汇总到一台Prometheus服务器上。</p>
 <p>资料：</p>
 <ul>
@@ -156,24 +156,24 @@ http_request_total{status=&quot;200&quot;, method=&quot;POST&quot;}@143441756128
 <p>e.g</p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text"># HELP prometheus_tsdb_compaction_chunk_range Final time range of chunks on their first compaction
 # TYPE prometheus_tsdb_compaction_chunk_range histogram
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;100&quot;} 0
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;400&quot;} 0
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;1600&quot;} 0
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;6400&quot;} 0
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;25600&quot;} 0
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;102400&quot;} 0
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;409600&quot;} 0
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;1.6384e+06&quot;} 260
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;6.5536e+06&quot;} 780
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;2.62144e+07&quot;} 780
-prometheus_tsdb_compaction_chunk_range_bucket{le=&quot;+Inf&quot;} 780
+prometheus_tsdb_compaction_chunk_range_bucket{le="100"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="400"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="1600"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="6400"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="25600"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="102400"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="409600"} 0
+prometheus_tsdb_compaction_chunk_range_bucket{le="1.6384e+06"} 260
+prometheus_tsdb_compaction_chunk_range_bucket{le="6.5536e+06"} 780
+prometheus_tsdb_compaction_chunk_range_bucket{le="2.62144e+07"} 780
+prometheus_tsdb_compaction_chunk_range_bucket{le="+Inf"} 780
 prometheus_tsdb_compaction_chunk_range_sum 1.1540798e+09
 prometheus_tsdb_compaction_chunk_range_count 780</code></pre></div>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text"># HELP prometheus_tsdb_wal_fsync_duration_seconds Duration of WAL fsync.
 # TYPE prometheus_tsdb_wal_fsync_duration_seconds summary
-prometheus_tsdb_wal_fsync_duration_seconds{quantile=&quot;0.5&quot;} 0.012352463
-prometheus_tsdb_wal_fsync_duration_seconds{quantile=&quot;0.9&quot;} 0.014458005
-prometheus_tsdb_wal_fsync_duration_seconds{quantile=&quot;0.99&quot;} 0.017316173
+prometheus_tsdb_wal_fsync_duration_seconds{quantile="0.5"} 0.012352463
+prometheus_tsdb_wal_fsync_duration_seconds{quantile="0.9"} 0.014458005
+prometheus_tsdb_wal_fsync_duration_seconds{quantile="0.99"} 0.017316173
 prometheus_tsdb_wal_fsync_duration_seconds_sum 2.888716127000002
 prometheus_tsdb_wal_fsync_duration_seconds_count 216</code></pre></div>
 <h2 id="34-exporter" style="position:relative;"><a href="#34-exporter" aria-label="34 exporter permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.4 Exporter</h2>
@@ -189,16 +189,16 @@ prometheus_tsdb_wal_fsync_duration_seconds_count 216</code></pre></div>
 </ul>
 <h3 id="341-exporter-过滤" style="position:relative;"><a href="#341-exporter-%E8%BF%87%E6%BB%A4" aria-label="341 exporter 过滤 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.4.1 Exporter 过滤</h3>
 <p>举个例子，node_exporter在MAC上启动，默认会吐出如下数据：</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">INFO[0000] Enabled collectors:                           source=&quot;node_exporter.go:90&quot;
-INFO[0000]  - boottime                                   source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - cpu                                        source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - diskstats                                  source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - filesystem                                 source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - loadavg                                    source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - meminfo                                    source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - netdev                                     source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - textfile                                   source=&quot;node_exporter.go:97&quot;
-INFO[0000]  - time                                       source=&quot;node_exporter.go:97&quot;</code></pre></div>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">INFO[0000] Enabled collectors:                           source="node_exporter.go:90"
+INFO[0000]  - boottime                                   source="node_exporter.go:97"
+INFO[0000]  - cpu                                        source="node_exporter.go:97"
+INFO[0000]  - diskstats                                  source="node_exporter.go:97"
+INFO[0000]  - filesystem                                 source="node_exporter.go:97"
+INFO[0000]  - loadavg                                    source="node_exporter.go:97"
+INFO[0000]  - meminfo                                    source="node_exporter.go:97"
+INFO[0000]  - netdev                                     source="node_exporter.go:97"
+INFO[0000]  - textfile                                   source="node_exporter.go:97"
+INFO[0000]  - time                                       source="node_exporter.go:97"</code></pre></div>
 <p>我们就可以在启动的时候附加：<code class="language-text">--no-collector.time</code>option（time可置换成其他的），让其不再吐出，当然也可以添加option（—collector.xxx）吐出某些我们需要但默认不开启的数据。不同的Exporter设置可能会有些微不同，建议使用的时候仔细查看其手册。</p>
 <p>这样的设计模式其实是有问题的，在使用的时候需要大量设置，用起来过于复杂：<a href="https://github.com/prometheus/node_exporter/issues/735" target="_blank" rel="nofollow noopener noreferrer">Question: Disable all collectors?</a>。</p>
 <h3 id="342-metricrelabelconfigs-过滤" style="position:relative;"><a href="#342-metricrelabelconfigs-%E8%BF%87%E6%BB%A4" aria-label="342 metricrelabelconfigs 过滤 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.4.2 metric<em>relabel</em>configs 过滤</h3>
@@ -218,8 +218,8 @@ INFO[0000]  - time                                       source=&quot;node_expor
       node_memory_wired_bytes\
     )"
     <span class="token key atrule">action</span><span class="token punctuation">:</span> drop</code></pre></div>
-<p>上面的例子里使用了字符串换行，这里需要注意的是需要换行的字符串一定要使用双引号<code class="language-text">&quot;</code>，双引号里的字符是不会被转译的，换行符<code class="language-text">\</code>也就不会失效了。不换行的话，写法是：</p>
-<p><code class="language-text">regex: &quot;(filtered1|filtered2|filtered3)&quot;</code></p>
+<p>上面的例子里使用了字符串换行，这里需要注意的是需要换行的字符串一定要使用双引号<code class="language-text">"</code>，双引号里的字符是不会被转译的，换行符<code class="language-text">\</code>也就不会失效了。不换行的话，写法是：</p>
+<p><code class="language-text">regex: "(filtered1|filtered2|filtered3)"</code></p>
 <p>总而言之，在数据过滤方面，Prometheus做的真的不好，无论是在Exporter端做过滤还是在配置文件里做过滤，都需要写不少过滤条目，蛮麻烦的。</p>
 <h2 id="35-配置文件" style="position:relative;"><a href="#35-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6" aria-label="35 配置文件 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.5 配置文件</h2>
 <p>官方文档：<a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/" target="_blank" rel="nofollow noopener noreferrer">CONFIGURATION</a>。有一篇中文的译文不错，但不是太全：<a href="https://www.jianshu.com/p/bedd169676b6" target="_blank" rel="nofollow noopener noreferrer">Prometheus的安装和配置</a>。</p>
@@ -330,7 +330,7 @@ INFO[0000]  - time                                       source=&quot;node_expor
 <p>有几点需要注意：</p>
 <ul>
 <li>下级Prometheus默认在<code class="language-text">/federate</code>endpoint暴露联邦集群的数据采集点，不需要配置</li>
-<li>上级Prometheus必须在配置文件里指定<code class="language-text">params:&#39;match[]&#39;:- &#39;{__name__=~&quot;node_.*&quot;}&#39;</code>这样的采集规则才能真正采集到数据，这方面的行为模式和Prometheus的默认模式是不一样的；默认情况下Prometheus会将暴露出来的所有数据都采集起来，但联邦集群的时候如果上级节点不指定采集的过滤参数的话，默认是什么都不采集（可能考虑到量级会有问题），因此必须手动在配置文件里进行指标名（可以组合标签）的过滤</li>
+<li>上级Prometheus必须在配置文件里指定<code class="language-text">params:'match[]':- '{__name__=~"node_.*"}'</code>这样的采集规则才能真正采集到数据，这方面的行为模式和Prometheus的默认模式是不一样的；默认情况下Prometheus会将暴露出来的所有数据都采集起来，但联邦集群的时候如果上级节点不指定采集的过滤参数的话，默认是什么都不采集（可能考虑到量级会有问题），因此必须手动在配置文件里进行指标名（可以组合标签）的过滤</li>
 </ul>
 <p>说穿了其实所谓的联邦集群也没什么内容，无非就是在启动的Prometheus节点上默认开了个<code class="language-text">/federate</code>endpoint，允许其他Prometheus从它这里拉取数据。至于联邦集群怎么组建，能玩出什么花来，Prometheus就不管了，让搭建者自己发挥。</p>
 <h2 id="44-高可用" style="position:relative;"><a href="#44-%E9%AB%98%E5%8F%AF%E7%94%A8" aria-label="44 高可用 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.4 高可用</h2>
@@ -968,39 +968,39 @@ promhttp_metric_handler_requests_total<span class="token punctuation">{</span>co
 promhttp_metric_handler_requests_total<span class="token punctuation">{</span>code<span class="token operator">=</span><span class="token string">"503"</span><span class="token punctuation">}</span> <span class="token number">0</span></code></pre></div>
 <h2 id="prometheus--h-idappprometheus_help" style="position:relative;"><a href="#prometheus--h-idappprometheus_help" aria-label="prometheus  h idappprometheus_help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>prometheus -h {#ID<em>APP</em>PROMETHEUS_HELP}</h2>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">prometheus -h
-usage: prometheus [&lt;flags&gt;]
+usage: prometheus [&lt;flags>]
 
 The Prometheus monitoring server
 
 Flags:
   -h, --help                     Show context-sensitive help (also try --help-long and --help-man).
       --version                  Show application version.
-      --config.file=&quot;prometheus.yml&quot;
+      --config.file="prometheus.yml"
                                  Prometheus configuration file path.
-      --web.listen-address=&quot;0.0.0.0:9090&quot;
+      --web.listen-address="0.0.0.0:9090"
                                  Address to listen on for UI, API, and telemetry.
       --web.read-timeout=5m      Maximum duration before timing out read of the request, and closing idle connections.
       --web.max-connections=512  Maximum number of simultaneous connections.
-      --web.external-url=&lt;URL&gt;   The URL under which Prometheus is externally reachable (for example, if Prometheus is served via a reverse proxy). Used for generating
+      --web.external-url=&lt;URL>   The URL under which Prometheus is externally reachable (for example, if Prometheus is served via a reverse proxy). Used for generating
                                  relative and absolute links back to Prometheus itself. If the URL has a path portion, it will be used to prefix all HTTP endpoints
                                  served by Prometheus. If omitted, relevant URL components will be derived automatically.
-      --web.route-prefix=&lt;path&gt;  Prefix for the internal routes of web endpoints. Defaults to path of --web.external-url.
-      --web.user-assets=&lt;path&gt;   Path to static asset directory, available at /user.
+      --web.route-prefix=&lt;path>  Prefix for the internal routes of web endpoints. Defaults to path of --web.external-url.
+      --web.user-assets=&lt;path>   Path to static asset directory, available at /user.
       --web.enable-lifecycle     Enable shutdown and reload via HTTP request.
       --web.enable-admin-api     Enable API endpoints for admin control actions.
-      --web.console.templates=&quot;consoles&quot;
+      --web.console.templates="consoles"
                                  Path to the console template directory, available at /consoles.
-      --web.console.libraries=&quot;console_libraries&quot;
+      --web.console.libraries="console_libraries"
                                  Path to the console library directory.
-      --web.page-title=&quot;Prometheus Time Series Collection and Processing Server&quot;
+      --web.page-title="Prometheus Time Series Collection and Processing Server"
                                  Document title of Prometheus instance.
-      --storage.tsdb.path=&quot;data/&quot;
+      --storage.tsdb.path="data/"
                                  Base path for metrics storage.
       --storage.tsdb.retention=STORAGE.TSDB.RETENTION
-                                 [DEPRECATED] How long to retain samples in storage. This flag has been deprecated, use &quot;storage.tsdb.retention.time&quot; instead
+                                 [DEPRECATED] How long to retain samples in storage. This flag has been deprecated, use "storage.tsdb.retention.time" instead
       --storage.tsdb.retention.time=STORAGE.TSDB.RETENTION.TIME
-                                 How long to retain samples in storage. When this flag is set it overrides &quot;storage.tsdb.retention&quot;. If neither this flag nor
-                                 &quot;storage.tsdb.retention&quot; nor &quot;storage.tsdb.retention.size&quot; is set, the retention time defaults to 15d.
+                                 How long to retain samples in storage. When this flag is set it overrides "storage.tsdb.retention". If neither this flag nor
+                                 "storage.tsdb.retention" nor "storage.tsdb.retention.size" is set, the retention time defaults to 15d.
       --storage.tsdb.retention.size=STORAGE.TSDB.RETENTION.SIZE
                                  [EXPERIMENTAL] Maximum number of bytes that can be stored for blocks. Units supported: KB, MB, GB, TB, PB. This flag is experimental and
                                  can be changed in future releases.
@@ -1008,16 +1008,16 @@ Flags:
                                  Do not create lockfile in data directory.
       --storage.tsdb.allow-overlapping-blocks
                                  [EXPERIMENTAL] Allow overlapping blocks which in-turn enables vertical compaction and vertical query merge.
-      --storage.remote.flush-deadline=&lt;duration&gt;
+      --storage.remote.flush-deadline=&lt;duration>
                                  How long to wait flushing sample on shutdown or config reload.
       --storage.remote.read-sample-limit=5e7
                                  Maximum overall number of samples to return via the remote read interface, in a single query. 0 means no limit.
       --storage.remote.read-concurrent-limit=10
                                  Maximum number of concurrent remote read calls. 0 means no limit.
       --rules.alert.for-outage-tolerance=1h
-                                 Max time to tolerate prometheus outage for restoring &#39;for&#39; state of alert.
+                                 Max time to tolerate prometheus outage for restoring 'for' state of alert.
       --rules.alert.for-grace-period=10m
-                                 Minimum duration between alert and restored &#39;for&#39; state. This is maintained only for alerts with configured &#39;for&#39; time greater than
+                                 Minimum duration between alert and restored 'for' state. This is maintained only for alerts with configured 'for' time greater than
                                  grace period.
       --rules.alert.resend-delay=1m
                                  Minimum amount of time to wait before resending an alert to Alertmanager.
@@ -1032,7 +1032,7 @@ Flags:
       --query.max-samples=50000000
                                  Maximum number of samples a single query can load into memory. Note that queries will fail if they would load more samples than this
                                  into memory, so this also limits the number of samples a query can return.
-      --web.cors.origin=&quot;.*&quot;     Regex for CORS origin. It is fully anchored. Eg. &#39;https?://(domain1|domain2)\.com&#39;
+      --web.cors.origin=".*"     Regex for CORS origin. It is fully anchored. Eg. 'https?://(domain1|domain2)\.com'
       --log.level=info           Only log messages with the given severity or above. One of: [debug, info, warn, error]
       --log.format=logfmt        Output format of log messages. One of: [logfmt, json]</code></pre></div>
 <h2 id="comparison-to-alternatives-idappcta" style="position:relative;"><a href="#comparison-to-alternatives-idappcta" aria-label="comparison to alternatives idappcta permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>COMPARISON TO ALTERNATIVES {#ID<em>APP</em>CTA}</h2>
@@ -1044,11 +1044,11 @@ Flags:
 <p>Graphite在命名的时序字段内存储数字化的采样值，这和Prometheus类似。然而，Prometheus的metadata模型更丰富：Graphite的metric由<code class="language-text">.</code>分隔的组件组成，并隐式编码维度，而Prometheus则显示地将维度编码为键值对，这被称为labels，并附加在metric上。这使得使用labels进行过滤、分组、匹配更为简单。</p>
 <p>更进一步，特别当Graphite与StatsD结合使用的时候，通常会仅存储所有被监控实例的聚合数据，而不是将实例作为一个维度进行保存，并能够深入挖掘单独的有问题实例。</p>
 <p>举例来说，存储响应码为<code class="language-text">500</code>、方法为<code class="language-text">POST</code>、发送到API服务器上<code class="language-text">/tracks</code>端点的HTTP请求数量，一般在Graphite/StatsD会存储为：</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">stats.api-server.tracks.post.500 -&gt; 93</code></pre></div>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">stats.api-server.tracks.post.500 -> 93</code></pre></div>
 <p>在Prometheus中，相同的数据则会被编码为（假设有三个API服务器实例）：</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">api_server_http_requests_total{method=&quot;POST&quot;,handler=&quot;/tracks&quot;,status=&quot;500&quot;,instance=&quot;&lt;sample1&gt;&quot;} -&gt; 34
-api_server_http_requests_total{method=&quot;POST&quot;,handler=&quot;/tracks&quot;,status=&quot;500&quot;,instance=&quot;&lt;sample2&gt;&quot;} -&gt; 28
-api_server_http_requests_total{method=&quot;POST&quot;,handler=&quot;/tracks&quot;,status=&quot;500&quot;,instance=&quot;&lt;sample3&gt;&quot;} -&gt; 31</code></pre></div>
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="&lt;sample1>"} -> 34
+api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="&lt;sample2>"} -> 28
+api_server_http_requests_total{method="POST",handler="/tracks",status="500",instance="&lt;sample3>"} -> 31</code></pre></div>
 <h4 id="storage" style="position:relative;"><a href="#storage" aria-label="storage permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Storage</h4>
 <p>Graphite将时序数据以Whisper格式存储在本地磁盘上，这是一个RDD-style的数据库，要求采样数据以固定间隔存储进入。每个时序数据被存储为单独的文件，而每隔一段固定时长，新的采样数据则会覆盖旧的数据。</p>
 <p>Prometheus也会在本地磁盘按照每个时序数据创建一个本地文件，但允许采样数据按随机的时间间隔进行存储，只要采样行为和规则评估行为发生。由于新的数据会被简单附加在后面，旧的数据会被保存不定时长。Prometheus在处理短存活周期、频繁变动的时序数据时也能很好工作。</p>
@@ -1128,4 +1128,4 @@ api_server_http_requests_total{method=&quot;POST&quot;,handler=&quot;/tracks&quo
 <p>如果你希望进行白盒监控，或希望有动态的基于云的环境，那么Prometheus是一个好的选择。</p>
 <blockquote>
 <p>EOF</p>
-</blockquote></div></div></div><div class="Post-module--post__footer--3WzWU"><div><p class="Meta-module--meta__date--29eD7">Published <!-- -->2019/4/9</p></div><div class="Tags-module--tags--1L_ct"><ul class="Tags-module--tags__list--91FqN"><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/prometheus/">Prometheus</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/monitor/">Monitor</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/metrics/">Metrics</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/dev-ops/">DevOps</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/time-series-db/">TimeSeriesDB</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/keynote/">Keynote</a></li></ul></div><div class="Author-module--author--2Yefr"><p>Some tech &amp; personal blog posts<a class="Author-module--author__bio-twitter--n-O9n" href="https://github.com/agreatfool" rel="noopener noreferrer" target="_blank"><strong>Jonathan Dai</strong> on Github</a></p></div></div><div class="Post-module--post__comments--25y6I"><div><div id="disqus_thread"></div></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/posts/2019/04/prometheus-note";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-8de6de3a6555a9e76093.js"],"app":["/app-d9bbf6acf43eadf2087a.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-fd4fb51a6fac1c18bdde.js"],"component---src-templates-categories-list-template-js":["/component---src-templates-categories-list-template-js-2181ec47d28e5c35d3e9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-b2a87adeccc85929aa5a.js"],"component---src-templates-index-template-js":["/component---src-templates-index-template-js-8ab439b4e507cb55f869.js"],"component---src-templates-not-found-template-js":["/component---src-templates-not-found-template-js-658f4507169e2836a377.js"],"component---src-templates-page-template-js":["/component---src-templates-page-template-js-d8aeb4e67f2e8af3e6cd.js"],"component---src-templates-post-template-js":["/component---src-templates-post-template-js-f2aa9cce62920d34090f.js"],"component---src-templates-tag-template-js":["/component---src-templates-tag-template-js-71e2e8dc3f543a0ae5ad.js"],"component---src-templates-tags-list-template-js":["/component---src-templates-tags-list-template-js-2d7007993fc2bf0f9caf.js"]};/*]]>*/</script><script src="/polyfill-8de6de3a6555a9e76093.js" nomodule=""></script><script src="/component---src-templates-post-template-js-f2aa9cce62920d34090f.js" async=""></script><script src="/cd95ea5cbd2c605f26db819f07999610c9ff4310-69626fa07c736046dbe7.js" async=""></script><script src="/styles-407fe62976dc5310c43e.js" async=""></script><script src="/app-d9bbf6acf43eadf2087a.js" async=""></script><script src="/dc6a8720040df98778fe970bf6c000a41750d3ae-ae9f57b3df6a2a1f7657.js" async=""></script><script src="/532a2f07-549094fa347c85980056.js" async=""></script><script src="/framework-1e331b2e9d55ebef6dec.js" async=""></script><script src="/webpack-runtime-85bd21567cb8ca1c8a08.js" async=""></script></body></html>
+</blockquote></div></div></div><div class="Post-module--post__footer--3WzWU"><div><p class="Meta-module--meta__date--29eD7">Published <!-- -->2019/4/9</p></div><div class="Tags-module--tags--1L_ct"><ul class="Tags-module--tags__list--91FqN"><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/prometheus/">Prometheus</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/monitor/">Monitor</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/metrics/">Metrics</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/dev-ops/">DevOps</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/time-series-db/">TimeSeriesDB</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/keynote/">Keynote</a></li></ul></div><div class="Author-module--author--2Yefr"><p>Some tech &amp; personal blog posts<a class="Author-module--author__bio-twitter--n-O9n" href="https://github.com/agreatfool" rel="noopener noreferrer" target="_blank"><strong>Jonathan Dai</strong> on Github</a></p></div></div><div class="Post-module--post__comments--25y6I"><div><div id="disqus_thread"></div></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/posts/2019/04/prometheus-note";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-8de6de3a6555a9e76093.js"],"app":["/app-4a8b63fc4e02e19dc59f.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-fd4fb51a6fac1c18bdde.js"],"component---src-templates-categories-list-template-js":["/component---src-templates-categories-list-template-js-2181ec47d28e5c35d3e9.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-b2a87adeccc85929aa5a.js"],"component---src-templates-index-template-js":["/component---src-templates-index-template-js-8ab439b4e507cb55f869.js"],"component---src-templates-not-found-template-js":["/component---src-templates-not-found-template-js-658f4507169e2836a377.js"],"component---src-templates-page-template-js":["/component---src-templates-page-template-js-d8aeb4e67f2e8af3e6cd.js"],"component---src-templates-post-template-js":["/component---src-templates-post-template-js-f2aa9cce62920d34090f.js"],"component---src-templates-tag-template-js":["/component---src-templates-tag-template-js-71e2e8dc3f543a0ae5ad.js"],"component---src-templates-tags-list-template-js":["/component---src-templates-tags-list-template-js-2d7007993fc2bf0f9caf.js"]};/*]]>*/</script><script src="/polyfill-8de6de3a6555a9e76093.js" nomodule=""></script><script src="/component---src-templates-post-template-js-f2aa9cce62920d34090f.js" async=""></script><script src="/cd95ea5cbd2c605f26db819f07999610c9ff4310-69626fa07c736046dbe7.js" async=""></script><script src="/styles-407fe62976dc5310c43e.js" async=""></script><script src="/app-4a8b63fc4e02e19dc59f.js" async=""></script><script src="/dc6a8720040df98778fe970bf6c000a41750d3ae-ae9f57b3df6a2a1f7657.js" async=""></script><script src="/532a2f07-549094fa347c85980056.js" async=""></script><script src="/framework-1e331b2e9d55ebef6dec.js" async=""></script><script src="/webpack-runtime-85bd21567cb8ca1c8a08.js" async=""></script></body></html>
