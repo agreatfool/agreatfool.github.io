@@ -221,7 +221,13 @@
 <li>Feed组件改了下时间的format，改为中国人的习惯格式</li>
 <li>Author组件改为github链接</li>
 <li>Meta组件改了下时间的format</li>
-<li>自制了Gallery组件：<a href="https://xenojoshua.com/posts/2021/09/gallery-example" target="_blank" rel="nofollow noopener noreferrer">Gatsby Gallery组件</a></li>
+<li>
+<p>自制了Gallery组件：</p>
+<ul>
+<li><a href="https://xenojoshua.com/posts/2021/09/gallery-example" target="_blank" rel="nofollow noopener noreferrer">Gatsby Gallery组件</a></li>
+<li>用到了额外的插件：<a href="https://www.gatsbyjs.com/plugins/gatsby-plugin-image/" target="_blank" rel="nofollow noopener noreferrer">gatsby-plugin-image</a></li>
+</ul>
+</li>
 </ul>
 <p>下面就简单说下gatsby里的一些技术点，因为每个starter都会对基本的gatsby进行客制化，所以我说的不一定你用得上，但大致上的概念是不会变的。另，建议先通读下<a href="https://www.gatsbyjs.com/docs/tutorial/" target="_blank" rel="nofollow noopener noreferrer">Official Tutorial</a>。</p>
 <h2 id="41-config" style="position:relative;"><a href="#41-config" aria-label="41 config permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.1 Config</h2>
@@ -302,7 +308,10 @@
     </span></p>
 <p>图上左边会列出所有gatsby可用的查询内容，紫色的表示是查询条件，蓝色的表示是可以得到的返回数据，点击你需要的内容，UI会自动将点中的内容填充到中间的那段查询语句里，非常便捷。查询结果也可以直接在UI上看到，基本上免去了后面到代码里调试的麻烦，只要UI上你的语句是对的，结果是你想要的，照样贴到代码里就不会错了。</p>
 <h3 id="431-page-query" style="position:relative;"><a href="#431-page-query" aria-label="431 page query permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.3.1 Page query</h3>
-<p><a href="https://www.gatsbyjs.com/docs/tutorial/part-4/#task-use-a-page-query-to-pull-the-list-of-post-filenames-into-your-blog-page" target="_blank" rel="nofollow noopener noreferrer">Task: Use a page query to pull the list of post filenames into your blog page</a></p>
+<ul>
+<li><a href="https://www.gatsbyjs.com/docs/how-to/querying-data/page-query/" target="_blank" rel="nofollow noopener noreferrer">Querying Data in Pages with GraphQL</a></li>
+<li><a href="https://www.gatsbyjs.com/docs/tutorial/part-4/#task-use-a-page-query-to-pull-the-list-of-post-filenames-into-your-blog-page" target="_blank" rel="nofollow noopener noreferrer">Task: Use a page query to pull the list of post filenames into your blog page</a></li>
+</ul>
 <p>Graphql最主要有两种使用方法，一种叫<code class="language-text">page query</code>：</p>
 <ul>
 <li>主要应用在页面初始化的时候的查询，比如说你的blog，点击某一篇post的链接，打开的时候就会去查询对应的post数据</li>
@@ -315,7 +324,10 @@
 <li>root/src/templates/post-template.js：在对应的template文件中，在graphql查询中使用context带过来的参数，并在page组件中使用查询得到的结果：e.g <a href="https://github.com/alxshelepenok/gatsby-starter-lumen/blob/3.0.7/src/templates/post-template.js#L30" target="_blank" rel="nofollow noopener noreferrer">source1</a> <a href="https://github.com/alxshelepenok/gatsby-starter-lumen/blob/3.0.7/src/templates/post-template.js#L24" target="_blank" rel="nofollow noopener noreferrer">source2</a></li>
 </ul>
 <h3 id="432-static-query" style="position:relative;"><a href="#432-static-query" aria-label="432 static query permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.3.2 Static query</h3>
-<p><a href="https://www.gatsbyjs.com/docs/tutorial/part-4/#task-use-usestaticquery-to-pull-the-site-title-into-the-layout-component" target="_blank" rel="nofollow noopener noreferrer">Task: Use useStaticQuery to pull the site title into the Layout component</a></p>
+<ul>
+<li><a href="https://www.gatsbyjs.com/docs/how-to/querying-data/use-static-query/" target="_blank" rel="nofollow noopener noreferrer">Querying Data in Components with the useStaticQuery Hook</a></li>
+<li><a href="https://www.gatsbyjs.com/docs/tutorial/part-4/#task-use-usestaticquery-to-pull-the-site-title-into-the-layout-component" target="_blank" rel="nofollow noopener noreferrer">Task: Use useStaticQuery to pull the site title into the Layout component</a></li>
+</ul>
 <p>Graphql另一种使用方法是<code class="language-text">static query</code>：</p>
 <ul>
 <li>可以在任何你想要进行查询的地方进行查询，不一定要像<code class="language-text">page query</code>那样必须写在固定的地方遵照规定的流程</li>
