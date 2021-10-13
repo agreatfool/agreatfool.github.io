@@ -161,17 +161,17 @@
 <li>
 <p><a href="#help">Help</a></p>
 <ul>
-<li><a href="#jaeger-agent---help-id_app_agent_help">jaeger-agent —help {#ID_APP_AGENT_HELP}</a></li>
-<li><a href="#jaeger-collector-memory---help-id_app_collector_help">jaeger-collector memory —help {#ID_APP_COLLECTOR_HELP}</a></li>
-<li><a href="#jaeger-query---help-id_app_query_help">jaeger-query —help {#ID_APP_QUERY_HELP}</a></li>
+<li><a href="#jaeger-agent---help">jaeger-agent —help</a></li>
+<li><a href="#jaeger-collector-memory---help">jaeger-collector memory —help</a></li>
+<li><a href="#jaeger-query---help">jaeger-query —help</a></li>
 </ul>
 </li>
 <li>
 <p><a href="#metrics">Metrics</a></p>
 <ul>
-<li><a href="#jaeger-agent-metrics-id_app_agent_metrics">jaeger-agent metrics {#ID_APP_AGENT_METRICS}</a></li>
-<li><a href="#jaeger-collector-metrics-id_app_collector_metrics">jaeger-collector metrics {#ID_APP_COLLECTOR_METRICS}</a></li>
-<li><a href="#jaeger-query-metrics-id_app_query_metrics">jaeger-query metrics {#ID_APP_QUERY_METRICS}</a></li>
+<li><a href="#jaeger-agent-metrics">jaeger-agent metrics</a></li>
+<li><a href="#jaeger-collector-metrics">jaeger-collector metrics</a></li>
+<li><a href="#jaeger-query-metrics">jaeger-query metrics</a></li>
 </ul>
 </li>
 </ul>
@@ -535,7 +535,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 --collector.http-port int    The HTTP port for the collector service (default 14268)
 ...</code></pre></div>
 <h2 id="41-jaeger-collector单独启动" style="position:relative;"><a href="#41-jaeger-collector%E5%8D%95%E7%8B%AC%E5%90%AF%E5%8A%A8" aria-label="41 jaeger collector单独启动 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.1 Jaeger Collector单独启动</h2>
-<p><a href="#ID_APP_COLLECTOR_HELP">jaeger-collector memory —help</a></p>
+<p><a href="#jaeger-collector-memory---help-id">jaeger-collector memory —help</a></p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ docker run -d --name jaeger-collector \
   -e SPAN_STORAGE_TYPE=memory \
   -p 14267:14267 \
@@ -543,7 +543,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   -p 14250:14250 \
   jaegertracing/jaeger-collector:1.11.0</code></pre></div>
 <h2 id="42-jaeger-agent单独启动" style="position:relative;"><a href="#42-jaeger-agent%E5%8D%95%E7%8B%AC%E5%90%AF%E5%8A%A8" aria-label="42 jaeger agent单独启动 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.2 Jaeger Agent单独启动</h2>
-<p><a href="#ID_APP_AGENT_HELP">jaeger-agent —help</a></p>
+<p><a href="#jaeger-agent---help">jaeger-agent —help</a></p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ docker run -d --name jaeger-agent \
   --link jaeger-collector \
   -p 5775:5775/udp \
@@ -554,7 +554,7 @@ Span context: Trace information that accompanies the distributed transaction, in
   --reporter.type=grpc \
   --reporter.grpc.host-port=jaeger-collector:14250</code></pre></div>
 <h2 id="43-jaeger-query单独启动" style="position:relative;"><a href="#43-jaeger-query%E5%8D%95%E7%8B%AC%E5%90%AF%E5%8A%A8" aria-label="43 jaeger query单独启动 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.3 Jaeger Query单独启动</h2>
-<p><a href="#ID_APP_QUERY_HELP">jaeger-query —help</a></p>
+<p><a href="#jaeger-query---help-id">jaeger-query —help</a></p>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ docker run -d --name jaeger-query \
   --link jaeger-collector \
   -e SPAN_STORAGE_TYPE=memory \
@@ -597,9 +597,9 @@ Span context: Trace information that accompanies the distributed transaction, in
 <br/>
 <p>范例都在本文下面的资料部分：</p>
 <ul>
-<li><a href="#ID_APP_AGENT_METRICS">jaeger-agent</a></li>
-<li><a href="#ID_APP_COLLECTOR_METRICS">jaeger-collector</a></li>
-<li><a href="#ID_APP_QUERY_METRICS">jaeger-query</a></li>
+<li><a href="#jaeger-agent-metrics">jaeger-agent</a></li>
+<li><a href="#jaeger-collector-metrics">jaeger-collector</a></li>
+<li><a href="#jaeger-query-metrics">jaeger-query</a></li>
 <li>jaeger-ingester（这块启动需要的依赖太重，暂时没做尝试）</li>
 </ul>
 <h2 id="52-components" style="position:relative;"><a href="#52-components" aria-label="52 components permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5.2 Components</h2>
@@ -815,7 +815,7 @@ Span context: Trace information that accompanies the distributed transaction, in
 <li><a href="https://github.com/grpc-ecosystem/grpc-opentracing/tree/master/go/otgrpc" target="_blank" rel="nofollow noopener noreferrer">grpc-opentracing/go/otgrpc/</a></li>
 </ul>
 <h2 id="help" style="position:relative;"><a href="#help" aria-label="help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Help</h2>
-<h3 id="jaeger-agent---help-id_app_agent_help" style="position:relative;"><a href="#jaeger-agent---help-id_app_agent_help" aria-label="jaeger agent   help id_app_agent_help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-agent —help {#ID_APP_AGENT_HELP}</h3>
+<h3 id="jaeger-agent---help" style="position:relative;"><a href="#jaeger-agent---help" aria-label="jaeger agent   help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-agent —help</h3>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ docker run --rm jaegertracing/jaeger-agent:1.11.0 --help
 
 Jaeger agent is a daemon program that runs on every host and receives tracing data submitted by Jaeger client libraries.
@@ -862,7 +862,7 @@ Flags:
       --reporter.type string                                      Reporter type to use e.g. grpc, tchannel (default "grpc")
 
 Use "jaeger-agent [command] --help" for more information about a command.</code></pre></div>
-<h3 id="jaeger-collector-memory---help-id_app_collector_help" style="position:relative;"><a href="#jaeger-collector-memory---help-id_app_collector_help" aria-label="jaeger collector memory   help id_app_collector_help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-collector memory —help {#ID_APP_COLLECTOR_HELP}</h3>
+<h3 id="jaeger-collector-memory---help" style="position:relative;"><a href="#jaeger-collector-memory---help" aria-label="jaeger collector memory   help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-collector memory —help</h3>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ docker run --rm -e SPAN_STORAGE_TYPE=memory jaegertracing/jaeger-collector:1.11.0 --help
 
 Jaeger collector receives traces from Jaeger agents and runs them through a processing pipeline.
@@ -897,7 +897,7 @@ Flags:
       --span-storage.type string          Deprecated; please use SPAN_STORAGE_TYPE environment variable. Run this binary with "env" command for help.
 
 Use "jaeger-collector [command] --help" for more information about a command.</code></pre></div>
-<h3 id="jaeger-query---help-id_app_query_help" style="position:relative;"><a href="#jaeger-query---help-id_app_query_help" aria-label="jaeger query   help id_app_query_help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-query —help {#ID_APP_QUERY_HELP}</h3>
+<h3 id="jaeger-query---help" style="position:relative;"><a href="#jaeger-query---help" aria-label="jaeger query   help permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-query —help</h3>
 <div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">$ docker run --rm jaegertracing/jaeger-query:1.11.0 --help
 
 Jaeger query service provides a Web UI and an API for accessing trace data.
@@ -927,7 +927,7 @@ Flags:
 
 Use "jaeger-query [command] --help" for more information about a command.</code></pre></div>
 <h2 id="metrics" style="position:relative;"><a href="#metrics" aria-label="metrics permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Metrics</h2>
-<h3 id="jaeger-agent-metrics-id_app_agent_metrics" style="position:relative;"><a href="#jaeger-agent-metrics-id_app_agent_metrics" aria-label="jaeger agent metrics id_app_agent_metrics permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-agent metrics {#ID_APP_AGENT_METRICS}</h3>
+<h3 id="jaeger-agent-metrics" style="position:relative;"><a href="#jaeger-agent-metrics" aria-label="jaeger agent metrics permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-agent metrics</h3>
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># HELP go_gc_duration_seconds A summary of the GC invocation durations.</span>
 <span class="token comment"># TYPE go_gc_duration_seconds summary</span>
 <span class="token punctuation">..</span>.
@@ -1060,7 +1060,7 @@ process_start_time_seconds <span class="token number">1</span>.55540751234e+09
 <span class="token comment"># HELP process_virtual_memory_bytes Virtual memory size in bytes.</span>
 <span class="token comment"># TYPE process_virtual_memory_bytes gauge</span>
 process_virtual_memory_bytes <span class="token number">1</span>.22187776e+08</code></pre></div>
-<h3 id="jaeger-collector-metrics-id_app_collector_metrics" style="position:relative;"><a href="#jaeger-collector-metrics-id_app_collector_metrics" aria-label="jaeger collector metrics id_app_collector_metrics permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-collector metrics {#ID_APP_COLLECTOR_METRICS}</h3>
+<h3 id="jaeger-collector-metrics" style="position:relative;"><a href="#jaeger-collector-metrics" aria-label="jaeger collector metrics permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-collector metrics</h3>
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># HELP go_gc_duration_seconds A summary of the GC invocation durations.</span>
 <span class="token comment"># TYPE go_gc_duration_seconds summary</span>
 <span class="token punctuation">..</span>.
@@ -1170,7 +1170,7 @@ process_start_time_seconds <span class="token number">1</span>.55540675992e+09
 <span class="token comment"># HELP process_virtual_memory_bytes Virtual memory size in bytes.</span>
 <span class="token comment"># TYPE process_virtual_memory_bytes gauge</span>
 process_virtual_memory_bytes <span class="token number">1</span>.3008896e+08</code></pre></div>
-<h3 id="jaeger-query-metrics-id_app_query_metrics" style="position:relative;"><a href="#jaeger-query-metrics-id_app_query_metrics" aria-label="jaeger query metrics id_app_query_metrics permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-query metrics {#ID_APP_QUERY_METRICS}</h3>
+<h3 id="jaeger-query-metrics" style="position:relative;"><a href="#jaeger-query-metrics" aria-label="jaeger query metrics permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>jaeger-query metrics</h3>
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># HELP go_gc_duration_seconds A summary of the GC invocation durations.</span>
 <span class="token comment"># TYPE go_gc_duration_seconds summary</span>
 <span class="token punctuation">..</span>.
