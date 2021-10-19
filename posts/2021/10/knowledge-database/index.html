@@ -71,6 +71,14 @@
 <li><a href="#34-%E6%90%9C%E7%B4%A2">3.4 搜索</a></li>
 </ul>
 </li>
+<li>
+<p><a href="#4-evernote%E7%BC%BA%E9%99%B7">4. Evernote缺陷</a></p>
+<ul>
+<li><a href="#41-editor">4.1 Editor</a></li>
+<li><a href="#42-export">4.2 Export</a></li>
+<li><a href="#43-sync">4.3 Sync</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="1-前言" style="position:relative;"><a href="#1-%E5%89%8D%E8%A8%80" aria-label="1 前言 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 前言</h1>
@@ -101,31 +109,31 @@
     >
       <a
     class="gatsby-resp-image-link"
-    href="/static/84622476880aaa81ceeed02f638501f3/532e8/evernote-webclipper.png"
+    href="/static/572f3f772bbf7b3cf3461e024b98dbd4/532e8/evernote-webclipper.png"
     style="display: block"
     target="_blank"
     rel="noopener"
   >
     <span
     class="gatsby-resp-image-background-image"
-    style="padding-bottom: 202.91666666666669%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAApCAYAAAA1bQl+AAAACXBIWXMAAAsTAAALEwEAmpwYAAAE5ElEQVRIx51WSU8jRxhtDSOiAYONt3a7u71gG294wQyrAQMGErOvFiZIiaLklssMKEgDKCf+AIdcJhFKIiXXZH7AHHKIlJ+QX/NSr0wbO2C2w9NX1VX1+qtvLeXi4gKrq6vY3d3Fzs5OQ25tbWFzc7Mhie3tbQl+I/b29uS8Wq1iY2MDR0dHULixs7MToXAIPs0Hr6pCNwxEY1EMDAwgEokglU4hmUwiFAohEAjItf7+frhcLphi7na78aqrC2NjY1BqBzUYuo752TlMTU4JFDFdnMLq8go21tZR+bSCWnUf1d0qZqdLGH09ipXKivj+GeKxOGamSkgMJGAaJsrlMpSD2gG67TaoQQ0eQ4XHVKV0+d1wam44NCd6VYeEw++6XvNIqAENbt0LLazD4enD/Pw8lM+39qFUVbz8PY+O92m8+GlQokPKNOw/j6Hvl3G4fp2Qkt86rPUfxfi9kL9l8eLbAMoTc4JwQxB+o0H5WIDyRxbKhyb8OYjMX3uY+PsLzP7zNUoCyodM6x6e+TgE5TyE8visuPLuPl7OuNH9LolXb2J4dXSNt5QD6HwTucHbyM26BXGm610Cn6z7UZ6aqzvF3tWDoNeA4fJDd2nQnTcwmqC3gen2w9VzbcODgwPYemzQdA2qT4VfF6SmIaA3wWiCfgtm0ITL7aoT7u/vCxID4yJkCq9H0C/izufzwe/3Q9O0R0EXYdfX13dD6PNpyOWHkB7MIBAMQhXBTUJuNESQPwTuY5A3CDWRIXNzcxgZGcHa2hrW19extLSE0dFRDA0NoVAotEU+n8fCwgISiQRKpVKdkH8olxcwPj4uifknLg4PD0vCdmgmZJpKwlqtht7eXmQyWZm31IrIZDIyX/kz0zQff2XpZZtN2jAc7sfMzAyKxSJSqZSYh6U9n+QUEvb09AgbJCUhbUFNqSErCw/QQfeBhE6ns1XDoqgw6cFBTExMSLuwckSj0YbHn0RIDamVaQYQj8flVVnjLO0e0vJOwlwuj1gsJj/SgyS0DjyLMBKJSo9ROxITnD/ZhgwbEtJ+JFlcXARjkz2CZniWDbu7uxsLzGPiMZrdSUhtVJHLmWz+UYfbxWELIbtcVjiFi5aG7WARNIO2/p9TbLJNMrAZNhzTnhxbsOZspc3mIGHgupU2nGK320X+jiEmEpwhw+AmOGbBmJyclHOOGezN9ZKEVo9uIeRf/GKD6vVKWNdrviplc7GwZIuGvDKrTWwgjmy+IGw5hGQqLcl5+DGO4b4WQsZhMBiS5Z92ZNW2Nlt2ageuU9OWK3PCYpnLZpEVYKUh0um03GyRtgulFi/Xe4oPlUpFvqj4mlpeXpYPHxbaoND2oaZ1K/VoQxq2Oa44p3bPqoe0IUnq3vTd0uChinNngY2LYJZeFq0glR5sXPPJuWxpyAwIEsLb1lXv7SP0rqG3K1+98IpgJjwez4Mli2RuVUOXwy1evW2cMj09IxtVNpuTeXtXEag7TJdk07kIvj8sIRoWzgsEb7fR705ORaOaxsLiksjhgtT0rlAxxGPK1ufFl+U0/v3hK+TiQfFYCgvCaw0PDw/hcDhkvFEDSzPa8T4YAv3hoCx9ATGmAnxBKCz1iqLIa7NyU1vKx4Avf0o6taOjQyaCcnV1hePjY5yfn+P09PRJODuz5BlOTk5weXmJ/wC9S77ka2nBbAAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+    style="padding-bottom: 202.91666666666669%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAApCAIAAAC6D54pAAAACXBIWXMAAAsTAAALEwEAmpwYAAAESElEQVRIx5VWS28iRxCetePEu+YlmBnmPRgwDGYGBkx4vwfjNQpevGZ52JaiRMktp41sxVmtj/4FlnJIspLjQ3JMck+kXKL8hv01+RgIYBYIWy6N2939dVVXfVVt4ubmptlsdjqdF6a02+3n/0mr1To+Pm6bgj9PTk6wDeNut4v5i4sLAr82Nze9Xi/HcQzDiKK4s7MTDAb9fn84HN7d3cWSx+MJBAI+n48kKUn2UDS9tWVJp9PE6empwAtGuVrM5vPZfDFXaDY+aTWfNQ4O+91+p92pFMupRBKTjacNZSdYKpSVgCIJkmEYA7DFYXXLLC0xlMiQAu3kSKiDc9oYh5VxODgXJbpdPAVlZI4SaNbLOyhntVolzp73iS7zwS/6+vfq+o/q+huotvZGdfyUct6nXfdZ531mbTCvYWkw+EFd+zm69pVcy1aIs1aP+IJ79Gec+DVC/D7QR/j+pkb+epH5+9PyP19Ch/MjxbY/YsRrTy0NcLu/USK3XoUevww8/nqiH770j3V6HtuefKt89Iwz8pXBne1PbDItCiQnuNgp5aZ0ep6VSJ60OqtG1QyYzcIJHIMfkecl4X9V9EguihwErNfr8YKQzubjiaTP52dZFglnlwrP806nGe1+v8+wbDQWV7WIJMtutxtgYakA7HK5RmAcVqlUkx8nj5rNo6Ojg4ODZDIZi8Xi80TX9VqtFgqFSqWS6TbPG0YNdKtUKuBNuVxOJBLxBYJDAQZ/sc2Mtt2uRSKgbjKVgk1N0zCGe+ICwdLI7UG0LRY9FkMBlIqlXC6HesAYl18UMIBHAQPYarXiDgDgi2KCF5IkDcM+Vx6AYTmXL6iqlslkhvHAESjPlcA2m83n98MawrC9vU3T9BKzs2C4HdV19IBq1UAwSZLklsqsZfiJMMIsjkDTwPKqdwZY1TSg6vU6OIPWNbwz8r9SwDCFrYwpyy/8ANzv9bBfi+qAc6vJBGxWlRjRY0uKaejXWBCdCcPGJEGq0GsRMEVRMMYX42H+JnhBkGUZGRmBHQ5HMpUOBAPgfcYUJAx1ks1m0+kMBtOcAdg7aOBTYByGBfB5LrFmigR0moDtdhu8i+px3DwUDs/c8N2E4awJGHnGg4Ie5PX6ZNkzcm+xwPgIDFZgtLe3p+tRSMQUVVXh26IjpvKMHsYwh4eHePHwDjYaDUQILQFRWMSWBwxDJ8HW8amwCcfeozCwe2DHtDQmxqrNQFFCiDZ0V1WXtIG5lq2ItgyV5SUO8wMYP8dttynoIYvMAkS5WauTwoWE8YsxDFi+UITnSBLI/O6LgW5LM1wh6rs+K/m9Mv6zmJAEhXH5zSv0wP16Hc8E7M+wShR4q5P+zAi//e5zXZElzzY5rKrz8/Mht+EMZz5ii3o9OO3zyryZS4qi9vf3CTQdgiCAh31c3rpUkBd8cc2NjY1UKkXc3d1dXl5eX1+/Xlmw+erq6vb29l8w5JMSvCY/9AAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
   ></span>
   <picture>
           <source
-              srcset="/static/84622476880aaa81ceeed02f638501f3/8ac56/evernote-webclipper.webp 240w,
-/static/84622476880aaa81ceeed02f638501f3/451be/evernote-webclipper.webp 309w"
+              srcset="/static/572f3f772bbf7b3cf3461e024b98dbd4/8ac56/evernote-webclipper.webp 240w,
+/static/572f3f772bbf7b3cf3461e024b98dbd4/451be/evernote-webclipper.webp 309w"
               sizes="(max-width: 309px) 100vw, 309px"
               type="image/webp"
             />
           <source
-            srcset="/static/84622476880aaa81ceeed02f638501f3/8ff5a/evernote-webclipper.png 240w,
-/static/84622476880aaa81ceeed02f638501f3/532e8/evernote-webclipper.png 309w"
+            srcset="/static/572f3f772bbf7b3cf3461e024b98dbd4/8ff5a/evernote-webclipper.png 240w,
+/static/572f3f772bbf7b3cf3461e024b98dbd4/532e8/evernote-webclipper.png 309w"
             sizes="(max-width: 309px) 100vw, 309px"
             type="image/png"
           />
           <img
             class="gatsby-resp-image-image"
-            src="/static/84622476880aaa81ceeed02f638501f3/532e8/evernote-webclipper.png"
+            src="/static/572f3f772bbf7b3cf3461e024b98dbd4/532e8/evernote-webclipper.png"
             alt="evernote webclipper"
             title="evernote webclipper"
             loading="lazy"
@@ -170,7 +178,7 @@
     >
       <a
     class="gatsby-resp-image-link"
-    href="/static/2ea5dc5d0e2dfd93d5a134b654743b80/2a333/evernote-search.png"
+    href="/static/40950367c02853b3503a7349f179f44f/2a333/evernote-search.png"
     style="display: block"
     target="_blank"
     rel="noopener"
@@ -181,26 +189,26 @@
   ></span>
   <picture>
           <source
-              srcset="/static/2ea5dc5d0e2dfd93d5a134b654743b80/8ac56/evernote-search.webp 240w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/d3be9/evernote-search.webp 480w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/e46b2/evernote-search.webp 960w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/f992d/evernote-search.webp 1440w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/17fe2/evernote-search.webp 1484w"
+              srcset="/static/40950367c02853b3503a7349f179f44f/8ac56/evernote-search.webp 240w,
+/static/40950367c02853b3503a7349f179f44f/d3be9/evernote-search.webp 480w,
+/static/40950367c02853b3503a7349f179f44f/e46b2/evernote-search.webp 960w,
+/static/40950367c02853b3503a7349f179f44f/f992d/evernote-search.webp 1440w,
+/static/40950367c02853b3503a7349f179f44f/17fe2/evernote-search.webp 1484w"
               sizes="(max-width: 960px) 100vw, 960px"
               type="image/webp"
             />
           <source
-            srcset="/static/2ea5dc5d0e2dfd93d5a134b654743b80/8ff5a/evernote-search.png 240w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/e85cb/evernote-search.png 480w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/d9199/evernote-search.png 960w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/07a9c/evernote-search.png 1440w,
-/static/2ea5dc5d0e2dfd93d5a134b654743b80/2a333/evernote-search.png 1484w"
+            srcset="/static/40950367c02853b3503a7349f179f44f/8ff5a/evernote-search.png 240w,
+/static/40950367c02853b3503a7349f179f44f/e85cb/evernote-search.png 480w,
+/static/40950367c02853b3503a7349f179f44f/d9199/evernote-search.png 960w,
+/static/40950367c02853b3503a7349f179f44f/07a9c/evernote-search.png 1440w,
+/static/40950367c02853b3503a7349f179f44f/2a333/evernote-search.png 1484w"
             sizes="(max-width: 960px) 100vw, 960px"
             type="image/png"
           />
           <img
             class="gatsby-resp-image-image"
-            src="/static/2ea5dc5d0e2dfd93d5a134b654743b80/d9199/evernote-search.png"
+            src="/static/40950367c02853b3503a7349f179f44f/d9199/evernote-search.png"
             alt="evernote search"
             title="evernote search"
             loading="lazy"
@@ -209,6 +217,89 @@
         </picture>
   </a>
     </span></p>
+<h1 id="4-evernote缺陷" style="position:relative;"><a href="#4-evernote%E7%BC%BA%E9%99%B7" aria-label="4 evernote缺陷 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. Evernote缺陷</h1>
+<h2 id="41-editor" style="position:relative;"><a href="#41-editor" aria-label="41 editor permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.1 Editor</h2>
+<p>Evernote说实在的，在使用上还是有相当多的问题。最主要的是它的编辑能力实在是非常孱弱，基本上除了随手写点笔记之外，结构性的和系统性的文章编辑就别指望它了，任何一款主流的基于Markdown的编辑软件都比它好用。虽然Evernote的新版本也支持markdown，但还是明显和传统笔记分割了开来，在Evernote里创建笔记只会创建出TXT笔记，而Markdown语法支持的笔记特定选择才可以：</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 330px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/a330de5eaf5fd3fbcc69f573586da061/d9ecf/evernote-markdown-create.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 42.91666666666667%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAJCAIAAAC9o5sfAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB70lEQVQoz02OyW7TUBiF/SYIaOLY10Pse+2kmZo4g5uETLIzOI5TpQ310NRxRtoSwQIhJJawpAogdggJEFKFKtY8CQ/CDUgI6ejXv/nO+Yj5xecnz26Wj7+0Bh/cxe3LVz/P1z+M8cfN85tKd1vUrzcvvlfMd6Xe1t98zbWvy9b74Ok3pbct9t8Sze6yY13p3cuKOmtql6Z1VWuu1bI/sB5lC15acTrGIlNwk4rd0mepvJPM2w1tmsw7ucqUOM1kVrWEd4SADhuH6nIarIJgaBg8CYQILbNclKQRYCTAChGAaJCCKBtPSgyXQIjo5hSrdNBrpoRCrKY+WM9WU8/3HrrDnllWVIkRJRYiVpRZGOPg7vJoX5QhK+yjGAEAL4uQByKzB6rFyvx8NptMfefMtyftuiZQHGQEHGnH7wKBIAIeAp7eI4miHP31xn7tlkNhtq5iOJjYnntiOyf20LD4CIcY8X8YsbgrKtIcdT9MyBz4dNGZ61mK5OpqNTjzJ6eeN3bw028bTAjwEVYE0X+whEUAL1J/4PBd8g4NSIpjwnRNrWLt8fDY6poj86h+WMvE0moOyyG89heO8ygelTC/g0OQAbejyLqkoIze0taL1bE1MnVj0OlrDQ23uGP7IJ4WKF7mIJ5NS4lCKoflqXvh3846nw7HF/JmAAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/a330de5eaf5fd3fbcc69f573586da061/8ac56/evernote-markdown-create.webp 240w,
+/static/a330de5eaf5fd3fbcc69f573586da061/f2908/evernote-markdown-create.webp 330w"
+              sizes="(max-width: 330px) 100vw, 330px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/a330de5eaf5fd3fbcc69f573586da061/8ff5a/evernote-markdown-create.png 240w,
+/static/a330de5eaf5fd3fbcc69f573586da061/d9ecf/evernote-markdown-create.png 330w"
+            sizes="(max-width: 330px) 100vw, 330px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/a330de5eaf5fd3fbcc69f573586da061/d9ecf/evernote-markdown-create.png"
+            alt="evernote markdown create"
+            title="evernote markdown create"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span></p>
+<h2 id="42-export" style="position:relative;"><a href="#42-export" aria-label="42 export permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.2 Export</h2>
+<p>Evernote的导出也不是特别友好，因为刚才说的，其支持Markdown比较晚，所以大量的历史存量笔记肯定都是TXT格式（从使用者角度来说）的，所以导出的时候的选项一般只有<code class="language-text">HTML</code>或<code class="language-text">ENEX</code>这个Evernote专用格式。</p>
+<p>也就是说，如果后续用户希望转到其他的平台或其他的工具，那只有祈祷转入方能够支持<code class="language-text">ENEX</code>格式的文件了。从我之前的简单research来看，不太乐观，一般来说即便宣称支持的那些软件做得也不太好，会有各种各样的导入问题或展示格式问题。</p>
+<p>因此，使用Evernote是有壁垒的，用户要有心理准备，后续将会很难将自己的数据导出或转移到其他服务。当然这也并非Evernote一家的问题，我相信MS的OneNote应该也差不多，或者其他的软件也是如此。</p>
+<h2 id="43-sync" style="position:relative;"><a href="#43-sync" aria-label="43 sync permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4.3 Sync</h2>
+<p>Evernote还有一个问题就是同步，最早的版本会完整同步所有你账户里的数据落地到本地磁盘，但后续的更新废除了这个同步。每次在新的机器上进行账号登录，只会同步<code class="language-text">最近一年</code>的数据，更早的数据不会丢失，但并不会自动下载到你本地磁盘上，而是当你点击该条目的时候，再按需从Evernote的服务器上实时下载。</p>
+<p>这对数据完整性和数据安全敏感的用户来说极不友好，因为一旦Evernote的服务暂时不可用或永久停止服务的时候，你将没有任何手段将你的数据库完整下载下来，难道几万条条目一个个点过来吗，不现实的。</p>
+<p>所以如果数据量不大的话，记得尽量将你目前所拥有的本地数据做好备份，比如说用好TimeMachine，保证至少有一份完整的数据存在于你本地。然后比如说当你更换新机器的时候，记得将整个本地文件都拷贝到新的机器上去，然后再进行账户登录和同步，这样你的本地数据就一直都是完整的了。</p>
+<p>目前版本的Evernote在MAC上的数据存储在：<code class="language-text">/Users/XXX/Library/Application Support/com.yinxiang.Mac/accounts/app.yinxiang.com/XXXX</code>。</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token builtin class-name">cd</span> <span class="token punctuation">..</span>.
+$ <span class="token function">du</span> -sh *
+<span class="token number">4</span>.0K	ContactExtractorFetchDate.plist
+<span class="token number">4</span>.0K	CoreNote-CheckPoint
+ 16K	SyncState
+112K	announcements
+ 40K	atlas
+760M	backupPreMigration
+<span class="token number">4</span>.0K	checkpoint
+  0B	chunks
+ 48G	content
+  0B	eb-up-sell
+  0B	external-edits
+428K	localMessageStore
+142M	localNoteStore
+ 11M	localNoteStore.metadata
+335M	note-personal.index
+203M	note.index
+157M	note.index.old
+<span class="token number">8</span>.0K	plugins
+ 80K	puppetmaster
+ 46M	purgatory
+<span class="token number">4</span>.0K	quick-search.store
+ 32K	quick-search.store-shm
+ 12K	quick-search.store-wal
+  0B	temp_relatedContent
+<span class="token number">4</span>.0K	tierSelectionEligibility.state
+265M	typeAhead-personal.index
+182M	typeAhead.index
+158M	typeAhead.index.old
+<span class="token number">4</span>.0K	version</code></pre></div>
+<p>条目数据全部都存放在<code class="language-text">content</code>文件夹下，务必保证该文件夹得到妥善的备份。</p>
 <blockquote>
 <p>EOF</p>
 </blockquote></div></div></div><div class="Post-module--post__footer--3WzWU"><div><p class="Meta-module--meta__date--29eD7">Published <!-- -->2021/10/7</p></div><div class="Tags-module--tags--1L_ct"><ul class="Tags-module--tags__list--91FqN"><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/evernote/">Evernote</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/knowledge-management/">KnowledgeManagement</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/blog/">Blog</a></li></ul></div><div class="Author-module--author--2Yefr"><p>Some tech &amp; personal blog posts<a class="Author-module--author__bio-twitter--n-O9n" href="https://github.com/agreatfool" rel="noopener noreferrer" target="_blank"><strong>Jonathan Dai</strong> on Github</a></p></div></div><div class="Post-module--post__comments--25y6I"><div><div id="disqus_thread"></div></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/posts/2021/10/knowledge-database";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-6c97a84da242e3df27de.js"],"app":["/app-b6f74eeafda9215d2765.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-a95b272f8c25b9a8a758.js"],"component---src-templates-categories-list-template-js":["/component---src-templates-categories-list-template-js-0b5ec6331b346faff87c.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a615ce56a55260054f6f.js"],"component---src-templates-index-template-js":["/component---src-templates-index-template-js-43f4f445a747fad1c9ab.js"],"component---src-templates-not-found-template-js":["/component---src-templates-not-found-template-js-5a6b0b2cd3a2384575c3.js"],"component---src-templates-page-template-js":["/component---src-templates-page-template-js-a00ead819a9bad15ee62.js"],"component---src-templates-post-template-js":["/component---src-templates-post-template-js-5ab2f930c9fb4b9f1d39.js"],"component---src-templates-tag-template-js":["/component---src-templates-tag-template-js-6c6b9db9009c5b087140.js"],"component---src-templates-tags-list-template-js":["/component---src-templates-tags-list-template-js-ab1fa84c826a4bf3640a.js"]};/*]]>*/</script><script src="/polyfill-6c97a84da242e3df27de.js" nomodule=""></script><script src="/component---src-templates-post-template-js-5ab2f930c9fb4b9f1d39.js" async=""></script><script src="/cd95ea5cbd2c605f26db819f07999610c9ff4310-69626fa07c736046dbe7.js" async=""></script><script src="/styles-407fe62976dc5310c43e.js" async=""></script><script src="/app-b6f74eeafda9215d2765.js" async=""></script><script src="/dc6a8720040df98778fe970bf6c000a41750d3ae-ae9f57b3df6a2a1f7657.js" async=""></script><script src="/532a2f07-7be199ac103747a90c37.js" async=""></script><script src="/framework-0c07c9218e9798907e47.js" async=""></script><script src="/webpack-runtime-09dc584798815dcead78.js" async=""></script></body></html>
