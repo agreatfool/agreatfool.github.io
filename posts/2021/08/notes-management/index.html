@@ -205,8 +205,9 @@
 <li>
 <p>必要插件：</p>
 <ul>
-<li><a href="https://github.com/Darakah/obsidian-gallery" target="_blank" rel="nofollow noopener noreferrer">Obsidian Gallery</a></li>
+<li><del><a href="https://github.com/Darakah/obsidian-gallery" target="_blank" rel="nofollow noopener noreferrer">Obsidian Gallery</a></del></li>
 <li><a href="https://github.com/pjeby/tag-wrangler" target="_blank" rel="nofollow noopener noreferrer">Obsidian Tag Wrangler Plugin</a></li>
+<li><a href="https://github.com/agreatfool/obsidian-post-gallery" target="_blank" rel="nofollow noopener noreferrer">agreatfool/obsidian-post-gallery</a></li>
 </ul>
 </li>
 </ul>
@@ -398,25 +399,30 @@ drwxr-xr-x@  <span class="token number">3</span> Jonathan  staff    96B  <span c
 <li>同样的，重命名tag也一定要使用软件的插件功能来做</li>
 <li>在文件的任何位置编写<code class="language-text">#TAG_NAME</code>的文本，即可创建<code class="language-text">TAG_NAME</code>tag</li>
 <li>
-<p>gallery的配置使用如下</p>
+<p><del>gallery的配置使用如下</del></p>
 <ul>
-<li>type：grid | active-thumb，一般使用grid，active-thumb为可拖拽的grid但有bug</li>
-<li>path：存放会展示在gallery里的图片的路径</li>
-<li>imgWidth：grid内每个图片格的宽度，一般不要太大</li>
-<li>divWidth：%值，指grid所处的div占页面的宽度多少</li>
-<li>divAlign：left | right，指grid所处的div在页面的左侧还是右侧</li>
-<li>reverseOrder：true | false，是否逆转图片的展示顺序</li>
-<li>customList：自定义的图片展示顺序：<code class="language-text">customList=5 10 2 4</code></li>
+<li><del>type：grid | active-thumb，一般使用grid，active-thumb为可拖拽的grid但有bug</del></li>
+<li><del>path：存放会展示在gallery里的图片的路径</del></li>
+<li><del>imgWidth：grid内每个图片格的宽度，一般不要太大</del></li>
+<li><del>divWidth：%值，指grid所处的div占页面的宽度多少</del></li>
+<li><del>divAlign：left | right，指grid所处的div在页面的左侧还是右侧</del></li>
+<li><del>reverseOrder：true | false，是否逆转图片的展示顺序</del></li>
+<li><del>customList：自定义的图片展示顺序：<code class="language-text">customList=5 10 2 4</code></del></li>
+</ul>
+</li>
+<li>
+<p>post-gallery额配置使用如下</p>
+<ul>
+<li>name：在assets文件夹内，含图片的子文件夹名：<code class="language-text">assets/gallery00/*.jpg</code> -> <code class="language-text">name: gallery00</code></li>
+<li>rowHeight：gallery内图片每行的高度，e.g 120</li>
+<li>margins：图片间的间距，e.g 5</li>
 </ul>
 </li>
 </ul>
 <p>e.g</p>
-<div class="gatsby-highlight" data-language="gallery"><pre class="language-gallery"><code class="language-gallery">type=grid
-path=Notes/2021-08-26/images
-imgWidth=200
-divWidth=100
-divAlign=left
-reverseOrder=true</code></pre></div>
+<div class="gatsby-highlight" data-language="post-gallery"><pre class="language-post-gallery"><code class="language-post-gallery">name: gallery00
+rowHeight: 200
+margins: 5</code></pre></div>
 <h2 id="64-vault规划及front-matter定义" style="position:relative;"><a href="#64-vault%E8%A7%84%E5%88%92%E5%8F%8Afront-matter%E5%AE%9A%E4%B9%89" aria-label="64 vault规划及front matter定义 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>6.4 Vault规划及front matter定义</h2>
 <p><strong>Vault</strong></p>
 <p>由于Obsidian仅只是一款简单的编辑软件，和dayone这样使用数据库来管理数据的软件不同，它是不会对数据的存放位置和结构进行定义的，所有的一切都交由使用者自己组织。这就对使用者提出了要求，你不能随随便便把所有的内容全部都扔到Vault的根目录下，这会导致后续浏览及搜索的困难，也不能把所有的内容都分得过细或扔到过多层的子文件夹中，这也会导致浏览的障碍。</p>
@@ -488,6 +494,7 @@ reverseOrder=true</code></pre></div>
 <ul>
 <li><a href="https://github.com/agreatfool/dayone2md" target="_blank" rel="nofollow noopener noreferrer">agreatfool/dayone2md</a>：将dayone的数据全部导出成上述文件夹格式md文件的命令行工具</li>
 <li><a href="https://github.com/agreatfool/obsidian-utils" target="_blank" rel="nofollow noopener noreferrer">agreatfool/obsidian-utils</a>：帮助创建obsidian post的命令行工具，可以帮忙初始化title、tags、front-matter等信息</li>
+<li><a href="https://github.com/agreatfool/obsidian-post-gallery" target="_blank" rel="nofollow noopener noreferrer">agreatfool/obsidian-post-gallery</a>：专注于post内gallery展示的插件</li>
 </ul>
 <blockquote>
 <p>EOF</p>
