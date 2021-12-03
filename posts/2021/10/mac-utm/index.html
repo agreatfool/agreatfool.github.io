@@ -62,15 +62,26 @@
 <ul>
 <li><a href="#1-%E5%89%8D%E8%A8%80">1. 前言</a></li>
 <li><a href="#2-%E4%BB%8B%E7%BB%8D">2. 介绍</a></li>
-<li><a href="#3-%E5%AE%89%E8%A3%85">3. 安装</a></li>
-<li><a href="#4-%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB">4. 文件共享</a></li>
-<li><a href="#5-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91">5. 端口转发</a></li>
+<li>
+<p><a href="#3-%E5%AE%89%E8%A3%85">3. 安装</a></p>
+<ul>
+<li><a href="#31-%E5%A4%96%E9%93%BE%E5%8F%82%E8%80%83">3.1 外链参考</a></li>
+<li><a href="#32-%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4">3.2 具体步骤</a></li>
+</ul>
+</li>
+<li>
+<p><a href="#others">Others</a></p>
+<ul>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB">文件共享</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <h1 id="1-前言" style="position:relative;"><a href="#1-%E5%89%8D%E8%A8%80" aria-label="1 前言 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 前言</h1>
 <p>一般来说使用MAC操作系统都会安装一个WIN虚拟机，来协助一些需要WIN的操作。因为之前的MAC也是使用的Intel的芯片，所以可以直接在虚拟机里安装x86的WIN，这样基本上就覆盖了最经典的使用场景。</p>
-<p>而最新的M1 MAC是ARM架构，且因为Rosetta不支持虚拟化，就导致了很多主流的虚拟机软件，类似Parallels都不支持在M1的MAC上安装x86架构的WIN10。</p>
+<p>而最新的M1 MAC是ARM架构，且因为Rosetta不支持x86架构的虚拟化，就导致了很多主流的虚拟机软件，类似Parallels都不支持在M1的MAC上安装x86架构的WIN10和其他软件。</p>
 <p>所以一旦有需求要使用x86的Windows，那就不能使用那些主流的虚拟机软件了，只能找一些偏门的软件。</p>
+<p>我本人的使用体验，只要不装java，其他的服务运行起来负载都还行。</p>
 <h1 id="2-介绍" style="position:relative;"><a href="#2-%E4%BB%8B%E7%BB%8D" aria-label="2 介绍 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. 介绍</h1>
 <p>实际上可选的并不多，或者说最后我就只找到了<code class="language-text">QEMU</code>，而在其基础上进行封装的<code class="language-text">UTM</code>应该说是最佳选择了。</p>
 <p>相关链接：</p>
@@ -81,6 +92,7 @@
 <li><a href="https://github.com/utmapp/UTM/wiki/Useful-tips" target="_blank" rel="nofollow noopener noreferrer">UTM Useful tips</a></li>
 </ul>
 <h1 id="3-安装" style="position:relative;"><a href="#3-%E5%AE%89%E8%A3%85" aria-label="3 安装 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. 安装</h1>
+<h2 id="31-外链参考" style="position:relative;"><a href="#31-%E5%A4%96%E9%93%BE%E5%8F%82%E8%80%83" aria-label="31 外链参考 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.1 外链参考</h2>
 <p>关于在MAC上安装UTM并安装虚拟操作系统的方法，参考这篇就够了：<a href="https://github.com/utmapp/UTM/wiki/Install-Ubuntu-ARM64-on-Apple-M1" target="_blank" rel="nofollow noopener noreferrer">Install Ubuntu ARM64 on Apple M1</a>。</p>
 <p>因为这篇讲的是如何安装<code class="language-text">ARM64</code>架构的虚拟操作系统，因此对于需要安装<code class="language-text">x86</code>虚拟系统的用户需要自行调整：</p>
 <blockquote>
@@ -88,10 +100,328 @@
 <li>In System, select the “ARM64 (aarch64)” architecture, and specify the amount of memory. At least half of your computer’s total memory is recommended for performance.</li>
 </ol>
 </blockquote>
-<p>在这里选择<code class="language-text">x86_64</code>，而不是ARM64。其他都一致即可。最后不要忘记在虚拟机内安装：<code class="language-text">sudo apt install spice-vdagent spice-webdavd</code>。</p>
-<h1 id="4-文件共享" style="position:relative;"><a href="#4-%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB" aria-label="4 文件共享 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>4. 文件共享</h1>
+<p>在这里选择<code class="language-text">x86_64</code>，而不是ARM64。</p>
+<h2 id="32-具体步骤" style="position:relative;"><a href="#32-%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4" aria-label="32 具体步骤 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3.2 具体步骤</h2>
+<p>打开<a href="https://mac.getutm.app/" target="_blank" rel="nofollow noopener noreferrer">官网</a>，并点击<code class="language-text">Download</code>开始下载MAC的安装包：<code class="language-text">UTM.dmg</code>。完成后打开dmg，把APP拖动到Application文件夹，都是常规操作。接下来打开UTM，开始虚拟机的安装。</p>
+<p>打开UTM：</p>
+<p>点击<code class="language-text">+ 新建一个虚拟机</code>，并按截图内容设置：</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 960px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/647676e8553896430e8563c3804e1779/ad997/utm-create-01-init.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 75.41666666666667%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAB80lEQVQ4y6WU3W7TMBSAixAChCouyqBp1yS2mza2oyRzUy7GRbu2SddB73kGLhch8Qy8xl5gVEi8x+AOngJxNTIfjtMfhOgmViJ9Ookdf/E5Ok6lgtc8Hb9+NZ+8G47S0/E4zUejNBc8yuPoee55QU4Jzxm9llPkLfLGslpV43swm6Rf5/MZpNkMptMTyDAKcQBSKPDaATAqoM3kVtZzKIS9vXpohI8Gw8lFlp3ANJtdorBAYcF5XLiOX+CCAheU0YC73dyv+GmEOP69Vnt6UAqPjiafVzsrMGqMWvBY48saX8Yoy+h3o5JuJyyfl3PiqhRS/gOF8Vr4ZSW82qTMY/PVTVqM+vDicADDQQpJcohzfpkmzt9OaGro2Ax838e6Cmg0mtDpdEFKieNkByFbCsMwBKUUNJv7pSxJeuC6FNpU3j5lSru4mAAhFAhKTGSM4biHae+YshASAhngDlvgeR0sAcdxulsNW/sEej0F/X4CVt0CzjlEUfRPNfyjbVCIrRFo1/U0poj3bW3brnYdogkh2nGovk54sRJeGum6sU0T/25qvoW/GnspxLP77fj4ZXns1tGkfNOR23IE9ZPaM2WE9+NYvVeq/0mp5BxZGOwWXVh1e9GwHMS+AecD8hE5q1Yf2xXOpZHeNT+J/+Ahcg+58wutGXgzrgx6vgAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/647676e8553896430e8563c3804e1779/8ac56/utm-create-01-init.webp 240w,
+/static/647676e8553896430e8563c3804e1779/d3be9/utm-create-01-init.webp 480w,
+/static/647676e8553896430e8563c3804e1779/e46b2/utm-create-01-init.webp 960w,
+/static/647676e8553896430e8563c3804e1779/2dbb9/utm-create-01-init.webp 1012w"
+              sizes="(max-width: 960px) 100vw, 960px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/647676e8553896430e8563c3804e1779/8ff5a/utm-create-01-init.png 240w,
+/static/647676e8553896430e8563c3804e1779/e85cb/utm-create-01-init.png 480w,
+/static/647676e8553896430e8563c3804e1779/d9199/utm-create-01-init.png 960w,
+/static/647676e8553896430e8563c3804e1779/ad997/utm-create-01-init.png 1012w"
+            sizes="(max-width: 960px) 100vw, 960px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/647676e8553896430e8563c3804e1779/d9199/utm-create-01-init.png"
+            alt="utm create 01 init"
+            title="utm create 01 init"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span></p>
+<p>系统部分务必选择架构为：<code class="language-text">x86_64</code>，内存和CPU核心数按需调整：</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 960px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/442375acc16cf17eea46288faad48205/7a1fb/utm-create-02-system.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 80%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAACk0lEQVQ4y6WT227TQBCG3cRxK1oBFRVNYntju04aH+Jj7NixkzTQlsIVUiMh8US8BU9AJC54BN4EzCVSxBXUHmadJmrVFJC4+DTr1fjf+WdnGYZhKobWOdNN9Y0iKZeqoswk0pqJh4cziednQr1RIlIa1xEhTX6mYJ4kiJeySN5iju0aJsox1Sd9p5eFgQ2OaYHbs6BvOxAGA4gQH799yy7xcL0icFxwDBNs3cBogKUbn6kYs73Nidax9jWgYl3tyu3q+cCy8zRK8tgP88hx89j1yrjEW+95mp57unGFgKfrPw4PDkRaInE1PXv94iW8mj7Pz5JRQTkdJkuStHgWDYuTMCqmyM1I96eDOJ9GCTqIF1WmStaCE7R3lo6pIMYRnKdjOB2mcDE+KePID2DcDzcQYAFjCJ1owVVYwmyhoCar2dCPwe9qebspQIcX13TFFmhEgmOBlOsNFLbaAVNWFo/39ghTqzKkLUhZ2k9KwZXAintEbgnSwzoCWTzapYK1GgqK2cXkBM5Hkzz1+jBGe6N/p5gEEU5DuLTMcSxReZIlbgBDvEFTUcE6at+ht4FyX1GLAU7IoGcvdlgqWKsSVWhl4yCBaRTnse1CYPQgxllMPB8S16fJZQ9vtmLVDowFjaXlsoccR9q8mEX4k9Pp5ncqw4pN+ehPFNcOlj1kWVZsCyRDuzC03ZxWRKsM0QbtJ71BvSWDISn3UVBhQz5aCnJYocqLX+hModhPtPALk9Zg8r3QXDyM/lMci63vpWClWnmK/r+tLG60hZXcglaEMbIcoBeCznDkdNhha+VL4eRG851cb36S640PuJ7/DYXGemM+sN1537Tm+L4/4mt7j49kn9l/sMsAABXe+h+oRuXxQ+Y3o5SLuE601poAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/442375acc16cf17eea46288faad48205/8ac56/utm-create-02-system.webp 240w,
+/static/442375acc16cf17eea46288faad48205/d3be9/utm-create-02-system.webp 480w,
+/static/442375acc16cf17eea46288faad48205/e46b2/utm-create-02-system.webp 960w,
+/static/442375acc16cf17eea46288faad48205/a820a/utm-create-02-system.webp 1030w"
+              sizes="(max-width: 960px) 100vw, 960px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/442375acc16cf17eea46288faad48205/8ff5a/utm-create-02-system.png 240w,
+/static/442375acc16cf17eea46288faad48205/e85cb/utm-create-02-system.png 480w,
+/static/442375acc16cf17eea46288faad48205/d9199/utm-create-02-system.png 960w,
+/static/442375acc16cf17eea46288faad48205/7a1fb/utm-create-02-system.png 1030w"
+            sizes="(max-width: 960px) 100vw, 960px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/442375acc16cf17eea46288faad48205/d9199/utm-create-02-system.png"
+            alt="utm create 02 system"
+            title="utm create 02 system"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span></p>
+<p>注意磁盘这边，第一张截图里制作的是虚拟机的硬盘，可以给大点；后一张是操作系统的安装盘的加载驱动，务必勾选可移除；两个都添加完成后，记得调整下启动顺序：</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 960px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/bcdff6a30edba6e7fb43e550fc3b6440/51ed8/utm-create-03-disk-main.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 80.41666666666667%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAACW0lEQVQ4y6WUzWvTYBjA34muKrRVQbRL03z2e03zsTRputraHsYOg9XvgXNq2EEQQRBBvEwYMlC8etvZkxS8iQiKnj14c3+C6Lx40KZ5fJKm0pZadL7w48n75OGX5837JuRw6ERIknIXc1J6XeCTtiimbI4TbJpmbBYjFaNsaoa243HGpqiEH/swDI9w1zHeYFm+qSgGIaHpMCMrxe9aSYVCQYZiUQFF0UCWNT8qmgGyooMkKXhPBQlrfHCeSechm531wWbeE0L2kYOHQgImvmhKCVRF72hqybHKVR+zZDmnmouOVTntGHrZz5WNimNgvl5rOvOVmmMalZ+WWYU4xbxC4RSJRMMCz4m7Ip8GkUt3MboCl/qNiFjmvIsPczlG9HNeLORld2lp2W21znVby2fBNK2dhcUFhoRRiO3uJoUMIG4Qh0gnc5ASs0M5lMLlK1dh6/ETd2PzYffW3Q1oXbJbPSHXE3rdjcr8zgMG89gprK5dg5u377j3Nx917z3YgvMrq2fGCNNDslH54PUcbhi+z261Wod6rfGp0WzQE4XjGOzWWzbisLQAx44ef0288a/CMd063vvFXX6Luun/EgZSx5tTsYQnPLBn4cAm9oVvesKIL/waFHSDozORQNRnULifRI9EkngOvwWFnb8BV9Hh2WQHN8SLPxBP+M7vEEeUY4SPowf3T3h1Ip+BYkEFXTNBlXXwPtuZGL298+EzIc36AsG/yTqb4F8yNPccaU8kwbcTcbZdyBfb+pzRVopaW1P1F7GTVHU2JxGycmGNAAAJxtQe8R3bT5+RX14TkNOdLZlwAAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/bcdff6a30edba6e7fb43e550fc3b6440/8ac56/utm-create-03-disk-main.webp 240w,
+/static/bcdff6a30edba6e7fb43e550fc3b6440/d3be9/utm-create-03-disk-main.webp 480w,
+/static/bcdff6a30edba6e7fb43e550fc3b6440/e46b2/utm-create-03-disk-main.webp 960w,
+/static/bcdff6a30edba6e7fb43e550fc3b6440/11b7f/utm-create-03-disk-main.webp 1021w"
+              sizes="(max-width: 960px) 100vw, 960px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/bcdff6a30edba6e7fb43e550fc3b6440/8ff5a/utm-create-03-disk-main.png 240w,
+/static/bcdff6a30edba6e7fb43e550fc3b6440/e85cb/utm-create-03-disk-main.png 480w,
+/static/bcdff6a30edba6e7fb43e550fc3b6440/d9199/utm-create-03-disk-main.png 960w,
+/static/bcdff6a30edba6e7fb43e550fc3b6440/51ed8/utm-create-03-disk-main.png 1021w"
+            sizes="(max-width: 960px) 100vw, 960px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/bcdff6a30edba6e7fb43e550fc3b6440/d9199/utm-create-03-disk-main.png"
+            alt="utm create 03 disk main"
+            title="utm create 03 disk main"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span>
+<span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 960px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/3297440e86d9896fecbabfd69e62eaff/ad997/utm-create-04-disk-usb.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 80%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAQCAYAAAAWGF8bAAAACXBIWXMAAAsTAAALEwEAmpwYAAACkklEQVQ4y52ST2sTQRTA04giSm29mNok+3+zm93ZZLPZbDbZJE2btmlaWhBR8OKhqBf/gOJBQYsVhF79LvoFGvDmRetB8AN4UzCC2M4+30xttBcbu/Djzc68/TH73ktsvXyQMPMmMe1cS1bUSFW1SJaVKJsRIkmUo0w6E6Wn0/w9k87ymM0KPMqSwnOQhiiIQXo6czKBz6ligbz1qy5YtrNLSIE6TpE6pEjdoodrlzqFEiV2gRLcs22HWhbha7Zn5cmebTmAfL1wIZVnwrOeZX0IvAB8P6R+uQqNaAZazVmIak1ozS1Bc64HYVCHqN7iZzXcn23PQy1sQFAJ47DawPy5AQpLXKip+ntNNUFVjD1dy8e4HuKQUlzxa5xyuRqzc0XOxUGlHne7K/Hi4jJFoNmc+W4aZpkLVUXbMQ0b8CPqlQLImw6YBuEQ24ViocwpOB4/M3IErLwD19dvwsbzrXjj2WZ85/5j6HRXelyooNB1fbh65RpdW70EC/NLsLiwjPRw3YP5ztIQtsfoLq7A+o1bcPvuvfjp5gt4+OgJtGY7XS6UZHWnjjVa6HRpo9HmdWpE7SOphU1WR+r5LRYHkiju11BV9R1DzwPWhsqSDqOC+SxSHevfbLQHOE7uUIgNAWwCZc35Tyg2CspeMMA5/XNDTT2+kF1GFJRBKjXlHhKqChMaI8sO/opFSVQPCd/9JYxHFMHvWT244behUNNyH/eFxk823KMgSzlEZ+yyBuENf0ylLnpMeFoQpNdMyIp79K/u5xC7yAedEJcPfyYtfpqcPK8n1lYvJ5LJpCFk5VeioL7Bq28j/X+Buf2KH/ajqNWvBvV+WK1vnxuf6H35DAn+JMdOsHAGmUQmjsE4MsYkvwBetZLc1aIMQAAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/3297440e86d9896fecbabfd69e62eaff/8ac56/utm-create-04-disk-usb.webp 240w,
+/static/3297440e86d9896fecbabfd69e62eaff/d3be9/utm-create-04-disk-usb.webp 480w,
+/static/3297440e86d9896fecbabfd69e62eaff/e46b2/utm-create-04-disk-usb.webp 960w,
+/static/3297440e86d9896fecbabfd69e62eaff/2dbb9/utm-create-04-disk-usb.webp 1012w"
+              sizes="(max-width: 960px) 100vw, 960px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/3297440e86d9896fecbabfd69e62eaff/8ff5a/utm-create-04-disk-usb.png 240w,
+/static/3297440e86d9896fecbabfd69e62eaff/e85cb/utm-create-04-disk-usb.png 480w,
+/static/3297440e86d9896fecbabfd69e62eaff/d9199/utm-create-04-disk-usb.png 960w,
+/static/3297440e86d9896fecbabfd69e62eaff/ad997/utm-create-04-disk-usb.png 1012w"
+            sizes="(max-width: 960px) 100vw, 960px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/3297440e86d9896fecbabfd69e62eaff/d9199/utm-create-04-disk-usb.png"
+            alt="utm create 04 disk usb"
+            title="utm create 04 disk usb"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span>
+<span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 960px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/ad997/utm-create-05-disk-order.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 75.41666666666667%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAACjklEQVQ4y6WU207bQBCGaauqLYUSCJBzAj4kdnyIHduJHcc5QKpAwqFBoKI+Qi9BlfoMfY2+QBtV6nvQ3LVPgbiCtaezTggUVVCplj7Nanf0e2b2t2dm8FFV+VgzpY88L5wUCsJpPi+cMgw3jWtr7On6+jXchOn6BPnAMPz7RDI1T/WeS1LxZ6msgChKUCzKIRxXgDwvAscWgA3JhzAMhf9jTcnlGIhGV1Qq+BIPzzTNhGq1dmlZDmk0NkizuUncmkeanR5pdPrErrrEdZukXm8Rx/GI57WJadrEMKpXmmZBKpk7n59b0ENBjsv/4HkJ3yoRhhEDli0GHC8HHCcHkmQEum4HWqkSlBA+3JeCen0jaLe7QbP52necBsTj6YvIwqI2qZAfFQoKmKbre14HLKsOsmwEimIGpuFCrdYOcZwWKIqFZyaoqjWmVPEFsQyJeOZGEAc8omXv7x/5h4fvYDB4C/3+AHq9AWxv78PW1h50u3th7PXehPthxLOd3SO/4vYhHktfLEaWJoIMO9IVAypYIbaFVZi0wjDeB83RNNsvG7W7LXMjUVRhs9PzcS5gYEK57DwIzWu1uijojQVphY8fjVsu6xU4ODj2abs3rd0PHccutmzXdyB2u2U076gk61BSLb8glNCHOnryITQQBI1eEI6pihXeuhRqG5YV0aBFtE0x+BfQYhNkH60GiUT2YuFV5FqQP2NZAQXFS4Tcx/oE120T226gwTevDMOht3weuW4Zv9lfPE8/L35KMpmlSXTYfyUWS41ZTYV5yUQmQMEyFXyWTmc/ZbO575lM9ksmkxtiHK4sx4bRpdVhNHqHpTHL0SlfkW/I59nZuexMLBanok/oT+I/eIE8pUK/AZASdJmv6omRAAAAAElFTkSuQmCC'); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/8ac56/utm-create-05-disk-order.webp 240w,
+/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/d3be9/utm-create-05-disk-order.webp 480w,
+/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/e46b2/utm-create-05-disk-order.webp 960w,
+/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/2dbb9/utm-create-05-disk-order.webp 1012w"
+              sizes="(max-width: 960px) 100vw, 960px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/8ff5a/utm-create-05-disk-order.png 240w,
+/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/e85cb/utm-create-05-disk-order.png 480w,
+/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/d9199/utm-create-05-disk-order.png 960w,
+/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/ad997/utm-create-05-disk-order.png 1012w"
+            sizes="(max-width: 960px) 100vw, 960px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/a5c0bac8f03fcc44ddcbb8c0f7f85eb1/d9199/utm-create-05-disk-order.png"
+            alt="utm create 05 disk order"
+            title="utm create 05 disk order"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span></p>
+<p>最后网络建议选择<code class="language-text">VLAN</code>模式，并开放主机和虚拟机之间的映射端口：</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 960px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/0d43bbfa1764288b37e321aa282f8870/ad997/utm-create-07-network-port.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 75.41666666666667%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC8klEQVQ4y6WUa0/TUBiAF8GILMoAGWNbb1t3627turW7ANsKYwzYGAiKMTEaxRgvwTAviHcTPkjir/APqDHxf8i+6a8gfIK2r+/pQGMMxsQmT95L2ifvOT2tzYZXVAivJKTQRsDPr4f4QCuIsF6qxTNsi/V4W4zbg7gt6BG3VZO+j6ZbnJdaRx5i7/bQwMAZ4uuRY8I3JZ2AuBCDZDQGCSEKGUmGgpoDNZUBJZUGVc50SCtWncVIIL2s3MlZikkQoV0Oh77mkxKoorSvJEW9lM3p02VNr5Y0jBMWU8WSPlOp6nP1Rb0yVtRr2qReyhX0cSV7oBVG4cL5S7tyKiNZQj/n20kEQ1DMKHo5mzOVWNxMC1FEMDPRKBKzahKP8iPkSMRICUlozDb3lIwqWkIfw7azogSzZc24ON+EC415IHGxNgMzZQ1mtYkOmFt1uVOTvFmtGlpxDuozzT1VORQG/P52iGEhyQeMkoL7kUjCKO5TLimCiJOLgeCfYD/u56GsZo3JwhjUaw0U5o+EfJt3e8iNRrM2C3JEAJ/TCWGKggjNHEuYoiHu8xtFRcUJ53HJuY7Qz3LtYi4PV1ZWjLU79+DOjVVYml8CKRyFCD4k4PTHgWIj5uNhoXG+M2FP72k7Q9HtyxdX4N3bbWPz4SN4/ngDnm2+gDwuO+Tx/oPQD5VyZS8RF0VbV3e3naWZ9nJzAR6s3TdWr16DW9dX4e7Nm5CXJAgeCv+ydCOMEQ/2nuNsn2g70d1l52hmZ3lhEbZevdZfPNk0X24+NbdevzFH5bQZ8lJmlOVMlP4G6RFiLGcILPdLSPaQ53xfFTw2c5Wp/cZ0Ta9PVS0SgaCOQh0nQOhOpGiLkprVx/Hcarn8ATlylGtkt9/h6Ajx+/0e4HzA4PLoQ1yD58hN4B0eBo/zT9xDzp94h13kWbO/z5EiwlOUx7uNL+YLQ9MfcD8/EUaczk9DA4PH4vyVf8T8M/Le3ttL21zOYSLtIj+J/+A0cpKIfgBNS4AlvW4ieQAAAABJRU5ErkJggg=='); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/0d43bbfa1764288b37e321aa282f8870/8ac56/utm-create-07-network-port.webp 240w,
+/static/0d43bbfa1764288b37e321aa282f8870/d3be9/utm-create-07-network-port.webp 480w,
+/static/0d43bbfa1764288b37e321aa282f8870/e46b2/utm-create-07-network-port.webp 960w,
+/static/0d43bbfa1764288b37e321aa282f8870/2dbb9/utm-create-07-network-port.webp 1012w"
+              sizes="(max-width: 960px) 100vw, 960px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/0d43bbfa1764288b37e321aa282f8870/8ff5a/utm-create-07-network-port.png 240w,
+/static/0d43bbfa1764288b37e321aa282f8870/e85cb/utm-create-07-network-port.png 480w,
+/static/0d43bbfa1764288b37e321aa282f8870/d9199/utm-create-07-network-port.png 960w,
+/static/0d43bbfa1764288b37e321aa282f8870/ad997/utm-create-07-network-port.png 1012w"
+            sizes="(max-width: 960px) 100vw, 960px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/0d43bbfa1764288b37e321aa282f8870/d9199/utm-create-07-network-port.png"
+            alt="utm create 07 network port"
+            title="utm create 07 network port"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span></p>
+<p>全部设置完成后按保存，然后到虚拟机列表加载下载好的操作系统镜像文件，然后启动虚拟机开始安装操作系统：</p>
+<p><span
+      class="gatsby-resp-image-wrapper"
+      style="position: relative; display: block; margin-left: auto; margin-right: auto; max-width: 960px; "
+    >
+      <a
+    class="gatsby-resp-image-link"
+    href="/static/d270ab1ba709e43de45a83d634bb9370/ad997/utm-create-06-set-linux-iso.png"
+    style="display: block"
+    target="_blank"
+    rel="noopener"
+  >
+    <span
+    class="gatsby-resp-image-background-image"
+    style="padding-bottom: 75.41666666666667%; position: relative; bottom: 0; left: 0; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAACXBIWXMAAAsTAAALEwEAmpwYAAAC/0lEQVQ4y6WUyU8TURzHMcaoMR6kGMEgLVunnc4MneliWYXSaVkOGhMiJHJwSUhQATsgCD3owQvxogYPJurBRNTIYiOBxBgPJiogW0vZBUX5B0hPMDM/f2+ouGJMbPLJd957v/nM7710Ji4Of2JRXqUo2luO5Nr87ny7VFzgkrI4XnI6XJKFZiUTZZHMpu+YKFpiLJzEW+0Sy2T5kSasr6Uoei/x7ao8dnK+6kwrlFYFoOREG4jHG6Cmph5aL1+BhvpLUF/XBA0IyfoLjVpebGiGJqkV/LE8faoGEg8kcUS4p7qiLnRWegIV/t61o+e7ZE91h9zX91qenVqWwxOLciS8pDEZWpJnpj5jLmrXZC088WF9bvoLdD/tX43fp+M1YUGhO+zxiOD1FMuI6hVFtaerX50Ym1eH3k2qw4MRjZHhafXlizfq2MisNn4/FCHrysToPDx62BtNSNhv1YTuIk+4pKQcfL5yxesrA6+3FHq7ByA0vgB4I+BNMB1ZhuvtN8FkouF2xz2YnvykzeO6Quoedz6L6nQxYREKfShCFCL7k3AKBbdu3AGHwwX373YCHgGuTQJ2+W9CPBMYH52DwbfhTSluVRuTjHVHxgqp6yRb/puwv+8VzM2sAB4+dvdRg3RFOt3IzTllfnYFeroGorr4hJ+FKFJiCedq/RBouwaN/gBISKMU0K5/RfK3KS3NV0l9VK83bC00USzQZisYMxk4mJS6JUmJBsWgp4BhhChtZn4TypiqKJaqAu9Sc7ILVYc9V83MYFTKyKkc61CzOGcsN+BYu4JzYLflRPEt2hSGYsI1n69UJmLGIiA2GWWyPsUoG/QmhNJIMyCp5m+sGzNZ4PnDqzQd69DtFhc2/odlQJJs2enMg4J8D3kyCHw22ASEd2HmAsNmg9lkxSPhtWQZO6lTsUOBCHdarUK7IDj6BcHeiwR53hakjJYgw1iDtJn7ATZI09ZgWgYX1KekBw36DMIz5Hl6GvUgOflQSpzZbCHS7eQj8R/sRnYg274CYNMsjO5aC6IAAAAASUVORK5CYII='); background-size: cover; display: block;"
+  ></span>
+  <picture>
+          <source
+              srcset="/static/d270ab1ba709e43de45a83d634bb9370/8ac56/utm-create-06-set-linux-iso.webp 240w,
+/static/d270ab1ba709e43de45a83d634bb9370/d3be9/utm-create-06-set-linux-iso.webp 480w,
+/static/d270ab1ba709e43de45a83d634bb9370/e46b2/utm-create-06-set-linux-iso.webp 960w,
+/static/d270ab1ba709e43de45a83d634bb9370/2dbb9/utm-create-06-set-linux-iso.webp 1012w"
+              sizes="(max-width: 960px) 100vw, 960px"
+              type="image/webp"
+            />
+          <source
+            srcset="/static/d270ab1ba709e43de45a83d634bb9370/8ff5a/utm-create-06-set-linux-iso.png 240w,
+/static/d270ab1ba709e43de45a83d634bb9370/e85cb/utm-create-06-set-linux-iso.png 480w,
+/static/d270ab1ba709e43de45a83d634bb9370/d9199/utm-create-06-set-linux-iso.png 960w,
+/static/d270ab1ba709e43de45a83d634bb9370/ad997/utm-create-06-set-linux-iso.png 1012w"
+            sizes="(max-width: 960px) 100vw, 960px"
+            type="image/png"
+          />
+          <img
+            class="gatsby-resp-image-image"
+            src="/static/d270ab1ba709e43de45a83d634bb9370/d9199/utm-create-06-set-linux-iso.png"
+            alt="utm create 06 set linux iso"
+            title="utm create 06 set linux iso"
+            loading="lazy"
+            style="width:100%;height:100%;margin:0;vertical-align:middle;position:absolute;top:0;left:0;"
+          />
+        </picture>
+  </a>
+    </span></p>
+<p>全部安装完成后，启动虚拟机。在宿主机上执行：</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ ssh-copy-id -i ~/.ssh/id_rsa -p <span class="token number">52222</span> jonathan@127.0.0.1</code></pre></div>
+<p>输入密码确认，将本机的SSH Key安装到虚拟机中，后续就可以通过ssh登录虚拟机了：</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">ssh</span> -p <span class="token number">52222</span> jonathan@127.0.0.1</code></pre></div>
+<p>如果有文件需要拷贝进出虚拟机，全部按正常远程服务器操作即可：</p>
+<div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ <span class="token function">scp</span> -P <span class="token number">52222</span> -r ./aaa jonathan@127.0.0.1:/home/jonathan/xxx/</code></pre></div>
+<h1 id="others" style="position:relative;"><a href="#others" aria-label="others permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Others</h1>
+<h2 id="文件共享" style="position:relative;"><a href="#%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB" aria-label="文件共享 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>文件共享</h2>
 <p>因为装过一次之后就没怎么使用过UTM了，而且也没打算装第二次。这里就留点之前的笔记：</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">关闭虚拟机
+<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">在虚拟机里安装spice相关插件
+sudo apt install spice-vdagent spice-webdavd
+关闭虚拟机
 在面板里选择共享目录
 重开虚拟机
 curl http://127.0.0.1:9843/ 查看是否有可访问内容
@@ -127,12 +457,6 @@ cat &lt;&lt; EOF | sudo tee -a /etc/davfs2/secrets
 EOF
 
 sudo mount /home/jonathan/mnt</code></pre></div>
-<h1 id="5-端口转发" style="position:relative;"><a href="#5-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91" aria-label="5 端口转发 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. 端口转发</h1>
-<p>主要还是为了虚拟机和宿主机之间能像两台主机一样进行ssh连接：</p>
-<div class="gatsby-highlight" data-language="text"><pre class="language-text"><code class="language-text">网络面板有个高级设置，勾选
-下面会有个新建，使用TCP，然后guest（虚拟机）设置0.0.0.0端口22，主机（宿主机）设置127.0.0.1端口52222
-重新启动虚拟机，然后自宿主机上进行ssh登录
-ssh jonathan@localhost -p 52222</code></pre></div>
 <blockquote>
 <p>EOF</p>
 </blockquote></div></div></div><div class="Post-module--post__footer--3WzWU"><div><p class="Meta-module--meta__date--29eD7">Published <!-- -->2021/10/5</p></div><div class="Tags-module--tags--1L_ct"><ul class="Tags-module--tags__list--91FqN"><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/mac/">MAC</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/arm/">ARM</a></li><li class="Tags-module--tags__list-item--1M30P"><a class="Tags-module--tags__list-item-link--3SL_8" href="/tag/utm/">UTM</a></li></ul></div><div class="Author-module--author--2Yefr"><p>Some tech &amp; personal blog posts<a class="Author-module--author__bio-twitter--n-O9n" href="https://github.com/agreatfool" rel="noopener noreferrer" target="_blank"><strong>Jonathan Dai</strong> on Github</a></p></div></div><div class="Post-module--post__comments--25y6I"><div><div id="disqus_thread"></div></div></div></div></div></div><div id="gatsby-announcer" style="position:absolute;top:0;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0, 0, 0, 0);white-space:nowrap;border:0" aria-live="assertive" aria-atomic="true"></div></div><script id="gatsby-script-loader">/*<![CDATA[*/window.pagePath="/posts/2021/10/mac-utm";/*]]>*/</script><script id="gatsby-chunk-mapping">/*<![CDATA[*/window.___chunkMapping={"polyfill":["/polyfill-6c97a84da242e3df27de.js"],"app":["/app-92fa5e2fde8268db0e7d.js"],"component---cache-caches-gatsby-plugin-offline-app-shell-js":["/component---cache-caches-gatsby-plugin-offline-app-shell-js-a95b272f8c25b9a8a758.js"],"component---src-templates-categories-list-template-js":["/component---src-templates-categories-list-template-js-0b5ec6331b346faff87c.js"],"component---src-templates-category-template-js":["/component---src-templates-category-template-js-a615ce56a55260054f6f.js"],"component---src-templates-index-template-js":["/component---src-templates-index-template-js-43f4f445a747fad1c9ab.js"],"component---src-templates-not-found-template-js":["/component---src-templates-not-found-template-js-5a6b0b2cd3a2384575c3.js"],"component---src-templates-page-template-js":["/component---src-templates-page-template-js-a00ead819a9bad15ee62.js"],"component---src-templates-post-template-js":["/component---src-templates-post-template-js-eb5394c2398cb5d4005e.js"],"component---src-templates-tag-template-js":["/component---src-templates-tag-template-js-6c6b9db9009c5b087140.js"],"component---src-templates-tags-list-template-js":["/component---src-templates-tags-list-template-js-ab1fa84c826a4bf3640a.js"]};/*]]>*/</script><script src="/polyfill-6c97a84da242e3df27de.js" nomodule=""></script><script src="/component---src-templates-post-template-js-eb5394c2398cb5d4005e.js" async=""></script><script src="/cd95ea5cbd2c605f26db819f07999610c9ff4310-69626fa07c736046dbe7.js" async=""></script><script src="/styles-407fe62976dc5310c43e.js" async=""></script><script src="/app-92fa5e2fde8268db0e7d.js" async=""></script><script src="/dc6a8720040df98778fe970bf6c000a41750d3ae-ae9f57b3df6a2a1f7657.js" async=""></script><script src="/532a2f07-7be199ac103747a90c37.js" async=""></script><script src="/framework-0c07c9218e9798907e47.js" async=""></script><script src="/webpack-runtime-84ddb8c5b13ff6239b19.js" async=""></script></body></html>
