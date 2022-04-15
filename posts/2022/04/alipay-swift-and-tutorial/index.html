@@ -70,7 +70,7 @@
 </div>
 <h1 id="1-前言" style="position:relative;"><a href="#1-%E5%89%8D%E8%A8%80" aria-label="1 前言 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>1. 前言</h1>
 <p>作为一名后端程序员，整个API链的调用联调是否能摒除所有的外部依赖是非常重要的，测试的流程贯通关系到整个开发的顺畅程度。支付系统的联调麻烦就麻烦在有外部系统的依赖。虽然在做开发的时候可以在单元测试代码中进行Mock来绕过外部的依赖，但真实的e2e测试还是必须的，这个时候就需要引入外部支付系统的接口了。</p>
-<p>目前国内的支付系统主要就是支付宝和维信支付。微信支付有点忘记了，但支付宝的app支付和网页支付是分开的2个独立的功能，也就是说公司的app可能只签了app支付而没有签网页支付。这种情况下在测试的时候，后端下单之后就无法使用自己生成的二维码然后用手机扫码支付测试了，必须是直接在手机的app内进行测试。这就很麻烦。所以本文会做一个教程，简单教下如何创建一个简单的app，可以使用后端支付后生成的返回字串来唤醒支付宝进行支付，以打通整个支付流程。</p>
+<p>目前国内的支付系统主要就是支付宝和维信支付。微信支付有点忘记了，但支付宝的app支付和网页支付是分开的2个独立的功能，也就是说公司的app可能只签了app支付而没有签网页支付。这种情况下在测试的时候，后端下单之后就无法使用自己生成的二维码然后用手机扫码支付测试了，必须是直接在手机的app内进行测试。这就很麻烦。所以本文会做一个教程，简单教下如何创建一个简单的app，可以使用后端支下单生成的返回字串来唤醒支付宝进行支付，以打通整个支付流程。</p>
 <h1 id="2-创建ios项目" style="position:relative;"><a href="#2-%E5%88%9B%E5%BB%BAios%E9%A1%B9%E7%9B%AE" aria-label="2 创建ios项目 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>2. 创建iOS项目</h1>
 <p>首先需要注册一个Apple开发者账号，因为没有任何账号的话，是无法对App进行打包和部署到手机上进行测试的。注册去：<a href="https://developer.apple.com/" target="_blank" rel="nofollow noopener noreferrer">https://developer.apple.com/</a>，点右上角的<code class="language-text">Account</code>，按引导注册即可。然后打开xocde，点开<code class="language-text">Perferences -> Accounts</code>，点左下角的<code class="language-text">+</code>添加自己的账号。</p>
 <p><span
@@ -209,8 +209,14 @@
         </picture>
   </a>
     </span></p>
+<p>题外：如果想认真学习下Swift的话，官方Tutorials教程在：<a href="https://developer.apple.com/tutorials/swiftui/" target="_blank" rel="nofollow noopener noreferrer">SwiftUI Tutorials</a>。此外，还有<a href="https://docs.swift.org/swift-book/" target="_blank" rel="nofollow noopener noreferrer">The swift programming language</a>。</p>
 <h1 id="3-安装cocospods" style="position:relative;"><a href="#3-%E5%AE%89%E8%A3%85cocospods" aria-label="3 安装cocospods permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>3. 安装cocospods</h1>
 <p><code class="language-text">cocospods</code>是iOS项目的依赖管理工具，类似nodejs的npm，基本上做项目都需要。最方便的的一点是这东西在安装的时候，会把一些对应的配置文件都更新好，对于我这样的新手来说就少了很多事情。</p>
+<p>几篇参考：</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/f43b5964f582" target="_blank" rel="nofollow noopener noreferrer">CocoaPods安装方法-2022.03.25</a></li>
+<li><a href="https://cloud.tencent.com/developer/article/1143325" target="_blank" rel="nofollow noopener noreferrer">cocoapods从安装到使用</a></li>
+</ul>
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash"><span class="token comment"># 安装cocospods本体</span>
 $ brew update --verbose
 $ brew <span class="token function">install</span> cocospods --verbose
@@ -246,6 +252,7 @@ end</code></pre></div>
 <div class="gatsby-highlight" data-language="bash"><pre class="language-bash"><code class="language-bash">$ pod <span class="token function">install</span></code></pre></div>
 <p>安装完成的dep都放在：<code class="language-text">Pods/</code>下，Alipay SDK在：<code class="language-text">/Pods/AlipaySDK-iOS</code>。</p>
 <p>后续需要关闭xcode，使用新生成的<code class="language-text">AlipayTest.xcworkspace</code>文件来打开项目。</p>
+<p>更多细节可以看支付宝官方的：<a href="https://opendocs.alipay.com/open/204/105295" target="_blank" rel="nofollow noopener noreferrer">客户端 iOS 集成流程</a>。</p>
 <h1 id="5-桥接alipay-sdk的header文件" style="position:relative;"><a href="#5-%E6%A1%A5%E6%8E%A5alipay-sdk%E7%9A%84header%E6%96%87%E4%BB%B6" aria-label="5 桥接alipay sdk的header文件 permalink" class="anchor before"><svg aria-hidden="true" focusable="false" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>5. 桥接Alipay SDK的Header文件</h1>
 <p>因为Alipay SDK是使用ObjC写的，所以在Swift项目中使用需要做一步工作：引入桥接的Header文件。</p>
 <p>执行创建文件操作，选择ObjC文件，名字随意，实际上这个ObjC文件我们后续可以直接删除，没用。IDE会问是否需要创建桥接Header，点击蓝色按钮选是，这才是我们创建ObjC文件的真正目的。</p>
