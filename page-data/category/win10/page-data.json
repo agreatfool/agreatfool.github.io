@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/win10",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/10/win10-wsl","categorySlug":"/category/win10/"},"frontmatter":{"description":"WIN10安装WSL相关笔记","category":"WIN10","title":"WIN10安装WSL","date":"2021-10-04T02:02:22.000Z"}}}]}},"pageContext":{"group":"WIN10","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/win10","nextPagePath":"/category/win10/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/10/win10-wsl","categorySlug":"/category/win10/"},"frontmatter":{"description":"WIN10安装WSL相关笔记","category":"WIN10","title":"WIN10安装WSL","date":"2021-10-04T02:02:22.000Z"}}}]}},"pageContext":{"group":"WIN10","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/win10","nextPagePath":"/category/win10/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

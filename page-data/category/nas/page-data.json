@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/nas",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/10/nas-backup","categorySlug":"/category/nas/"},"frontmatter":{"description":"简单介绍下NAS的备份策略，并推荐一款非常好用的PC端的备份软件","category":"NAS","title":"NAS备份计划 及 PC备份软件推荐","date":"2021-10-06T02:02:22.000Z"}}}]}},"pageContext":{"group":"NAS","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/nas","nextPagePath":"/category/nas/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/10/nas-backup","categorySlug":"/category/nas/"},"frontmatter":{"description":"简单介绍下NAS的备份策略，并推荐一款非常好用的PC端的备份软件","category":"NAS","title":"NAS备份计划 及 PC备份软件推荐","date":"2021-10-06T02:02:22.000Z"}}}]}},"pageContext":{"group":"NAS","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/nas","nextPagePath":"/category/nas/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

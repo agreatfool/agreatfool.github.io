@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/envoy",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/05/envoy-note","categorySlug":"/category/envoy/"},"frontmatter":{"description":"","category":"Envoy","title":"Envoy Notes","date":"2019-05-08T02:01:22.000Z"}}}]}},"pageContext":{"group":"Envoy","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/envoy","nextPagePath":"/category/envoy/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/05/envoy-note","categorySlug":"/category/envoy/"},"frontmatter":{"description":"","category":"Envoy","title":"Envoy Notes","date":"2019-05-08T02:01:22.000Z"}}}]}},"pageContext":{"group":"Envoy","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/envoy","nextPagePath":"/category/envoy/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

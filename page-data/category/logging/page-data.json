@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/logging",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/04/monitoring-tracing-logging","categorySlug":"/category/logging/"},"frontmatter":{"description":"","category":"Logging","title":"Compare: Monitoring | Tracing | Logging","date":"2019-04-12T02:01:22.000Z"}}}]}},"pageContext":{"group":"Logging","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/logging","nextPagePath":"/category/logging/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/04/monitoring-tracing-logging","categorySlug":"/category/logging/"},"frontmatter":{"description":"","category":"Logging","title":"Compare: Monitoring | Tracing | Logging","date":"2019-04-12T02:01:22.000Z"}}}]}},"pageContext":{"group":"Logging","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/logging","nextPagePath":"/category/logging/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/politics",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2017/12/why-anxiety","categorySlug":"/category/politics/"},"frontmatter":{"description":"","category":"Politics","title":"到底在焦虑什么","date":"2017-12-11T02:33:22.000Z"}}}]}},"pageContext":{"group":"Politics","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/politics","nextPagePath":"/category/politics/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2017/12/why-anxiety","categorySlug":"/category/politics/"},"frontmatter":{"description":"","category":"Politics","title":"到底在焦虑什么","date":"2017-12-11T02:33:22.000Z"}}}]}},"pageContext":{"group":"Politics","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/politics","nextPagePath":"/category/politics/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

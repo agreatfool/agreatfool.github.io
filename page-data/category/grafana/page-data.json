@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/grafana",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/04/grafana-note","categorySlug":"/category/grafana/"},"frontmatter":{"description":"","category":"Grafana","title":"Grafana Notes","date":"2019-04-11T02:01:22.000Z"}}}]}},"pageContext":{"group":"Grafana","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/grafana","nextPagePath":"/category/grafana/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/04/grafana-note","categorySlug":"/category/grafana/"},"frontmatter":{"description":"","category":"Grafana","title":"Grafana Notes","date":"2019-04-11T02:01:22.000Z"}}}]}},"pageContext":{"group":"Grafana","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/grafana","nextPagePath":"/category/grafana/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-tag-template-tag-template-tsx",
     "path": "/tag/wsl",
-    "result": {"data":{"site":{"siteMetadata":{"title":"Blog by Jonathan Dai","subtitle":""}},"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/10/win10-wsl","categorySlug":"/category/win10/"},"frontmatter":{"title":"WIN10安装WSL","date":"2021-10-04T02:02:22.000Z","category":"WIN10","description":"WIN10安装WSL相关笔记"}}}]}},"pageContext":{"group":"WSL","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/tag/wsl","nextPagePath":"/tag/wsl/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"site":{"siteMetadata":{"title":"Blog by Jonathan Dai","subtitle":""}},"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/10/win10-wsl","categorySlug":"/category/win10/"},"frontmatter":{"title":"WIN10安装WSL","date":"2021-10-04T02:02:22.000Z","category":"WIN10","description":"WIN10安装WSL相关笔记"}}}]}},"pageContext":{"group":"WSL","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/tag/wsl","nextPagePath":"/tag/wsl/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

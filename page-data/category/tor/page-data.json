@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/tor",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/09/virtualbox-tor","categorySlug":"/category/tor/"},"frontmatter":{"description":"","category":"Tor","title":"在VirtualBox中安装Tor","date":"2019-09-20T02:36:22.000Z"}}}]}},"pageContext":{"group":"Tor","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/tor","nextPagePath":"/category/tor/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/09/virtualbox-tor","categorySlug":"/category/tor/"},"frontmatter":{"description":"","category":"Tor","title":"在VirtualBox中安装Tor","date":"2019-09-20T02:36:22.000Z"}}}]}},"pageContext":{"group":"Tor","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/tor","nextPagePath":"/category/tor/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

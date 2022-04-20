@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/prometheus",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/04/prometheus-note","categorySlug":"/category/prometheus/"},"frontmatter":{"description":"","category":"Prometheus","title":"Prometheus Notes","date":"2019-04-09T02:01:22.000Z"}}}]}},"pageContext":{"group":"Prometheus","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/prometheus","nextPagePath":"/category/prometheus/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/04/prometheus-note","categorySlug":"/category/prometheus/"},"frontmatter":{"description":"","category":"Prometheus","title":"Prometheus Notes","date":"2019-04-09T02:01:22.000Z"}}}]}},"pageContext":{"group":"Prometheus","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/prometheus","nextPagePath":"/category/prometheus/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

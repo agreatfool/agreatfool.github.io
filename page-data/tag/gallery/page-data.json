@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-tag-template-tag-template-tsx",
     "path": "/tag/gallery",
-    "result": {"data":{"site":{"siteMetadata":{"title":"Blog by Jonathan Dai","subtitle":""}},"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/09/gallery-example","categorySlug":"/category/blog/"},"frontmatter":{"title":"Gatsby Gallery组件","date":"2021-09-05T02:02:22.000Z","category":"Blog","description":"在gatsby站点中制作gallery展示组件"}}}]}},"pageContext":{"group":"Gallery","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/tag/gallery","nextPagePath":"/tag/gallery/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"site":{"siteMetadata":{"title":"Blog by Jonathan Dai","subtitle":""}},"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2021/09/gallery-example","categorySlug":"/category/blog/"},"frontmatter":{"title":"Gatsby Gallery组件","date":"2021-09-05T02:02:22.000Z","category":"Blog","description":"在gatsby站点中制作gallery展示组件"}}}]}},"pageContext":{"group":"Gallery","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/tag/gallery","nextPagePath":"/tag/gallery/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

@@ -1,5 +1,5 @@
 {
     "componentChunkName": "component---src-templates-category-template-category-template-tsx",
     "path": "/category/git",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/12/gitea-note","categorySlug":"/category/git/"},"frontmatter":{"description":"","category":"Git","title":"Gitea简单介绍及使用","date":"2019-12-26T02:36:22.000Z"}}}]}},"pageContext":{"group":"Git","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/git","nextPagePath":"/category/git/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/12/gitea-note","categorySlug":"/category/git/"},"frontmatter":{"description":"","category":"Git","title":"Gitea简单介绍及使用","date":"2019-12-26T02:36:22.000Z"}}}]}},"pageContext":{"group":"Git","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/git","nextPagePath":"/category/git/page/1","hasNextPage":false,"hasPrevPage":false}}},
     "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}
