@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-templates-index-template-index-template-tsx",
+    "path": "/page/29",
+    "result": {"data":{"allMarkdownRemark":{"edges":[]}},"pageContext":{"limit":4,"offset":116,"pagination":{"currentPage":29,"prevPagePath":"/page/28","nextPagePath":"/page/30","hasNextPage":false,"hasPrevPage":true}}},
+    "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

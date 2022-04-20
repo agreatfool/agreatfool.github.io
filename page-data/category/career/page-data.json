@@ -1,1 +1,5 @@
-{"componentChunkName":"component---src-templates-category-template-js","path":"/category/career","result":{"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"categorySlug":"/category/career/","slug":"/posts/2019/04/996"},"frontmatter":{"date":"2019-04-05T02:01:22.000Z","description":"","category":"Career","title":"也谈996"}}}]}},"pageContext":{"category":"Career","currentPage":0,"postsLimit":50,"postsOffset":0,"prevPagePath":"/category/career","nextPagePath":"/category/career/page/1","hasPrevPage":false,"hasNextPage":false}},"staticQueryHashes":["251939775","401334301","825871152"]}
+{
+    "componentChunkName": "component---src-templates-category-template-category-template-tsx",
+    "path": "/category/career",
+    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/04/996","categorySlug":"/category/career/"},"frontmatter":{"description":"","category":"Career","title":"也谈996","date":"2019-04-05T02:01:22.000Z"}}}]}},"pageContext":{"group":"Career","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/career","nextPagePath":"/category/career/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}

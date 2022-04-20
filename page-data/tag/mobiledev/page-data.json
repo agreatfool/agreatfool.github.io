@@ -1,0 +1,5 @@
+{
+    "componentChunkName": "component---src-templates-tag-template-tag-template-tsx",
+    "path": "/tag/mobiledev",
+    "result": {"data":{"site":{"siteMetadata":{"title":"Blog by Jonathan Dai","subtitle":""}},"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2016/11/mobile-reverse-code-engineering","categorySlug":"/category/mobile/"},"frontmatter":{"title":"移动应用逆向工程","date":"2016-11-22T15:46:37.121Z","category":"Mobile","description":""}}}]}},"pageContext":{"group":"MobileDev","limit":4,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/tag/mobiledev","nextPagePath":"/tag/mobiledev/page/1","hasNextPage":false,"hasPrevPage":false}}},
+    "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}
