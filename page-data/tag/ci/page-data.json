@@ -1,5 +1,1 @@
-{
-    "componentChunkName": "component---src-templates-tag-template-tag-template-tsx",
-    "path": "/tag/ci",
-    "result": {"data":{"site":{"siteMetadata":{"title":"Blog by Jonathan Dai","subtitle":""}},"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/12/drone-ci","categorySlug":"/category/ci/"},"frontmatter":{"title":"使用Drone进行CI支持","date":"2019-12-23T02:36:22.000Z","category":"CI","description":""}}}]}},"pageContext":{"group":"CI","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/tag/ci","nextPagePath":"/tag/ci/page/1","hasNextPage":false,"hasPrevPage":false}}},
-    "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}
+{"componentChunkName":"component---src-templates-tag-template-tag-template-tsx","path":"/tag/ci","result":{"data":{"site":{"siteMetadata":{"title":"Blog by Jonathan Dai","subtitle":""}},"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/12/drone-ci","categorySlug":"/category/ci/"},"frontmatter":{"title":"使用Drone进行CI支持","date":"2019-12-23T02:36:22.000Z","category":"CI","description":""}}}]}},"pageContext":{"group":"CI","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/tag/ci","nextPagePath":"/tag/ci/page/1","hasNextPage":false,"hasPrevPage":false}}},"staticQueryHashes":["251939775","357378587","401334301","63107425"]}

@@ -1,5 +1,1 @@
-{
-    "componentChunkName": "component---src-templates-category-template-category-template-tsx",
-    "path": "/category/memcache",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/05/memcached-note","categorySlug":"/category/memcache/"},"frontmatter":{"description":"","category":"Memcache","title":"Memcached Notes","date":"2019-05-11T02:01:22.000Z"}}}]}},"pageContext":{"group":"Memcache","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/memcache","nextPagePath":"/category/memcache/page/1","hasNextPage":false,"hasPrevPage":false}}},
-    "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}
+{"componentChunkName":"component---src-templates-category-template-category-template-tsx","path":"/category/memcache","result":{"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2019/05/memcached-note","categorySlug":"/category/memcache/"},"frontmatter":{"description":"","category":"Memcache","title":"Memcached Notes","date":"2019-05-11T02:01:22.000Z"}}}]}},"pageContext":{"group":"Memcache","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/memcache","nextPagePath":"/category/memcache/page/1","hasNextPage":false,"hasPrevPage":false}}},"staticQueryHashes":["251939775","357378587","401334301","63107425"]}

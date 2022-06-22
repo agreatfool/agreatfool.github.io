@@ -1,5 +1,1 @@
-{
-    "componentChunkName": "component---src-templates-category-template-category-template-tsx",
-    "path": "/category/reactjs",
-    "result": {"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2020/06/nextjs-note","categorySlug":"/category/reactjs/"},"frontmatter":{"description":"","category":"ReactJs","title":"Next.js Notes","date":"2020-06-09T02:02:22.000Z"}}}]}},"pageContext":{"group":"ReactJs","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/reactjs","nextPagePath":"/category/reactjs/page/1","hasNextPage":false,"hasPrevPage":false}}},
-    "staticQueryHashes": ["251939775","357378587","401334301","63107425"]}
+{"componentChunkName":"component---src-templates-category-template-category-template-tsx","path":"/category/reactjs","result":{"data":{"allMarkdownRemark":{"edges":[{"node":{"fields":{"slug":"/posts/2020/06/nextjs-note","categorySlug":"/category/reactjs/"},"frontmatter":{"description":"","category":"ReactJs","title":"Next.js Notes","date":"2020-06-09T02:02:22.000Z"}}}]}},"pageContext":{"group":"ReactJs","limit":10,"offset":0,"pagination":{"currentPage":0,"prevPagePath":"/category/reactjs","nextPagePath":"/category/reactjs/page/1","hasNextPage":false,"hasPrevPage":false}}},"staticQueryHashes":["251939775","357378587","401334301","63107425"]}
